@@ -1,0 +1,89 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - User variables</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_14.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_14.html">previous</A>, <A HREF="flex_16.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_16.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC15" HREF="flex_toc.html#TOC15" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC15">Values available to the user</A></H2>
+
+<P>
+This section summarizes the various values available to
+the user in the rule actions.
+
+
+
+<UL>
+<LI>
+
+<SAMP>`char *yytext'</SAMP> holds the text of the current token.
+It may be modified but not lengthened (you cannot
+append characters to the end).
+
+If the special directive <SAMP>`%array'</SAMP> appears in the
+first section of the scanner description, then
+<CODE>yytext</CODE> is instead declared <SAMP>`char yytext[YYLMAX]'</SAMP>,
+where <CODE>YYLMAX</CODE> is a macro definition that you can
+redefine in the first section if you don't like the
+default value (generally 8KB).  Using <SAMP>`%array'</SAMP>
+results in somewhat slower scanners, but the value
+of <CODE>yytext</CODE> becomes immune to calls to <SAMP>`input()'</SAMP> and
+<SAMP>`unput()'</SAMP>, which potentially destroy its value when
+<CODE>yytext</CODE> is a character pointer.  The opposite of
+<SAMP>`%array'</SAMP> is <SAMP>`%pointer'</SAMP>, which is the default.
+
+You cannot use <SAMP>`%array'</SAMP> when generating C++ scanner
+classes (the <SAMP>`-+'</SAMP> flag).
+
+<LI>
+
+<SAMP>`int yyleng'</SAMP> holds the length of the current token.
+
+<LI>
+
+<SAMP>`FILE *yyin'</SAMP> is the file which by default <CODE>flex</CODE> reads
+from.  It may be redefined but doing so only makes
+sense before scanning begins or after an EOF has
+been encountered.  Changing it in the midst of
+scanning will have unexpected results since <CODE>flex</CODE>
+buffers its input; use <SAMP>`yyrestart()'</SAMP> instead.  Once
+scanning terminates because an end-of-file has been
+seen, you can assign <CODE>yyin</CODE> at the new input file and
+then call the scanner again to continue scanning.
+
+<LI>
+
+<SAMP>`void yyrestart( FILE *new_file )'</SAMP> may be called to
+point <CODE>yyin</CODE> at the new input file.  The switch-over
+to the new file is immediate (any previously
+buffered-up input is lost).  Note that calling
+<SAMP>`yyrestart()'</SAMP> with <CODE>yyin</CODE> as an argument thus throws
+away the current input buffer and continues
+scanning the same input file.
+
+<LI>
+
+<SAMP>`FILE *yyout'</SAMP> is the file to which <SAMP>`ECHO'</SAMP> actions are
+done.  It can be reassigned by the user.
+
+<LI>
+
+<CODE>YY_CURRENT_BUFFER</CODE> returns a <CODE>YY_BUFFER_STATE</CODE> handle
+to the current buffer.
+
+<LI>
+
+<CODE>YY_START</CODE> returns an integer value corresponding to
+the current start condition.  You can subsequently
+use this value with <CODE>BEGIN</CODE> to return to that start
+condition.
+</UL>
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_14.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_14.html">previous</A>, <A HREF="flex_16.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_16.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>

@@ -1,0 +1,142 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - Examples</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_4.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_4.html">previous</A>, <A HREF="flex_6.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_6.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC5" HREF="flex_toc.html#TOC5" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC5">Some simple examples</A></H2>
+
+<P>
+First some simple examples to get the flavor of how one
+uses <CODE>flex</CODE>.  The following <CODE>flex</CODE> input specifies a scanner
+which whenever it encounters the string "username" will
+replace it with the user's login name:
+
+
+
+<PRE>
+%%
+username    printf( "%s", getlogin() );
+</PRE>
+
+<P>
+By default, any text not matched by a <CODE>flex</CODE> scanner is
+copied to the output, so the net effect of this scanner is
+to copy its input file to its output with each occurrence
+of "username" expanded.  In this input, there is just one
+rule.  "username" is the <VAR>pattern</VAR> and the "printf" is the
+<VAR>action</VAR>.  The "%%" marks the beginning of the rules.
+
+
+<P>
+Here's another simple example:
+
+
+
+<PRE>
+        int num_lines = 0, num_chars = 0;
+
+%%
+\n      ++num_lines; ++num_chars;
+.       ++num_chars;
+
+%%
+main()
+        {
+        yylex();
+        printf( "# of lines = %d, # of chars = %d\n",
+                num_lines, num_chars );
+        }
+</PRE>
+
+<P>
+This scanner counts the number of characters and the
+number of lines in its input (it produces no output other
+than the final report on the counts).  The first line
+declares two globals, "num_lines" and "num_chars", which
+are accessible both inside <SAMP>`yylex()'</SAMP> and in the <SAMP>`main()'</SAMP>
+routine declared after the second "%%".  There are two rules,
+one which matches a newline ("\n") and increments both the
+line count and the character count, and one which matches
+any character other than a newline (indicated by the "."
+regular expression).
+
+
+<P>
+A somewhat more complicated example:
+
+
+
+<PRE>
+/* scanner for a toy Pascal-like language */
+
+%{
+/* need this for the call to atof() below */
+#include &#60;math.h&#62;
+%}
+
+DIGIT    [0-9]
+ID       [a-z][a-z0-9]*
+
+%%
+
+{DIGIT}+    {
+            printf( "An integer: %s (%d)\n", yytext,
+                    atoi( yytext ) );
+            }
+
+{DIGIT}+"."{DIGIT}*        {
+            printf( "A float: %s (%g)\n", yytext,
+                    atof( yytext ) );
+            }
+
+if|then|begin|end|procedure|function        {
+            printf( "A keyword: %s\n", yytext );
+            }
+
+{ID}        printf( "An identifier: %s\n", yytext );
+
+"+"|"-"|"*"|"/"   printf( "An operator: %s\n", yytext );
+
+"{"[^}\n]*"}"     /* eat up one-line comments */
+
+[ \t\n]+          /* eat up whitespace */
+
+.           printf( "Unrecognized character: %s\n", yytext );
+
+%%
+
+main( argc, argv )
+int argc;
+char **argv;
+    {
+    ++argv, --argc;  /* skip over program name */
+    if ( argc &#62; 0 )
+            yyin = fopen( argv[0], "r" );
+    else
+            yyin = stdin;
+
+    yylex();
+    }
+</PRE>
+
+<P>
+This is the beginnings of a simple scanner for a language
+like Pascal.  It identifies different types of <VAR>tokens</VAR> and
+reports on what it has seen.
+
+
+<P>
+The details of this example will be explained in the
+following sections.
+
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_4.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_4.html">previous</A>, <A HREF="flex_6.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_6.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>

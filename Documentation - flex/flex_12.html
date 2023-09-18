@@ -1,0 +1,219 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - Multiple buffers</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_11.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_11.html">previous</A>, <A HREF="flex_13.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_13.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC12" HREF="flex_toc.html#TOC12" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC12">Multiple input buffers</A></H2>
+
+<P>
+Some scanners (such as those which support "include"
+files) require reading from several input streams.  As
+<CODE>flex</CODE> scanners do a large amount of buffering, one cannot
+control where the next input will be read from by simply
+writing a <CODE>YY_INPUT</CODE> which is sensitive to the scanning
+context.  <CODE>YY_INPUT</CODE> is only called when the scanner reaches
+the end of its buffer, which may be a long time after
+scanning a statement such as an "include" which requires
+switching the input source.
+
+
+<P>
+To negotiate these sorts of problems, <CODE>flex</CODE> provides a
+mechanism for creating and switching between multiple
+input buffers.  An input buffer is created by using:
+
+
+
+<PRE>
+YY_BUFFER_STATE yy_create_buffer( FILE *file, int size )
+</PRE>
+
+<P>
+which takes a <CODE>FILE</CODE> pointer and a size and creates a buffer
+associated with the given file and large enough to hold
+<VAR>size</VAR> characters (when in doubt, use <CODE>YY_BUF_SIZE</CODE> for the
+size).  It returns a <CODE>YY_BUFFER_STATE</CODE> handle, which may
+then be passed to other routines (see below).  The
+<CODE>YY_BUFFER_STATE</CODE> type is a pointer to an opaque <CODE>struct</CODE>
+<CODE>yy_buffer_state</CODE> structure, so you may safely initialize
+YY_BUFFER_STATE variables to <SAMP>`((YY_BUFFER_STATE) 0)'</SAMP> if you
+wish, and also refer to the opaque structure in order to
+correctly declare input buffers in source files other than
+that of your scanner.  Note that the <CODE>FILE</CODE> pointer in the
+call to <CODE>yy_create_buffer</CODE> is only used as the value of <CODE>yyin</CODE>
+seen by <CODE>YY_INPUT</CODE>; if you redefine <CODE>YY_INPUT</CODE> so it no longer
+uses <CODE>yyin</CODE>, then you can safely pass a nil <CODE>FILE</CODE> pointer to
+<CODE>yy_create_buffer</CODE>.  You select a particular buffer to scan
+from using:
+
+
+
+<PRE>
+void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer )
+</PRE>
+
+<P>
+switches the scanner's input buffer so subsequent tokens
+will come from <VAR>new_buffer</VAR>.  Note that
+<SAMP>`yy_switch_to_buffer()'</SAMP> may be used by <SAMP>`yywrap()'</SAMP> to set
+things up for continued scanning, instead of opening a new
+file and pointing <CODE>yyin</CODE> at it.  Note also that switching
+input sources via either <SAMP>`yy_switch_to_buffer()'</SAMP> or <SAMP>`yywrap()'</SAMP>
+does <EM>not</EM> change the start condition.
+
+
+
+<PRE>
+void yy_delete_buffer( YY_BUFFER_STATE buffer )
+</PRE>
+
+<P>
+is used to reclaim the storage associated with a buffer.
+You can also clear the current contents of a buffer using:
+
+
+
+<PRE>
+void yy_flush_buffer( YY_BUFFER_STATE buffer )
+</PRE>
+
+<P>
+This function discards the buffer's contents, so the next time the
+scanner attempts to match a token from the buffer, it will first fill
+the buffer anew using <CODE>YY_INPUT</CODE>.
+
+
+<P>
+<SAMP>`yy_new_buffer()'</SAMP> is an alias for <SAMP>`yy_create_buffer()'</SAMP>,
+provided for compatibility with the C++ use of <CODE>new</CODE> and <CODE>delete</CODE>
+for creating and destroying dynamic objects.
+
+
+<P>
+Finally, the <CODE>YY_CURRENT_BUFFER</CODE> macro returns a
+<CODE>YY_BUFFER_STATE</CODE> handle to the current buffer.
+
+
+<P>
+Here is an example of using these features for writing a
+scanner which expands include files (the <SAMP>`&#60;&#60;EOF&#62;&#62;'</SAMP> feature
+is discussed below):
+
+
+
+<PRE>
+/* the "incl" state is used for picking up the name
+ * of an include file
+ */
+%x incl
+
+%{
+#define MAX_INCLUDE_DEPTH 10
+YY_BUFFER_STATE include_stack[MAX_INCLUDE_DEPTH];
+int include_stack_ptr = 0;
+%}
+
+%%
+include             BEGIN(incl);
+
+[a-z]+              ECHO;
+[^a-z\n]*\n?        ECHO;
+
+&#60;incl&#62;[ \t]*      /* eat the whitespace */
+&#60;incl&#62;[^ \t\n]+   { /* got the include file name */
+        if ( include_stack_ptr &#62;= MAX_INCLUDE_DEPTH )
+            {
+            fprintf( stderr, "Includes nested too deeply" );
+            exit( 1 );
+            }
+
+        include_stack[include_stack_ptr++] =
+            YY_CURRENT_BUFFER;
+
+        yyin = fopen( yytext, "r" );
+
+        if ( ! yyin )
+            error( ... );
+
+        yy_switch_to_buffer(
+            yy_create_buffer( yyin, YY_BUF_SIZE ) );
+
+        BEGIN(INITIAL);
+        }
+
+&#60;&#60;EOF&#62;&#62; {
+        if ( --include_stack_ptr &#60; 0 )
+            {
+            yyterminate();
+            }
+
+        else
+            {
+            yy_delete_buffer( YY_CURRENT_BUFFER );
+            yy_switch_to_buffer(
+                 include_stack[include_stack_ptr] );
+            }
+        }
+</PRE>
+
+<P>
+Three routines are available for setting up input buffers
+for scanning in-memory strings instead of files.  All of
+them create a new input buffer for scanning the string,
+and return a corresponding <CODE>YY_BUFFER_STATE</CODE> handle (which
+you should delete with <SAMP>`yy_delete_buffer()'</SAMP> when done with
+it).  They also switch to the new buffer using
+<SAMP>`yy_switch_to_buffer()'</SAMP>, so the next call to <SAMP>`yylex()'</SAMP> will
+start scanning the string.
+
+
+<DL COMPACT>
+
+<DT><SAMP>`yy_scan_string(const char *str)'</SAMP>
+<DD>
+scans a NUL-terminated string.
+
+<DT><SAMP>`yy_scan_bytes(const char *bytes, int len)'</SAMP>
+<DD>
+scans <CODE>len</CODE> bytes (including possibly NUL's) starting
+at location <VAR>bytes</VAR>.
+</DL>
+
+<P>
+Note that both of these functions create and scan a <EM>copy</EM>
+of the string or bytes.  (This may be desirable, since
+<SAMP>`yylex()'</SAMP> modifies the contents of the buffer it is
+scanning.) You can avoid the copy by using:
+
+
+<DL COMPACT>
+
+<DT><SAMP>`yy_scan_buffer(char *base, yy_size_t size)'</SAMP>
+<DD>
+which scans in place the buffer starting at <VAR>base</VAR>,
+consisting of <VAR>size</VAR> bytes, the last two bytes of
+which <EM>must</EM> be <CODE>YY_END_OF_BUFFER_CHAR</CODE> (ASCII NUL).
+These last two bytes are not scanned; thus,
+scanning consists of <SAMP>`base[0]'</SAMP> through <SAMP>`base[size-2]'</SAMP>,
+inclusive.
+
+If you fail to set up <VAR>base</VAR> in this manner (i.e.,
+forget the final two <CODE>YY_END_OF_BUFFER_CHAR</CODE> bytes),
+then <SAMP>`yy_scan_buffer()'</SAMP> returns a nil pointer instead
+of creating a new input buffer.
+
+The type <CODE>yy_size_t</CODE> is an integral type to which you
+can cast an integer expression reflecting the size
+of the buffer.
+</DL>
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_11.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_11.html">previous</A>, <A HREF="flex_13.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_13.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>

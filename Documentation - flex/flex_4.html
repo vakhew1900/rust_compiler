@@ -1,0 +1,32 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - Description</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_3.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_3.html">previous</A>, <A HREF="flex_5.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_5.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC4" HREF="flex_toc.html#TOC4" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC4">Description</A></H2>
+
+<P>
+<CODE>flex</CODE> is a tool for generating <EM>scanners</EM>: programs which
+recognized lexical patterns in text.  <CODE>flex</CODE> reads the given
+input files, or its standard input if no file names are
+given, for a description of a scanner to generate.  The
+description is in the form of pairs of regular expressions
+and C code, called <EM>rules</EM>. <CODE>flex</CODE> generates as output a C
+source file, <TT>`lex.yy.c'</TT>, which defines a routine <SAMP>`yylex()'</SAMP>.
+This file is compiled and linked with the <SAMP>`-lfl'</SAMP> library to
+produce an executable.  When the executable is run, it
+analyzes its input for occurrences of the regular
+expressions.  Whenever it finds one, it executes the
+corresponding C code.
+
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_3.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_3.html">previous</A>, <A HREF="flex_5.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_5.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>

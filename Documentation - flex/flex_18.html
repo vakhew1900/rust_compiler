@@ -1,0 +1,396 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - Performance</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_17.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_17.html">previous</A>, <A HREF="flex_19.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_19.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC18" HREF="flex_toc.html#TOC18" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC18">Performance considerations</A></H2>
+
+<P>
+The main design goal of <CODE>flex</CODE> is that it generate
+high-performance scanners.  It has been optimized for dealing
+well with large sets of rules.  Aside from the effects on
+scanner speed of the table compression <SAMP>`-C'</SAMP> options outlined
+above, there are a number of options/actions which degrade
+performance.  These are, from most expensive to least:
+
+
+
+<PRE>
+REJECT
+%option yylineno
+arbitrary trailing context
+
+pattern sets that require backing up
+%array
+%option interactive
+%option always-interactive
+
+'^' beginning-of-line operator
+yymore()
+</PRE>
+
+<P>
+with the first three all being quite expensive and the
+last two being quite cheap.  Note also that <SAMP>`unput()'</SAMP> is
+implemented as a routine call that potentially does quite
+a bit of work, while <SAMP>`yyless()'</SAMP> is a quite-cheap macro; so
+if just putting back some excess text you scanned, use
+<SAMP>`yyless()'</SAMP>.
+
+
+<P>
+<CODE>REJECT</CODE> should be avoided at all costs when performance is
+important.  It is a particularly expensive option.
+
+
+<P>
+Getting rid of backing up is messy and often may be an
+enormous amount of work for a complicated scanner.  In
+principal, one begins by using the <SAMP>`-b'</SAMP> flag to generate a
+<TT>`lex.backup'</TT> file.  For example, on the input
+
+
+
+<PRE>
+%%
+foo        return TOK_KEYWORD;
+foobar     return TOK_KEYWORD;
+</PRE>
+
+<P>
+the file looks like:
+
+
+
+<PRE>
+State #6 is non-accepting -
+ associated rule line numbers:
+       2       3
+ out-transitions: [ o ]
+ jam-transitions: EOF [ \001-n  p-\177 ]
+
+State #8 is non-accepting -
+ associated rule line numbers:
+       3
+ out-transitions: [ a ]
+ jam-transitions: EOF [ \001-`  b-\177 ]
+
+State #9 is non-accepting -
+ associated rule line numbers:
+       3
+ out-transitions: [ r ]
+ jam-transitions: EOF [ \001-q  s-\177 ]
+
+Compressed tables always back up.
+</PRE>
+
+<P>
+The first few lines tell us that there's a scanner state
+in which it can make a transition on an 'o' but not on any
+other character, and that in that state the currently
+scanned text does not match any rule.  The state occurs
+when trying to match the rules found at lines 2 and 3 in
+the input file.  If the scanner is in that state and then
+reads something other than an 'o', it will have to back up
+to find a rule which is matched.  With a bit of
+head-scratching one can see that this must be the state it's in
+when it has seen "fo".  When this has happened, if
+anything other than another 'o' is seen, the scanner will
+have to back up to simply match the 'f' (by the default
+rule).
+
+
+<P>
+The comment regarding State #8 indicates there's a problem
+when "foob" has been scanned.  Indeed, on any character
+other than an 'a', the scanner will have to back up to
+accept "foo".  Similarly, the comment for State #9
+concerns when "fooba" has been scanned and an 'r' does not
+follow.
+
+
+<P>
+The final comment reminds us that there's no point going
+to all the trouble of removing backing up from the rules
+unless we're using <SAMP>`-Cf'</SAMP> or <SAMP>`-CF'</SAMP>, since there's no
+performance gain doing so with compressed scanners.
+
+
+<P>
+The way to remove the backing up is to add "error" rules:
+
+
+
+<PRE>
+%%
+foo         return TOK_KEYWORD;
+foobar      return TOK_KEYWORD;
+
+fooba       |
+foob        |
+fo          {
+            /* false alarm, not really a keyword */
+            return TOK_ID;
+            }
+</PRE>
+
+<P>
+Eliminating backing up among a list of keywords can also
+be done using a "catch-all" rule:
+
+
+
+<PRE>
+%%
+foo         return TOK_KEYWORD;
+foobar      return TOK_KEYWORD;
+
+[a-z]+      return TOK_ID;
+</PRE>
+
+<P>
+This is usually the best solution when appropriate.
+
+
+<P>
+Backing up messages tend to cascade.  With a complicated
+set of rules it's not uncommon to get hundreds of
+messages.  If one can decipher them, though, it often only
+takes a dozen or so rules to eliminate the backing up
+(though it's easy to make a mistake and have an error rule
+accidentally match a valid token.  A possible future <CODE>flex</CODE>
+feature will be to automatically add rules to eliminate
+backing up).
+
+
+<P>
+It's important to keep in mind that you gain the benefits
+of eliminating backing up only if you eliminate <EM>every</EM>
+instance of backing up.  Leaving just one means you gain
+nothing.
+
+
+<P>
+<VAR>Variable</VAR> trailing context (where both the leading and
+trailing parts do not have a fixed length) entails almost
+the same performance loss as <CODE>REJECT</CODE> (i.e., substantial).
+So when possible a rule like:
+
+
+
+<PRE>
+%%
+mouse|rat/(cat|dog)   run();
+</PRE>
+
+<P>
+is better written:
+
+
+
+<PRE>
+%%
+mouse/cat|dog         run();
+rat/cat|dog           run();
+</PRE>
+
+<P>
+or as
+
+
+
+<PRE>
+%%
+mouse|rat/cat         run();
+mouse|rat/dog         run();
+</PRE>
+
+<P>
+Note that here the special '|' action does <EM>not</EM> provide any
+savings, and can even make things worse (see Deficiencies
+/ Bugs below).
+
+
+<P>
+Another area where the user can increase a scanner's
+performance (and one that's easier to implement) arises from
+the fact that the longer the tokens matched, the faster
+the scanner will run.  This is because with long tokens
+the processing of most input characters takes place in the
+(short) inner scanning loop, and does not often have to go
+through the additional work of setting up the scanning
+environment (e.g., <CODE>yytext</CODE>) for the action.  Recall the
+scanner for C comments:
+
+
+
+<PRE>
+%x comment
+%%
+        int line_num = 1;
+
+"/*"         BEGIN(comment);
+
+&#60;comment&#62;[^*\n]*
+&#60;comment&#62;"*"+[^*/\n]*
+&#60;comment&#62;\n             ++line_num;
+&#60;comment&#62;"*"+"/"        BEGIN(INITIAL);
+</PRE>
+
+<P>
+This could be sped up by writing it as:
+
+
+
+<PRE>
+%x comment
+%%
+        int line_num = 1;
+
+"/*"         BEGIN(comment);
+
+&#60;comment&#62;[^*\n]*
+&#60;comment&#62;[^*\n]*\n      ++line_num;
+&#60;comment&#62;"*"+[^*/\n]*
+&#60;comment&#62;"*"+[^*/\n]*\n ++line_num;
+&#60;comment&#62;"*"+"/"        BEGIN(INITIAL);
+</PRE>
+
+<P>
+Now instead of each newline requiring the processing of
+another action, recognizing the newlines is "distributed"
+over the other rules to keep the matched text as long as
+possible.  Note that <EM>adding</EM> rules does <EM>not</EM> slow down the
+scanner!  The speed of the scanner is independent of the
+number of rules or (modulo the considerations given at the
+beginning of this section) how complicated the rules are
+with regard to operators such as '*' and '|'.
+
+
+<P>
+A final example in speeding up a scanner: suppose you want
+to scan through a file containing identifiers and
+keywords, one per line and with no other extraneous
+characters, and recognize all the keywords.  A natural first
+approach is:
+
+
+
+<PRE>
+%%
+asm      |
+auto     |
+break    |
+... etc ...
+volatile |
+while    /* it's a keyword */
+
+.|\n     /* it's not a keyword */
+</PRE>
+
+<P>
+To eliminate the back-tracking, introduce a catch-all
+rule:
+
+
+
+<PRE>
+%%
+asm      |
+auto     |
+break    |
+... etc ...
+volatile |
+while    /* it's a keyword */
+
+[a-z]+   |
+.|\n     /* it's not a keyword */
+</PRE>
+
+<P>
+Now, if it's guaranteed that there's exactly one word per
+line, then we can reduce the total number of matches by a
+half by merging in the recognition of newlines with that
+of the other tokens:
+
+
+
+<PRE>
+%%
+asm\n    |
+auto\n   |
+break\n  |
+... etc ...
+volatile\n |
+while\n  /* it's a keyword */
+
+[a-z]+\n |
+.|\n     /* it's not a keyword */
+</PRE>
+
+<P>
+One has to be careful here, as we have now reintroduced
+backing up into the scanner.  In particular, while <EM>we</EM> know
+that there will never be any characters in the input
+stream other than letters or newlines, <CODE>flex</CODE> can't figure
+this out, and it will plan for possibly needing to back up
+when it has scanned a token like "auto" and then the next
+character is something other than a newline or a letter.
+Previously it would then just match the "auto" rule and be
+done, but now it has no "auto" rule, only a "auto\n" rule.
+To eliminate the possibility of backing up, we could
+either duplicate all rules but without final newlines, or,
+since we never expect to encounter such an input and
+therefore don't how it's classified, we can introduce one
+more catch-all rule, this one which doesn't include a
+newline:
+
+
+
+<PRE>
+%%
+asm\n    |
+auto\n   |
+break\n  |
+... etc ...
+volatile\n |
+while\n  /* it's a keyword */
+
+[a-z]+\n |
+[a-z]+   |
+.|\n     /* it's not a keyword */
+</PRE>
+
+<P>
+Compiled with <SAMP>`-Cf'</SAMP>, this is about as fast as one can get a
+<CODE>flex</CODE> scanner to go for this particular problem.
+
+
+<P>
+A final note: <CODE>flex</CODE> is slow when matching NUL's,
+particularly when a token contains multiple NUL's.  It's best to
+write rules which match <EM>short</EM> amounts of text if it's
+anticipated that the text will often include NUL's.
+
+
+<P>
+Another final note regarding performance: as mentioned
+above in the section How the Input is Matched, dynamically
+resizing <CODE>yytext</CODE> to accommodate huge tokens is a slow
+process because it presently requires that the (huge) token
+be rescanned from the beginning.  Thus if performance is
+vital, you should attempt to match "large" quantities of
+text but not "huge" quantities, where the cutoff between
+the two is at about 8K characters/token.
+
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_17.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_17.html">previous</A>, <A HREF="flex_19.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_19.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>

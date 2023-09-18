@@ -1,0 +1,273 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - Incompatibilities</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_19.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_19.html">previous</A>, <A HREF="flex_21.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_21.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC20" HREF="flex_toc.html#TOC20" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC20">Incompatibilities with <CODE>lex</CODE> and POSIX</A></H2>
+
+<P>
+<CODE>flex</CODE> is a rewrite of the AT&#38;T Unix <CODE>lex</CODE> tool (the two
+implementations do not share any code, though), with some
+extensions and incompatibilities, both of which are of
+concern to those who wish to write scanners acceptable to
+either implementation.  Flex is fully compliant with the
+POSIX <CODE>lex</CODE> specification, except that when using <SAMP>`%pointer'</SAMP>
+(the default), a call to <SAMP>`unput()'</SAMP> destroys the contents of
+<CODE>yytext</CODE>, which is counter to the POSIX specification.
+
+
+<P>
+In this section we discuss all of the known areas of
+incompatibility between flex, AT&#38;T lex, and the POSIX
+specification.
+
+
+<P>
+<CODE>flex's</CODE> <SAMP>`-l'</SAMP> option turns on maximum compatibility with the
+original AT&#38;T <CODE>lex</CODE> implementation, at the cost of a major
+loss in the generated scanner's performance.  We note
+below which incompatibilities can be overcome using the <SAMP>`-l'</SAMP>
+option.
+
+
+<P>
+<CODE>flex</CODE> is fully compatible with <CODE>lex</CODE> with the following
+exceptions:
+
+
+
+<UL>
+<LI>
+
+The undocumented <CODE>lex</CODE> scanner internal variable <CODE>yylineno</CODE>
+is not supported unless <SAMP>`-l'</SAMP> or <SAMP>`%option yylineno'</SAMP> is used.
+<CODE>yylineno</CODE> should be maintained on a per-buffer basis, rather
+than a per-scanner (single global variable) basis.  <CODE>yylineno</CODE> is
+not part of the POSIX specification.
+
+<LI>
+
+The <SAMP>`input()'</SAMP> routine is not redefinable, though it
+may be called to read characters following whatever
+has been matched by a rule.  If <SAMP>`input()'</SAMP> encounters
+an end-of-file the normal <SAMP>`yywrap()'</SAMP> processing is
+done.  A "real" end-of-file is returned by
+<SAMP>`input()'</SAMP> as <CODE>EOF</CODE>.
+
+Input is instead controlled by defining the
+<CODE>YY_INPUT</CODE> macro.
+
+The <CODE>flex</CODE> restriction that <SAMP>`input()'</SAMP> cannot be
+redefined is in accordance with the POSIX
+specification, which simply does not specify any way of
+controlling the scanner's input other than by making
+an initial assignment to <CODE>yyin</CODE>.
+
+<LI>
+
+The <SAMP>`unput()'</SAMP> routine is not redefinable.  This
+restriction is in accordance with POSIX.
+
+<LI>
+
+<CODE>flex</CODE> scanners are not as reentrant as <CODE>lex</CODE> scanners.
+In particular, if you have an interactive scanner
+and an interrupt handler which long-jumps out of
+the scanner, and the scanner is subsequently called
+again, you may get the following message:
+
+
+<PRE>
+fatal flex scanner internal error--end of buffer missed
+</PRE>
+
+To reenter the scanner, first use
+
+
+<PRE>
+yyrestart( yyin );
+</PRE>
+
+Note that this call will throw away any buffered
+input; usually this isn't a problem with an
+interactive scanner.
+
+Also note that flex C++ scanner classes <EM>are</EM>
+reentrant, so if using C++ is an option for you, you
+should use them instead.  See "Generating C++
+Scanners" above for details.
+
+<LI>
+
+<SAMP>`output()'</SAMP> is not supported.  Output from the <SAMP>`ECHO'</SAMP>
+macro is done to the file-pointer <CODE>yyout</CODE> (default
+<CODE>stdout</CODE>).
+
+<SAMP>`output()'</SAMP> is not part of the POSIX specification.
+
+<LI>
+
+<CODE>lex</CODE> does not support exclusive start conditions
+(%x), though they are in the POSIX specification.
+
+<LI>
+
+When definitions are expanded, <CODE>flex</CODE> encloses them
+in parentheses.  With lex, the following:
+
+
+<PRE>
+NAME    [A-Z][A-Z0-9]*
+%%
+foo{NAME}?      printf( "Found it\n" );
+%%
+</PRE>
+
+will not match the string "foo" because when the
+macro is expanded the rule is equivalent to
+"foo[A-Z][A-Z0-9]*?" and the precedence is such that the
+'?' is associated with "[A-Z0-9]*".  With <CODE>flex</CODE>, the
+rule will be expanded to "foo([A-Z][A-Z0-9]*)?" and
+so the string "foo" will match.
+
+Note that if the definition begins with <SAMP>`^'</SAMP> or ends
+with <SAMP>`$'</SAMP> then it is <EM>not</EM> expanded with parentheses, to
+allow these operators to appear in definitions
+without losing their special meanings.  But the
+<SAMP>`&#60;s&#62;, /'</SAMP>, and <SAMP>`&#60;&#60;EOF&#62;&#62;'</SAMP> operators cannot be used in a
+<CODE>flex</CODE> definition.
+
+Using <SAMP>`-l'</SAMP> results in the <CODE>lex</CODE> behavior of no
+parentheses around the definition.
+
+The POSIX specification is that the definition be enclosed in
+parentheses.
+
+<LI>
+
+Some implementations of <CODE>lex</CODE> allow a rule's action to begin on
+a separate line, if the rule's pattern has trailing whitespace:
+
+
+<PRE>
+%%
+foo|bar&#60;space here&#62;
+  { foobar_action(); }
+</PRE>
+
+<CODE>flex</CODE> does not support this feature.
+
+<LI>
+
+The <CODE>lex</CODE> <SAMP>`%r'</SAMP> (generate a Ratfor scanner) option is
+not supported.  It is not part of the POSIX
+specification.
+
+<LI>
+
+After a call to <SAMP>`unput()'</SAMP>, <CODE>yytext</CODE> is undefined until
+the next token is matched, unless the scanner was
+built using <SAMP>`%array'</SAMP>.  This is not the case with <CODE>lex</CODE>
+or the POSIX specification.  The <SAMP>`-l'</SAMP> option does
+away with this incompatibility.
+
+<LI>
+
+The precedence of the <SAMP>`{}'</SAMP> (numeric range) operator
+is different.  <CODE>lex</CODE> interprets "abc{1,3}" as "match
+one, two, or three occurrences of 'abc'", whereas
+<CODE>flex</CODE> interprets it as "match 'ab' followed by one,
+two, or three occurrences of 'c'".  The latter is
+in agreement with the POSIX specification.
+
+<LI>
+
+The precedence of the <SAMP>`^'</SAMP> operator is different.  <CODE>lex</CODE>
+interprets "^foo|bar" as "match either 'foo' at the
+beginning of a line, or 'bar' anywhere", whereas
+<CODE>flex</CODE> interprets it as "match either 'foo' or 'bar'
+if they come at the beginning of a line".  The
+latter is in agreement with the POSIX specification.
+
+<LI>
+
+The special table-size declarations such as <SAMP>`%a'</SAMP>
+supported by <CODE>lex</CODE> are not required by <CODE>flex</CODE> scanners;
+<CODE>flex</CODE> ignores them.
+
+<LI>
+
+The name FLEX_SCANNER is #define'd so scanners may
+be written for use with either <CODE>flex</CODE> or <CODE>lex</CODE>.
+Scanners also include <CODE>YY_FLEX_MAJOR_VERSION</CODE> and
+<CODE>YY_FLEX_MINOR_VERSION</CODE> indicating which version of
+<CODE>flex</CODE> generated the scanner (for example, for the
+2.5 release, these defines would be 2 and 5
+respectively).
+</UL>
+
+<P>
+The following <CODE>flex</CODE> features are not included in <CODE>lex</CODE> or the
+POSIX specification:
+
+
+
+<PRE>
+C++ scanners
+%option
+start condition scopes
+start condition stacks
+interactive/non-interactive scanners
+yy_scan_string() and friends
+yyterminate()
+yy_set_interactive()
+yy_set_bol()
+YY_AT_BOL()
+&#60;&#60;EOF&#62;&#62;
+&#60;*&#62;
+YY_DECL
+YY_START
+YY_USER_ACTION
+YY_USER_INIT
+#line directives
+%{}'s around actions
+multiple actions on a line
+</PRE>
+
+<P>
+plus almost all of the flex flags.  The last feature in
+the list refers to the fact that with <CODE>flex</CODE> you can put
+multiple actions on the same line, separated with
+semicolons, while with <CODE>lex</CODE>, the following
+
+
+
+<PRE>
+foo    handle_foo(); ++num_foos_seen;
+</PRE>
+
+<P>
+is (rather surprisingly) truncated to
+
+
+
+<PRE>
+foo    handle_foo();
+</PRE>
+
+<P>
+<CODE>flex</CODE> does not truncate the action.  Actions that are not
+enclosed in braces are simply terminated at the end of the
+line.
+
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_19.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_19.html">previous</A>, <A HREF="flex_21.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_21.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>
