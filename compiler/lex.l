@@ -17,8 +17,6 @@ DIGIT [0-9]
 
 %%
 
-/* ==================== KEYWORDS ==================== */
-
 as  { printf("Found KW_AS: %s\n", yytext); }
 break   { printf("Found KW_BREAK: %s\n", yytext); }
 const   { printf("Found KW_CONST: %s\n", yytext); }
@@ -55,17 +53,12 @@ use    { printf("Found KW_USE: %s\n", yytext); }
 where    { printf("Found KW_WHERE: %s\n", yytext); }
 while    { printf("Found KW_WHILE: %s\n", yytext); }
 
+bool  { printf("Found TYPE_BOOL: %s\n", yytext); }
+i32  { printf("Found TYPE_I32: %s\n", yytext); }
+i64  { printf("Found TYPE_I64: %s\n", yytext); }
+f32  { printf("Found TYPE_F32: %s\n", yytext); }
+f64  { printf("Found TYPE_F64: %s\n", yytext); }
+String  { printf("Found TYPE_STRING: %s\n", yytext); }
 
 %%
 
-int main()
-{
-    const char* filename = "test.txt";
-    FILE *file = fopen(filename, "r");
-    yyin = file;
-
-    while (yylex() != 0);
-    fclose(file);
-
-    return 0;
-}
