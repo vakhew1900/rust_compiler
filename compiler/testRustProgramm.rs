@@ -412,4 +412,10 @@ fn main() {
     println!("point: {:?}", point);
     println!("reference_point: {:?}", reference_point);
 
+
+    /* Многострочный коммент Все, что находится между символами /* и */
+    pub fn my_method(&self) {
+                println!("Публичный метод");
+            }
+     */
 }
