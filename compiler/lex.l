@@ -1,18 +1,17 @@
 %option noyywrap
 %option never-interactive
 
-/* templates */
 DIGIT [0-9]
 
-/* start condition */
 %x STRING
-%x COMMENT
 %x ML_COMMENT
 
 %{
 	#include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+
+    char str[1024];
 %}
 
 %%
@@ -51,7 +50,7 @@ type    { printf("Found KW_TYPE: %s\n", yytext); }
 unsafe    { printf("Found KW_UNSAFE: %s\n", yytext); }
 use    { printf("Found KW_USE: %s\n", yytext); }
 where    { printf("Found KW_WHERE: %s\n", yytext); }
-while    { printf("Found KW_WHILE: %s\n", yytext); }
+while   { printf("Found KW_WHILE: %s\n", yytext); }
 
 bool  { printf("Found TYPE_BOOL: %s\n", yytext); }
 i32  { printf("Found TYPE_I32: %s\n", yytext); }
@@ -59,6 +58,13 @@ i64  { printf("Found TYPE_I64: %s\n", yytext); }
 f32  { printf("Found TYPE_F32: %s\n", yytext); }
 f64  { printf("Found TYPE_F64: %s\n", yytext); }
 String  { printf("Found TYPE_STRING: %s\n", yytext); }
+
+"/*" { strcpy(str,""); BEGIN(ML_COMMENT); }
+ <ML_COMMENT>[^*]* { strcat(str,yytext); }
+ <ML_COMMENT>"*"+[^/]* { strcat(str,yytext); }
+ <ML_COMMENT>"*"+"/" { printf("Found ML_COMMENT: %s\n", str);  BEGIN(INITIAL); }
+
+ \/\/[^\n]* { printf("Found COMMENT: %s\n", yytext); }
 
 %%
 
