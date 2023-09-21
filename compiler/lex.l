@@ -122,8 +122,31 @@ String  { printf("Found TYPE_STRING: %s\n", yytext); }
 
  \/\/[^\n]* { printf("Found COMMENT: %s\n", yytext); }
 
+\" { strcpy(str,""); BEGIN(STRING); }
+<STRING>[^\\\"]+ { strcat(str,yytext); }
+<STRING>\\n  { strcat(str,"\n"); }
+<STRING>\\r  { strcat(str,"\r"); }
+<STRING>\\t  { strcat(str,"\t"); }
+<STRING>\\0  { strcat(str,"\0"); }
+<STRING>\\\\ { strcat(str,"\\"); }
+<STRING>\\\" { strcat(str,"\""); }
+<STRING>\\x[0-7][a-zA-Z0-9] {
+    char string[2];
+    convertCharacterCodeToString(yytext, 2, string);
+    strcat(str, string);
+}
+<STRING>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL);}
+<STRING><<EOF>> { printf("STRING Error: there is no closing quotation mark"); BEGIN(INITIAL);}
+<STRING>\\ { printf("STRING Error: slash"); }
+
 [a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext);}
 [a-zA-Z_][a-zA-Z0-9_]*! { printf("Found MACROS: %s\n", yytext);}
 
 %%
+
+void convertCharacterCodeToString(char characterCode[], int startPosition, char *string)
+{
+    string[0] = strtol(characterCode + startPosition,NULL, 16);
+    string[1] = '\0';
+}
 
