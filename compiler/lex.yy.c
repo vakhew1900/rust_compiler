@@ -928,20 +928,23 @@ YY_RULE_SETUP
 #line 65 "compiler/lex.l"
 { printf("Found ML_COMMENT: %s\n", str);  BEGIN(INITIAL); }
 	YY_BREAK
+case YY_STATE_EOF(ML_COMMENT):
+#line 66 "compiler/lex.l"
+{ printf("ML_COMMENT Error: comments are not closed"); BEGIN(INITIAL);}
+	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 67 "compiler/lex.l"
+#line 68 "compiler/lex.l"
 { printf("Found COMMENT: %s\n", yytext); }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 69 "compiler/lex.l"
+#line 70 "compiler/lex.l"
 ECHO;
 	YY_BREAK
-#line 942 "lex.yy.c"
+#line 946 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STRING):
-case YY_STATE_EOF(ML_COMMENT):
 	yyterminate();
 
 	case YY_END_OF_BUFFER:
@@ -1800,6 +1803,6 @@ int main()
 	return 0;
 	}
 #endif
-#line 69 "compiler/lex.l"
+#line 70 "compiler/lex.l"
 
 

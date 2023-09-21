@@ -63,6 +63,7 @@ String  { printf("Found TYPE_STRING: %s\n", yytext); }
  <ML_COMMENT>[^*]* { strcat(str,yytext); }
  <ML_COMMENT>"*"+[^/]* { strcat(str,yytext); }
  <ML_COMMENT>"*"+"/" { printf("Found ML_COMMENT: %s\n", str);  BEGIN(INITIAL); }
+ <ML_COMMENT><<EOF>> { printf("ML_COMMENT Error: comments are not closed"); BEGIN(INITIAL);}
 
  \/\/[^\n]* { printf("Found COMMENT: %s\n", yytext); }
 
