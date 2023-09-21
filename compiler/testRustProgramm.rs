@@ -420,4 +420,17 @@ fn main() {
      */
 }
 
+/* ML_COMMENT START
+*/
+
+fn func_between_comment()
+{
+}
+
+/* ML_COMMENT FINISH
+*/
+
+
 // Comment
+
+/* Not Closed Comment

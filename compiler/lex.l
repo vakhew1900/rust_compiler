@@ -52,6 +52,7 @@ use    { printf("Found KW_USE: %s\n", yytext); }
 where    { printf("Found KW_WHERE: %s\n", yytext); }
 while   { printf("Found KW_WHILE: %s\n", yytext); }
 
+
 bool  { printf("Found TYPE_BOOL: %s\n", yytext); }
 i32  { printf("Found TYPE_I32: %s\n", yytext); }
 i64  { printf("Found TYPE_I64: %s\n", yytext); }
@@ -59,12 +60,70 @@ f32  { printf("Found TYPE_F32: %s\n", yytext); }
 f64  { printf("Found TYPE_F64: %s\n", yytext); }
 String  { printf("Found TYPE_STRING: %s\n", yytext); }
 
+
+"+"  { printf("Found OPERATOR_PLUS: %s\n", yytext); }
+"-"  { printf("Found OPERATOR_MINUS: %s\n", yytext); }
+"*"  { printf("Found OPERATOR_MUL: %s\n", yytext); }
+"/"  { printf("Found OPERATOR_DIV: %s\n", yytext); }
+"%"  { printf("Found OPERATOR_MOD: %s\n", yytext); }
+
+"="  { printf("Found OPERATOR_ASSIGNMENT: %s\n", yytext); }
+"=="  { printf("Found OPERATOR_EQUAL: %s\n", yytext); }
+"!="  { printf("Found OPERATOR_NOT_EQUAL: %s\n", yytext); }
+"<"  { printf("Found OPERATOR_LESS: %s\n", yytext); }
+">"  { printf("Found OPERATOR_MORE: %s\n", yytext); }
+"<="  { printf("Found OPERATOR_LESS_OR_EQUAL: %s\n", yytext); }
+">="  { printf("Found OPERATOR_MORE_OR_EQUAL: %s\n", yytext); }
+
+"&"  { printf("Found OPERATOR_AMPERSAND: %s\n", yytext); }
+"|"  { printf("Found OPERATOR_BIT_OR: %s\n", yytext); }
+"!"  { printf("Found OPERATOR_BIT_NOT: %s\n", yytext); }
+"^"  { printf("Found OPERATOR_BIT_XOR: %s\n", yytext); }
+"<<"  { printf("Found OPERATOR_BIT_LEFT_SHIFT: %s\n", yytext); }
+">>"  { printf("Found OPERATOR_BIT_RIGHT_SHIFT: %s\n", yytext); }
+
+"&&"  { printf("Found OPERATOR_AND: %s\n", yytext); }
+"||"  { printf("Found OPERATOR_OR: %s\n", yytext); }
+
+"+="  { printf("Found OPERATOR_PLUS_ASSIGNMENT: %s\n", yytext); }
+"-="  { printf("Found OPERATOR_MINUS_ASSIGNMENT: %s\n", yytext); }
+"*="  { printf("Found OPERATOR_MUL_ASSIGNMENT: %s\n", yytext); }
+"/="  { printf("Found OPERATOR_DIV_ASSIGNMENT: %s\n", yytext); }
+"%="  { printf("Found OPERATOR_MOD_ASSIGNMENT: %s\n", yytext); }
+"&="  { printf("Found OPERATOR_BIT_AND_ASSIGNMENT: %s\n", yytext); }
+"|="  { printf("Found OPERATOR_BIT_OR_ASSIGNMENT: %s\n", yytext); }
+"^="  { printf("Found OPERATOR_BIT_XOR_ASSIGNMENT: %s\n", yytext); }
+"<<="  { printf("Found OPERATOR_BIT_LEFT_SHIFT_ASSIGNMENT: %s\n", yytext); }
+">>="  { printf("Found OPERATOR_BIT_RIGHT_SHIFT_ASSIGNMENT: %s\n", yytext); }
+
+"."  { printf("Found OPERATOR_POINT: %s\n", yytext); }
+".."  { printf("Found OPERATOR_RANGE: %s\n", yytext); }
+"..="  { printf("Found OPERATOR_RANGE_ASSIGMENT: %s\n", yytext); }
+"->"  { printf("Found OPERATOR_ARROW: %s\n", yytext); }
+
+"("  { printf("Found LEFT_ROUND_BRACKET: %s\n", yytext); }
+")"  { printf("Found RIGHT_ROUND_BRACKET: %s\n", yytext); }
+"["  { printf("Found LEFT_SQUARE_BRACKET: %s\n", yytext); }
+"]"  { printf("Found RIGHT_SQUARE_BRACKET: %s\n", yytext); }
+"{"  { printf("Found LEFT_FIGURE_BRACKET: %s\n", yytext); }
+"}"  { printf("Found RIGHT_FIGURE_BRACKET: %s\n", yytext); }
+
+","  { printf("Found COMMA: %s\n", yytext); }
+";"  { printf("Found SEMICOLON: %s\n", yytext); }
+":"  { printf("Found COLON: %s\n", yytext); }
+"::"  { printf("Found TWO_COLON: %s\n", yytext); }
+
+
 "/*" { strcpy(str,""); BEGIN(ML_COMMENT); }
  <ML_COMMENT>[^*]* { strcat(str,yytext); }
  <ML_COMMENT>"*"+[^/]* { strcat(str,yytext); }
  <ML_COMMENT>"*"+"/" { printf("Found ML_COMMENT: %s\n", str);  BEGIN(INITIAL); }
+ <ML_COMMENT><<EOF>> { printf("ML_COMMENT Error: comments are not closed"); BEGIN(INITIAL);}
 
  \/\/[^\n]* { printf("Found COMMENT: %s\n", yytext); }
+
+[a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext);}
+[a-zA-Z_][a-zA-Z0-9_]*! { printf("Found MACROS: %s\n", yytext);}
 
 %%
 
