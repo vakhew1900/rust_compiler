@@ -1,10 +1,8 @@
 %option noyywrap
 %option never-interactive
 
-/* templates */
 DIGIT [0-9]
 
-/* start condition */
 %x STRING
 %x ML_COMMENT
 
@@ -64,8 +62,9 @@ String  { printf("Found TYPE_STRING: %s\n", yytext); }
 "/*" { strcpy(str,""); BEGIN(ML_COMMENT); }
  <ML_COMMENT>[^*]* { strcat(str,yytext); }
  <ML_COMMENT>"*"+[^/]* { strcat(str,yytext); }
- <ML_COMMENT>"*"+"/" { printf("Found ML_COMMENT: %s\n", yytext);  BEGIN(INITIAL); }
+ <ML_COMMENT>"*"+"/" { printf("Found ML_COMMENT: %s\n", str);  BEGIN(INITIAL); }
 
  \/\/[^\n]* { printf("Found COMMENT: %s\n", yytext); }
 
 %%
+
