@@ -3,6 +3,7 @@
 
 DIGIT [0-9]
 
+%x CHAR
 %x STRING
 %x ML_COMMENT
 
@@ -10,11 +11,13 @@ DIGIT [0-9]
 	#include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
-
-    char str[1024];
 %}
 
 %%
+
+%{
+	char str[1024];
+%}
 
 as  { printf("Found KW_AS: %s\n", yytext); }
 break   { printf("Found KW_BREAK: %s\n", yytext); }
@@ -138,6 +141,32 @@ String  { printf("Found TYPE_STRING: %s\n", yytext); }
 <STRING>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL);}
 <STRING><<EOF>> { printf("STRING Error: there is no closing quotation mark"); BEGIN(INITIAL);}
 <STRING>\\ { printf("STRING Error: slash"); }
+
+
+\' { strcpy(str,""); BEGIN(CHAR); }
+<CHAR>[^\\\']+ { strcat(str,yytext); }
+<CHAR>\\n  { strcat(str,"\n"); }
+<CHAR>\\r  { strcat(str,"\r"); }
+<CHAR>\\t  { strcat(str,"\t"); }
+<CHAR>\\0  { strcat(str,"\0"); }
+<CHAR>\\\\ { strcat(str,"\\"); }
+<CHAR>\\\' { strcat(str,"\'"); }
+<CHAR>\\x[0-7][a-zA-Z0-9] {
+    char string[2];
+    convertCharacterCodeToString(yytext, 2, string);
+    strcat(str, string);
+}
+<CHAR>\' {
+    if(strlen(str) == 1) {
+        printf("Found CHAR: %c\n", str[0]);
+    }
+    else {
+        printf("CHAR Error: more than one char in quote");
+    }
+    BEGIN(INITIAL);
+}
+<CHAR><<EOF>> { printf("CHAR Error: there is no closing quotation mark"); BEGIN(INITIAL);}
+<CHAR>\\ { printf("CHAR Error: slash"); }
 
 [a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext);}
 [a-zA-Z_][a-zA-Z0-9_]*! { printf("Found MACROS: %s\n", yytext);}
