@@ -188,15 +188,7 @@ fn main() {
     let result: Vec<_> = data.iter().map(|&x| x * 2).filter(|&x| x > 5).collect();
     println!("Итераторы: {:?}", result);
 
-    // 7. Цикл с использованием вложенной метки
-    'outer: for i in 0..3 {
-        for j in 0..3 {
-            if i == 1 && j == 1 {
-                break 'outer;
-            }
-            println!("Цикл с меткой: ({}, {})", i, j);
-        }
-    }
+
 
     // Функции
     // Функция без параметров и возвращаемого значения
@@ -244,8 +236,8 @@ fn main() {
 
     fn double(x: i32) -> i32 {
         x * 2
+        let x = 0o_;
     }
-
     fn use_higher_order_function() {
         let result = apply_function(double, 5);
         println!("Результат функции высшего порядка: {}", result); // Вывод: Результат функции высшего порядка: 10
@@ -255,7 +247,6 @@ fn main() {
     fn generic_function<T>(x: T) {
         println!("Значение: {:?}", x);
     }
-
 
     //Ввод
     io::stdin().read_line(&mut input).expect("Не удалось прочитать строку");
@@ -294,7 +285,6 @@ fn main() {
     let cat = Cat { name: "Тузик".to_string() };
     dog.speak();
     cat.speak();
-
     // Массивы
     // Массив массивов
     let matrix: [[i32; 3]; 3] = [
@@ -309,7 +299,6 @@ fn main() {
         vec![4, 5, 6],
         vec![7, 8, 9],
     ];
-
     // Логические операции
     // Комбинирование
     let a = true;
@@ -458,7 +447,6 @@ static let z = 0b________1;
 //integer in 16 system
 static let x = 0xff;
 static let y = 0xffi32;
-static let z = 0x_1fi32
-
+static let z = 0x_1fi32;
 
 /* Not Closed Comment

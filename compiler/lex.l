@@ -14,6 +14,7 @@ DIGIT [0-9]
     #include <ctype.h>
 
     char str[1024];
+    int lineNumber = 1;
 %}
 
 %%
@@ -23,6 +24,8 @@ DIGIT [0-9]
     void removeType(char *typeName);
 	void convertCharacterCodeToString(char characterCode[], int startPosition, char *string);
 %}
+
+\n { lineNumber++; }
 
 as { printf("Found KW_AS: %s\n", yytext); }
 break { printf("Found KW_BREAK: %s\n", yytext); }
@@ -123,15 +126,17 @@ String { printf("Found TYPE_STRING: %s\n", yytext); }
 
 
 "/*" { strcpy(str,""); BEGIN(ML_COMMENT); }
- <ML_COMMENT>[^*]* { strcat(str,yytext); }
+ <ML_COMMENT>[^*\n]* { strcat(str,yytext); }
+ <ML_COMMENT>\n { lineNumber++; }
  <ML_COMMENT>"*"+[^/]* { strcat(str,yytext); }
  <ML_COMMENT>"*"+"/" { printf("Found ML_COMMENT: %s\n", str);  BEGIN(INITIAL); }
- <ML_COMMENT><<EOF>> { printf("ML_COMMENT Error: comments are not closed"); BEGIN(INITIAL);}
+ <ML_COMMENT><<EOF>> { printf("ML_COMMENT Error in line %d: comments are not closed\n", lineNumber); BEGIN(INITIAL);}
 
  \/\/[^\n]* { printf("Found COMMENT: %s\n", yytext); }
 
 \" { strcpy(str,""); BEGIN(STRING); }
-<STRING>[^\\\"]+ { strcat(str,yytext); }
+<STRING>[^\\\"\n]+ { strcat(str,yytext); }
+<STRING>\n  { lineNumber++; }
 <STRING>\\n  { strcat(str,"\n"); }
 <STRING>\\r  { strcat(str,"\r"); }
 <STRING>\\t  { strcat(str,"\t"); }
@@ -144,8 +149,8 @@ String { printf("Found TYPE_STRING: %s\n", yytext); }
     strcat(str, string);
 }
 <STRING>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL);}
-<STRING><<EOF>> { printf("STRING Error: there is no closing quotation mark"); BEGIN(INITIAL);}
-<STRING>\\ { printf("STRING Error: slash"); }
+<STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
+<STRING>\\ { printf("STRING Error in line %d: slash", lineNumber); }
 
 
 \' { strcpy(str,""); BEGIN(CHAR); }
@@ -162,36 +167,36 @@ String { printf("Found TYPE_STRING: %s\n", yytext); }
     strcat(str, string);
 }
 <CHAR>\' {
-    if(strlen(str) == 1) {
+    if(strlen(str) <= 1) {
         printf("Found CHAR: %c\n", str[0]);
     }
     else {
-        printf("CHAR Error: more than one char in quote");
+        printf("CHAR Error in line %d: more than one char in quote", lineNumber);
     }
     BEGIN(INITIAL);
 }
-<CHAR><<EOF>> { printf("CHAR Error: there is no closing quotation mark"); BEGIN(INITIAL);}
-<CHAR>\\ { printf("CHAR Error: slash"); }
+<CHAR><<EOF>> { printf("CHAR Error in line %d: there is no closing quotation mark", lineNumber); BEGIN(INITIAL);}
+<CHAR>\\ { printf("CHAR Error in line %d: slash", lineNumber); }
 
 
-[0-9][\t \n]*[_0-9]*(i32)? {
+[0-9][_0-9]*(i32)? {
 
     removeType("i32");
     removeUnderline();
-    printf("Found DECIMAL_NUMBER: %d\n", atoi(yytext));
+    printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
 }
 
 0b([_0-1])+(i32)? {
 
     removeType("i32");
     removeUnderline();
-    if(strlen(yytext) > 2)
+    if(strlen(str) > 2)
     {
-         printf("Found BIN_NUMBER: %d\n", strtol(yytext + 2, NULL, 2));
+         printf("Found BIN_NUMBER: %d\n", strtol(str + 2, NULL, 2));
     }
     else
     {
-        printf("NUMBER Error: incorrect format");
+        printf("NUMBER Error in line %d: incorrect format\n", lineNumber);
     }
 }
 
@@ -199,13 +204,13 @@ String { printf("Found TYPE_STRING: %s\n", yytext); }
 
     removeType("i32");
     removeUnderline();
-    if(strlen(yytext) > 2)
+    if(strlen(str) > 2)
     {
-         printf("Found OCTAL_NUMBER: %d\n", strtol(yytext + 2, NULL, 8));
+         printf("Found OCTAL_NUMBER: %d\n", strtol(str + 2, NULL, 8));
     }
     else
     {
-        printf("NUMBER Error: incorrect format");
+        printf("NUMBER Error in line %d: incorrect format\n", lineNumber);
     }
 }
 
@@ -213,13 +218,13 @@ String { printf("Found TYPE_STRING: %s\n", yytext); }
 
     removeType("i32");
     removeUnderline();
-    if(strlen(yytext) > 2)
+    if(strlen(str) > 2)
     {
-         printf("Found HEXADECIMAL_NUMBER: %d\n", strtol(yytext + 2, NULL, 16));
+         printf("Found HEXADECIMAL_NUMBER: %d\n", strtol(str + 2, NULL, 16));
     }
     else
     {
-        printf("NUMBER Error: incorrect format");
+        printf("NUMBER Error in line %d: incorrect format\n", lineNumber);
     }
 }
 
@@ -251,10 +256,11 @@ void removeUnderline()
 
 void removeType(char *typeName)
 {
-    char* p = strstr(yytext, typeName);
+    strcpy(str, yytext);
+    char* p = strstr(str, typeName);
     if(p)
     {
-        int pos = strlen(yytext)  - strlen(typeName);
-        yytext[pos] = '\0';
+        int pos = strlen(str)  - strlen(typeName);
+        str[pos] = '\0';
     }
 }
