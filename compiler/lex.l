@@ -228,6 +228,18 @@ String { printf("Found TYPE_STRING: %s\n", yytext); }
     }
 }
 
+[0-9][_0-9]*\.([0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?)?(f64)? {
+    removeType("f64");
+    removeUnderline();
+    printf("Found DOUBLE: %lf\n", atof(str), str);
+}
+
+[0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?(f64)? {
+    removeType("f64");
+    removeUnderline();
+    printf("Found DOUBLE: %lf\n", atof(str));
+}
+
 [a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext);}
 [a-zA-Z_][a-zA-Z0-9_]*! { printf("Found MACROS: %s\n", yytext);}
 
@@ -258,9 +270,9 @@ void removeType(char *typeName)
 {
     strcpy(str, yytext);
     char* p = strstr(str, typeName);
-    if(p)
+    if(p != NULL)
     {
         int pos = strlen(str)  - strlen(typeName);
-        str[pos] = '\0';
+        str[pos] = 0;
     }
 }

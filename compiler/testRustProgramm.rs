@@ -449,4 +449,13 @@ static let x = 0xff;
 static let y = 0xffi32;
 static let z = 0x_1fi32;
 
+// Double
+static let x = 1234.0f64;
+static let y = 125.0;
+static let z = 1.5E+5;
+static let x = 1.6E-5;
+static let y = 1.3444e+10;
+static let z = 123.;
+static let x = 111.1E+99;
+static let y = 12E+99_f64;
 /* Not Closed Comment
