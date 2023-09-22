@@ -443,4 +443,22 @@ fn func_between_comment()
 
 // Comment
 
+/* ML_COMMENT1 */  static let between_comment = 10; /* ML_COMMENT2 */
+
+//integer in 8 system
+static let x = 0o70;
+static let y = 0o70_i32;
+static let z = 0o_70_i32;
+
+//integer in 2 system
+static let x = 0b1111_1111_1001_0000;
+static let y = 0b1111_1111_1001_0000i32;
+static let z = 0b________1;
+
+//integer in 16 system
+static let x = 0xff;
+static let y = 0xffi32;
+static let z = 0x_1fi32
+
+
 /* Not Closed Comment
