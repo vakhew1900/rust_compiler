@@ -11,6 +11,7 @@ DIGIT [0-9]
 	#include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+    #include <ctype.h>
 
     char str[1024];
 %}
@@ -172,13 +173,14 @@ String  { printf("Found TYPE_STRING: %s\n", yytext); }
 <CHAR><<EOF>> { printf("CHAR Error: there is no closing quotation mark"); BEGIN(INITIAL);}
 <CHAR>\\ { printf("CHAR Error: slash"); }
 
-(-)?[0-9][_0-9]+ {
+[0-9][_0-9]* {
     removeUnderline();
-    printf("Found DECIMAL_NUMBER: %d", atoi(yytext));
+    printf("Found DECIMAL_NUMBER: %d\n", atoi(yytext));
 }
 
-(-)?[0-9][_0-9]+i32 {
+[0-9][\t \n]*[_0-9]*i32 {
 
+    removeType("i32");
     removeUnderline();
     printf("Found DECIMAL_NUMBER: %d\n", atoi(yytext));
 }
@@ -199,7 +201,7 @@ void removeUnderline()
   int pos = 0;
   for(int i = 0; i < strlen(yytext); i++)
   {
-        if(yytext[i] != '_')
+        if(yytext[i] != '_' && !isspace(yytext[i]))
         {
             str[pos++] = yytext[i];
         }
@@ -211,6 +213,6 @@ void removeUnderline()
 
 void removeType(char *typeName)
 {
-    int pos = strlen(yytext) - 1 - strlen(typeName);
+    int pos = strlen(yytext)  - strlen(typeName);
     yytext[pos] = '\0';
 }

@@ -5,6 +5,9 @@ fn main() {
 
     // Integer
     let x = -1;
+    let x1 = - 1;
+    let x2 = -  1;
+    let x3 = -  3;
     let y = 10;
     let z = 10i32;
     let w = 50_10_10;
