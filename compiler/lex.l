@@ -11,12 +11,16 @@ DIGIT [0-9]
 	#include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+
+    char str[1024];
 %}
 
 %%
 
 %{
-	char str[1024];
+    void removeUnderline();
+    void removeType(char *typeName);
+	void convertCharacterCodeToString(char characterCode[], int startPosition, char *string);
 %}
 
 as  { printf("Found KW_AS: %s\n", yytext); }
@@ -168,6 +172,17 @@ String  { printf("Found TYPE_STRING: %s\n", yytext); }
 <CHAR><<EOF>> { printf("CHAR Error: there is no closing quotation mark"); BEGIN(INITIAL);}
 <CHAR>\\ { printf("CHAR Error: slash"); }
 
+(-)?[0-9][_0-9]+ {
+    removeUnderline();
+    printf("Found DECIMAL_NUMBER: %d", atoi(yytext));
+}
+
+(-)?[0-9][_0-9]+i32 {
+
+    removeUnderline();
+    printf("Found DECIMAL_NUMBER: %d\n", atoi(yytext));
+}
+
 [a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext);}
 [a-zA-Z_][a-zA-Z0-9_]*! { printf("Found MACROS: %s\n", yytext);}
 
@@ -179,3 +194,23 @@ void convertCharacterCodeToString(char characterCode[], int startPosition, char 
     string[1] = '\0';
 }
 
+void removeUnderline()
+{
+  int pos = 0;
+  for(int i = 0; i < strlen(yytext); i++)
+  {
+        if(yytext[i] != '_')
+        {
+            str[pos++] = yytext[i];
+        }
+  }
+
+  str[pos] = '\0';
+  strcpy(yytext, str);
+}
+
+void removeType(char *typeName)
+{
+    int pos = strlen(yytext) - 1 - strlen(typeName);
+    yytext[pos] = '\0';
+}
