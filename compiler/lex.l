@@ -26,6 +26,7 @@ DIGIT [0-9]
 %}
 
 \n { lineNumber++; }
+" " { }
 
 as { printf("Found KW_AS: %s\n", yytext); }
 break { printf("Found KW_BREAK: %s\n", yytext); }
@@ -275,4 +276,26 @@ void removeType(char *typeName)
         int pos = strlen(str)  - strlen(typeName);
         str[pos] = 0;
     }
+}
+
+int main(int argc, char** argv) {
+
+    if (argc != 2) {
+        printf("Filename is not found");
+        return 1;
+    }
+
+    const char *filename= argv[1];
+    
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("File opening error");
+        return 1;
+    }
+
+    yyin = file;
+    yylex();
+    fclose(file);
+
+    return 0;
 }
