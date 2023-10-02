@@ -169,8 +169,12 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
     strcat(str, string);
 }
 <CHAR>\' {
-    if(strlen(str) <= 1) {
-        printf("Found CHAR: %c\n", str[0]);
+    if(strlen(str) == 1) {
+        printf("Found CHAR:  %c\n", str[0]);
+    }
+    else if(strlen(str) == 0)
+    {
+        printf("CHAR Error in line %d: empty char literal\n", lineNumber);
     }
     else {
         printf("CHAR Error in line %d: more than one char in quote", lineNumber);
