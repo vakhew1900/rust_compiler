@@ -71,6 +71,7 @@ i64 { printf("Found TYPE_I64: %s\n", yytext); }
 f32 { printf("Found TYPE_F32: %s\n", yytext); }
 f64 { printf("Found TYPE_F64: %s\n", yytext); }
 String { printf("Found TYPE_STRING: %s\n", yytext); }
+char { printf("Found TYPE_CHAR: %s\n", yytext); }
 
 
 "+" { printf("Found OPERATOR_PLUS: %s\n", yytext); }
