@@ -115,7 +115,8 @@ fn main() {
     // Строковые литералы аналогично
     let quote_escape = "Это строка с символами \" внутри";
     let ascii_escape = "ASCII символы: \x48\x65\x6C\x6C\x6F";
-    let unicode_escape = "Символы Unicode: \u{2764} \u{1F603}";
+    let unicode_escape = "Символы Unicode: \u{2764} \u{1F603} \u{0041}";
+    let unicode_escape = "Символы Unicode: \u{0042} \u{0043} \u{0041}";
 
     // Управляющие структуры
     // if
@@ -460,6 +461,9 @@ static let y = 1.3444e+10;
 static let z = 123.;
 static let x = 111.1E+99;
 static let y = 12E+99_f64;
+static tmp1 = '\u{002F}';
+static tmp1 = '\u{132F}';
+static xy = 'xy';
 
 // if (x == 222) {let z = 64 ;}
 let 121212incorrextVar = 1;

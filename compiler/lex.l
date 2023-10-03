@@ -145,6 +145,20 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 <STRING>\\0  { strcat(str,"\0"); }
 <STRING>\\\\ { strcat(str,"\\"); }
 <STRING>\\\" { strcat(str,"\""); }
+<STRING>\\u\{[0-9a-fA-F]{4}\} {
+    int x = strtol(yytext + 3,NULL, 16); 
+    if(x <= 127)
+    {
+        char tmp[2];
+        tmp[0] = x;
+        tmp[1] = 0;
+        strcat(str, tmp);
+    }
+    else
+    {
+     printf("CHAR Error in line %d: Unicode are not supported\n", lineNumber); 
+    }
+}
 <STRING>\\x[0-7][a-zA-Z0-9] {
     char string[2];
     convertCharacterCodeToString(yytext, 2, string);
@@ -152,7 +166,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 }
 <STRING>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL);}
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
-<STRING>\\ { printf("STRING Error in line %d: slash", lineNumber); }
+<STRING>\\ { printf("STRING Error in line %d: slash\n", lineNumber); }
 
 
 \' { strcpy(str,""); BEGIN(CHAR); }
@@ -163,6 +177,20 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 <CHAR>\\0 { strcat(str,"\0"); }
 <CHAR>\\\\ { strcat(str,"\\"); }
 <CHAR>\\\' { strcat(str,"\'"); }
+<CHAR>\\u\{[0-9a-fA-F]{4}\} {
+    int x = strtol(yytext + 3,NULL, 16); 
+    if(x <= 127)
+    {
+        char tmp[2];
+        tmp[0] = x;
+        tmp[1] = 0;
+        strcat(str, tmp);
+    }
+    else
+    {
+     printf("CHAR Error in line %d: Unicode are not supported\n", lineNumber); 
+    }
+}
 <CHAR>\\x[0-7][a-zA-Z0-9] {
     char string[2];
     convertCharacterCodeToString(yytext, 2, string);
@@ -177,12 +205,12 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
         printf("CHAR Error in line %d: empty char literal\n", lineNumber);
     }
     else {
-        printf("CHAR Error in line %d: more than one char in quote", lineNumber);
+        printf("CHAR Error in line %d: more than one char in quote\n", lineNumber);
     }
     BEGIN(INITIAL);
 }
-<CHAR><<EOF>> { printf("CHAR Error in line %d: there is no closing quotation mark", lineNumber); BEGIN(INITIAL);}
-<CHAR>\\ { printf("CHAR Error in line %d: slash", lineNumber); }
+<CHAR><<EOF>> { printf("CHAR Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
+<CHAR>\\ { printf("CHAR Error in line %d: slash\n", lineNumber); }
 
 
 [0-9][_0-9]*(i32)? {
