@@ -462,7 +462,14 @@ static let x = 111.1E+99;
 static let y = 12E+99_f64;
 
 // if (x == 222) {let z = 64 ;}
+let 121212incorrextVar = 1;
+0invalidSuffix;
+123AFB43;
+0b010a;
+0xAB_CD_EF_GH;
+0b1111_f32; 
 
+$asdasfmlkfa
 
 /* Not Closed Comment
 

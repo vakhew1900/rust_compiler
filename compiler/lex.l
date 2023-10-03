@@ -248,6 +248,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 
 [a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext);}
 [a-zA-Z_][a-zA-Z0-9_]*! { printf("Found MACROS: %s\n", yytext);}
+[0-9]*[a-zA-Z_][a-zA-Z0-9_]* { printf("Error in line %d: incorrect IDENTIFIER\n", lineNumber); }
 
 %%
 
@@ -304,3 +305,5 @@ int main(int argc, char** argv) {
 
     return 0;
 }
+
+
