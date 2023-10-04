@@ -149,10 +149,9 @@ Found STRING: Это множественная    строка,    состоя
 Found SEMICOLON: ;
 Found COMMENT: // Unicode и символы
 Found KW_LET: let
-Found IDENTIFIER: unicode_heart
+Found IDENTIFIER: unicode_Q
 Found OPERATOR_ASSIGNMENT: =
-CHAR Error in line 33: Unicode does not supported
-CHAR Error in line 33: empty char literal
+Found CHAR:  Q
 Found SEMICOLON: ;
 Found COMMENT: // Escaping
 Found KW_LET: let
@@ -476,9 +475,10 @@ Found CHAR:  A
 Found SEMICOLON: ;
 Found COMMENT: // \xHH - ASCII символы в шестнадцатеричной форме \x7F - предел)
 Found KW_LET: let
-Found IDENTIFIER: unicode_heart
+Found IDENTIFIER: unicode_symb
 Found OPERATOR_ASSIGNMENT: =
-Found CHAR:  '
+CHAR Error in line 113: Unicode does not supported
+CHAR Error in line 113: empty char literal
 Found SEMICOLON: ;
 Found COMMENT: //\u{XXXX} - Unicode символы \u{10FFFF} - предел
 Found COMMENT: // Строковые литералы аналогично
@@ -492,13 +492,7 @@ Found IDENTIFIER: ascii_escape
 Found OPERATOR_ASSIGNMENT: =
 Found STRING: ASCII символы: Hello
 Found SEMICOLON: ;
-Found KW_LET: let
-Found IDENTIFIER: unicode_escape
-Found OPERATOR_ASSIGNMENT: =
-CHAR Error in line 118: Unicode does not supported
-STRING Error in line 118: slash
-Found STRING: Символы Unicode:  u{1F603} A
-Found SEMICOLON: ;
+Found COMMENT: // Hello
 Found KW_LET: let
 Found IDENTIFIER: unicode_escape
 Found OPERATOR_ASSIGNMENT: =
@@ -960,7 +954,7 @@ Found DECIMAL_NUMBER: 2
 Found KW_LET: let
 Found IDENTIFIER: x
 Found OPERATOR_ASSIGNMENT: =
-NUMBER Error in line 240: incorrect format
+NUMBER Error in line 239: incorrect format
 Found SEMICOLON: ;
 Found RIGHT_FIGURE_BRACKET: }
 Found KW_FN: fn
@@ -1679,7 +1673,7 @@ Found IDENTIFIER: x
 Found COLON: :
 Found TYPE_CHAR: char
 Found OPERATOR_ASSIGNMENT: =
-CHAR Error in line 422: empty char literal
+CHAR Error in line 421: empty char literal
 Found SEMICOLON: ;
 Found RIGHT_FIGURE_BRACKET: }
 Found ML_COMMENT:  ML_COMMENT START
@@ -1813,19 +1807,21 @@ Found SEMICOLON: ;
 Found KW_STATIC: static
 Found IDENTIFIER: tmp1
 Found OPERATOR_ASSIGNMENT: =
-CHAR Error in line 465: Unicode does not supported
-CHAR Error in line 465: empty char literal
+CHAR Error in line 464: Unicode does not supported
+CHAR Error in line 464: empty char literal
 Found SEMICOLON: ;
 Found KW_STATIC: static
 Found IDENTIFIER: xy
 Found OPERATOR_ASSIGNMENT: =
-CHAR Error in line 466: more than one char in quote
+CHAR Error in line 465: more than one char in quote
 Found SEMICOLON: ;
 Found COMMENT: // if (x == 222) {let z = 64 ;}
 Found KW_LET: let
-Error in line 469: incorrect IDENTIFIER
+Error in line 468: incorrect IDENTIFIER
 Found OPERATOR_ASSIGNMENT: =
 Found DECIMAL_NUMBER: 1
+Found SEMICOLON: ;
+Error in line 469: incorrect IDENTIFIER
 Found SEMICOLON: ;
 Error in line 470: incorrect IDENTIFIER
 Found SEMICOLON: ;
@@ -1835,7 +1831,5 @@ Error in line 472: incorrect IDENTIFIER
 Found SEMICOLON: ;
 Error in line 473: incorrect IDENTIFIER
 Found SEMICOLON: ;
-Error in line 474: incorrect IDENTIFIER
-Found SEMICOLON: ;
 $Found IDENTIFIER: asdasfmlkfa
-ML_COMMENT Error in line 480: comment are not closed
+ML_COMMENT Error in line 479: comment are not closed

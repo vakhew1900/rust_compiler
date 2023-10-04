@@ -30,7 +30,7 @@ fn main() {
     состоящая из нескольких строк.";
 
     // Unicode и символы
-    let unicode_heart = '\u{2764}';
+    let unicode_Q = '\u{0051}';
 
     // Escaping
     let escaped_string = "Это строка с символами: \\n (новая строка), \\t (табуляция)";
@@ -110,12 +110,11 @@ fn main() {
     let single_quote = '\'';    // Одинарная кавычка
     let double_quote = '\"';    // Двойная кавычка
     let hex_escape = '\x41';    // \xHH - ASCII символы в шестнадцатеричной форме \x7F - предел)
-    let unicode_heart = '\u{27__6_4__}';  //\u{XXXX} - Unicode символы \u{10FFFF} - предел
+    let unicode_symb = '\u{100__6___}';  //\u{XXXX} - Unicode символы \u{10FFFF} - предел
 
     // Строковые литералы аналогично
     let quote_escape = "Это строка с символами \" внутри";
-    let ascii_escape = "ASCII символы: \x48\x65\x6C\x6C\x6F";
-    let unicode_escape = "Символы Unicode: \u{2764} \u{1F603} \u{0041}";
+    let ascii_escape = "ASCII символы: \x48\x65\x6C\x6C\x6F"; // Hello
     let unicode_escape = "Символы Unicode: \u{0042} \u{0043} \u{0041}";
 
     // Управляющие структуры
