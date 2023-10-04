@@ -132,7 +132,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
  <ML_COMMENT>\n { lineNumber++; }
  <ML_COMMENT>"*"+[^/]* { strcat(str,yytext); }
  <ML_COMMENT>"*"+"/" { printf("Found ML_COMMENT: %s\n", str);  BEGIN(INITIAL); }
- <ML_COMMENT><<EOF>> { printf("ML_COMMENT Error in line %d: comments are not closed\n", lineNumber); BEGIN(INITIAL);}
+ <ML_COMMENT><<EOF>> { printf("ML_COMMENT Error in line %d: comment are not closed\n", lineNumber); BEGIN(INITIAL);}
 
  \/\/[^\n]* { printf("Found COMMENT: %s\n", yytext); }
 
@@ -145,7 +145,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 <STRING>\\0  { strcat(str,"\0"); }
 <STRING>\\\\ { strcat(str,"\\"); }
 <STRING>\\\" { strcat(str,"\""); }
-<STRING>\\u\{[0-9a-fA-F]{4}\} {
+<STRING>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
     int x = strtol(yytext + 3,NULL, 16); 
     if(x <= 127)
     {
@@ -156,7 +156,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
     }
     else
     {
-     printf("CHAR Error in line %d: Unicode are not supported\n", lineNumber); 
+     printf("CHAR Error in line %d: Unicode does not supported\n", lineNumber);
     }
 }
 <STRING>\\x[0-7][a-zA-Z0-9] {
@@ -177,7 +177,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 <CHAR>\\0 { strcat(str,"\0"); }
 <CHAR>\\\\ { strcat(str,"\\"); }
 <CHAR>\\\' { strcat(str,"\'"); }
-<CHAR>\\u\{[0-9a-fA-F]{4}\} {
+<CHAR>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
     int x = strtol(yytext + 3,NULL, 16); 
     if(x <= 127)
     {
@@ -188,7 +188,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
     }
     else
     {
-     printf("CHAR Error in line %d: Unicode are not supported\n", lineNumber); 
+     printf("CHAR Error in line %d: Unicode does not supported\n", lineNumber);
     }
 }
 <CHAR>\\x[0-7][a-zA-Z0-9] {

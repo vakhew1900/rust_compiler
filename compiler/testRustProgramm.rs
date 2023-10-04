@@ -49,7 +49,7 @@ fn main() {
     let char1: char = 'A';
     let char2: char = 'Б';
     let escaped_char = '\n';
-    let unicode_char = '\u{2764}';
+    let unicode_char = '\u{276__4__________}';
 
     // Арифметические операции
     let sum = integer1 + integer2;
@@ -110,7 +110,7 @@ fn main() {
     let single_quote = '\'';    // Одинарная кавычка
     let double_quote = '\"';    // Двойная кавычка
     let hex_escape = '\x41';    // \xHH - ASCII символы в шестнадцатеричной форме \x7F - предел)
-    let unicode_heart = '\u{27__6_4_}';  //\u{XXXX} - Unicode символы \u{10FFFF} - предел
+    let unicode_heart = '\u{27__6_4__}';  //\u{XXXX} - Unicode символы \u{10FFFF} - предел
 
     // Строковые литералы аналогично
     let quote_escape = "Это строка с символами \" внутри";
