@@ -1,0 +1,1841 @@
+ 
+Found KW_FN: fn
+Found IDENTIFIER: main
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found LEFT_FIGURE_BRACKET: {
+Found COMMENT: // Дополнительные ключевые слова
+Found KW_LET: let
+Found IDENTIFIER: array
+Found OPERATOR_ASSIGNMENT: =
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 1
+Found COMMA: ,
+Found DECIMAL_NUMBER: 2
+Found COMMA: ,
+Found DECIMAL_NUMBER: 3
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: vector
+Found OPERATOR_ASSIGNMENT: =
+Found MACROS: vec!
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 4
+Found COMMA: ,
+Found DECIMAL_NUMBER: 5
+Found COMMA: ,
+Found DECIMAL_NUMBER: 6
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found COMMENT: // Создание вектора (динамический массив)
+Found COMMENT: // Integer
+Found KW_LET: let
+Found IDENTIFIER: x
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_MINUS: -
+Found DECIMAL_NUMBER: 1
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: x1
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_MINUS: -
+Found DECIMAL_NUMBER: 1
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: x2
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_MINUS: -
+Found DECIMAL_NUMBER: 1
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: x3
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_MINUS: -
+Found DECIMAL_NUMBER: 3
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: y
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 10
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: z
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 10
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: w
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 501010
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: v
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 401010
+Found SEMICOLON: ;
+Found COMMENT: // Строковые константы
+Found KW_LET: let
+Found IDENTIFIER: string1
+Found COLON: :
+Found OPERATOR_AMPERSAND: &
+Found IDENTIFIER: str
+Found OPERATOR_ASSIGNMENT: =
+Found STRING: Привет, мир!
+Found SEMICOLON: ;
+Found COMMENT: // Строка в двойных кавычках
+Found KW_LET: let
+Found IDENTIFIER: string2
+Found COLON: :
+Found OPERATOR_AMPERSAND: &
+Found IDENTIFIER: str
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: r
+Found STRING: Это строка с 'ро' внутри
+Found SEMICOLON: ;
+Found COMMENT: // Raw string
+Found COMMENT: // Raw строковый литерал в тройных кавычках
+Found KW_LET: let
+Found IDENTIFIER: raw_triple_quoted
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: r
+###Found STRING: Это 
+Found IDENTIFIER: raw
+Found STRING:  строка с тройными кавычками
+###Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: string3
+Found COLON: :
+Found TYPE_STRING: String
+Found OPERATOR_ASSIGNMENT: =
+Found TYPE_STRING: String
+Found TWO_COLON: ::
+Found IDENTIFIER: from
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Это строка String
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Строка типа String
+Found KW_LET: let
+Found IDENTIFIER: string4
+Found COLON: :
+Found TYPE_STRING: String
+Found OPERATOR_ASSIGNMENT: =
+Found STRING: Это тоже строка String
+Found OPERATOR_POINT: .
+Found IDENTIFIER: to_string
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Использование to_string()
+Found COMMENT: // Конкатенация строк
+Found KW_LET: let
+Found IDENTIFIER: concat_string
+Found OPERATOR_ASSIGNMENT: =
+Found MACROS: format!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: {} {}
+Found COMMA: ,
+Found IDENTIFIER: string1
+Found COMMA: ,
+Found IDENTIFIER: string2
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Множественные строки (String Literals)
+Found KW_LET: let
+Found IDENTIFIER: multiline_string
+Found OPERATOR_ASSIGNMENT: =
+Found STRING: Это множественная    строка,    состоящая из нескольких строк.
+Found SEMICOLON: ;
+Found COMMENT: // Unicode и символы
+Found KW_LET: let
+Found IDENTIFIER: unicode_heart
+Found OPERATOR_ASSIGNMENT: =
+CHAR Error in line 33: Unicode does not supported
+CHAR Error in line 33: empty char literal
+Found SEMICOLON: ;
+Found COMMENT: // Escaping
+Found KW_LET: let
+Found IDENTIFIER: escaped_string
+Found OPERATOR_ASSIGNMENT: =
+Found STRING: Это строка с символами: \n (новая строка), \t (табуляция)
+Found SEMICOLON: ;
+Found COMMENT: // Байтовые строки (byte strings)
+Found KW_LET: let
+Found IDENTIFIER: byte_string
+Found COLON: :
+Found OPERATOR_AMPERSAND: &
+Found LEFT_SQUARE_BRACKET: [
+Found IDENTIFIER: u8
+Found RIGHT_SQUARE_BRACKET: ]
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: b
+Found STRING: Hello, World!
+Found SEMICOLON: ;
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: {:?}
+Found COMMA: ,
+Found IDENTIFIER: byte_string
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Целые числа
+Found KW_LET: let
+Found IDENTIFIER: integer1
+Found COLON: :
+Found TYPE_I32: i32
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 42
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: integer2
+Found COLON: :
+Found TYPE_I64: i64
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: -2045911175
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: integer3
+Found COLON: :
+Found IDENTIFIER: u64
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 821579789
+Found SEMICOLON: ;
+Found COMMENT: // Символы
+Found KW_LET: let
+Found IDENTIFIER: char1
+Found COLON: :
+Found TYPE_CHAR: char
+Found OPERATOR_ASSIGNMENT: =
+Found CHAR:  A
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: char2
+Found COLON: :
+Found TYPE_CHAR: char
+Found OPERATOR_ASSIGNMENT: =
+CHAR Error in line 50: more than one char in quote
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: escaped_char
+Found OPERATOR_ASSIGNMENT: =
+Found CHAR:  
+
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: unicode_char
+Found OPERATOR_ASSIGNMENT: =
+CHAR Error in line 52: Unicode does not supported
+CHAR Error in line 52: empty char literal
+Found SEMICOLON: ;
+Found COMMENT: // Арифметические операции
+Found KW_LET: let
+Found IDENTIFIER: sum
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: integer1
+Found OPERATOR_PLUS: +
+Found IDENTIFIER: integer2
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: difference
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: integer2
+Found OPERATOR_MINUS: -
+Found IDENTIFIER: integer1
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: product
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: integer1
+Found OPERATOR_MUL: *
+Found DECIMAL_NUMBER: 5
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: quotient
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: integer3
+Found OPERATOR_DIV: /
+Found DECIMAL_NUMBER: 2
+Found SEMICOLON: ;
+Found COMMENT: // Операции сравнения
+Found KW_LET: let
+Found IDENTIFIER: is_equal
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: integer1
+Found OPERATOR_EQUAL: ==
+Found IDENTIFIER: integer2
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: is_not_equal
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: integer1
+Found OPERATOR_NOT_EQUAL: !=
+Found IDENTIFIER: integer2
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: greater_than
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: integer2
+Found OPERATOR_MORE: >
+Found IDENTIFIER: integer1
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: less_than_or_equal
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: integer1
+Found OPERATOR_LESS_OR_EQUAL: <=
+Found DECIMAL_NUMBER: 42
+Found SEMICOLON: ;
+Found COMMENT: // Присваивание
+Found KW_LET: let
+Found KW_MUT: mut
+Found IDENTIFIER: mutable_variable
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 10
+Found SEMICOLON: ;
+Found IDENTIFIER: mutable_variable
+Found OPERATOR_PLUS_ASSIGNMENT: +=
+Found DECIMAL_NUMBER: 5
+Found SEMICOLON: ;
+Found IDENTIFIER: mutable_variable
+Found OPERATOR_MINUS_ASSIGNMENT: -=
+Found DECIMAL_NUMBER: 3
+Found SEMICOLON: ;
+Found IDENTIFIER: mutable_variable
+Found OPERATOR_MUL_ASSIGNMENT: *=
+Found DECIMAL_NUMBER: 2
+Found SEMICOLON: ;
+Found IDENTIFIER: mutable_variable
+Found OPERATOR_DIV_ASSIGNMENT: /=
+Found DECIMAL_NUMBER: 4
+Found SEMICOLON: ;
+Found COMMENT: // Создание одномерного массива (вектора)
+Found KW_LET: let
+Found IDENTIFIER: numbers
+Found OPERATOR_ASSIGNMENT: =
+Found MACROS: vec!
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 1
+Found COMMA: ,
+Found DECIMAL_NUMBER: 2
+Found COMMA: ,
+Found DECIMAL_NUMBER: 3
+Found COMMA: ,
+Found DECIMAL_NUMBER: 4
+Found COMMA: ,
+Found DECIMAL_NUMBER: 5
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found COMMENT: // Доступ к элементам массива
+Found KW_LET: let
+Found IDENTIFIER: first_element
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: numbers
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 0
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found COMMENT: // Обращение к первому элементу
+Found COMMENT: // Итерация по элементам массива
+Found KW_FOR: for
+Found IDENTIFIER: number
+Found KW_IN: in
+Found OPERATOR_AMPERSAND: &
+Found IDENTIFIER: numbers
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Элемент массива: {}
+Found COMMA: ,
+Found IDENTIFIER: number
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Изменение элемента массива
+Found KW_LET: let
+Found KW_MUT: mut
+Found IDENTIFIER: mutable_numbers
+Found OPERATOR_ASSIGNMENT: =
+Found MACROS: vec!
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 10
+Found COMMA: ,
+Found DECIMAL_NUMBER: 20
+Found COMMA: ,
+Found DECIMAL_NUMBER: 30
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found IDENTIFIER: mutable_numbers
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 1
+Found RIGHT_SQUARE_BRACKET: ]
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 25
+Found SEMICOLON: ;
+Found COMMENT: // Изменение второго элемента
+Found COMMENT: // Вывод измененных значений
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Измененный массив: {:?}
+Found COMMA: ,
+Found IDENTIFIER: mutable_numbers
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Добавление элементов в вектор
+Found IDENTIFIER: mutable_numbers
+Found OPERATOR_POINT: .
+Found IDENTIFIER: push
+Found LEFT_ROUND_BRACKET: (
+Found DECIMAL_NUMBER: 40
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Удаление элемента из вектора
+Found KW_LET: let
+Found IDENTIFIER: removed_element
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: mutable_numbers
+Found OPERATOR_POINT: .
+Found IDENTIFIER: pop
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Удаление последнего элемента
+Found COMMENT: // 3
+Found COMMENT: // Целочисленные литералы
+Found KW_LET: let
+Found IDENTIFIER: decimal_integer
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 42
+Found SEMICOLON: ;
+Found COMMENT: // Десятичное целое число (42, _ не несет смысловой нагрузки)
+Found KW_LET: let
+Found IDENTIFIER: hexadecimal_integer
+Found OPERATOR_ASSIGNMENT: =
+Found HEXADECIMAL_NUMBER: 42
+Found SEMICOLON: ;
+Found COMMENT: // Шестнадцатеричное целое число
+Found KW_LET: let
+Found IDENTIFIER: binary_integer
+Found OPERATOR_ASSIGNMENT: =
+Found BIN_NUMBER: 42
+Found SEMICOLON: ;
+Found COMMENT: // Двоичное целое число
+Found KW_LET: let
+Found IDENTIFIER: octal_integer
+Found OPERATOR_ASSIGNMENT: =
+Found OCTAL_NUMBER: 42
+Found SEMICOLON: ;
+Found COMMENT: // Восьмеричное целое число
+Found KW_LET: let
+Found IDENTIFIER: byte_integer
+Found COLON: :
+Found IDENTIFIER: i8
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: b
+Found CHAR:  X
+Found SEMICOLON: ;
+Found COMMENT: // Байтовое целое число
+Found COMMENT: // Символьные литералы
+Found COMMENT: // Escape-последовательности
+Found KW_LET: let
+Found IDENTIFIER: newline
+Found OPERATOR_ASSIGNMENT: =
+Found CHAR:  
+
+Found SEMICOLON: ;
+Found COMMENT: // Новая строка
+Found KW_LET: let
+Found IDENTIFIER: tab
+Found OPERATOR_ASSIGNMENT: =
+Found CHAR:  	
+Found SEMICOLON: ;
+Found COMMENT: // Табуляция
+Found KW_LET: let
+Found IDENTIFIER: backslash
+Found OPERATOR_ASSIGNMENT: =
+Found CHAR:  \
+Found SEMICOLON: ;
+Found COMMENT: // Обратный слеш
+Found KW_LET: let
+Found IDENTIFIER: single_quote
+Found OPERATOR_ASSIGNMENT: =
+Found CHAR:  '
+Found SEMICOLON: ;
+Found COMMENT: // Одинарная кавычка
+Found KW_LET: let
+Found IDENTIFIER: double_quote
+Found OPERATOR_ASSIGNMENT: =
+CHAR Error in line 111: slash
+Found CHAR:  "
+Found SEMICOLON: ;
+Found COMMENT: // Двойная кавычка
+Found KW_LET: let
+Found IDENTIFIER: hex_escape
+Found OPERATOR_ASSIGNMENT: =
+Found CHAR:  A
+Found SEMICOLON: ;
+Found COMMENT: // \xHH - ASCII символы в шестнадцатеричной форме \x7F - предел)
+Found KW_LET: let
+Found IDENTIFIER: unicode_heart
+Found OPERATOR_ASSIGNMENT: =
+Found CHAR:  '
+Found SEMICOLON: ;
+Found COMMENT: //\u{XXXX} - Unicode символы \u{10FFFF} - предел
+Found COMMENT: // Строковые литералы аналогично
+Found KW_LET: let
+Found IDENTIFIER: quote_escape
+Found OPERATOR_ASSIGNMENT: =
+Found STRING: Это строка с символами " внутри
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: ascii_escape
+Found OPERATOR_ASSIGNMENT: =
+Found STRING: ASCII символы: Hello
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: unicode_escape
+Found OPERATOR_ASSIGNMENT: =
+CHAR Error in line 118: Unicode does not supported
+STRING Error in line 118: slash
+Found STRING: Символы Unicode:  u{1F603} A
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: unicode_escape
+Found OPERATOR_ASSIGNMENT: =
+Found STRING: Символы Unicode: B C A
+Found SEMICOLON: ;
+Found COMMENT: // Управляющие структуры
+Found COMMENT: // if
+Found KW_LET: let
+Found IDENTIFIER: x
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 5
+Found SEMICOLON: ;
+Found KW_IF: if
+Found IDENTIFIER: x
+Found OPERATOR_MORE: >
+Found DECIMAL_NUMBER: 0
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: x положительное
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found KW_ELSE: else
+Found KW_IF: if
+Found IDENTIFIER: x
+Found OPERATOR_LESS: <
+Found DECIMAL_NUMBER: 0
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: x отрицательное
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found KW_ELSE: else
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: x равно нулю
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Сопоставление (match)
+Found KW_LET: let
+Found IDENTIFIER: number
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 3
+Found SEMICOLON: ;
+Found KW_MATCH: match
+Found IDENTIFIER: number
+Found LEFT_FIGURE_BRACKET: {
+Found DECIMAL_NUMBER: 1
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_MORE: >
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Один
+Found RIGHT_ROUND_BRACKET: )
+Found COMMA: ,
+Found DECIMAL_NUMBER: 3
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_MORE: >
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Три
+Found RIGHT_ROUND_BRACKET: )
+Found COMMA: ,
+Found IDENTIFIER: _
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_MORE: >
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Другое число
+Found RIGHT_ROUND_BRACKET: )
+Found COMMA: ,
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Сопоставление if let
+Found KW_LET: let
+Found IDENTIFIER: some_value
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: Some
+Found LEFT_ROUND_BRACKET: (
+Found DECIMAL_NUMBER: 5
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found KW_IF: if
+Found KW_LET: let
+Found IDENTIFIER: Some
+Found LEFT_ROUND_BRACKET: (
+Found IDENTIFIER: x
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: some_value
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Значение x: {}
+Found COMMA: ,
+Found IDENTIFIER: x
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found KW_ELSE: else
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Нет значения
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: //Циклы
+Found COMMENT: // 1. Бесконечный цикл (loop)
+Found KW_LET: let
+Found KW_MUT: mut
+Found IDENTIFIER: count
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 0
+Found SEMICOLON: ;
+Found KW_LOOP: loop
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Бесконечный цикл: {}
+Found COMMA: ,
+Found IDENTIFIER: count
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found IDENTIFIER: count
+Found OPERATOR_PLUS_ASSIGNMENT: +=
+Found DECIMAL_NUMBER: 1
+Found SEMICOLON: ;
+Found KW_IF: if
+Found IDENTIFIER: count
+Found OPERATOR_MORE_OR_EQUAL: >=
+Found DECIMAL_NUMBER: 3
+Found LEFT_FIGURE_BRACKET: {
+Found KW_BREAK: break
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // 2. Цикл с предусловием (while)
+Found KW_LET: let
+Found KW_MUT: mut
+Found IDENTIFIER: while_count
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 0
+Found SEMICOLON: ;
+Found KW_WHILE: while
+Found IDENTIFIER: while_count
+Found OPERATOR_LESS: <
+Found DECIMAL_NUMBER: 3
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Цикл с предусловием: {}
+Found COMMA: ,
+Found IDENTIFIER: while_count
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found IDENTIFIER: while_count
+Found OPERATOR_PLUS_ASSIGNMENT: +=
+Found DECIMAL_NUMBER: 1
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // 3. Цикл с постусловием (do-while)
+Found KW_LET: let
+Found KW_MUT: mut
+Found IDENTIFIER: do_while_count
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 0
+Found SEMICOLON: ;
+Found KW_LOOP: loop
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Цикл с постусловием: {}
+Found COMMA: ,
+Found IDENTIFIER: do_while_count
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found IDENTIFIER: do_while_count
+Found OPERATOR_PLUS_ASSIGNMENT: +=
+Found DECIMAL_NUMBER: 1
+Found SEMICOLON: ;
+Found KW_IF: if
+Found IDENTIFIER: do_while_count
+Found OPERATOR_MORE_OR_EQUAL: >=
+Found DECIMAL_NUMBER: 3
+Found LEFT_FIGURE_BRACKET: {
+Found KW_BREAK: break
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // 4. Цикл for-in с диапазоном
+Found KW_FOR: for
+Found IDENTIFIER: i
+Found KW_IN: in
+Found DOUBLE: 0.000000
+Found OPERATOR_POINT: .
+Found DECIMAL_NUMBER: 3
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Цикл for-in с диапазоном: {}
+Found COMMA: ,
+Found IDENTIFIER: i
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // 5. Цикл for-in с коллекцией
+Found KW_LET: let
+Found IDENTIFIER: numbers
+Found OPERATOR_ASSIGNMENT: =
+Found MACROS: vec!
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 1
+Found COMMA: ,
+Found DECIMAL_NUMBER: 2
+Found COMMA: ,
+Found DECIMAL_NUMBER: 3
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found KW_FOR: for
+Found IDENTIFIER: num
+Found KW_IN: in
+Found OPERATOR_AMPERSAND: &
+Found IDENTIFIER: numbers
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Цикл for-in с коллекцией: {}
+Found COMMA: ,
+Found IDENTIFIER: num
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // 6. Итераторы (map, filter)
+Found KW_LET: let
+Found IDENTIFIER: data
+Found OPERATOR_ASSIGNMENT: =
+Found MACROS: vec!
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 1
+Found COMMA: ,
+Found DECIMAL_NUMBER: 2
+Found COMMA: ,
+Found DECIMAL_NUMBER: 3
+Found COMMA: ,
+Found DECIMAL_NUMBER: 4
+Found COMMA: ,
+Found DECIMAL_NUMBER: 5
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: result
+Found COLON: :
+Found IDENTIFIER: Vec
+Found OPERATOR_LESS: <
+Found IDENTIFIER: _
+Found OPERATOR_MORE: >
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: data
+Found OPERATOR_POINT: .
+Found IDENTIFIER: iter
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_POINT: .
+Found IDENTIFIER: map
+Found LEFT_ROUND_BRACKET: (
+Found OPERATOR_BIT_OR: |
+Found OPERATOR_AMPERSAND: &
+Found IDENTIFIER: x
+Found OPERATOR_BIT_OR: |
+Found IDENTIFIER: x
+Found OPERATOR_MUL: *
+Found DECIMAL_NUMBER: 2
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_POINT: .
+Found IDENTIFIER: filter
+Found LEFT_ROUND_BRACKET: (
+Found OPERATOR_BIT_OR: |
+Found OPERATOR_AMPERSAND: &
+Found IDENTIFIER: x
+Found OPERATOR_BIT_OR: |
+Found IDENTIFIER: x
+Found OPERATOR_MORE: >
+Found DECIMAL_NUMBER: 5
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_POINT: .
+Found IDENTIFIER: collect
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Итераторы: {:?}
+Found COMMA: ,
+Found IDENTIFIER: result
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Функции
+Found COMMENT: // Функция без параметров и возвращаемого значения
+Found KW_FN: fn
+Found IDENTIFIER: simple_function
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Привет, мир!
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Функция с параметрами
+Found KW_FN: fn
+Found IDENTIFIER: add
+Found LEFT_ROUND_BRACKET: (
+Found IDENTIFIER: x
+Found COLON: :
+Found TYPE_I32: i32
+Found COMMA: ,
+Found IDENTIFIER: y
+Found COLON: :
+Found TYPE_I32: i32
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_ARROW: ->
+Found TYPE_I32: i32
+Found LEFT_FIGURE_BRACKET: {
+Found IDENTIFIER: x
+Found OPERATOR_PLUS: +
+Found IDENTIFIER: y
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Функция с возвращаемым значением, но без параметров
+Found KW_FN: fn
+Found IDENTIFIER: generate_random_number
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_ARROW: ->
+Found TYPE_I32: i32
+Found LEFT_FIGURE_BRACKET: {
+Found COMMENT: // Генерация случайного числа
+Found DECIMAL_NUMBER: 42
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Функция с параметрами и возвращаемым значением
+Found KW_FN: fn
+Found IDENTIFIER: multiply
+Found LEFT_ROUND_BRACKET: (
+Found IDENTIFIER: x
+Found COLON: :
+Found TYPE_I32: i32
+Found COMMA: ,
+Found IDENTIFIER: y
+Found COLON: :
+Found TYPE_I32: i32
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_ARROW: ->
+Found TYPE_I32: i32
+Found LEFT_FIGURE_BRACKET: {
+Found IDENTIFIER: x
+Found OPERATOR_MUL: *
+Found IDENTIFIER: y
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Функция с областью видимости (scope)
+Found KW_FN: fn
+Found IDENTIFIER: outer_fn
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found LEFT_FIGURE_BRACKET: {
+Found COMMENT: // Функция внутри outer_fn()
+Found KW_FN: fn
+Found IDENTIFIER: inner_function
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Внутренняя функция
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found IDENTIFIER: inner_function
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Вызов внутренней функции
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Функция с использованием замыкания (closure)
+Found KW_FN: fn
+Found IDENTIFIER: use_closure
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found LEFT_FIGURE_BRACKET: {
+Found KW_LET: let
+Found IDENTIFIER: add_one
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_BIT_OR: |
+Found IDENTIFIER: x
+Found OPERATOR_BIT_OR: |
+Found IDENTIFIER: x
+Found OPERATOR_PLUS: +
+Found DECIMAL_NUMBER: 1
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: result
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: add_one
+Found LEFT_ROUND_BRACKET: (
+Found DECIMAL_NUMBER: 5
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Результат замыкания: {}
+Found COMMA: ,
+Found IDENTIFIER: result
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Вывод: Результат замыкания: 6
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Функция как аргумент другой функции (функции высшего порядка)
+Found KW_FN: fn
+Found IDENTIFIER: apply_function
+Found LEFT_ROUND_BRACKET: (
+Found IDENTIFIER: func
+Found COLON: :
+Found KW_FN: fn
+Found LEFT_ROUND_BRACKET: (
+Found TYPE_I32: i32
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_ARROW: ->
+Found TYPE_I32: i32
+Found COMMA: ,
+Found IDENTIFIER: x
+Found COLON: :
+Found TYPE_I32: i32
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_ARROW: ->
+Found TYPE_I32: i32
+Found LEFT_FIGURE_BRACKET: {
+Found IDENTIFIER: func
+Found LEFT_ROUND_BRACKET: (
+Found IDENTIFIER: x
+Found RIGHT_ROUND_BRACKET: )
+Found RIGHT_FIGURE_BRACKET: }
+Found KW_FN: fn
+Found IDENTIFIER: double
+Found LEFT_ROUND_BRACKET: (
+Found IDENTIFIER: x
+Found COLON: :
+Found TYPE_I32: i32
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_ARROW: ->
+Found TYPE_I32: i32
+Found LEFT_FIGURE_BRACKET: {
+Found IDENTIFIER: x
+Found OPERATOR_MUL: *
+Found DECIMAL_NUMBER: 2
+Found KW_LET: let
+Found IDENTIFIER: x
+Found OPERATOR_ASSIGNMENT: =
+NUMBER Error in line 240: incorrect format
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found KW_FN: fn
+Found IDENTIFIER: use_higher_order_function
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found LEFT_FIGURE_BRACKET: {
+Found KW_LET: let
+Found IDENTIFIER: result
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: apply_function
+Found LEFT_ROUND_BRACKET: (
+Found IDENTIFIER: double
+Found COMMA: ,
+Found DECIMAL_NUMBER: 5
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Результат функции высшего порядка: {}
+Found COMMA: ,
+Found IDENTIFIER: result
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Вывод: Результат функции высшего порядка: 10
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Обобщенные (generic) функции
+Found KW_FN: fn
+Found IDENTIFIER: generic_function
+Found OPERATOR_LESS: <
+Found IDENTIFIER: T
+Found OPERATOR_MORE: >
+Found LEFT_ROUND_BRACKET: (
+Found IDENTIFIER: x
+Found COLON: :
+Found IDENTIFIER: T
+Found RIGHT_ROUND_BRACKET: )
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Значение: {:?}
+Found COMMA: ,
+Found IDENTIFIER: x
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: //Ввод
+Found IDENTIFIER: io
+Found TWO_COLON: ::
+Found IDENTIFIER: stdin
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_POINT: .
+Found IDENTIFIER: read_line
+Found LEFT_ROUND_BRACKET: (
+Found OPERATOR_AMPERSAND: &
+Found KW_MUT: mut
+Found IDENTIFIER: input
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_POINT: .
+Found IDENTIFIER: expect
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Не удалось прочитать строку
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // struct, trait, impl
+Found COMMENT: // Определяем трейт Animal
+Found KW_TRAIT: trait
+Found IDENTIFIER: Animal
+Found LEFT_FIGURE_BRACKET: {
+Found COMMENT: // Абстрактный метод, который должен быть реализован всеми типами, реализующими трейт Animal
+Found KW_FN: fn
+Found IDENTIFIER: speak
+Found LEFT_ROUND_BRACKET: (
+Found OPERATOR_AMPERSAND: &
+Found KW_SELFVALUE: self
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Структура Dog, которая реализует трейт Animal
+Found KW_STRUCT: struct
+Found IDENTIFIER: Dog
+Found LEFT_FIGURE_BRACKET: {
+Found IDENTIFIER: name
+Found COLON: :
+Found TYPE_STRING: String
+Found COMMA: ,
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Реализация трейта Animal для структуры Dog
+Found KW_IMPL: impl
+Found IDENTIFIER: Animal
+Found KW_FOR: for
+Found IDENTIFIER: Dog
+Found LEFT_FIGURE_BRACKET: {
+Found KW_FN: fn
+Found IDENTIFIER: speak
+Found LEFT_ROUND_BRACKET: (
+Found OPERATOR_AMPERSAND: &
+Found KW_SELFVALUE: self
+Found RIGHT_ROUND_BRACKET: )
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Собака {} говорит: Гав-гав!
+Found COMMA: ,
+Found KW_SELFVALUE: self
+Found OPERATOR_POINT: .
+Found IDENTIFIER: name
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Структура Cat, которая реализует трейт Animal
+Found KW_STRUCT: struct
+Found IDENTIFIER: Cat
+Found LEFT_FIGURE_BRACKET: {
+Found IDENTIFIER: name
+Found COLON: :
+Found TYPE_STRING: String
+Found COMMA: ,
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Реализация трейта Animal для структуры Cat
+Found KW_IMPL: impl
+Found IDENTIFIER: Animal
+Found KW_FOR: for
+Found IDENTIFIER: Cat
+Found LEFT_FIGURE_BRACKET: {
+Found KW_FN: fn
+Found IDENTIFIER: speak
+Found LEFT_ROUND_BRACKET: (
+Found OPERATOR_AMPERSAND: &
+Found KW_SELFVALUE: self
+Found RIGHT_ROUND_BRACKET: )
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Кот {} говорит: Мяу-мяу!
+Found COMMA: ,
+Found KW_SELFVALUE: self
+Found OPERATOR_POINT: .
+Found IDENTIFIER: name
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found RIGHT_FIGURE_BRACKET: }
+Found KW_LET: let
+Found IDENTIFIER: dog
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: Dog
+Found LEFT_FIGURE_BRACKET: {
+Found IDENTIFIER: name
+Found COLON: :
+Found STRING: Барсик
+Found OPERATOR_POINT: .
+Found IDENTIFIER: to_string
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found RIGHT_FIGURE_BRACKET: }
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: cat
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: Cat
+Found LEFT_FIGURE_BRACKET: {
+Found IDENTIFIER: name
+Found COLON: :
+Found STRING: Тузик
+Found OPERATOR_POINT: .
+Found IDENTIFIER: to_string
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found RIGHT_FIGURE_BRACKET: }
+Found SEMICOLON: ;
+Found IDENTIFIER: dog
+Found OPERATOR_POINT: .
+Found IDENTIFIER: speak
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found IDENTIFIER: cat
+Found OPERATOR_POINT: .
+Found IDENTIFIER: speak
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Массивы
+Found COMMENT: // Массив массивов
+Found KW_LET: let
+Found IDENTIFIER: matrix
+Found COLON: :
+Found LEFT_SQUARE_BRACKET: [
+Found LEFT_SQUARE_BRACKET: [
+Found TYPE_I32: i32
+Found SEMICOLON: ;
+Found DECIMAL_NUMBER: 3
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found DECIMAL_NUMBER: 3
+Found RIGHT_SQUARE_BRACKET: ]
+Found OPERATOR_ASSIGNMENT: =
+Found LEFT_SQUARE_BRACKET: [
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 1
+Found COMMA: ,
+Found DECIMAL_NUMBER: 2
+Found COMMA: ,
+Found DECIMAL_NUMBER: 3
+Found RIGHT_SQUARE_BRACKET: ]
+Found COMMA: ,
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 4
+Found COMMA: ,
+Found DECIMAL_NUMBER: 5
+Found COMMA: ,
+Found DECIMAL_NUMBER: 6
+Found RIGHT_SQUARE_BRACKET: ]
+Found COMMA: ,
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 7
+Found COMMA: ,
+Found DECIMAL_NUMBER: 8
+Found COMMA: ,
+Found DECIMAL_NUMBER: 9
+Found RIGHT_SQUARE_BRACKET: ]
+Found COMMA: ,
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found COMMENT: // Вектор векторов
+Found KW_LET: let
+Found IDENTIFIER: matrix
+Found COLON: :
+Found IDENTIFIER: Vec
+Found OPERATOR_LESS: <
+Found IDENTIFIER: Vec
+Found OPERATOR_LESS: <
+Found TYPE_I32: i32
+Found OPERATOR_BIT_RIGHT_SHIFT: >>
+Found OPERATOR_ASSIGNMENT: =
+Found MACROS: vec!
+Found LEFT_SQUARE_BRACKET: [
+Found MACROS: vec!
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 1
+Found COMMA: ,
+Found DECIMAL_NUMBER: 2
+Found COMMA: ,
+Found DECIMAL_NUMBER: 3
+Found RIGHT_SQUARE_BRACKET: ]
+Found COMMA: ,
+Found MACROS: vec!
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 4
+Found COMMA: ,
+Found DECIMAL_NUMBER: 5
+Found COMMA: ,
+Found DECIMAL_NUMBER: 6
+Found RIGHT_SQUARE_BRACKET: ]
+Found COMMA: ,
+Found MACROS: vec!
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 7
+Found COMMA: ,
+Found DECIMAL_NUMBER: 8
+Found COMMA: ,
+Found DECIMAL_NUMBER: 9
+Found RIGHT_SQUARE_BRACKET: ]
+Found COMMA: ,
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found COMMENT: // Логические операции
+Found COMMENT: // Комбинирование
+Found KW_LET: let
+Found IDENTIFIER: a
+Found OPERATOR_ASSIGNMENT: =
+Found KW_TRUE: true
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: b
+Found OPERATOR_ASSIGNMENT: =
+Found KW_FALSE: false
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: c
+Found OPERATOR_ASSIGNMENT: =
+Found KW_TRUE: true
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: result1
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: a
+Found OPERATOR_AND: &&
+Found IDENTIFIER: b
+Found OPERATOR_OR: ||
+Found IDENTIFIER: c
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: result2
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_BIT_NOT: !
+Found LEFT_ROUND_BRACKET: (
+Found IDENTIFIER: a
+Found OPERATOR_AND: &&
+Found IDENTIFIER: b
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_OR: ||
+Found IDENTIFIER: c
+Found SEMICOLON: ;
+Found COMMENT: // Операции над строками
+Found COMMENT: // Конкатенация строк с использованием оператора +
+Found KW_LET: let
+Found IDENTIFIER: hello
+Found OPERATOR_ASSIGNMENT: =
+Found STRING: Hello, 
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: world
+Found OPERATOR_ASSIGNMENT: =
+Found STRING: world!
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: greeting
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: hello
+Found OPERATOR_POINT: .
+Found IDENTIFIER: to_string
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found OPERATOR_PLUS: +
+Found IDENTIFIER: world
+Found SEMICOLON: ;
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: {}
+Found COMMA: ,
+Found IDENTIFIER: greeting
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Результат: "Hello, world!"
+Found COMMENT: // Форматирование строк с макросом format!
+Found KW_LET: let
+Found IDENTIFIER: name
+Found OPERATOR_ASSIGNMENT: =
+Found STRING: Alice
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: age
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 30
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: formatted
+Found OPERATOR_ASSIGNMENT: =
+Found MACROS: format!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Имя: {}, Возраст: {}
+Found COMMA: ,
+Found IDENTIFIER: name
+Found COMMA: ,
+Found IDENTIFIER: age
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: {}
+Found COMMA: ,
+Found IDENTIFIER: formatted
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Результат: "Имя: Alice, Возраст: 30"
+Found COMMENT: // Индексирование и срезы строк
+Found KW_LET: let
+Found IDENTIFIER: text
+Found OPERATOR_ASSIGNMENT: =
+Found STRING: Rust Programming
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: first_char
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_AMPERSAND: &
+Found IDENTIFIER: text
+Found LEFT_SQUARE_BRACKET: [
+Found DOUBLE: 0.000000
+Found OPERATOR_POINT: .
+Found DECIMAL_NUMBER: 1
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: last_word
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_AMPERSAND: &
+Found IDENTIFIER: text
+Found LEFT_SQUARE_BRACKET: [
+Found DOUBLE: 5.000000
+Found OPERATOR_POINT: .
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Первый символ: {}
+Found COMMA: ,
+Found IDENTIFIER: first_char
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Результат: "R"
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Последнее слово: {}
+Found COMMA: ,
+Found IDENTIFIER: last_word
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Результат: "Programming"
+Found COMMENT: // Применение методов на строку
+Found KW_LET: let
+Found IDENTIFIER: text
+Found OPERATOR_ASSIGNMENT: =
+Found STRING: This is a test.
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: contains_test
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: text
+Found OPERATOR_POINT: .
+Found IDENTIFIER: contains
+Found LEFT_ROUND_BRACKET: (
+Found STRING: test
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Содержит 'test': {}
+Found COMMA: ,
+Found IDENTIFIER: contains_test
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Результат: true
+Found COMMENT: // Области видимости
+Found KW_MOD: mod
+Found IDENTIFIER: my_module
+Found LEFT_FIGURE_BRACKET: {
+Found KW_PUB: pub
+Found LEFT_ROUND_BRACKET: (
+Found KW_CRATE: crate
+Found RIGHT_ROUND_BRACKET: )
+Found KW_STRUCT: struct
+Found IDENTIFIER: MyStruct
+Found LEFT_FIGURE_BRACKET: {
+Found KW_PUB: pub
+Found IDENTIFIER: my_field
+Found COLON: :
+Found TYPE_I32: i32
+Found COMMA: ,
+Found RIGHT_FIGURE_BRACKET: }
+Found KW_IMPL: impl
+Found IDENTIFIER: MyStruct
+Found LEFT_FIGURE_BRACKET: {
+Found KW_PUB: pub
+Found KW_FN: fn
+Found IDENTIFIER: my_method
+Found LEFT_ROUND_BRACKET: (
+Found OPERATOR_AMPERSAND: &
+Found KW_SELFVALUE: self
+Found RIGHT_ROUND_BRACKET: )
+Found LEFT_FIGURE_BRACKET: {
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Публичный метод
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found RIGHT_FIGURE_BRACKET: }
+Found RIGHT_FIGURE_BRACKET: }
+Found KW_LET: let
+Found IDENTIFIER: instance
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: my_module
+Found TWO_COLON: ::
+Found IDENTIFIER: MyStruct
+Found LEFT_FIGURE_BRACKET: {
+Found IDENTIFIER: my_field
+Found COLON: :
+Found DECIMAL_NUMBER: 42
+Found RIGHT_FIGURE_BRACKET: }
+Found SEMICOLON: ;
+Found COMMENT: // Объявление перечислимого типа данных
+Found KW_ENUM: enum
+Found IDENTIFIER: Color
+Found LEFT_FIGURE_BRACKET: {
+Found IDENTIFIER: Red
+Found COMMA: ,
+Found IDENTIFIER: Green
+Found COMMA: ,
+Found IDENTIFIER: Blue
+Found COMMA: ,
+Found RIGHT_FIGURE_BRACKET: }
+Found COMMENT: // Создание переменных с типом данных Color
+Found KW_LET: let
+Found IDENTIFIER: favorite_color
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: Color
+Found TWO_COLON: ::
+Found IDENTIFIER: Blue
+Found SEMICOLON: ;
+Found COMMENT: // Ссылки в Rust
+Found COMMENT: // Создание переменных
+Found KW_LET: let
+Found IDENTIFIER: x
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 42
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: y
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 24
+Found SEMICOLON: ;
+Found COMMENT: // Ссылки и заимствование
+Found KW_LET: let
+Found IDENTIFIER: reference_x
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_AMPERSAND: &
+Found IDENTIFIER: x
+Found SEMICOLON: ;
+Found COMMENT: // Неизменяемая ссылка на x
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Значение x: {}
+Found COMMA: ,
+Found IDENTIFIER: x
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Значение, на которое ссылается reference_x: {}
+Found COMMA: ,
+Found OPERATOR_MUL: *
+Found IDENTIFIER: reference_x
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // reference_x = &y; // Ошибка! Нельзя изменить ссылку на другую переменную
+Found COMMENT: // Мутабельные ссылки
+Found KW_LET: let
+Found KW_MUT: mut
+Found IDENTIFIER: mutable_x
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: x
+Found SEMICOLON: ;
+Found COMMENT: // Создаем копию x
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Изначальное значение mutable_x: {}
+Found COMMA: ,
+Found IDENTIFIER: mutable_x
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: reference_mutable_x
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_AMPERSAND: &
+Found KW_MUT: mut
+Found IDENTIFIER: mutable_x
+Found SEMICOLON: ;
+Found COMMENT: // Мутабельная ссылка на mutable_x
+Found IDENTIFIER: reference_mutable_x
+Found OPERATOR_PLUS_ASSIGNMENT: +=
+Found DECIMAL_NUMBER: 10
+Found SEMICOLON: ;
+Found COMMENT: // Меняем значение через ссылку
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Новое значение mutable_x: {}
+Found COMMA: ,
+Found IDENTIFIER: mutable_x
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Срезы
+Found KW_LET: let
+Found IDENTIFIER: arr
+Found OPERATOR_ASSIGNMENT: =
+Found LEFT_SQUARE_BRACKET: [
+Found DECIMAL_NUMBER: 1
+Found COMMA: ,
+Found DECIMAL_NUMBER: 2
+Found COMMA: ,
+Found DECIMAL_NUMBER: 3
+Found COMMA: ,
+Found DECIMAL_NUMBER: 4
+Found COMMA: ,
+Found DECIMAL_NUMBER: 5
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: slice
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_AMPERSAND: &
+Found IDENTIFIER: arr
+Found LEFT_SQUARE_BRACKET: [
+Found DOUBLE: 1.000000
+Found OPERATOR_POINT: .
+Found DECIMAL_NUMBER: 4
+Found RIGHT_SQUARE_BRACKET: ]
+Found SEMICOLON: ;
+Found COMMENT: // Срез массива arr с индексами 1, 2, 3
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Срез: {:?}
+Found COMMA: ,
+Found IDENTIFIER: slice
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Владение и переход владения
+Found KW_LET: let
+Found IDENTIFIER: string1
+Found OPERATOR_ASSIGNMENT: =
+Found TYPE_STRING: String
+Found TWO_COLON: ::
+Found IDENTIFIER: from
+Found LEFT_ROUND_BRACKET: (
+Found STRING: Привет
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: string2
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: string1
+Found SEMICOLON: ;
+Found COMMENT: // Переход владения
+Found COMMENT: // println!("string1: {}", string1); // Ошибка! string1 больше не доступна
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: string2: {}
+Found COMMA: ,
+Found IDENTIFIER: string2
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Клонирование
+Found KW_LET: let
+Found IDENTIFIER: string3
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: string2
+Found OPERATOR_POINT: .
+Found IDENTIFIER: clone
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: string2: {}
+Found COMMA: ,
+Found IDENTIFIER: string2
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // string2 по-прежнему доступна
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: string3: {}
+Found COMMA: ,
+Found IDENTIFIER: string3
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found COMMENT: // Примеры ссылок на структуры
+#Found LEFT_SQUARE_BRACKET: [
+Found IDENTIFIER: derive
+Found LEFT_ROUND_BRACKET: (
+Found IDENTIFIER: Debug
+Found RIGHT_ROUND_BRACKET: )
+Found RIGHT_SQUARE_BRACKET: ]
+Found KW_STRUCT: struct
+Found IDENTIFIER: Point
+Found LEFT_FIGURE_BRACKET: {
+Found IDENTIFIER: x
+Found COLON: :
+Found TYPE_I32: i32
+Found COMMA: ,
+Found IDENTIFIER: y
+Found COLON: :
+Found TYPE_I32: i32
+Found COMMA: ,
+Found RIGHT_FIGURE_BRACKET: }
+Found KW_LET: let
+Found IDENTIFIER: point
+Found OPERATOR_ASSIGNMENT: =
+Found IDENTIFIER: Point
+Found LEFT_FIGURE_BRACKET: {
+Found IDENTIFIER: x
+Found COLON: :
+Found DECIMAL_NUMBER: 5
+Found COMMA: ,
+Found IDENTIFIER: y
+Found COLON: :
+Found DECIMAL_NUMBER: 10
+Found RIGHT_FIGURE_BRACKET: }
+Found SEMICOLON: ;
+Found KW_LET: let
+Found IDENTIFIER: reference_point
+Found OPERATOR_ASSIGNMENT: =
+Found OPERATOR_AMPERSAND: &
+Found IDENTIFIER: point
+Found SEMICOLON: ;
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: point: {:?}
+Found COMMA: ,
+Found IDENTIFIER: point
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found MACROS: println!
+Found LEFT_ROUND_BRACKET: (
+Found STRING: reference_point: {:?}
+Found COMMA: ,
+Found IDENTIFIER: reference_point
+Found RIGHT_ROUND_BRACKET: )
+Found SEMICOLON: ;
+Found ML_COMMENT:  Многострочный коммент Все, что находится между символами /* и */    pub fn my_method(&self) {                println!("Публичный метод");            }     
+Found KW_LET: let
+Found IDENTIFIER: x
+Found COLON: :
+Found TYPE_CHAR: char
+Found OPERATOR_ASSIGNMENT: =
+CHAR Error in line 422: empty char literal
+Found SEMICOLON: ;
+Found RIGHT_FIGURE_BRACKET: }
+Found ML_COMMENT:  ML_COMMENT START
+Found KW_FN: fn
+Found IDENTIFIER: func_between_comment
+Found LEFT_ROUND_BRACKET: (
+Found RIGHT_ROUND_BRACKET: )
+Found LEFT_FIGURE_BRACKET: {
+Found RIGHT_FIGURE_BRACKET: }
+Found ML_COMMENT:  ML_COMMENT FINISH
+Found COMMENT: // Comment
+Found ML_COMMENT:  ML_COMMENT1 
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: between_comment
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 10
+Found SEMICOLON: ;
+Found ML_COMMENT:  ML_COMMENT2 
+Found COMMENT: //integer in 8 system
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: x
+Found OPERATOR_ASSIGNMENT: =
+Found OCTAL_NUMBER: 56
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: y
+Found OPERATOR_ASSIGNMENT: =
+Found OCTAL_NUMBER: 56
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: z
+Found OPERATOR_ASSIGNMENT: =
+Found OCTAL_NUMBER: 56
+Found SEMICOLON: ;
+Found COMMENT: //integer in 2 system
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: x
+Found OPERATOR_ASSIGNMENT: =
+Found BIN_NUMBER: 65424
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: y
+Found OPERATOR_ASSIGNMENT: =
+Found BIN_NUMBER: 65424
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: z
+Found OPERATOR_ASSIGNMENT: =
+Found BIN_NUMBER: 1
+Found SEMICOLON: ;
+Found COMMENT: //integer in 16 system
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: x
+Found OPERATOR_ASSIGNMENT: =
+Found HEXADECIMAL_NUMBER: 255
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: y
+Found OPERATOR_ASSIGNMENT: =
+Found HEXADECIMAL_NUMBER: 255
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: z
+Found OPERATOR_ASSIGNMENT: =
+Found HEXADECIMAL_NUMBER: 31
+Found SEMICOLON: ;
+Found COMMENT: // Double
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: x
+Found OPERATOR_ASSIGNMENT: =
+Found DOUBLE: 1234.000000
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: y
+Found OPERATOR_ASSIGNMENT: =
+Found DOUBLE: 125.000000
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: z
+Found OPERATOR_ASSIGNMENT: =
+Found DOUBLE: 150000.000000
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: x
+Found OPERATOR_ASSIGNMENT: =
+Found DOUBLE: 0.000016
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: y
+Found OPERATOR_ASSIGNMENT: =
+Found DOUBLE: 13444000000.000000
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: z
+Found OPERATOR_ASSIGNMENT: =
+Found DOUBLE: 123.000000
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: x
+Found OPERATOR_ASSIGNMENT: =
+Found DOUBLE: 111099999999999997512366328319980229689867007201925670693599571642392937217343756257437266943462604800.000000
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found KW_LET: let
+Found IDENTIFIER: y
+Found OPERATOR_ASSIGNMENT: =
+Found DOUBLE: 12000000000000000579368471762264830745925351641438118996218960879725310776966939220757021024069877760.000000
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found IDENTIFIER: tmp1
+Found OPERATOR_ASSIGNMENT: =
+Found CHAR:  /
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found IDENTIFIER: tmp1
+Found OPERATOR_ASSIGNMENT: =
+CHAR Error in line 465: Unicode does not supported
+CHAR Error in line 465: empty char literal
+Found SEMICOLON: ;
+Found KW_STATIC: static
+Found IDENTIFIER: xy
+Found OPERATOR_ASSIGNMENT: =
+CHAR Error in line 466: more than one char in quote
+Found SEMICOLON: ;
+Found COMMENT: // if (x == 222) {let z = 64 ;}
+Found KW_LET: let
+Error in line 469: incorrect IDENTIFIER
+Found OPERATOR_ASSIGNMENT: =
+Found DECIMAL_NUMBER: 1
+Found SEMICOLON: ;
+Error in line 470: incorrect IDENTIFIER
+Found SEMICOLON: ;
+Error in line 471: incorrect IDENTIFIER
+Found SEMICOLON: ;
+Error in line 472: incorrect IDENTIFIER
+Found SEMICOLON: ;
+Error in line 473: incorrect IDENTIFIER
+Found SEMICOLON: ;
+Error in line 474: incorrect IDENTIFIER
+Found SEMICOLON: ;
+$Found IDENTIFIER: asdasfmlkfa
+ML_COMMENT Error in line 480: comment are not closed

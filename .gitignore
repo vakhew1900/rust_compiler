@@ -1,2 +1,5 @@
 compiler/.idea
 compiler/cmake-build-debug
+compiler/.vs
+compiler/CMakeLists.txt
+compiler/cmake-build-debug
