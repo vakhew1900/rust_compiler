@@ -146,7 +146,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 <STRING>\\n  { stdstr += "\n"; }
 <STRING>\\r  { stdstr += "\r"; }
 <STRING>\\t  { stdstr += "\t"; }
-<STRING>\\0  { stdstr += "\0"; }
+<STRING>\\0  { stdstr.push_back('\0'); }
 <STRING>\\\\ { stdstr += "\\"; }
 <STRING>\\\" { stdstr += "\""; }
 <STRING>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
@@ -168,7 +168,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
     convertCharacterCodeToString(yytext, 2, string);
     stdstr += string;
 }
-<STRING>\" { cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL);}
+<STRING>\" { cout << "Found STRING: " << stdstr << endl << stdstr.size() << endl; BEGIN(INITIAL);}
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 <STRING>\\ { printf("STRING Error in line %d: slash\n", lineNumber); }
 

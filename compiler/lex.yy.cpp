@@ -1418,7 +1418,7 @@ YY_RULE_SETUP
 case 101:
 YY_RULE_SETUP
 #line 149 "lex.l"
-{ stdstr += "\0"; }
+{ stdstr.push_back('\0'); }
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
@@ -1460,7 +1460,7 @@ YY_RULE_SETUP
 case 106:
 YY_RULE_SETUP
 #line 171 "lex.l"
-{ cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL);}
+{ cout << "Found STRING: " << stdstr << endl << stdstr.size() << endl; BEGIN(INITIAL);}
 	YY_BREAK
 case YY_STATE_EOF(STRING):
 #line 172 "lex.l"

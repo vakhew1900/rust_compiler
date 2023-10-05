@@ -33,11 +33,8 @@ fn main() {
     let unicode_Q = '\u{0051}';
 
     // Escaping
+    let escaped_string1 = "abc\0ab";
     let escaped_string = "Это строка\n с символами: \\n (новая строка)\0, \\t (табуляция) \\0 (терминальный ноль)";
-
-    // Байтовые строки (byte strings)
-    let byte_string: &[u8] = b"Hello, World!";
-    println!("{:?}", byte_string);
 
     // Целые числа
     let integer1: i32 = 42;
