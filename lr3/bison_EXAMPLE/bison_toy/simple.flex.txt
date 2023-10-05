@@ -1,0 +1,30 @@
+%{
+ #include "tree_structs.h"
+ #include "simple_tab.h"
+ #include <stdlib.h>
+ #include <conio.h>
+ #include "tree_print.h"
+ extern int yyparse(void);
+%}
+%option noyywrap
+%option never-interactive
+%%
+print {return PRINT;}
+"+" {return '+';}
+"-" {return '-';}
+"*" {return '*';}
+"/" {return '/';}
+";" {return ';';}
+"(" {return '(';}
+")" {return ')';}
+
+[0-9]+ {yylval.int_const=atoi(yytext); return INT;}
+%%
+void main(int argc, char *argv[])
+{
+    if(argc>1)
+    yyin=fopen(argv[1],"r");
+    yyparse();
+    tree_print();
+    getch();
+}

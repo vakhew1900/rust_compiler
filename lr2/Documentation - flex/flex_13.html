@@ -1,0 +1,87 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - End-of-file rules</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_12.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_12.html">previous</A>, <A HREF="flex_14.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_14.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC13" HREF="flex_toc.html#TOC13" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC13">End-of-file rules</A></H2>
+
+<P>
+The special rule "&#60;&#60;EOF&#62;&#62;" indicates actions which are to
+be taken when an end-of-file is encountered and yywrap()
+returns non-zero (i.e., indicates no further files to
+process).  The action must finish by doing one of four
+things:
+
+
+
+<UL>
+<LI>
+
+assigning <CODE>yyin</CODE> to a new input file (in previous
+versions of flex, after doing the assignment you
+had to call the special action <CODE>YY_NEW_FILE</CODE>; this is
+no longer necessary);
+
+<LI>
+
+executing a <CODE>return</CODE> statement;
+
+<LI>
+
+executing the special <SAMP>`yyterminate()'</SAMP> action;
+
+<LI>
+
+or, switching to a new buffer using
+<SAMP>`yy_switch_to_buffer()'</SAMP> as shown in the example
+above.
+</UL>
+
+<P>
+&#60;&#60;EOF&#62;&#62; rules may not be used with other patterns; they
+may only be qualified with a list of start conditions.  If
+an unqualified &#60;&#60;EOF&#62;&#62; rule is given, it applies to <EM>all</EM>
+start conditions which do not already have &#60;&#60;EOF&#62;&#62;
+actions.  To specify an &#60;&#60;EOF&#62;&#62; rule for only the initial
+start condition, use
+
+
+
+<PRE>
+&#60;INITIAL&#62;&#60;&#60;EOF&#62;&#62;
+</PRE>
+
+<P>
+These rules are useful for catching things like unclosed
+comments.  An example:
+
+
+
+<PRE>
+%x quote
+%%
+
+...other rules for dealing with quotes...
+
+&#60;quote&#62;&#60;&#60;EOF&#62;&#62;   {
+         error( "unterminated quote" );
+         yyterminate();
+         }
+&#60;&#60;EOF&#62;&#62;  {
+         if ( *++filelist )
+             yyin = fopen( *filelist, "r" );
+         else
+            yyterminate();
+         }
+</PRE>
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_12.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_12.html">previous</A>, <A HREF="flex_14.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_14.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>

@@ -1,0 +1,114 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - Diagnostics</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_20.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_20.html">previous</A>, <A HREF="flex_22.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_22.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC21" HREF="flex_toc.html#TOC21" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC21">Diagnostics</A></H2>
+
+<DL COMPACT>
+
+<DT><SAMP>`warning, rule cannot be matched'</SAMP>
+<DD>
+indicates that the given
+rule cannot be matched because it follows other rules that
+will always match the same text as it.  For example, in
+the following "foo" cannot be matched because it comes
+after an identifier "catch-all" rule:
+
+
+<PRE>
+[a-z]+    got_identifier();
+foo       got_foo();
+</PRE>
+
+Using <CODE>REJECT</CODE> in a scanner suppresses this warning.
+
+<DT><SAMP>`warning, -s option given but default rule can be matched'</SAMP>
+<DD>
+means that it is possible (perhaps only in a particular
+start condition) that the default rule (match any single
+character) is the only one that will match a particular
+input.  Since <SAMP>`-s'</SAMP> was given, presumably this is not
+intended.
+
+<DT><SAMP>`reject_used_but_not_detected undefined'</SAMP>
+<DD>
+<DT><SAMP>`yymore_used_but_not_detected undefined'</SAMP>
+<DD>
+These errors can
+occur at compile time.  They indicate that the scanner
+uses <CODE>REJECT</CODE> or <SAMP>`yymore()'</SAMP> but that <CODE>flex</CODE> failed to notice the
+fact, meaning that <CODE>flex</CODE> scanned the first two sections
+looking for occurrences of these actions and failed to
+find any, but somehow you snuck some in (via a #include
+file, for example).  Use <SAMP>`%option reject'</SAMP> or <SAMP>`%option yymore'</SAMP>
+to indicate to flex that you really do use these features.
+
+<DT><SAMP>`flex scanner jammed'</SAMP>
+<DD>
+a scanner compiled with <SAMP>`-s'</SAMP> has
+encountered an input string which wasn't matched by any of
+its rules.  This error can also occur due to internal
+problems.
+
+<DT><SAMP>`token too large, exceeds YYLMAX'</SAMP>
+<DD>
+your scanner uses <SAMP>`%array'</SAMP>
+and one of its rules matched a string longer than the <SAMP>`YYL-'</SAMP>
+<CODE>MAX</CODE> constant (8K bytes by default).  You can increase the
+value by #define'ing <CODE>YYLMAX</CODE> in the definitions section of
+your <CODE>flex</CODE> input.
+
+<DT><SAMP>`scanner requires -8 flag to use the character '<VAR>x</VAR>''</SAMP>
+<DD>
+Your
+scanner specification includes recognizing the 8-bit
+character <VAR>x</VAR> and you did not specify the -8 flag, and your
+scanner defaulted to 7-bit because you used the <SAMP>`-Cf'</SAMP> or <SAMP>`-CF'</SAMP>
+table compression options.  See the discussion of the <SAMP>`-7'</SAMP>
+flag for details.
+
+<DT><SAMP>`flex scanner push-back overflow'</SAMP>
+<DD>
+you used <SAMP>`unput()'</SAMP> to push
+back so much text that the scanner's buffer could not hold
+both the pushed-back text and the current token in <CODE>yytext</CODE>.
+Ideally the scanner should dynamically resize the buffer
+in this case, but at present it does not.
+
+<DT><SAMP>`input buffer overflow, can't enlarge buffer because scanner uses REJECT'</SAMP>
+<DD>
+the scanner was working on matching an
+extremely large token and needed to expand the input
+buffer.  This doesn't work with scanners that use <CODE>REJECT</CODE>.
+
+<DT><SAMP>`fatal flex scanner internal error--end of buffer missed'</SAMP>
+<DD>
+This can occur in an scanner which is reentered after a
+long-jump has jumped out (or over) the scanner's
+activation frame.  Before reentering the scanner, use:
+
+
+<PRE>
+yyrestart( yyin );
+</PRE>
+
+or, as noted above, switch to using the C++ scanner class.
+
+<DT><SAMP>`too many start conditions in &#60;&#62; construct!'</SAMP>
+<DD>
+you listed
+more start conditions in a &#60;&#62; construct than exist (so you
+must have listed at least one of them twice).
+</DL>
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_20.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_20.html">previous</A>, <A HREF="flex_22.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_22.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>

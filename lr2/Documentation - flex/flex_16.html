@@ -1,0 +1,42 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - YACC interface</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_15.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_15.html">previous</A>, <A HREF="flex_17.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_17.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC16" HREF="flex_toc.html#TOC16" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC16">Interfacing with <CODE>yacc</CODE></A></H2>
+
+<P>
+One of the main uses of <CODE>flex</CODE> is as a companion to the <CODE>yacc</CODE>
+parser-generator.  <CODE>yacc</CODE> parsers expect to call a routine
+named <SAMP>`yylex()'</SAMP> to find the next input token.  The routine
+is supposed to return the type of the next token as well
+as putting any associated value in the global <CODE>yylval</CODE>.  To
+use <CODE>flex</CODE> with <CODE>yacc</CODE>, one specifies the <SAMP>`-d'</SAMP> option to <CODE>yacc</CODE> to
+instruct it to generate the file <TT>`y.tab.h'</TT> containing
+definitions of all the <SAMP>`%tokens'</SAMP> appearing in the <CODE>yacc</CODE> input.
+This file is then included in the <CODE>flex</CODE> scanner.  For
+example, if one of the tokens is "TOK_NUMBER", part of the
+scanner might look like:
+
+
+
+<PRE>
+%{
+#include "y.tab.h"
+%}
+
+%%
+
+[0-9]+        yylval = atoi( yytext ); return TOK_NUMBER;
+</PRE>
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_15.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_15.html">previous</A>, <A HREF="flex_17.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_17.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>

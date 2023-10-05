@@ -1,0 +1,110 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - Matching</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_7.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_7.html">previous</A>, <A HREF="flex_9.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_9.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC8" HREF="flex_toc.html#TOC8" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC8">How the input is matched</A></H2>
+
+<P>
+When the generated scanner is run, it analyzes its input
+looking for strings which match any of its patterns.  If
+it finds more than one match, it takes the one matching
+the most text (for trailing context rules, this includes
+the length of the trailing part, even though it will then
+be returned to the input).  If it finds two or more
+matches of the same length, the rule listed first in the
+<CODE>flex</CODE> input file is chosen.
+
+
+<P>
+Once the match is determined, the text corresponding to
+the match (called the <VAR>token</VAR>) is made available in the
+global character pointer <CODE>yytext</CODE>, and its length in the
+global integer <CODE>yyleng</CODE>.  The <VAR>action</VAR> corresponding to the
+matched pattern is then executed (a more detailed
+description of actions follows), and then the remaining input is
+scanned for another match.
+
+
+<P>
+If no match is found, then the <EM>default rule</EM> is executed:
+the next character in the input is considered matched and
+copied to the standard output.  Thus, the simplest legal
+<CODE>flex</CODE> input is:
+
+
+
+<PRE>
+%%
+</PRE>
+
+<P>
+which generates a scanner that simply copies its input
+(one character at a time) to its output.
+
+
+<P>
+Note that <CODE>yytext</CODE> can be defined in two different ways:
+either as a character <EM>pointer</EM> or as a character <EM>array</EM>.
+You can control which definition <CODE>flex</CODE> uses by including
+one of the special directives <SAMP>`%pointer'</SAMP> or <SAMP>`%array'</SAMP> in the
+first (definitions) section of your flex input.  The
+default is <SAMP>`%pointer'</SAMP>, unless you use the <SAMP>`-l'</SAMP> lex
+compatibility option, in which case <CODE>yytext</CODE> will be an array.  The
+advantage of using <SAMP>`%pointer'</SAMP> is substantially faster
+scanning and no buffer overflow when matching very large
+tokens (unless you run out of dynamic memory).  The
+disadvantage is that you are restricted in how your actions can
+modify <CODE>yytext</CODE> (see the next section), and calls to the
+<SAMP>`unput()'</SAMP> function destroys the present contents of <CODE>yytext</CODE>,
+which can be a considerable porting headache when moving
+between different <CODE>lex</CODE> versions.
+
+
+<P>
+The advantage of <SAMP>`%array'</SAMP> is that you can then modify <CODE>yytext</CODE>
+to your heart's content, and calls to <SAMP>`unput()'</SAMP> do not
+destroy <CODE>yytext</CODE> (see below).  Furthermore, existing <CODE>lex</CODE>
+programs sometimes access <CODE>yytext</CODE> externally using
+declarations of the form:
+
+<PRE>
+extern char yytext[];
+</PRE>
+
+<P>
+This definition is erroneous when used with <SAMP>`%pointer'</SAMP>, but
+correct for <SAMP>`%array'</SAMP>.
+
+
+<P>
+<SAMP>`%array'</SAMP> defines <CODE>yytext</CODE> to be an array of <CODE>YYLMAX</CODE> characters,
+which defaults to a fairly large value.  You can change
+the size by simply #define'ing <CODE>YYLMAX</CODE> to a different value
+in the first section of your <CODE>flex</CODE> input.  As mentioned
+above, with <SAMP>`%pointer'</SAMP> yytext grows dynamically to
+accommodate large tokens.  While this means your <SAMP>`%pointer'</SAMP> scanner
+can accommodate very large tokens (such as matching entire
+blocks of comments), bear in mind that each time the
+scanner must resize <CODE>yytext</CODE> it also must rescan the entire
+token from the beginning, so matching such tokens can
+prove slow.  <CODE>yytext</CODE> presently does <EM>not</EM> dynamically grow if
+a call to <SAMP>`unput()'</SAMP> results in too much text being pushed
+back; instead, a run-time error results.
+
+
+<P>
+Also note that you cannot use <SAMP>`%array'</SAMP> with C++ scanner
+classes (the <CODE>c++</CODE> option; see below).
+
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_7.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_7.html">previous</A>, <A HREF="flex_9.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_9.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>

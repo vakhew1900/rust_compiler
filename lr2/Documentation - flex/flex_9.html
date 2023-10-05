@@ -1,0 +1,315 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - Actions</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_8.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_8.html">previous</A>, <A HREF="flex_10.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_10.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC9" HREF="flex_toc.html#TOC9" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC9">Actions</A></H2>
+
+<P>
+Each pattern in a rule has a corresponding action, which
+can be any arbitrary C statement.  The pattern ends at the
+first non-escaped whitespace character; the remainder of
+the line is its action.  If the action is empty, then when
+the pattern is matched the input token is simply
+discarded.  For example, here is the specification for a
+program which deletes all occurrences of "zap me" from its
+input:
+
+
+
+<PRE>
+%%
+"zap me"
+</PRE>
+
+<P>
+(It will copy all other characters in the input to the
+output since they will be matched by the default rule.)
+
+
+<P>
+Here is a program which compresses multiple blanks and
+tabs down to a single blank, and throws away whitespace
+found at the end of a line:
+
+
+
+<PRE>
+%%
+[ \t]+        putchar( ' ' );
+[ \t]+$       /* ignore this token */
+</PRE>
+
+<P>
+If the action contains a '{', then the action spans till
+the balancing '}' is found, and the action may cross
+multiple lines.  <CODE>flex</CODE> knows about C strings and comments and
+won't be fooled by braces found within them, but also
+allows actions to begin with <SAMP>`%{'</SAMP> and will consider the
+action to be all the text up to the next <SAMP>`%}'</SAMP> (regardless of
+ordinary braces inside the action).
+
+
+<P>
+An action consisting solely of a vertical bar ('|') means
+"same as the action for the next rule." See below for an
+illustration.
+
+
+<P>
+Actions can include arbitrary C code, including <CODE>return</CODE>
+statements to return a value to whatever routine called
+<SAMP>`yylex()'</SAMP>.  Each time <SAMP>`yylex()'</SAMP> is called it continues
+processing tokens from where it last left off until it either
+reaches the end of the file or executes a return.
+
+
+<P>
+Actions are free to modify <CODE>yytext</CODE> except for lengthening
+it (adding characters to its end--these will overwrite
+later characters in the input stream).  This however does
+not apply when using <SAMP>`%array'</SAMP> (see above); in that case,
+<CODE>yytext</CODE> may be freely modified in any way.
+
+
+<P>
+Actions are free to modify <CODE>yyleng</CODE> except they should not
+do so if the action also includes use of <SAMP>`yymore()'</SAMP> (see
+below).
+
+
+<P>
+There are a number of special directives which can be
+included within an action:
+
+
+
+<UL>
+<LI>
+
+<SAMP>`ECHO'</SAMP> copies yytext to the scanner's output.
+
+<LI>
+
+<CODE>BEGIN</CODE> followed by the name of a start condition
+places the scanner in the corresponding start
+condition (see below).
+
+<LI>
+
+<CODE>REJECT</CODE> directs the scanner to proceed on to the
+"second best" rule which matched the input (or a
+prefix of the input).  The rule is chosen as
+described above in "How the Input is Matched", and
+<CODE>yytext</CODE> and <CODE>yyleng</CODE> set up appropriately.  It may
+either be one which matched as much text as the
+originally chosen rule but came later in the <CODE>flex</CODE>
+input file, or one which matched less text.  For
+example, the following will both count the words in
+the input and call the routine special() whenever
+"frob" is seen:
+
+
+<PRE>
+        int word_count = 0;
+%%
+
+frob        special(); REJECT;
+[^ \t\n]+   ++word_count;
+</PRE>
+
+Without the <CODE>REJECT</CODE>, any "frob"'s in the input would
+not be counted as words, since the scanner normally
+executes only one action per token.  Multiple
+<CODE>REJECT's</CODE> are allowed, each one finding the next
+best choice to the currently active rule.  For
+example, when the following scanner scans the token
+"abcd", it will write "abcdabcaba" to the output:
+
+
+<PRE>
+%%
+a        |
+ab       |
+abc      |
+abcd     ECHO; REJECT;
+.|\n     /* eat up any unmatched character */
+</PRE>
+
+(The first three rules share the fourth's action
+since they use the special '|' action.)  <CODE>REJECT</CODE> is
+a particularly expensive feature in terms of
+scanner performance; if it is used in <EM>any</EM> of the
+scanner's actions it will slow down <EM>all</EM> of the
+scanner's matching.  Furthermore, <CODE>REJECT</CODE> cannot be used
+with the <SAMP>`-Cf'</SAMP> or <SAMP>`-CF'</SAMP> options (see below).
+
+Note also that unlike the other special actions,
+<CODE>REJECT</CODE> is a <EM>branch</EM>; code immediately following it
+in the action will <EM>not</EM> be executed.
+
+<LI>
+
+<SAMP>`yymore()'</SAMP> tells the scanner that the next time it
+matches a rule, the corresponding token should be
+<EM>appended</EM> onto the current value of <CODE>yytext</CODE> rather
+than replacing it.  For example, given the input
+"mega-kludge" the following will write
+"mega-mega-kludge" to the output:
+
+
+<PRE>
+%%
+mega-    ECHO; yymore();
+kludge   ECHO;
+</PRE>
+
+First "mega-" is matched and echoed to the output.
+Then "kludge" is matched, but the previous "mega-"
+is still hanging around at the beginning of <CODE>yytext</CODE>
+so the <SAMP>`ECHO'</SAMP> for the "kludge" rule will actually
+write "mega-kludge".
+</UL>
+
+<P>
+Two notes regarding use of <SAMP>`yymore()'</SAMP>.  First, <SAMP>`yymore()'</SAMP>
+depends on the value of <CODE>yyleng</CODE> correctly reflecting the
+size of the current token, so you must not modify <CODE>yyleng</CODE>
+if you are using <SAMP>`yymore()'</SAMP>.  Second, the presence of
+<SAMP>`yymore()'</SAMP> in the scanner's action entails a minor
+performance penalty in the scanner's matching speed.
+
+
+
+<UL>
+<LI>
+
+<SAMP>`yyless(n)'</SAMP> returns all but the first <VAR>n</VAR> characters of
+the current token back to the input stream, where
+they will be rescanned when the scanner looks for
+the next match.  <CODE>yytext</CODE> and <CODE>yyleng</CODE> are adjusted
+appropriately (e.g., <CODE>yyleng</CODE> will now be equal to <VAR>n</VAR>
+).  For example, on the input "foobar" the
+following will write out "foobarbar":
+
+
+<PRE>
+%%
+foobar    ECHO; yyless(3);
+[a-z]+    ECHO;
+</PRE>
+
+An argument of 0 to <CODE>yyless</CODE> will cause the entire
+current input string to be scanned again.  Unless
+you've changed how the scanner will subsequently
+process its input (using <CODE>BEGIN</CODE>, for example), this
+will result in an endless loop.
+
+Note that <CODE>yyless</CODE> is a macro and can only be used in the
+flex input file, not from other source files.
+
+<LI>
+
+<SAMP>`unput(c)'</SAMP> puts the character <CODE>c</CODE> back onto the input
+stream.  It will be the next character scanned.
+The following action will take the current token
+and cause it to be rescanned enclosed in
+parentheses.
+
+
+<PRE>
+{
+int i;
+/* Copy yytext because unput() trashes yytext */
+char *yycopy = strdup( yytext );
+unput( ')' );
+for ( i = yyleng - 1; i &#62;= 0; --i )
+    unput( yycopy[i] );
+unput( '(' );
+free( yycopy );
+}
+</PRE>
+
+Note that since each <SAMP>`unput()'</SAMP> puts the given
+character back at the <EM>beginning</EM> of the input stream,
+pushing back strings must be done back-to-front.
+An important potential problem when using <SAMP>`unput()'</SAMP> is that
+if you are using <SAMP>`%pointer'</SAMP> (the default), a call to <SAMP>`unput()'</SAMP>
+<EM>destroys</EM> the contents of <CODE>yytext</CODE>, starting with its
+rightmost character and devouring one character to the left
+with each call.  If you need the value of yytext preserved
+after a call to <SAMP>`unput()'</SAMP> (as in the above example), you
+must either first copy it elsewhere, or build your scanner
+using <SAMP>`%array'</SAMP> instead (see How The Input Is Matched).
+
+Finally, note that you cannot put back <CODE>EOF</CODE> to attempt to
+mark the input stream with an end-of-file.
+
+<LI>
+
+<SAMP>`input()'</SAMP> reads the next character from the input
+stream.  For example, the following is one way to
+eat up C comments:
+
+
+<PRE>
+%%
+"/*"        {
+            register int c;
+
+            for ( ; ; )
+                {
+                while ( (c = input()) != '*' &#38;&#38;
+                        c != EOF )
+                    ;    /* eat up text of comment */
+
+                if ( c == '*' )
+                    {
+                    while ( (c = input()) == '*' )
+                        ;
+                    if ( c == '/' )
+                        break;    /* found the end */
+                    }
+
+                if ( c == EOF )
+                    {
+                    error( "EOF in comment" );
+                    break;
+                    }
+                }
+            }
+</PRE>
+
+(Note that if the scanner is compiled using <SAMP>`C++'</SAMP>,
+then <SAMP>`input()'</SAMP> is instead referred to as <SAMP>`yyinput()'</SAMP>,
+in order to avoid a name clash with the <SAMP>`C++'</SAMP> stream
+by the name of <CODE>input</CODE>.)
+
+<LI>YY_FLUSH_BUFFER
+
+flushes the scanner's internal buffer so that the next time the scanner
+attempts to match a token, it will first refill the buffer using
+<CODE>YY_INPUT</CODE> (see The Generated Scanner, below).  This action is
+a special case of the more general <SAMP>`yy_flush_buffer()'</SAMP> function,
+described below in the section Multiple Input Buffers.
+
+<LI>
+
+<SAMP>`yyterminate()'</SAMP> can be used in lieu of a return
+statement in an action.  It terminates the scanner
+and returns a 0 to the scanner's caller, indicating
+"all done".  By default, <SAMP>`yyterminate()'</SAMP> is also
+called when an end-of-file is encountered.  It is a
+macro and may be redefined.
+</UL>
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_8.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_8.html">previous</A>, <A HREF="flex_10.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_10.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>

@@ -1,0 +1,95 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - Miscellaneous</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_13.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_13.html">previous</A>, <A HREF="flex_15.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_15.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC14" HREF="flex_toc.html#TOC14" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC14">Miscellaneous macros</A></H2>
+
+<P>
+The macro <CODE>YY_USER_ACTION</CODE> can be defined to provide an
+action which is always executed prior to the matched
+rule's action.  For example, it could be #define'd to call
+a routine to convert yytext to lower-case.  When
+<CODE>YY_USER_ACTION</CODE> is invoked, the variable <CODE>yy_act</CODE> gives the
+number of the matched rule (rules are numbered starting
+with 1).  Suppose you want to profile how often each of
+your rules is matched.  The following would do the trick:
+
+
+
+<PRE>
+#define YY_USER_ACTION ++ctr[yy_act]
+</PRE>
+
+<P>
+where <CODE>ctr</CODE> is an array to hold the counts for the different
+rules.  Note that the macro <CODE>YY_NUM_RULES</CODE> gives the total number
+of rules (including the default rule, even if you use <SAMP>`-s'</SAMP>, so
+a correct declaration for <CODE>ctr</CODE> is:
+
+
+
+<PRE>
+int ctr[YY_NUM_RULES];
+</PRE>
+
+<P>
+The macro <CODE>YY_USER_INIT</CODE> may be defined to provide an action
+which is always executed before the first scan (and before
+the scanner's internal initializations are done).  For
+example, it could be used to call a routine to read in a
+data table or open a logging file.
+
+
+<P>
+The macro <SAMP>`yy_set_interactive(is_interactive)'</SAMP> can be used
+to control whether the current buffer is considered
+<EM>interactive</EM>.  An interactive buffer is processed more slowly,
+but must be used when the scanner's input source is indeed
+interactive to avoid problems due to waiting to fill
+buffers (see the discussion of the <SAMP>`-I'</SAMP> flag below).  A
+non-zero value in the macro invocation marks the buffer as
+interactive, a zero value as non-interactive.  Note that
+use of this macro overrides <SAMP>`%option always-interactive'</SAMP> or
+<SAMP>`%option never-interactive'</SAMP> (see Options below).
+<SAMP>`yy_set_interactive()'</SAMP> must be invoked prior to beginning to
+scan the buffer that is (or is not) to be considered
+interactive.
+
+
+<P>
+The macro <SAMP>`yy_set_bol(at_bol)'</SAMP> can be used to control
+whether the current buffer's scanning context for the next
+token match is done as though at the beginning of a line.
+A non-zero macro argument makes rules anchored with
+
+
+<P>
+The macro <SAMP>`YY_AT_BOL()'</SAMP> returns true if the next token
+scanned from the current buffer will have '^' rules
+active, false otherwise.
+
+
+<P>
+In the generated scanner, the actions are all gathered in
+one large switch statement and separated using <CODE>YY_BREAK</CODE>,
+which may be redefined.  By default, it is simply a
+"break", to separate each rule's action from the following
+rule's.  Redefining <CODE>YY_BREAK</CODE> allows, for example, C++
+users to #define YY_BREAK to do nothing (while being very
+careful that every rule ends with a "break" or a
+"return"!) to avoid suffering from unreachable statement
+warnings where because a rule's action ends with "return",
+the <CODE>YY_BREAK</CODE> is inaccessible.
+
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_13.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_13.html">previous</A>, <A HREF="flex_15.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_15.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>

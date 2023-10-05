@@ -1,0 +1,624 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - Options</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_16.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_16.html">previous</A>, <A HREF="flex_18.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_18.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC17" HREF="flex_toc.html#TOC17" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC17">Options</A></H2>
+<P>
+<CODE>flex</CODE> has the following options:
+
+
+<DL COMPACT>
+
+<DT><SAMP>`-b'</SAMP>
+<DD>
+Generate backing-up information to <TT>`lex.backup'</TT>.
+This is a list of scanner states which require
+backing up and the input characters on which they
+do so.  By adding rules one can remove backing-up
+states.  If <EM>all</EM> backing-up states are eliminated
+and <SAMP>`-Cf'</SAMP> or <SAMP>`-CF'</SAMP> is used, the generated scanner will
+run faster (see the <SAMP>`-p'</SAMP> flag).  Only users who wish
+to squeeze every last cycle out of their scanners
+need worry about this option.  (See the section on
+Performance Considerations below.)
+
+<DT><SAMP>`-c'</SAMP>
+<DD>
+is a do-nothing, deprecated option included for
+POSIX compliance.
+
+<DT><SAMP>`-d'</SAMP>
+<DD>
+makes the generated scanner run in <EM>debug</EM> mode.
+Whenever a pattern is recognized and the global
+<CODE>yy_flex_debug</CODE> is non-zero (which is the default),
+the scanner will write to <CODE>stderr</CODE> a line of the
+form:
+
+
+<PRE>
+--accepting rule at line 53 ("the matched text")
+</PRE>
+
+The line number refers to the location of the rule
+in the file defining the scanner (i.e., the file
+that was fed to flex).  Messages are also generated
+when the scanner backs up, accepts the default
+rule, reaches the end of its input buffer (or
+encounters a NUL; at this point, the two look the
+same as far as the scanner's concerned), or reaches
+an end-of-file.
+
+<DT><SAMP>`-f'</SAMP>
+<DD>
+specifies <EM>fast scanner</EM>.  No table compression is
+done and stdio is bypassed.  The result is large
+but fast.  This option is equivalent to <SAMP>`-Cfr'</SAMP> (see
+below).
+
+<DT><SAMP>`-h'</SAMP>
+<DD>
+generates a "help" summary of <CODE>flex's</CODE> options to
+<CODE>stdout</CODE> and then exits.  <SAMP>`-?'</SAMP> and <SAMP>`--help'</SAMP> are synonyms
+for <SAMP>`-h'</SAMP>.
+
+<DT><SAMP>`-i'</SAMP>
+<DD>
+instructs <CODE>flex</CODE> to generate a <EM>case-insensitive</EM>
+scanner.  The case of letters given in the <CODE>flex</CODE> input
+patterns will be ignored, and tokens in the input
+will be matched regardless of case.  The matched
+text given in <CODE>yytext</CODE> will have the preserved case
+(i.e., it will not be folded).
+
+<DT><SAMP>`-l'</SAMP>
+<DD>
+turns on maximum compatibility with the original
+AT&#38;T <CODE>lex</CODE> implementation.  Note that this does not
+mean <EM>full</EM> compatibility.  Use of this option costs
+a considerable amount of performance, and it cannot
+be used with the <SAMP>`-+, -f, -F, -Cf'</SAMP>, or <SAMP>`-CF'</SAMP> options.
+For details on the compatibilities it provides, see
+the section "Incompatibilities With Lex And POSIX"
+below.  This option also results in the name
+<CODE>YY_FLEX_LEX_COMPAT</CODE> being #define'd in the generated
+scanner.
+
+<DT><SAMP>`-n'</SAMP>
+<DD>
+is another do-nothing, deprecated option included
+only for POSIX compliance.
+
+<DT><SAMP>`-p'</SAMP>
+<DD>
+generates a performance report to stderr.  The
+report consists of comments regarding features of
+the <CODE>flex</CODE> input file which will cause a serious loss
+of performance in the resulting scanner.  If you
+give the flag twice, you will also get comments
+regarding features that lead to minor performance
+losses.
+
+Note that the use of <CODE>REJECT</CODE>, <SAMP>`%option yylineno'</SAMP> and
+variable trailing context (see the Deficiencies / Bugs section below)
+entails a substantial performance penalty; use of <SAMP>`yymore()'</SAMP>,
+the <SAMP>`^'</SAMP> operator, and the <SAMP>`-I'</SAMP> flag entail minor performance
+penalties.
+
+<DT><SAMP>`-s'</SAMP>
+<DD>
+causes the <EM>default rule</EM> (that unmatched scanner
+input is echoed to <CODE>stdout</CODE>) to be suppressed.  If
+the scanner encounters input that does not match
+any of its rules, it aborts with an error.  This
+option is useful for finding holes in a scanner's
+rule set.
+
+<DT><SAMP>`-t'</SAMP>
+<DD>
+instructs <CODE>flex</CODE> to write the scanner it generates to
+standard output instead of <TT>`lex.yy.c'</TT>.
+
+<DT><SAMP>`-v'</SAMP>
+<DD>
+specifies that <CODE>flex</CODE> should write to <CODE>stderr</CODE> a
+summary of statistics regarding the scanner it
+generates.  Most of the statistics are meaningless to
+the casual <CODE>flex</CODE> user, but the first line identifies
+the version of <CODE>flex</CODE> (same as reported by <SAMP>`-V'</SAMP>), and
+the next line the flags used when generating the
+scanner, including those that are on by default.
+
+<DT><SAMP>`-w'</SAMP>
+<DD>
+suppresses warning messages.
+
+<DT><SAMP>`-B'</SAMP>
+<DD>
+instructs <CODE>flex</CODE> to generate a <EM>batch</EM> scanner, the
+opposite of <EM>interactive</EM> scanners generated by <SAMP>`-I'</SAMP>
+(see below).  In general, you use <SAMP>`-B'</SAMP> when you are
+<EM>certain</EM> that your scanner will never be used
+interactively, and you want to squeeze a <EM>little</EM> more
+performance out of it.  If your goal is instead to
+squeeze out a <EM>lot</EM> more performance, you should be
+using the <SAMP>`-Cf'</SAMP> or <SAMP>`-CF'</SAMP> options (discussed below),
+which turn on <SAMP>`-B'</SAMP> automatically anyway.
+
+<DT><SAMP>`-F'</SAMP>
+<DD>
+specifies that the <EM>fast</EM> scanner table
+representation should be used (and stdio bypassed).  This
+representation is about as fast as the full table
+representation <SAMP>`(-f)'</SAMP>, and for some sets of patterns
+will be considerably smaller (and for others,
+larger).  In general, if the pattern set contains
+both "keywords" and a catch-all, "identifier" rule,
+such as in the set:
+
+
+<PRE>
+"case"    return TOK_CASE;
+"switch"  return TOK_SWITCH;
+...
+"default" return TOK_DEFAULT;
+[a-z]+    return TOK_ID;
+</PRE>
+
+then you're better off using the full table
+representation.  If only the "identifier" rule is
+present and you then use a hash table or some such to
+detect the keywords, you're better off using <SAMP>`-F'</SAMP>.
+
+This option is equivalent to <SAMP>`-CFr'</SAMP> (see below).  It
+cannot be used with <SAMP>`-+'</SAMP>.
+
+<DT><SAMP>`-I'</SAMP>
+<DD>
+instructs <CODE>flex</CODE> to generate an <EM>interactive</EM> scanner.
+An interactive scanner is one that only looks ahead
+to decide what token has been matched if it
+absolutely must.  It turns out that always looking one
+extra character ahead, even if the scanner has
+already seen enough text to disambiguate the
+current token, is a bit faster than only looking ahead
+when necessary.  But scanners that always look
+ahead give dreadful interactive performance; for
+example, when a user types a newline, it is not
+recognized as a newline token until they enter
+<EM>another</EM> token, which often means typing in another
+whole line.
+
+<CODE>Flex</CODE> scanners default to <EM>interactive</EM> unless you use
+the <SAMP>`-Cf'</SAMP> or <SAMP>`-CF'</SAMP> table-compression options (see
+below).  That's because if you're looking for
+high-performance you should be using one of these
+options, so if you didn't, <CODE>flex</CODE> assumes you'd
+rather trade off a bit of run-time performance for
+intuitive interactive behavior.  Note also that you
+<EM>cannot</EM> use <SAMP>`-I'</SAMP> in conjunction with <SAMP>`-Cf'</SAMP> or <SAMP>`-CF'</SAMP>.
+Thus, this option is not really needed; it is on by
+default for all those cases in which it is allowed.
+
+You can force a scanner to <EM>not</EM> be interactive by
+using <SAMP>`-B'</SAMP> (see above).
+
+<DT><SAMP>`-L'</SAMP>
+<DD>
+instructs <CODE>flex</CODE> not to generate <SAMP>`#line'</SAMP> directives.
+Without this option, <CODE>flex</CODE> peppers the generated
+scanner with #line directives so error messages in
+the actions will be correctly located with respect
+to either the original <CODE>flex</CODE> input file (if the
+errors are due to code in the input file), or
+<TT>`lex.yy.c'</TT> (if the errors are <CODE>flex's</CODE> fault -- you
+should report these sorts of errors to the email
+address given below).
+
+<DT><SAMP>`-T'</SAMP>
+<DD>
+makes <CODE>flex</CODE> run in <CODE>trace</CODE> mode.  It will generate a
+lot of messages to <CODE>stderr</CODE> concerning the form of
+the input and the resultant non-deterministic and
+deterministic finite automata.  This option is
+mostly for use in maintaining <CODE>flex</CODE>.
+
+<DT><SAMP>`-V'</SAMP>
+<DD>
+prints the version number to <CODE>stdout</CODE> and exits.
+<SAMP>`--version'</SAMP> is a synonym for <SAMP>`-V'</SAMP>.
+
+<DT><SAMP>`-7'</SAMP>
+<DD>
+instructs <CODE>flex</CODE> to generate a 7-bit scanner, i.e.,
+one which can only recognized 7-bit characters in
+its input.  The advantage of using <SAMP>`-7'</SAMP> is that the
+scanner's tables can be up to half the size of
+those generated using the <SAMP>`-8'</SAMP> option (see below).
+The disadvantage is that such scanners often hang
+or crash if their input contains an 8-bit
+character.
+
+Note, however, that unless you generate your
+scanner using the <SAMP>`-Cf'</SAMP> or <SAMP>`-CF'</SAMP> table compression options,
+use of <SAMP>`-7'</SAMP> will save only a small amount of table
+space, and make your scanner considerably less
+portable.  <CODE>Flex's</CODE> default behavior is to generate
+an 8-bit scanner unless you use the <SAMP>`-Cf'</SAMP> or <SAMP>`-CF'</SAMP>, in
+which case <CODE>flex</CODE> defaults to generating 7-bit
+scanners unless your site was always configured to
+generate 8-bit scanners (as will often be the case
+with non-USA sites).  You can tell whether flex
+generated a 7-bit or an 8-bit scanner by inspecting
+the flag summary in the <SAMP>`-v'</SAMP> output as described
+above.
+
+Note that if you use <SAMP>`-Cfe'</SAMP> or <SAMP>`-CFe'</SAMP> (those table
+compression options, but also using equivalence
+classes as discussed see below), flex still
+defaults to generating an 8-bit scanner, since
+usually with these compression options full 8-bit
+tables are not much more expensive than 7-bit
+tables.
+
+<DT><SAMP>`-8'</SAMP>
+<DD>
+instructs <CODE>flex</CODE> to generate an 8-bit scanner, i.e.,
+one which can recognize 8-bit characters.  This
+flag is only needed for scanners generated using
+<SAMP>`-Cf'</SAMP> or <SAMP>`-CF'</SAMP>, as otherwise flex defaults to
+generating an 8-bit scanner anyway.
+
+See the discussion of <SAMP>`-7'</SAMP> above for flex's default
+behavior and the tradeoffs between 7-bit and 8-bit
+scanners.
+
+<DT><SAMP>`-+'</SAMP>
+<DD>
+specifies that you want flex to generate a C++
+scanner class.  See the section on Generating C++
+Scanners below for details.
+
+<DT><SAMP>`-C[aefFmr]'</SAMP>
+<DD>
+controls the degree of table compression and, more
+generally, trade-offs between small scanners and
+fast scanners.
+
+<SAMP>`-Ca'</SAMP> ("align") instructs flex to trade off larger
+tables in the generated scanner for faster
+performance because the elements of the tables are better
+aligned for memory access and computation.  On some
+RISC architectures, fetching and manipulating
+long-words is more efficient than with smaller-sized
+units such as shortwords.  This option can double
+the size of the tables used by your scanner.
+
+<SAMP>`-Ce'</SAMP> directs <CODE>flex</CODE> to construct <EM>equivalence classes</EM>,
+i.e., sets of characters which have identical
+lexical properties (for example, if the only appearance
+of digits in the <CODE>flex</CODE> input is in the character
+class "[0-9]" then the digits '0', '1', ..., '9'
+will all be put in the same equivalence class).
+Equivalence classes usually give dramatic
+reductions in the final table/object file sizes
+(typically a factor of 2-5) and are pretty cheap
+performance-wise (one array look-up per character
+scanned).
+
+<SAMP>`-Cf'</SAMP> specifies that the <EM>full</EM> scanner tables should
+be generated - <CODE>flex</CODE> should not compress the tables
+by taking advantages of similar transition
+functions for different states.
+
+<SAMP>`-CF'</SAMP> specifies that the alternate fast scanner
+representation (described above under the <SAMP>`-F'</SAMP> flag)
+should be used.  This option cannot be used with
+<SAMP>`-+'</SAMP>.
+
+<SAMP>`-Cm'</SAMP> directs <CODE>flex</CODE> to construct <EM>meta-equivalence
+classes</EM>, which are sets of equivalence classes (or
+characters, if equivalence classes are not being
+used) that are commonly used together.
+Meta-equivalence classes are often a big win when using
+compressed tables, but they have a moderate
+performance impact (one or two "if" tests and one array
+look-up per character scanned).
+
+<SAMP>`-Cr'</SAMP> causes the generated scanner to <EM>bypass</EM> use of
+the standard I/O library (stdio) for input.
+Instead of calling <SAMP>`fread()'</SAMP> or <SAMP>`getc()'</SAMP>, the scanner
+will use the <SAMP>`read()'</SAMP> system call, resulting in a
+performance gain which varies from system to
+system, but in general is probably negligible unless
+you are also using <SAMP>`-Cf'</SAMP> or <SAMP>`-CF'</SAMP>.  Using <SAMP>`-Cr'</SAMP> can cause
+strange behavior if, for example, you read from
+<CODE>yyin</CODE> using stdio prior to calling the scanner
+(because the scanner will miss whatever text your
+previous reads left in the stdio input buffer).
+
+<SAMP>`-Cr'</SAMP> has no effect if you define <CODE>YY_INPUT</CODE> (see The
+Generated Scanner above).
+
+A lone <SAMP>`-C'</SAMP> specifies that the scanner tables should
+be compressed but neither equivalence classes nor
+meta-equivalence classes should be used.
+
+The options <SAMP>`-Cf'</SAMP> or <SAMP>`-CF'</SAMP> and <SAMP>`-Cm'</SAMP> do not make sense
+together - there is no opportunity for
+meta-equivalence classes if the table is not being
+compressed.  Otherwise the options may be freely
+mixed, and are cumulative.
+
+The default setting is <SAMP>`-Cem'</SAMP>, which specifies that
+<CODE>flex</CODE> should generate equivalence classes and
+meta-equivalence classes.  This setting provides the
+highest degree of table compression.  You can trade
+off faster-executing scanners at the cost of larger
+tables with the following generally being true:
+
+
+<PRE>
+slowest &#38; smallest
+      -Cem
+      -Cm
+      -Ce
+      -C
+      -C{f,F}e
+      -C{f,F}
+      -C{f,F}a
+fastest &#38; largest
+</PRE>
+
+Note that scanners with the smallest tables are
+usually generated and compiled the quickest, so
+during development you will usually want to use the
+default, maximal compression.
+
+<SAMP>`-Cfe'</SAMP> is often a good compromise between speed and
+size for production scanners.
+
+<DT><SAMP>`-ooutput'</SAMP>
+<DD>
+directs flex to write the scanner to the file <SAMP>`out-'</SAMP>
+<CODE>put</CODE> instead of <TT>`lex.yy.c'</TT>.  If you combine <SAMP>`-o'</SAMP> with
+the <SAMP>`-t'</SAMP> option, then the scanner is written to
+<CODE>stdout</CODE> but its <SAMP>`#line'</SAMP> directives (see the <SAMP>`-L'</SAMP> option
+above) refer to the file <CODE>output</CODE>.
+
+<DT><SAMP>`-Pprefix'</SAMP>
+<DD>
+changes the default <SAMP>`yy'</SAMP> prefix used by <CODE>flex</CODE> for all
+globally-visible variable and function names to
+instead be <VAR>prefix</VAR>.  For example, <SAMP>`-Pfoo'</SAMP> changes the
+name of <CODE>yytext</CODE> to <TT>`footext'</TT>.  It also changes the
+name of the default output file from <TT>`lex.yy.c'</TT> to
+<TT>`lex.foo.c'</TT>.  Here are all of the names affected:
+
+
+<PRE>
+yy_create_buffer
+yy_delete_buffer
+yy_flex_debug
+yy_init_buffer
+yy_flush_buffer
+yy_load_buffer_state
+yy_switch_to_buffer
+yyin
+yyleng
+yylex
+yylineno
+yyout
+yyrestart
+yytext
+yywrap
+</PRE>
+
+(If you are using a C++ scanner, then only <CODE>yywrap</CODE>
+and <CODE>yyFlexLexer</CODE> are affected.) Within your scanner
+itself, you can still refer to the global variables
+and functions using either version of their name;
+but externally, they have the modified name.
+
+This option lets you easily link together multiple
+<CODE>flex</CODE> programs into the same executable.  Note,
+though, that using this option also renames
+<SAMP>`yywrap()'</SAMP>, so you now <EM>must</EM> either provide your own
+(appropriately-named) version of the routine for
+your scanner, or use <SAMP>`%option noyywrap'</SAMP>, as linking
+with <SAMP>`-lfl'</SAMP> no longer provides one for you by
+default.
+
+<DT><SAMP>`-Sskeleton_file'</SAMP>
+<DD>
+overrides the default skeleton file from which <CODE>flex</CODE>
+constructs its scanners.  You'll never need this
+option unless you are doing <CODE>flex</CODE> maintenance or
+development.
+</DL>
+
+<P>
+<CODE>flex</CODE> also provides a mechanism for controlling options
+within the scanner specification itself, rather than from
+the flex command-line.  This is done by including <SAMP>`%option'</SAMP>
+directives in the first section of the scanner
+specification.  You can specify multiple options with a single
+<SAMP>`%option'</SAMP> directive, and multiple directives in the first
+section of your flex input file.  Most options are given
+simply as names, optionally preceded by the word "no"
+(with no intervening whitespace) to negate their meaning.
+A number are equivalent to flex flags or their negation:
+
+
+
+<PRE>
+7bit            -7 option
+8bit            -8 option
+align           -Ca option
+backup          -b option
+batch           -B option
+c++             -+ option
+
+caseful or
+case-sensitive  opposite of -i (default)
+
+case-insensitive or
+caseless        -i option
+
+debug           -d option
+default         opposite of -s option
+ecs             -Ce option
+fast            -F option
+full            -f option
+interactive     -I option
+lex-compat      -l option
+meta-ecs        -Cm option
+perf-report     -p option
+read            -Cr option
+stdout          -t option
+verbose         -v option
+warn            opposite of -w option
+                (use "%option nowarn" for -w)
+
+array           equivalent to "%array"
+pointer         equivalent to "%pointer" (default)
+</PRE>
+
+<P>
+Some <SAMP>`%option's'</SAMP> provide features otherwise not available:
+
+
+<DL COMPACT>
+
+<DT><SAMP>`always-interactive'</SAMP>
+<DD>
+instructs flex to generate a scanner which always
+considers its input "interactive".  Normally, on
+each new input file the scanner calls <SAMP>`isatty()'</SAMP> in
+an attempt to determine whether the scanner's input
+source is interactive and thus should be read a
+character at a time.  When this option is used,
+however, then no such call is made.
+
+<DT><SAMP>`main'</SAMP>
+<DD>
+directs flex to provide a default <SAMP>`main()'</SAMP> program
+for the scanner, which simply calls <SAMP>`yylex()'</SAMP>.  This
+option implies <CODE>noyywrap</CODE> (see below).
+
+<DT><SAMP>`never-interactive'</SAMP>
+<DD>
+instructs flex to generate a scanner which never
+considers its input "interactive" (again, no call
+made to <SAMP>`isatty())'</SAMP>.  This is the opposite of <SAMP>`always-'</SAMP>
+<EM>interactive</EM>.
+
+<DT><SAMP>`stack'</SAMP>
+<DD>
+enables the use of start condition stacks (see
+Start Conditions above).
+
+<DT><SAMP>`stdinit'</SAMP>
+<DD>
+if unset (i.e., <SAMP>`%option nostdinit'</SAMP>) initializes <CODE>yyin</CODE>
+and <CODE>yyout</CODE> to nil <CODE>FILE</CODE> pointers, instead of <CODE>stdin</CODE>
+and <CODE>stdout</CODE>.
+
+<DT><SAMP>`yylineno'</SAMP>
+<DD>
+directs <CODE>flex</CODE> to generate a scanner that maintains the number
+of the current line read from its input in the global variable
+<CODE>yylineno</CODE>.  This option is implied by <SAMP>`%option lex-compat'</SAMP>.
+
+<DT><SAMP>`yywrap'</SAMP>
+<DD>
+if unset (i.e., <SAMP>`%option noyywrap'</SAMP>), makes the
+scanner not call <SAMP>`yywrap()'</SAMP> upon an end-of-file, but
+simply assume that there are no more files to scan
+(until the user points <CODE>yyin</CODE> at a new file and calls
+<SAMP>`yylex()'</SAMP> again).
+</DL>
+
+<P>
+<CODE>flex</CODE> scans your rule actions to determine whether you use
+the <CODE>REJECT</CODE> or <SAMP>`yymore()'</SAMP> features.  The <CODE>reject</CODE> and <CODE>yymore</CODE>
+options are available to override its decision as to
+whether you use the options, either by setting them (e.g.,
+<SAMP>`%option reject'</SAMP>) to indicate the feature is indeed used, or
+unsetting them to indicate it actually is not used (e.g.,
+<SAMP>`%option noyymore'</SAMP>).
+
+
+<P>
+Three options take string-delimited values, offset with '=':
+
+
+
+<PRE>
+%option outfile="ABC"
+</PRE>
+
+<P>
+is equivalent to <SAMP>`-oABC'</SAMP>, and
+
+
+
+<PRE>
+%option prefix="XYZ"
+</PRE>
+
+<P>
+is equivalent to <SAMP>`-PXYZ'</SAMP>.
+
+
+<P>
+Finally,
+
+
+
+<PRE>
+%option yyclass="foo"
+</PRE>
+
+<P>
+only applies when generating a C++ scanner (<SAMP>`-+'</SAMP> option).  It
+informs <CODE>flex</CODE> that you have derived <SAMP>`foo'</SAMP> as a subclass of
+<CODE>yyFlexLexer</CODE> so <CODE>flex</CODE> will place your actions in the member
+function <SAMP>`foo::yylex()'</SAMP> instead of <SAMP>`yyFlexLexer::yylex()'</SAMP>.
+It also generates a <SAMP>`yyFlexLexer::yylex()'</SAMP> member function that
+emits a run-time error (by invoking <SAMP>`yyFlexLexer::LexerError()'</SAMP>)
+if called.  See Generating C++ Scanners, below, for additional
+information.
+
+
+<P>
+A number of options are available for lint purists who
+want to suppress the appearance of unneeded routines in
+the generated scanner.  Each of the following, if unset,
+results in the corresponding routine not appearing in the
+generated scanner:
+
+
+
+<PRE>
+input, unput
+yy_push_state, yy_pop_state, yy_top_state
+yy_scan_buffer, yy_scan_bytes, yy_scan_string
+</PRE>
+
+<P>
+(though <SAMP>`yy_push_state()'</SAMP> and friends won't appear anyway
+unless you use <SAMP>`%option stack'</SAMP>).
+
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_16.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_16.html">previous</A>, <A HREF="flex_18.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_18.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>

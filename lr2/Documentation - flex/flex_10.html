@@ -1,0 +1,151 @@
+<HTML>
+<HEAD><meta http-equiv="pragma" content="no-cache">
+<!-- Created by texi2html 1.56k from flex.texi on 23 February 2001 -->
+
+<TITLE>Flex - a scanner generator - Generated scanner</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_9.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_9.html">previous</A>, <A HREF="flex_11.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_11.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H2><A NAME="SEC10" HREF="flex_toc.html#TOC10" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html#TOC10">The generated scanner</A></H2>
+
+<P>
+The output of <CODE>flex</CODE> is the file <TT>`lex.yy.c'</TT>, which contains
+the scanning routine <SAMP>`yylex()'</SAMP>, a number of tables used by
+it for matching tokens, and a number of auxiliary routines
+and macros.  By default, <SAMP>`yylex()'</SAMP> is declared as follows:
+
+
+
+<PRE>
+int yylex()
+    {
+    ... various definitions and the actions in here ...
+    }
+</PRE>
+
+<P>
+(If your environment supports function prototypes, then it
+will be "int yylex( void  )".)   This  definition  may  be
+changed by defining the "YY_DECL" macro.  For example, you
+could use:
+
+
+
+<PRE>
+#define YY_DECL float lexscan( a, b ) float a, b;
+</PRE>
+
+<P>
+to give the scanning routine the name <CODE>lexscan</CODE>, returning a
+float, and taking two floats as arguments.  Note that if
+you give arguments to the scanning routine using a
+K&#38;R-style/non-prototyped function declaration, you must
+terminate the definition with a semi-colon (<SAMP>`;'</SAMP>).
+
+
+<P>
+Whenever <SAMP>`yylex()'</SAMP> is called, it scans tokens from the
+global input file <CODE>yyin</CODE> (which defaults to stdin).  It
+continues until it either reaches an end-of-file (at which
+point it returns the value 0) or one of its actions
+executes a <CODE>return</CODE> statement.
+
+
+<P>
+If the scanner reaches an end-of-file, subsequent calls are undefined
+unless either <CODE>yyin</CODE> is pointed at a new input file (in which case
+scanning continues from that file), or <SAMP>`yyrestart()'</SAMP> is called.
+<SAMP>`yyrestart()'</SAMP> takes one argument, a <SAMP>`FILE *'</SAMP> pointer (which
+can be nil, if you've set up <CODE>YY_INPUT</CODE> to scan from a source
+other than <CODE>yyin</CODE>), and initializes <CODE>yyin</CODE> for scanning from
+that file.  Essentially there is no difference between just assigning
+<CODE>yyin</CODE> to a new input file or using <SAMP>`yyrestart()'</SAMP> to do so;
+the latter is available for compatibility with previous versions of
+<CODE>flex</CODE>, and because it can be used to switch input files in the
+middle of scanning.  It can also be used to throw away the current
+input buffer, by calling it with an argument of <CODE>yyin</CODE>; but
+better is to use <CODE>YY_FLUSH_BUFFER</CODE> (see above).  Note that
+<SAMP>`yyrestart()'</SAMP> does <EM>not</EM> reset the start condition to
+<CODE>INITIAL</CODE> (see Start Conditions, below).
+
+
+<P>
+If <SAMP>`yylex()'</SAMP> stops scanning due to executing a <CODE>return</CODE>
+statement in one of the actions, the scanner may then be called
+again and it will resume scanning where it left off.
+
+
+<P>
+By default (and for purposes of efficiency), the scanner
+uses block-reads rather than simple <SAMP>`getc()'</SAMP> calls to read
+characters from <CODE>yyin</CODE>.  The nature of how it gets its input
+can be controlled by defining the <CODE>YY_INPUT</CODE> macro.
+YY_INPUT's calling sequence is
+"YY_INPUT(buf,result,max_size)".  Its action is to place
+up to <VAR>max_size</VAR> characters in the character array <VAR>buf</VAR> and
+return in the integer variable <VAR>result</VAR> either the number of
+characters read or the constant YY_NULL (0 on Unix
+systems) to indicate EOF.  The default YY_INPUT reads from
+the global file-pointer "yyin".
+
+
+<P>
+A sample definition of YY_INPUT (in the definitions
+section of the input file):
+
+
+
+<PRE>
+%{
+#define YY_INPUT(buf,result,max_size) \
+    { \
+    int c = getchar(); \
+    result = (c == EOF) ? YY_NULL : (buf[0] = c, 1); \
+    }
+%}
+</PRE>
+
+<P>
+This definition will change the input processing to occur
+one character at a time.
+
+
+<P>
+When the scanner receives an end-of-file indication from
+YY_INPUT, it then checks the <SAMP>`yywrap()'</SAMP> function.  If
+<SAMP>`yywrap()'</SAMP> returns false (zero), then it is assumed that the
+function has gone ahead and set up <CODE>yyin</CODE> to point to
+another input file, and scanning continues.  If it returns
+true (non-zero), then the scanner terminates, returning 0
+to its caller.  Note that in either case, the start
+condition remains unchanged; it does <EM>not</EM> revert to <CODE>INITIAL</CODE>.
+
+
+<P>
+If you do not supply your own version of <SAMP>`yywrap()'</SAMP>, then you
+must either use <SAMP>`%option noyywrap'</SAMP> (in which case the scanner
+behaves as though <SAMP>`yywrap()'</SAMP> returned 1), or you must link with
+<SAMP>`-lfl'</SAMP> to obtain the default version of the routine, which always
+returns 1.
+
+
+<P>
+Three routines are available for scanning from in-memory
+buffers rather than files: <SAMP>`yy_scan_string()'</SAMP>,
+<SAMP>`yy_scan_bytes()'</SAMP>, and <SAMP>`yy_scan_buffer()'</SAMP>.  See the discussion
+of them below in the section Multiple Input Buffers.
+
+
+<P>
+The scanner writes its <SAMP>`ECHO'</SAMP> output to the <CODE>yyout</CODE> global
+(default, stdout), which may be redefined by the user
+simply by assigning it to some other <CODE>FILE</CODE> pointer.
+
+
+<P><HR><P>
+Go to the <A HREF="flex_1.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_1.html">first</A>, <A HREF="flex_9.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_9.html">previous</A>, <A HREF="flex_11.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_11.html">next</A>, <A HREF="flex_25.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_25.html">last</A> section, <A HREF="flex_toc.html" tppabs="http://www.gnu.org/software/flex/manual/html_node/flex_toc.html">table of contents</A>.
+</BODY>
+</HTML>
