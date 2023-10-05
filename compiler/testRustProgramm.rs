@@ -17,7 +17,8 @@ fn main() {
     let string1: &str = "Привет, мир!"; // Строка в двойных кавычках
     let string2: &str = r"Это строка с 'ро' внутри"; // Raw string
     // Raw строковый литерал в тройных кавычках
-    let raw_triple_quoted = r###"Это "raw" строка с тройными кавычками"###;
+    let raw_triple_quoted = r###"Это ##"raw"## строка с тройными кавычками"###;
+    let raw_triple_quoted = r"Это \0 \n \t \xFF строка с тройными кавычками";
     let string3: String = String::from("Это строка String"); // Строка типа String
     let string4: String = "Это тоже строка String".to_string(); // Использование to_string()
 
@@ -33,8 +34,11 @@ fn main() {
     let unicode_Q = '\u{0051}';
 
     // Escaping
-    let escaped_string1 = "abc\0ab";
     let escaped_string = "Это строка\n с символами: \\n (новая строка)\0, \\t (табуляция) \\0 (терминальный ноль)";
+
+    // Байтовые строки (byte strings)
+    let byte_string: &[u8] = b"Hello, World!";
+    println!("{:?}", byte_string);
 
     // Целые числа
     let integer1: i32 = 42;

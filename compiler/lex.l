@@ -6,6 +6,7 @@ DIGIT [0-9]
 %x CHAR
 %x STRING
 %x ML_COMMENT
+%x SHIELD_STRING
 
 %{
 	#include <stdio.h>
@@ -19,6 +20,7 @@ DIGIT [0-9]
     char str[1024];
     string stdstr = "";
     int lineNumber = 1;
+    int octothorpeCount = 0;
 %}
 
 %%
@@ -146,7 +148,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 <STRING>\\n  { stdstr += "\n"; }
 <STRING>\\r  { stdstr += "\r"; }
 <STRING>\\t  { stdstr += "\t"; }
-<STRING>\\0  { stdstr.push_back('\0'); }
+<STRING>\\0  { stdstr += "\0"; }
 <STRING>\\\\ { stdstr += "\\"; }
 <STRING>\\\" { stdstr += "\""; }
 <STRING>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
@@ -172,6 +174,23 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 <STRING>\\ { printf("STRING Error in line %d: slash\n", lineNumber); }
 
+r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING);}
+<SHIELD_STRING>[^\"\n]+ { stdstr += yytext; }
+<SHIELD_STRING>\n { lineNumber++; }
+<SHIELD_STRING>\"#* {
+    int tmp  = strlen(yytext) - 1;
+    if(tmp == octothorpeCount)
+    {
+        cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL);
+    }
+    else
+    {
+         stdstr += yytext;
+    }
+
+}
+<SHIELD_STRING><<EOF>> { printf("SHIELD_STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
+
 
 \' { strcpy(str,""); BEGIN(CHAR); }
 <CHAR>[^\\\']+ { strcat(str,yytext); }
@@ -181,8 +200,9 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 <CHAR>\\0 { strcat(str,"\0"); }
 <CHAR>\\\\ { strcat(str,"\\"); }
 <CHAR>\\\' { strcat(str,"\'"); }
+<CHAR>\\\" { strcat(str,"\""); }
 <CHAR>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
-    int x = strtol(yytext + 3,NULL, 16); 
+    int x = strtol(yytext + 3,NULL, 16);
     if(x <= 127)
     {
         char tmp[2];
@@ -208,7 +228,8 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
     {
         printf("CHAR Error in line %d: empty char literal\n", lineNumber);
     }
-    else {
+    else
+    {
         printf("CHAR Error in line %d: more than one char in quote\n", lineNumber);
     }
     BEGIN(INITIAL);
@@ -281,7 +302,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 [a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext);}
 [a-zA-Z_][a-zA-Z0-9_]*! { printf("Found MACROS: %s\n", yytext);}
 [0-9]*[a-zA-Z_][a-zA-Z0-9_]* { printf("Error in line %d: incorrect IDENTIFIER\n", lineNumber); }
-
+. { printf("Error in line %d: incorrect character in code\n", lineNumber); }
 %%
 
 void convertCharacterCodeToString(char characterCode[], int startPosition, char *string)
