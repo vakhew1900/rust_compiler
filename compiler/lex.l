@@ -11,9 +11,13 @@ DIGIT [0-9]
 	#include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+    #include <iostream>
+    #include <string>
     #include <ctype.h>
+    using namespace std;
 
     char str[1024];
+    string stdstr = "";
     int lineNumber = 1;
 %}
 
@@ -136,15 +140,15 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 
  \/\/[^\n]* { printf("Found COMMENT: %s\n", yytext); }
 
-\" { strcpy(str,""); BEGIN(STRING); }
-<STRING>[^\\\"\n]+ { strcat(str,yytext); }
+\" { stdstr = ""; BEGIN(STRING); }
+<STRING>[^\\\"\n]+ { stdstr += yytext; }
 <STRING>\n  { lineNumber++; }
-<STRING>\\n  { strcat(str,"\n"); }
-<STRING>\\r  { strcat(str,"\r"); }
-<STRING>\\t  { strcat(str,"\t"); }
-<STRING>\\0  { strcat(str,"\0"); }
-<STRING>\\\\ { strcat(str,"\\"); }
-<STRING>\\\" { strcat(str,"\""); }
+<STRING>\\n  { stdstr += "\n"; }
+<STRING>\\r  { stdstr += "\r"; }
+<STRING>\\t  { stdstr += "\t"; }
+<STRING>\\0  { stdstr += "\0"; }
+<STRING>\\\\ { stdstr += "\\"; }
+<STRING>\\\" { stdstr += "\""; }
 <STRING>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
     int x = strtol(yytext + 3,NULL, 16); 
     if(x <= 127)
@@ -152,7 +156,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
         char tmp[2];
         tmp[0] = x;
         tmp[1] = 0;
-        strcat(str, tmp);
+        stdstr += tmp;
     }
     else
     {
@@ -162,9 +166,9 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 <STRING>\\x[0-7][a-zA-Z0-9] {
     char string[2];
     convertCharacterCodeToString(yytext, 2, string);
-    strcat(str, string);
+    stdstr += string;
 }
-<STRING>\" { printf("Found STRING: %s\n", str); BEGIN(INITIAL);}
+<STRING>\" { cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL);}
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 <STRING>\\ { printf("STRING Error in line %d: slash\n", lineNumber); }
 

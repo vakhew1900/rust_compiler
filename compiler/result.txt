@@ -157,7 +157,8 @@ Found COMMENT: // Escaping
 Found KW_LET: let
 Found IDENTIFIER: escaped_string
 Found OPERATOR_ASSIGNMENT: =
-Found STRING: Это строка с символами: \n (новая строка), \t (табуляция)
+Found STRING: Это строка
+ с символами: \n (новая строка), \t (табуляция) \0 (терминальный ноль)
 Found SEMICOLON: ;
 Found COMMENT: // Байтовые строки (byte strings)
 Found KW_LET: let
@@ -191,14 +192,14 @@ Found IDENTIFIER: integer2
 Found COLON: :
 Found TYPE_I64: i64
 Found OPERATOR_ASSIGNMENT: =
-Found DECIMAL_NUMBER: -2045911175
+Found DECIMAL_NUMBER: 2147483647
 Found SEMICOLON: ;
 Found KW_LET: let
 Found IDENTIFIER: integer3
 Found COLON: :
 Found IDENTIFIER: u64
 Found OPERATOR_ASSIGNMENT: =
-Found DECIMAL_NUMBER: 821579789
+Found DECIMAL_NUMBER: 2147483647
 Found SEMICOLON: ;
 Found COMMENT: // Символы
 Found KW_LET: let
