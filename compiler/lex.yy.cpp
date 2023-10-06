@@ -22,7 +22,6 @@
 #ifdef __cplusplus
 
 #include <stdlib.h>
-#include <unistd.h>
 
 /* Use prototypes in function declarations. */
 #define YY_USE_PROTOS
@@ -683,11 +682,10 @@ char *yytext;
     #include <ctype.h>
     using namespace std;
 
-    char str[1024];
-    string stdstr = "";
-    int lineNumber = 1;
-    int octothorpeCount = 0;
-#line 691 "lex.yy.c"
+    void removeUnderline(char str[]);
+    void removeType(char str[], char *typeName);
+    void convertCharacterCodeToString(char characterCode[], int startPosition, char *string);
+#line 690 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -834,13 +832,14 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 26 "lex.l"
+#line 25 "lex.l"
 
 
 
-    void removeUnderline();
-    void removeType(char *typeName);
-	void convertCharacterCodeToString(char characterCode[], int startPosition, char *string);
+    char str[1024];
+    string stdstr = "";
+    int lineNumber = 1;
+    int octothorpeCount = 0;
 
 
 #line 847 "lex.yy.c"
@@ -1433,7 +1432,7 @@ YY_RULE_SETUP
 case 101:
 YY_RULE_SETUP
 #line 151 "lex.l"
-{ stdstr += "\0"; }
+{ stdstr.push_back('\0'); }
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
@@ -1459,7 +1458,7 @@ YY_RULE_SETUP
     }
     else
     {
-     printf("CHAR Error in line %d: Unicode does not supported\n", lineNumber);
+     printf("CHAR Error in line %d: Unicode is not support\n", lineNumber);
     }
 }
 	YY_BREAK
@@ -1524,47 +1523,47 @@ case YY_STATE_EOF(SHIELD_STRING):
 case 112:
 YY_RULE_SETUP
 #line 195 "lex.l"
-{ strcpy(str,""); BEGIN(CHAR); }
+{ stdstr = ""; BEGIN(CHAR); }
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
 #line 196 "lex.l"
-{ strcat(str,yytext); }
+{ stdstr += yytext; }
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
 #line 197 "lex.l"
-{ strcat(str,"\n"); }
+{ stdstr += "\n"; }
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
 #line 198 "lex.l"
-{ strcat(str,"\r"); }
+{ stdstr += "\r"; }
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
 #line 199 "lex.l"
-{ strcat(str,"\t"); }
+{ stdstr += "\t"; }
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
 #line 200 "lex.l"
-{ strcat(str,"\0"); }
+{ stdstr.push_back('\0'); }
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
 #line 201 "lex.l"
-{ strcat(str,"\\"); }
+{ stdstr += "\\"; }
 	YY_BREAK
 case 119:
 YY_RULE_SETUP
 #line 202 "lex.l"
-{ strcat(str,"\'"); }
+{ stdstr += "\'"; }
 	YY_BREAK
 case 120:
 YY_RULE_SETUP
 #line 203 "lex.l"
-{ strcat(str,"\""); }
+{ stdstr += "\""; }
 	YY_BREAK
 case 121:
 YY_RULE_SETUP
@@ -1576,11 +1575,11 @@ YY_RULE_SETUP
         char tmp[2];
         tmp[0] = x;
         tmp[1] = 0;
-        strcat(str, tmp);
+        stdstr += tmp;
     }
     else
     {
-     printf("CHAR Error in line %d: Unicode does not supported\n", lineNumber);
+     printf("CHAR Error in line %d: Unicode is not support\n", lineNumber);
     }
 }
 	YY_BREAK
@@ -1590,17 +1589,17 @@ YY_RULE_SETUP
 {
     char string[2];
     convertCharacterCodeToString(yytext, 2, string);
-    strcat(str, string);
+    stdstr += string;
 }
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
 #line 223 "lex.l"
 {
-    if(strlen(str) == 1) {
-        printf("Found CHAR:  %c\n", str[0]);
+    if(stdstr.size() == 1) {
+        cout << "Found CHAR:  " << stdstr << endl;
     }
-    else if(strlen(str) == 0)
+    else if(stdstr.size() == 0)
     {
         printf("CHAR Error in line %d: empty char literal\n", lineNumber);
     }
@@ -1625,8 +1624,8 @@ YY_RULE_SETUP
 #line 241 "lex.l"
 {
 
-    removeType("i32");
-    removeUnderline();
+    removeType(str, "i32");
+    removeUnderline(str);
     printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
 }
 	YY_BREAK
@@ -1635,8 +1634,8 @@ YY_RULE_SETUP
 #line 248 "lex.l"
 {
 
-    removeType("i32");
-    removeUnderline();
+    removeType(str, "i32");
+    removeUnderline(str);
     if(strlen(str) > 2)
     {
          printf("Found BIN_NUMBER: %d\n", strtol(str + 2, NULL, 2));
@@ -1652,8 +1651,8 @@ YY_RULE_SETUP
 #line 262 "lex.l"
 {
 
-    removeType("i32");
-    removeUnderline();
+    removeType(str, "i32");
+    removeUnderline(str);
     if(strlen(str) > 2)
     {
          printf("Found OCTAL_NUMBER: %d\n", strtol(str + 2, NULL, 8));
@@ -1669,8 +1668,8 @@ YY_RULE_SETUP
 #line 276 "lex.l"
 {
 
-    removeType("i32");
-    removeUnderline();
+    removeType(str, "i32");
+    removeUnderline(str);
     if(strlen(str) > 2)
     {
          printf("Found HEXADECIMAL_NUMBER: %d\n", strtol(str + 2, NULL, 16));
@@ -1685,8 +1684,8 @@ case 129:
 YY_RULE_SETUP
 #line 290 "lex.l"
 {
-    removeType("f64");
-    removeUnderline();
+    removeType(str, "f64");
+    removeUnderline(str);
     printf("Found DOUBLE: %lf\n", atof(str), str);
 }
 	YY_BREAK
@@ -1694,8 +1693,8 @@ case 130:
 YY_RULE_SETUP
 #line 296 "lex.l"
 {
-    removeType("f64");
-    removeUnderline();
+    removeType(str, "f64");
+    removeUnderline(str);
     printf("Found DOUBLE: %lf\n", atof(str));
 }
 	YY_BREAK
@@ -2593,7 +2592,7 @@ void convertCharacterCodeToString(char characterCode[], int startPosition, char 
     string[1] = '\0';
 }
 
-void removeUnderline()
+void removeUnderline(char str[])
 {
   int pos = 0;
   for(int i = 0; i < strlen(yytext); i++)
@@ -2608,7 +2607,7 @@ void removeUnderline()
   strcpy(yytext, str);
 }
 
-void removeType(char *typeName)
+void removeType(char str[], char *typeName)
 {
     strcpy(str, yytext);
     char* p = strstr(str, typeName);

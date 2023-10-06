@@ -17,18 +17,18 @@ DIGIT [0-9]
     #include <ctype.h>
     using namespace std;
 
-    char str[1024];
-    string stdstr = "";
-    int lineNumber = 1;
-    int octothorpeCount = 0;
+    void removeUnderline(char str[]);
+    void removeType(char str[], char *typeName);
+    void convertCharacterCodeToString(char characterCode[], int startPosition, char *string);
 %}
 
 %%
 
 %{
-    void removeUnderline();
-    void removeType(char *typeName);
-	void convertCharacterCodeToString(char characterCode[], int startPosition, char *string);
+    char str[1024];
+    string stdstr = "";
+    int lineNumber = 1;
+    int octothorpeCount = 0;
 %}
 
 \n { lineNumber++; }
@@ -148,7 +148,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 <STRING>\\n  { stdstr += "\n"; }
 <STRING>\\r  { stdstr += "\r"; }
 <STRING>\\t  { stdstr += "\t"; }
-<STRING>\\0  { stdstr += "\0"; }
+<STRING>\\0  { stdstr.push_back('\0'); }
 <STRING>\\\\ { stdstr += "\\"; }
 <STRING>\\\" { stdstr += "\""; }
 <STRING>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
@@ -162,7 +162,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
     }
     else
     {
-     printf("CHAR Error in line %d: Unicode does not supported\n", lineNumber);
+     printf("CHAR Error in line %d: Unicode is not support\n", lineNumber);
     }
 }
 <STRING>\\x[0-7][a-zA-Z0-9] {
@@ -192,15 +192,15 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 <SHIELD_STRING><<EOF>> { printf("SHIELD_STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 
 
-\' { strcpy(str,""); BEGIN(CHAR); }
-<CHAR>[^\\\']+ { strcat(str,yytext); }
-<CHAR>\\n { strcat(str,"\n"); }
-<CHAR>\\r { strcat(str,"\r"); }
-<CHAR>\\t { strcat(str,"\t"); }
-<CHAR>\\0 { strcat(str,"\0"); }
-<CHAR>\\\\ { strcat(str,"\\"); }
-<CHAR>\\\' { strcat(str,"\'"); }
-<CHAR>\\\" { strcat(str,"\""); }
+\' { stdstr = ""; BEGIN(CHAR); }
+<CHAR>[^\\\']+ { stdstr += yytext; }
+<CHAR>\\n { stdstr += "\n"; }
+<CHAR>\\r { stdstr += "\r"; }
+<CHAR>\\t { stdstr += "\t"; }
+<CHAR>\\0 { stdstr.push_back('\0'); }
+<CHAR>\\\\ { stdstr += "\\"; }
+<CHAR>\\\' { stdstr += "\'"; }
+<CHAR>\\\" { stdstr += "\""; }
 <CHAR>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
     int x = strtol(yytext + 3,NULL, 16);
     if(x <= 127)
@@ -208,23 +208,23 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
         char tmp[2];
         tmp[0] = x;
         tmp[1] = 0;
-        strcat(str, tmp);
+        stdstr += tmp;
     }
     else
     {
-     printf("CHAR Error in line %d: Unicode does not supported\n", lineNumber);
+     printf("CHAR Error in line %d: Unicode is not support\n", lineNumber);
     }
 }
 <CHAR>\\x[0-7][a-zA-Z0-9] {
     char string[2];
     convertCharacterCodeToString(yytext, 2, string);
-    strcat(str, string);
+    stdstr += string;
 }
 <CHAR>\' {
-    if(strlen(str) == 1) {
-        printf("Found CHAR:  %c\n", str[0]);
+    if(stdstr.size() == 1) {
+        cout << "Found CHAR:  " << stdstr << endl;
     }
-    else if(strlen(str) == 0)
+    else if(stdstr.size() == 0)
     {
         printf("CHAR Error in line %d: empty char literal\n", lineNumber);
     }
@@ -240,15 +240,15 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 
 [0-9][_0-9]*(i32)? {
 
-    removeType("i32");
-    removeUnderline();
+    removeType(str, "i32");
+    removeUnderline(str);
     printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
 }
 
 0b([_0-1])+(i32)? {
 
-    removeType("i32");
-    removeUnderline();
+    removeType(str, "i32");
+    removeUnderline(str);
     if(strlen(str) > 2)
     {
          printf("Found BIN_NUMBER: %d\n", strtol(str + 2, NULL, 2));
@@ -261,8 +261,8 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 
 0o([_0-7])+(i32)? {
 
-    removeType("i32");
-    removeUnderline();
+    removeType(str, "i32");
+    removeUnderline(str);
     if(strlen(str) > 2)
     {
          printf("Found OCTAL_NUMBER: %d\n", strtol(str + 2, NULL, 8));
@@ -275,8 +275,8 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 
 0x([_0-9a-fA-F])+(i32)? {
 
-    removeType("i32");
-    removeUnderline();
+    removeType(str, "i32");
+    removeUnderline(str);
     if(strlen(str) > 2)
     {
          printf("Found HEXADECIMAL_NUMBER: %d\n", strtol(str + 2, NULL, 16));
@@ -288,20 +288,20 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 }
 
 [0-9][_0-9]*\.([0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?)?(f64)? {
-    removeType("f64");
-    removeUnderline();
+    removeType(str, "f64");
+    removeUnderline(str);
     printf("Found DOUBLE: %lf\n", atof(str), str);
 }
 
 [0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?(f64)? {
-    removeType("f64");
-    removeUnderline();
+    removeType(str, "f64");
+    removeUnderline(str);
     printf("Found DOUBLE: %lf\n", atof(str));
 }
 
 [a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext);}
 [a-zA-Z_][a-zA-Z0-9_]*! { printf("Found MACROS: %s\n", yytext);}
-[0-9]*[a-zA-Z_][a-zA-Z0-9_]* { printf("Error in line %d: incorrect IDENTIFIER\n", lineNumber); }
+[0-9]+[a-zA-Z_][a-zA-Z0-9_]* { printf("Error in line %d: incorrect IDENTIFIER\n", lineNumber); }
 . { printf("Error in line %d: incorrect character in code\n", lineNumber); }
 %%
 
@@ -311,7 +311,7 @@ void convertCharacterCodeToString(char characterCode[], int startPosition, char 
     string[1] = '\0';
 }
 
-void removeUnderline()
+void removeUnderline(char str[])
 {
   int pos = 0;
   for(int i = 0; i < strlen(yytext); i++)
@@ -326,7 +326,7 @@ void removeUnderline()
   strcpy(yytext, str);
 }
 
-void removeType(char *typeName)
+void removeType(char str[], char *typeName)
 {
     strcpy(str, yytext);
     char* p = strstr(str, typeName);
