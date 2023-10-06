@@ -464,6 +464,10 @@ static let y = 12E+99_f64;
 static tmp1 = '\u{002F}';
 static tmp1 = '\u{132F}';
 static xy = 'xy';
+let x = 1.;
+let x = .123;
+let x = .123E+99f64;
+let x = .123E+99;
 
 // if (x == 222) {let z = 64 ;}
 let 121212incorrextVar = 1;

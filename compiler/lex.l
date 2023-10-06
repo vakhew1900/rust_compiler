@@ -32,7 +32,7 @@ DIGIT [0-9]
 %}
 
 \n { lineNumber++; }
-" " { }
+[[:space:]] { }
 
 as { printf("Found KW_AS: %s\n", yytext); }
 break { printf("Found KW_BREAK: %s\n", yytext); }
@@ -170,13 +170,13 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
     convertCharacterCodeToString(yytext, 2, string);
     stdstr += string;
 }
-<STRING>\" { cout << "Found STRING: " << stdstr << endl << stdstr.size() << endl; BEGIN(INITIAL);}
+<STRING>\" { cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL);}
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 <STRING>\\ { printf("STRING Error in line %d: slash\n", lineNumber); }
 
 r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING);}
 <SHIELD_STRING>[^\"\n]+ { stdstr += yytext; }
-<SHIELD_STRING>\n { lineNumber++; }
+<SHIELD_STRING>\n { stdstr += "\n"; lineNumber++; }
 <SHIELD_STRING>\"#* {
     int tmp  = strlen(yytext) - 1;
     if(tmp == octothorpeCount)
@@ -285,6 +285,10 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     {
         printf("NUMBER Error in line %d: incorrect format\n", lineNumber);
     }
+}
+
+\.[0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?(f64)? {
+    printf("INCORRECT DOUBLE Error in line %d: float literals must have an integer part", lineNumber);
 }
 
 [0-9][_0-9]*\.([0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?)?(f64)? {
