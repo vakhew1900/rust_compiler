@@ -29,18 +29,18 @@
 /* ---------------------- PROGRAM --------------------------- */
 
 
-/* ---------------------- LIST ------------------------------ */
-
 /* ---------------------- STATEMENT -----------------------  */
+
+StmtList: Stmt
+        | StmtList Stmt
+        ;
 
 Stmt: ';'
     | LetStmt
     | Expr ';'
     ;
 
-LetStmt: LET ID ';'
-       | LET ID ':' Type ';'
-       | LET ID = Expr ';'
+LetStmt: LET ID = Expr ';'
        | LET ID ':' Type = Expr ';'
        | LET MUT ID ';'
        | LET MUT ID ':' Type ';'
