@@ -10,7 +10,7 @@
 
 /* BREAK и RETURN  в документации почему-то присуствует в приоритетах операций. Стоит наверное с этим разобраться */
 
-%nonassoc RETURN BREAK
+%right ':'
 %right '='
 %nonassoc RANGE   /* .. */
 %left OR  /* || */
@@ -25,12 +25,34 @@
 
 %%
 
-/*----------------------- EXPRESSION ---------------------- */
 
+/* ---------------------- PROGRAM --------------------------- */
+
+
+/* ---------------------- LIST ------------------------------ */
 
 /* ---------------------- STATEMENT -----------------------  */
 
+Stmt: ';'
+    | LetStmt
+    | Expr ';'
+    ;
 
+LetStmt: LET ID ';'
+       | LET ID ':' Type ';'
+       | LET ID = Expr ';'
+       | LET ID ':' Type = Expr ';'
+       | LET MUT ID ';'
+       | LET MUT ID ':' Type ';'
+       | LET MUT ID = Expr ';'
+       | LET MUT ID ':' Type = Expr ';'
+       ;
+
+/*----------------------- EXPRESSION ---------------------- */
+
+Expr: ExprWithoutBlock
+    | ExprWithBlock
+    ;
 
 /*-------------------------TYPE -------------------------- */
 
