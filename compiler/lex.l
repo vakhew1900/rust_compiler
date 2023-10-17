@@ -69,7 +69,9 @@ unsafe { printf("Found KW_UNSAFE: %s\n", yytext); }
 use { printf("Found KW_USE: %s\n", yytext); }
 where { printf("Found KW_WHERE: %s\n", yytext); }
 while { printf("Found KW_WHILE: %s\n", yytext); }
-
+&mut { printf("Found KW_MUT_REF: %s\n", yytext); }
+&self { printf("Found KW_SELF_REF: %s\n", yytext); }
+&mut[[:space:]]+self { printf("Found KW_MUT_SELF_REF: %s\n", yytext); }
 
 bool { printf("Found TYPE_BOOL: %s\n", yytext); }
 i32 { printf("Found TYPE_I32: %s\n", yytext); }
