@@ -99,8 +99,29 @@ FuncParam: ID : Type
 
 /* ========== Struct =========== */
 
+StructStmt: StructStruct
+          | TupleStruct  /* Надо ли ? */
+          ;
+
+StructStruct : STRUCT ID '{' '}'
+             | STRUCT ID '{' StructFieldListEmpty '}'
+             ;
+
+StructFieldListEmpty: /* empty */
+                    | StructFieldList
+                    | StructFieldList ','
+                    ;
+
+StructFieldList: StructField
+               | StructFieldList ',' StructField
+               ;
+
+StructField: ID ':' Type
+           | Visibility ID ':' Type
+           ;
 
 
+/* ========= LetStmt ============ */
 LetStmt: LET ID = Expr ';'
        | LET ID ':' Type = Expr ';'
        | LET MUT ID ';'
