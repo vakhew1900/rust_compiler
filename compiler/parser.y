@@ -57,11 +57,16 @@ Item: FuncStmt
 /* ---------- Function ------------ */
 
 FuncStmt: DecFuncStmt
-        | ImplFuncStmt;
+        | ImplFuncStmt
+        ;
 
 DecFuncStmt: FN ID '(' FuncParamsEmpty ')' ';'
            | FN ID '(' FuncParamsEmpty ')' RIGHT_ARROW  Type ';'
+           ;
 
+ImplFuncStmt: FN ID '(' FuncParamsEmpty ')' BlockExpr
+            | FN ID '(' FuncParamsEmpty ')' RIGHT_ARROW  Type BlockExpr
+            ;
 
 
 LetStmt: LET ID = Expr ';'
