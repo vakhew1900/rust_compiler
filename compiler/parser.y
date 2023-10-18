@@ -91,7 +91,7 @@ FuncParamList: FuncParam
              | FuncParamList ',' FuncParam
              ;
 
-FuncParam: ID : Type
+FuncParam: ID : Type /* Возможен конфликт */
          | MUT ID : Type
          | ID : MUT_REF Type
          | ID : '&' Type
@@ -131,16 +131,15 @@ TupleFieldListEmpty: /* empty */
                     | TupleFieldList ','
                     ;
 
-TupleFieldList: TupleField
-               | TupleFieldList ',' StructField
+TupleFieldList: Type /* Возможен конфликт */
+               | Visibility Type
+               | TupleFieldList ',' Type
+               | TupleFieldList ',' Visibility Type
                ;
 
-TupleField: Type  /* Возможен конфликт c Type */
-           | Visibility Type
-           ;
 
 
-/* --------------------- CONST -------------------------- */
+/* ============ CONST =============== */
 
 ConstStmt: CONST ID ':' Type = Expr ';'
          | CONST ID ':' Type ';'
