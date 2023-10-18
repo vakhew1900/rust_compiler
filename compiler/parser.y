@@ -167,7 +167,7 @@ Type: BOOL
     | INT
     | STRING
     | ID
-    | '[' Type ';' Expression ']'
+    | '[' Type ';' Expr ']'
     ;
     /* Не доделан */
 
