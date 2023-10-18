@@ -50,6 +50,8 @@ Item: FuncStmt
     | StructStmt
     | EnumStmt
     | ImplStmt
+    | TraitStmt
+    | ConstStmt
     ;
     /* ModuleStmt */ /// Можно добавить
 
@@ -90,6 +92,11 @@ FuncParam: ID : Type
          | MUT ID : Type
          | ID : MUT_REF Type
          | ID : '&' Type
+
+
+/* ========== Struct =========== */
+
+
 
 LetStmt: LET ID = Expr ';'
        | LET ID ':' Type = Expr ';'
