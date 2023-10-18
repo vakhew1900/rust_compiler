@@ -375,6 +375,7 @@ int findSecondDot(const char *input_string) {
             if (first_dot == -1) {
                 first_dot = i;  // Нашли первую точку
             } else {
+                printf("Found TWO_DOTS: %.*s\n", i - first_dot + 1, input_string + first_dot);
                 return i;  // Нашли вторую точку, возвращаем её индекс
             }
         }
