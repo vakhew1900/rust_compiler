@@ -140,6 +140,11 @@ TupleField: Type  /* Возможен конфликт c Type */
            ;
 
 
+/* --------------------- CONST -------------------------- */
+
+ConstStmt: CONST ID ':' Type = Expr ';'
+         | CONST ID ':' Type ';'
+
 /* ========= LetStmt ============ */
 LetStmt: LET ID = Expr ';'
        | LET ID ':' Type = Expr ';'
@@ -169,7 +174,7 @@ Type: BOOL
     | ID
     | '[' Type ';' Expr ']'
     ;
-    /* Не доделан */
+    /* Не доделан. Можно добавить TupleType */
 
 /*---------------------- VISIBILITY ------------------------- */
 
