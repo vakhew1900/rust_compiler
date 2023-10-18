@@ -1,15 +1,16 @@
 %token BOOL CHAR FLOAT INT STRING
 %token TRUE FALSE CHAR_LITERAL INT_LITERAL FLOAT_LITERAL STRING_LITERAL
 %token ID
-%token FOR LOOP WHILE IN CONTINUE BREAK RETURN
+%token FOR LOOP WHILE IN CONTINUE
 %token IF ELSE
 %token LET MUT CONST
 %token FN ENUM STRUCT TRAIN
-%token IMPL SELF  PUB SELF_REF MUT_SELF_REF
+%token IMPL SELF  PUB SELF_REF MUT_SELF_REF MOD
 %token ';'
 
 /* BREAK и RETURN  в документации почему-то присуствует в приоритетах операций. Стоит наверное с этим разобраться */
 
+%nonassoc BREAK RETURN
 %right ':'
 %right '='
 %nonassoc RANGE   /* .. */
@@ -29,16 +30,29 @@
 /* ---------------------- PROGRAM --------------------------- */
 
 
-/* ---------------------- STATEMENT -----------------------  */
+/* ----------------------------- STATEMENT -----------------------------  */
+
+StmtListEmpty: /* empty */
+             | StmtList
+             ;
 
 StmtList: Stmt
         | StmtList Stmt
         ;
 
 Stmt: ';'
+    | Item
     | LetStmt
     | Expr ';'
     ;
+
+Item: FunctionStmt
+    | StructStmt
+    | EnumStmt
+    | ImplStmt
+    ;
+    /* ModuleStmt */ /// Можно добавить
+
 
 LetStmt: LET ID = Expr ';'
        | LET ID ':' Type = Expr ';'
