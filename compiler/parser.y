@@ -170,7 +170,7 @@ EnumItem: ID
 /* =========== IMPL ================ */
 
 ImplStmt: IMPL Type '{'AssociatedItemListEmpty '}'
-        | IMPL Type FOR Type '{'AssociatedItemListEmpty '}'
+        | IMPL ID FOR Type '{'AssociatedItemListEmpty '}'
         ;
 
 AssociatedItemListEmpty: /* empty */
@@ -181,12 +181,17 @@ AssociatedItemList: AssociatedItem
                   | AssociatedItemList AssociatedItem
                   ;
 
+/* Необходима еще проверка для Impl то что FuncStmt является именно реализацией */
 AssociatedItem: FuncStmt
               | ConstStmt
               | Visibility FuncStmt
               | Visibility ConstStmt
               ;
 
+
+/* ============ TRAIT ================ */
+
+TraitStmt: TRAIT ID '{' AssociatedItemListEmpty '}'
 
 
 /* ============ CONST =============== */
