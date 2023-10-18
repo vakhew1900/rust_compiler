@@ -5,8 +5,8 @@
 %token IF ELSE
 %token LET MUT CONST
 %token FN ENUM STRUCT TRAIN
-%token IMPL SELF  PUB SELF_REF MUT_SELF_REF MOD
-%token ';'
+%token IMPL SELF  PUB SELF_REF MUT_SELF_REF MUT_REF MOD
+%token ';' RIGHT_ARROW
 
 /* BREAK и RETURN  в документации почему-то присуствует в приоритетах операций. Стоит наверное с этим разобраться */
 
@@ -19,7 +19,7 @@
 %left '<' '>'  EQUAL NOT_EQUAL     // == !=
 %left '+' '-'
 %left '*' '/'
-%left '!' UMINUS USTAR /*  - * */
+%left '!' '&' UMINUS USTAR /*  - * */
 %nonassoc '?'
 %left '.' '[' ']'
 %nonassoc '(' ')'
@@ -46,12 +46,22 @@ Stmt: ';'
     | Expr ';'
     ;
 
-Item: FunctionStmt
+Item: FuncStmt
     | StructStmt
     | EnumStmt
     | ImplStmt
     ;
     /* ModuleStmt */ /// Можно добавить
+
+
+/* ---------- Function ------------ */
+
+FuncStmt: DecFuncStmt
+        | ImplFuncStmt;
+
+DecFuncStmt: FN ID '(' FuncParamsEmpty ')' ';'
+           | FN ID '(' FuncParamsEmpty ')' RIGHT_ARROW  Type ';'
+
 
 
 LetStmt: LET ID = Expr ';'
