@@ -69,13 +69,27 @@ ImplFuncStmt: FN ID '(' FuncParamListEmpty ')' BlockExpr
             ;
 
 FuncParamListEmpty: /* empty */
-               | FuncParamList
+               | FullFuncParamList
                ;
 
-FuncParamList:
+FullFuncParamList: SelfParam
+                 | SelfParam ',' FuncParamList
+                 | FuncParamList
 
 
+SelfParam: SELF,
+         | SELF_REF,
+         | MUT_SELF_REF
+         ;
 
+FuncParamList: FuncParam
+             | FuncParamList ',' FuncParam
+             ;
+
+FuncParam: ID : Type
+         | MUT ID : Type
+         | ID : MUT_REF Type
+         | ID : '&' Type
 
 LetStmt: LET ID = Expr ';'
        | LET ID ':' Type = Expr ';'
