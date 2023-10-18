@@ -47,15 +47,17 @@ Stmt: ';'
     | Expr ';'
     ;
 
-Item: FuncStmt
-    | StructStmt
-    | EnumStmt
-    | ImplStmt
-    | TraitStmt
-    | ConstStmt
-    ;
-    /* ModuleStmt */ /// Можно добавить
+Item: SimpleItem
+      Visibility SimpleItem
 
+SimpleItem:  FuncStmt
+          | StructStmt
+          | EnumStmt
+          | ImplStmt
+          | TraitStmt
+          | ConstStmt
+          ;
+          /* ModuleStmt */ /// Можно добавить
 
 /* ---------- Function ------------ */
 
