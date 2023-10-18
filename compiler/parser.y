@@ -60,13 +60,21 @@ FuncStmt: DecFuncStmt
         | ImplFuncStmt
         ;
 
-DecFuncStmt: FN ID '(' FuncParamsEmpty ')' ';'
-           | FN ID '(' FuncParamsEmpty ')' RIGHT_ARROW  Type ';'
+DecFuncStmt: FN ID '(' FuncParamListEmpty ')' ';'
+           | FN ID '(' FuncParamListEmpty ')' RIGHT_ARROW  Type ';'
            ;
 
-ImplFuncStmt: FN ID '(' FuncParamsEmpty ')' BlockExpr
-            | FN ID '(' FuncParamsEmpty ')' RIGHT_ARROW  Type BlockExpr
+ImplFuncStmt: FN ID '(' FuncParamListEmpty ')' BlockExpr
+            | FN ID '(' FuncParamListEmpty ')' RIGHT_ARROW  Type BlockExpr
             ;
+
+FuncParamListEmpty: /* empty */
+               | FuncParamList
+               ;
+
+FuncParamList:
+
+
 
 
 LetStmt: LET ID = Expr ';'
@@ -82,6 +90,10 @@ LetStmt: LET ID = Expr ';'
 Expr: ExprWithoutBlock
     | ExprWithBlock
     ;
+
+BlockExpr: '{' '}'
+         | '{' Stmt '}'
+         ;
 
 /*-------------------------TYPE -------------------------- */
 
