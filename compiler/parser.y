@@ -167,6 +167,28 @@ EnumItem: ID
         | Visibility ID '(' TupleFieldListEmpty ')'
         | Visibility ID '(' TupleFieldListEmpty ')' '=' Expr
 
+/* =========== IMPL ================ */
+
+ImplStmt: IMPL Type '{'AssociatedItemListEmpty '}'
+        | IMPL Type FOR Type '{'AssociatedItemListEmpty '}'
+        ;
+
+AssociatedItemListEmpty: /* empty */
+                       | AssociatedItemList
+                       ;
+
+AssociatedItemList: AssociatedItem
+                  | AssociatedItemList AssociatedItem
+                  ;
+
+AssociatedItem: FuncStmt
+              | ConstStmt
+              | Visibility FuncStmt
+              | Visibility ConstStmt
+              ;
+
+
+
 /* ============ CONST =============== */
 
 ConstStmt: CONST ID ':' Type = Expr ';'
