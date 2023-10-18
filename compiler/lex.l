@@ -20,6 +20,10 @@ DIGIT [0-9]
     void removeUnderline(char str[]);
     void removeType(char str[], char *typeName);
     void convertCharacterCodeToString(char characterCode[], int startPosition, char *string);
+    int translateNumberByBase(char *input_string);
+    void removeSpacesAndUnderlines(char* input);
+    int findRightNumberPos(const char *input_string);
+    int findSecondDot(const char *input_string);
 %}
 
 %%
@@ -239,6 +243,26 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 <CHAR><<EOF>> { printf("CHAR Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 <CHAR>\\ { printf("CHAR Error in line %d: slash\n", lineNumber); }
 
+(([0-9][_0-9]*)|(0b([_0-1])+)|(0o([_0-7])+)|(0x([_0-9a-fA-F])+))[[:space:]]*\.\.[[:space:]]*(([0-9][_0-9]*)|(0b([_0-1])+)|(0o([_0-7])+)|(0x([_0-9a-fA-F])+)) {
+
+    strcpy(str, yytext);
+    int second_dot_index = findSecondDot(str);
+    int first_dot_index = second_dot_index - 1;
+    int right_number_index = findRightNumberPos(&str[second_dot_index]) + second_dot_index;
+
+    char left_number[50];
+    char right_number[50];
+
+    strncpy(left_number, str + 0, first_dot_index);
+    left_number[first_dot_index] = '\0';
+
+    int length = strlen(str) - right_number_index;
+    strncpy(right_number, str + right_number_index, length);
+    right_number[length] = '\0';
+
+    translateNumberByBase(left_number);
+    translateNumberByBase(right_number);
+}
 
 [0-9][_0-9]*(i32)? {
 
@@ -341,6 +365,72 @@ void removeType(char str[], char *typeName)
         int pos = strlen(str)  - strlen(typeName);
         str[pos] = 0;
     }
+}
+
+int findSecondDot(const char *input_string) {
+    int first_dot = -1;  // Переменная для индекса первой точки
+
+    for (int i = 0; input_string[i] != '\0'; i++) {
+        if (input_string[i] == '.') {
+            if (first_dot == -1) {
+                first_dot = i;  // Нашли первую точку
+            } else {
+                return i;  // Нашли вторую точку, возвращаем её индекс
+            }
+        }
+    }
+
+    return -1;  // Второй символ точки не найден
+}
+
+int findRightNumberPos(const char *input_string) {
+
+    for (int i = 0; input_string[i] != '\0'; i++) {
+        if (input_string[i] >= '0' && input_string[i] <= '9') {
+            return i;  // Нашли индекс начала второго числа
+        }
+    }
+
+    return -1;  // второе число не нашлось
+}
+
+void removeSpacesAndUnderlines(char* input) {
+    int len = strlen(input);
+    int i, j = 0;
+
+    for (i = 0; i < len; i++) {
+        if (input[i] != ' ' && input[i] != '_') {
+            input[j] = input[i];
+            j++;
+        }
+    }
+    input[j] = '\0';
+}
+
+int translateNumberByBase(char *input_string) {
+    removeSpacesAndUnderlines(input_string);
+    int len = strlen(input_string);
+
+    if (len == 1 && (input_string[0] >= '0' && input_string[0] <= '9')) {
+        printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+    } else if (len >= 2 && (input_string[0] >= '0' && input_string[0] <= '9') && (input_string[1] >= '0' && input_string[1] <= '9')) {
+        printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+    }
+
+
+    if (input_string[0] == '0' && (len > 2)){
+        if (input_string[1] == 'x'){
+            printf("Found RANGE_HEXADECIMAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 16));
+        } else if (input_string[1] == 'b') {
+            printf("Found RANGE_BIN_NUMBER: %ld\n", strtol(input_string + 2, NULL, 2));
+        } else if (input_string[1] == 'o'){
+            printf("Found RANGE_OCTAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 8));
+        } else {
+            printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+        }
+    }
+
+    return -1; // не удалось произвести операцию перевода с числом
 }
 
 int main(int argc, char** argv) {
