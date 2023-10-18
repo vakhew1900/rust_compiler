@@ -116,8 +116,27 @@ StructFieldList: StructField
                | StructFieldList ',' StructField
                ;
 
-StructField: ID ':' Type
+StructField: ID ':' Type  /* Возможен конфликт с FunctionParam */
            | Visibility ID ':' Type
+           ;
+
+/*--- TupleStruct ----*/
+
+TupleStruct: STRUCT ID '(' ')'
+           | STRUCT ID '(' TupleFieldListEmpty ')'
+           ;
+
+TupleFieldListEmpty: /* empty */
+                    | TupleFieldList
+                    | TupleFieldList ','
+                    ;
+
+TupleFieldList: TupleField
+               | TupleFieldList ',' StructField
+               ;
+
+TupleField: Type  /* Возможен конфликт c Type */
+           | Visibility Type
            ;
 
 
