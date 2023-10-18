@@ -108,6 +108,7 @@ StructStruct : STRUCT ID '{' '}'
              ;
 
 StructFieldListEmpty: /* empty */
+                    | ','
                     | StructFieldList
                     | StructFieldList ','
                     ;
@@ -127,6 +128,7 @@ TupleStruct: STRUCT ID '(' ')'
            ;
 
 TupleFieldListEmpty: /* empty */
+                    | ','
                     | TupleFieldList
                     | TupleFieldList ','
                     ;
@@ -137,7 +139,33 @@ TupleFieldList: Type /* Возможен конфликт */
                | TupleFieldList ',' Visibility Type
                ;
 
+/* ============= ENUM ================ */
 
+EnumStmt: ENUM ID '{' EnumItemListEmpty '}'
+        ;
+
+EnumItemListEmpty: /* empty */
+                 | ','
+                 | EnumItemList
+                 | EnumItemList ','
+                 ;
+
+EnumItemList: EnumItem
+            | EnumItemList ',' EnumItem
+            ;
+
+EnumItem: ID
+        | Visibility ID
+        | ID '=' Expr
+        | Visibility ID '=' Expr
+        | ID '(' StructFieldListEmpty ')' /* Этот и далее мб лучше удалить */
+        | Visibility ID '(' StructFieldListEmpty ')'
+        | ID '(' StructFieldListEmpty ')' '=' Expr
+        | Visibility ID '(' StructFieldListEmpty ')' '=' Expr
+        | ID '(' TupleFieldListEmpty ')'
+        | ID '(' TupleFieldListEmpty ')' '=' Expr
+        | Visibility ID '(' TupleFieldListEmpty ')'
+        | Visibility ID '(' TupleFieldListEmpty ')' '=' Expr
 
 /* ============ CONST =============== */
 
