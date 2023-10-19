@@ -122,8 +122,7 @@ StructField: ID ':' Type  /* Возможен конфликт с FunctionParam 
 
 /*--- TupleStruct ----*/
 
-TupleStruct: STRUCT ID '(' ')'
-           | STRUCT ID '(' TupleFieldListEmpty ')'
+TupleStruct: STRUCT ID '(' TupleFieldListEmpty ')'
            ;
 
 TupleFieldListEmpty: /* empty */
