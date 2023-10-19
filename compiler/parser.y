@@ -289,6 +289,7 @@ CallParams: ExprList
 // STRUCT EXPR!!!!!!!!!!!!!!!!!!!!
 StructExpr: StructExprStruct
           | StructExprTuple
+          | StructExprUnit
           ;
 
 StructExprStruct: PathInExpr '{' '}'
@@ -296,11 +297,36 @@ StructExprStruct: PathInExpr '{' '}'
                 | PathInExpr '{' StructBase '}'
                 ;
 
-StructExprFields: StructExprField ',' StructBase
-                | StructExprField ','
-                | StructExprField ',' StructExprField ',' StructBase
-                | StructExprField ',' StructExprField ','
+StructExprFieldList: StructExprField
+                   | StructExprFieldList ',' StructExprField
+                   ;
+
+StructExprFields: StructExprFieldList ',' StructBase
+                | StructExprFieldList ','
                 ;
+
+StructExprField: ID
+               | ID ':' ExprWithoutBlock
+               | ID ':' ExprWithBlock
+               | INT_LITERAL ':' ExprWithoutBlock
+               | INT_LITERAL ':' ExprWithBlock
+               ;
+
+StructBase: RANGE ExprWithoutBlock
+          | RANGE ExprWithBlock
+          ;
+
+StructExprTuple: PathInExpr '(' ExprList ')'
+               | PathInExpr '(' ExprList ',' ')'
+               | PathInExpr '(' ')'
+               ;
+
+StructExprUnit: PathInExpr
+              ;
+
+PathInExpr: PathExprSegment
+          | DOUBLEDOTS PathExprSegment
+          | DOUBLEDOTS PathExprSegment
 
 TupleIndexingExpr: ExprWithoutBlock '.' INT_LITERAL
                  | ExprWithBlock '.' INT_LITERAL
