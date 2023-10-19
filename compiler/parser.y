@@ -5,7 +5,7 @@
 %token IF ELSE
 %token LET MUT CONST
 %token FN ENUM STRUCT TRAIN
-%token IMPL SELF  PUB SELF_REF MUT_SELF_REF MUT_REF MOD
+%token IMPL SELF  PUB SELF_REF MUT_SELF_REF MUT_REF MOD SUPER
 %token ';' RIGHT_ARROW
 
 /* BREAK и RETURN  в документации почему-то присуствует в приоритетах операций. Стоит наверное с этим разобраться */
@@ -80,10 +80,10 @@ FuncParamListEmpty: /* empty */
 FullFuncParamList: SelfParam
                  | SelfParam ',' FuncParamList
                  | FuncParamList
+                 ;
 
-
-SelfParam: SELF,
-         | SELF_REF,
+SelfParam: SELF
+         | SELF_REF
          | MUT_SELF_REF
          ;
 
@@ -91,10 +91,10 @@ FuncParamList: FuncParam
              | FuncParamList ',' FuncParam
              ;
 
-FuncParam: ID : Type /* Возможен конфликт */
-         | MUT ID : Type
-         | ID : MUT_REF Type
-         | ID : '&' Type
+FuncParam: ID ':' Type /* Возможен конфликт */
+         | MUT ID ':' Type
+         | ID ':' MUT_REF Type
+         | ID ':' '&' Type
 
 
 /* ========== Struct =========== */
@@ -192,20 +192,21 @@ AssociatedItem: FuncStmt
 /* ============ TRAIT ================ */
 
 TraitStmt: TRAIT ID '{' AssociatedItemListEmpty '}'
-
+         ;
 
 /* ============ CONST =============== */
 
-ConstStmt: CONST ID ':' Type = Expr ';'
+ConstStmt: CONST ID ':' Type '=' Expr ';'
          | CONST ID ':' Type ';'
+         ;
 
 /* ========= LetStmt ============ */
-LetStmt: LET ID = Expr ';'
-       | LET ID ':' Type = Expr ';'
+LetStmt: LET ID '=' Expr ';'
+       | LET ID ':' Type '=' Expr ';'
        | LET MUT ID ';'
        | LET MUT ID ':' Type ';'
-       | LET MUT ID = Expr ';'
-       | LET MUT ID ':' Type = Expr ';'
+       | LET MUT ID '=' Expr ';'
+       | LET MUT ID ':' Type '=' Expr ';'
        ;
 
 /*----------------------- EXPRESSION ---------------------- */
