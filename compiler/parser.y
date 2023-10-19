@@ -309,11 +309,13 @@ StructExprFieldList: StructExprField
                    | StructExprFieldList ',' StructExprField
                    ;
 
+// Не уверен что правильно
 StructExprFields: StructExprFieldList ',' StructBase
                 | StructExprFieldList ','
                 | StructExprFieldList
                 ;
 
+// Перепроверить
 StructExprField: ID
                | ID ':' ExprWithoutBlock
                | ID ':' ExprWithBlock
