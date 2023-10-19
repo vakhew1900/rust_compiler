@@ -107,7 +107,6 @@ StructStruct : STRUCT ID '{' StructFieldListEmpty '}'
              ;
 
 StructFieldListEmpty: /* empty */
-                    | ','
                     | StructFieldList
                     | StructFieldList ','
                     ;
@@ -126,7 +125,6 @@ TupleStruct: STRUCT ID '(' TupleFieldListEmpty ')'
            ;
 
 TupleFieldListEmpty: /* empty */
-                    | ','
                     | TupleFieldList
                     | TupleFieldList ','
                     ;
@@ -156,14 +154,7 @@ EnumItem: ID
         | Visibility ID
         | ID '=' Expr
         | Visibility ID '=' Expr
-        | ID '(' StructFieldListEmpty ')' /* Этот и далее мб лучше удалить */
-        | Visibility ID '(' StructFieldListEmpty ')'
-        | ID '(' StructFieldListEmpty ')' '=' Expr
-        | Visibility ID '(' StructFieldListEmpty ')' '=' Expr
-        | ID '(' TupleFieldListEmpty ')'
-        | ID '(' TupleFieldListEmpty ')' '=' Expr
-        | Visibility ID '(' TupleFieldListEmpty ')'
-        | Visibility ID '(' TupleFieldListEmpty ')' '=' Expr
+        ;
 
 /* =========== IMPL ================ */
 
