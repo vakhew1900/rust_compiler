@@ -333,9 +333,21 @@ StructExprTuple: PathInExpr '(' ExprList ')'
 StructExprUnit: PathInExpr
               ;
 
-PathInExpr: PathExprSegment
-          | DOUBLEDOTS PathExprSegment
-          | DOUBLEDOTS PathExprSegment
+PathExprSegmentList: PathExprSegment
+                   | PathExprSegmentList DOUBLEDOTS PathExprSegment
+                   ;
+
+PathInExpr: PathExprSegmentList
+          | DOUBLEDOTS PathExprSegmentList
+          ;
+
+PathExprSegment: ID
+               | SUPER
+               | SELF
+               | BIG_SELF
+               | CRATE
+               | DOLLAR_CRATE
+               ;
 
 TupleIndexingExpr: ExprWithoutBlock '.' INT_LITERAL
                  | ExprWithBlock '.' INT_LITERAL
