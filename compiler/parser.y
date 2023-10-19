@@ -212,7 +212,7 @@ ExprList: ExprWithoutBlock
         | ExprList ',' ExprWithBlock
 
 ExprWithoutBlock: LiteralExpr
-                | PathExpression
+                | PathExpr
                 | OperatorExpr
                 | GroupedExpr
                 | ArrayExpr
@@ -250,7 +250,7 @@ RangeFromExpr: ExprWithoutBlock RANGE
              | ExprWithBlock RANGE
              ;
 
-RangeFromExpr: RANGE ExprWithoutBlock
+RangeToExpr: RANGE ExprWithoutBlock
              | RANGE ExprWithBlock
              ;
 
@@ -286,8 +286,21 @@ CallParams: ExprList
           | ExprList ','
           ;
 
-// ПОКА НЕ РЕАЛИЗУЮ
-StructExpr: ID;
+// STRUCT EXPR!!!!!!!!!!!!!!!!!!!!
+StructExpr: StructExprStruct
+          | StructExprTuple
+          ;
+
+StructExprStruct: PathInExpr '{' '}'
+                | PathInExpr '{' StuctExprFields '}'
+                | PathInExpr '{' StructBase '}'
+                ;
+
+StructExprFields: StructExprField ',' StructBase
+                | StructExprField ','
+                | StructExprField ',' StructExprField ',' StructBase
+                | StructExprField ',' StructExprField ','
+                ;
 
 TupleIndexingExpr: ExprWithoutBlock '.' INT_LITERAL
                  | ExprWithBlock '.' INT_LITERAL
@@ -417,14 +430,14 @@ GroupedExpr: '(' ExprWithoutBlock ')'
            | '(' ExprWithBlock ')'
            ;
 
-LiteralExpression: CHAR_LITERAL
-                 | STRING_LITERAL
-                 | RAW_STRING_LITERAL
-                 | INT_LITERAL
-                 | FLOAT_LITERAL
-                 | TRUE
-                 | FALSE
-                 ;
+LiteralExpr: CHAR_LITERAL
+             | STRING_LITERAL
+             | RAW_STRING_LITERAL
+             | INT_LITERAL
+             | FLOAT_LITERAL
+             | TRUE
+             | FALSE
+             ;
 
 ExprWithBlock: BlockExpr
              | LoopExpr
