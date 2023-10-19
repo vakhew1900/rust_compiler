@@ -103,8 +103,7 @@ StructStmt: StructStruct
           | TupleStruct  /* Надо ли ? */
           ;
 
-StructStruct : STRUCT ID '{' '}'
-             | STRUCT ID '{' StructFieldListEmpty '}'
+StructStruct : STRUCT ID '{' StructFieldListEmpty '}'
              ;
 
 StructFieldListEmpty: /* empty */
