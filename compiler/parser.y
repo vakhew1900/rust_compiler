@@ -1,5 +1,5 @@
 %token BOOL CHAR FLOAT INT STRING
-%token TRUE FALSE CHAR_LITERAL INT_LITERAL FLOAT_LITERAL STRING_LITERAL
+%token TRUE FALSE CHAR_LITERAL INT_LITERAL FLOAT_LITERAL STRING_LITERAL RAW_STRING_LITERAL
 %token ID
 %token FOR LOOP WHILE IN CONTINUE
 %token IF ELSE
@@ -16,7 +16,7 @@
 %nonassoc RANGE   /* .. */
 %left OR  /* || */
 %left AND /* && */
-%left '<' '>'  EQUAL NOT_EQUAL     // == !=
+%left '<' '>'  EQUAL NOT_EQUAL LESS_EQUAL GREATER_EQUAL  // == != <= >=
 %left '+' '-'
 %left '*' '/'
 %left '!' '&' UMINUS USTAR /*  - * */
@@ -206,16 +206,233 @@ ExprStmt: ExprWithoutBlock ';'
 
 /*----------------------- EXPRESSION ---------------------- */
 
-Expr: ExprWithoutBlock
-    | ExprWithBlock
-    ;
+ExprList: ExprWithoutBlock
+        | ExprWithBlock
+        | ExprList ',' ExprWithoutBlock
+        | ExprList ',' ExprWithBlock
+
+ExprWithoutBlock: LiteralExpr
+                | PathExpression
+                | OperatorExpr
+                | GroupedExpr
+                | ArrayExpr
+                | IndexExpr
+                | TupleExpr
+                | TupleIndexingExpr
+                | StructExpr
+                | CallExpr
+                | MethodCallExpr
+                | FieldExpr
+                | BreakExpr
+                | ContinueExpr
+                | RangeExpr
+                | ReturnExpr
+                ;
+
+ReturnExpr: RETURN
+          | RETURN ExprWithoutBlock
+          | RETURN ExprWithBlock
+          ;
+
+RangeExpr: RangeExpr
+         | RangeFromExpr
+         | RangeToExpr
+         | RangeFullExpr
+         ;
+
+RangeExpr: ExprWithoutBlock RANGE ExprWithoutBlock
+         | ExprWithoutBlock RANGE ExprWithBlock
+         | ExprWithBlock RANGE ExprWithoutBlock
+         | ExprWithBlock RANGE ExprWithBlock
+         ;
+
+RangeFromExpr: ExprWithoutBlock RANGE
+             | ExprWithBlock RANGE
+             ;
+
+RangeFromExpr: RANGE ExprWithoutBlock
+             | RANGE ExprWithBlock
+             ;
+
+RangeFullExpr: RANGE
+             ;
+
+ContinueExpr: CONTINUE
+            ;
+
+BreakExpr: BREAK
+         | BREAK ExprWithoutBlock
+         | BREAK ExprWithBlock
+         ;
+
+FieldExpr: ExprWithoutBlock '.' ID
+         | ExprWithBlock '.' ID
+         ;
+
+//ID вместо PathExprSegment
+MethodCallExpr: ExprWithoutBlock '.' ID '(' ')'
+              | ExprWithBlock '.' ID '(' ')'
+              | ExprWithoutBlock '.' ID '(' CallParams ')'
+              | ExprWithBlock '.' ID '(' CallParams ')'
+              ;
+
+CallExpr: ExprWithoutBlock '(' ')'
+        | ExprWithBlock '(' ')'
+        | ExprWithoutBlock '(' CallParams ')'
+        | ExprWithBlock '(' CallParams ')'
+        ;
+
+CallParams: ExprList
+          | ExprList ','
+          ;
+
+// ПОКА НЕ РЕАЛИЗУЮ
+StructExpr: ID;
+
+TupleIndexingExpr: ExprWithoutBlock '.' INT_LITERAL
+                 | ExprWithBlock '.' INT_LITERAL
+                 ;
+
+TupleExpr: '(' ')'
+         | '(' TupleElements ')'
+         ;
+
+// Тут возможен конфликт. Не знаю как записать через + ExprList
+TupleElements: ExprWithoutBlock
+             | ExprWithBlock
+             | ExprList
+             ;
+
+IndexExpr: ExprWithoutBlock '[' ExprWithoutBlock ']'
+         | ExprWithoutBlock '[' ExprWithBlock ']'
+         | ExprWithBlock '[' ExprWithoutBlock ']'
+         | ExprWithBlock '[' ExprWithBlock ']'
+         ;
+
+ArrayExpr: /* empty */
+         | '[' ArrayElements ']'
+         ;
+
+ArrayElements: ExprList
+             | ExprList ','
+             | ExprWithoutBlock ';' ExprWithoutBlock
+             | ExprWithoutBlock ';' ExprWithBlock
+             | ExprWithBlock ';' ExprWithoutBlock
+             | ExprWithBlock ';' ExprWithBlock
+             ;
+
+OperatorExpr: BorrowExpr
+            | DereferenceExpr
+            | ErrorPropagationExpr
+            | NegationExpr
+            | ArithmeticOrLogicalExpr
+            | ComparisonExpr
+            | LazyBooleanExpr
+            | AssignmentExpr
+            ;
+
+BorrowExpr: '&' ExprWithoutBlock
+          | '&' ExprWithBlock
+          ;
+
+DereferenceExpr: '*' ExprWithoutBlock
+               | '*' ExprWithBlock
+               ;
+
+ErrorPropagationExpr: ExprWithoutBlock '?'
+                    | ExprWithBlock '?'
+                    ;
+
+NegationExpr: '-' ExprWithoutBlock
+            | '-' ExprWithBlock
+            | '!' ExprWithoutBlock
+            | '!' ExprWithBlock
+            ;
+
+ArithmeticOrLogicalExpr: ExprWithoutBlock '+' ExprWithoutBlock
+                       | ExprWithoutBlock '+' ExprWithBlock
+                       | ExprWithBlock '+' ExprWithoutBlock
+                       | ExprWithBlock '+' ExprWithBlock
+                       | ExprWithoutBlock '-' ExprWithoutBlock
+                       | ExprWithoutBlock '-' ExprWithBlock
+                       | ExprWithBlock '-' ExprWithoutBlock
+                       | ExprWithBlock '-' ExprWithBlock
+                       | ExprWithoutBlock '/' ExprWithoutBlock
+                       | ExprWithoutBlock '/' ExprWithBlock
+                       | ExprWithBlock '/' ExprWithoutBlock
+                       | ExprWithBlock '/' ExprWithBlock
+                       | ExprWithoutBlock '*' ExprWithoutBlock
+                       | ExprWithoutBlock '*' ExprWithBlock
+                       | ExprWithBlock '*' ExprWithoutBlock
+                       | ExprWithBlock '*' ExprWithBlock
+                       | ExprWithoutBlock '%' ExprWithoutBlock
+                       | ExprWithoutBlock '%' ExprWithBlock
+                       | ExprWithBlock '%' ExprWithoutBlock
+                       | ExprWithBlock '%' ExprWithBlock
+                       ;
+
+LazyBooleanExpr: ExprWithoutBlock AND ExprWithoutBlock
+               | ExprWithoutBlock AND ExprWithBlock
+               | ExprWithBlock AND ExprWithoutBlock
+               | ExprWithBlock AND ExprWithBlock
+               | ExprWithoutBlock OR ExprWithoutBlock
+               | ExprWithoutBlock OR ExprWithBlock
+               | ExprWithBlock OR ExprWithoutBlock
+               | ExprWithBlock OR ExprWithBlock
+               ;
+
+AssignmentExpr: ExprWithoutBlock '=' ExprWithoutBlock
+              | ExprWithoutBlock '=' ExprWithBlock
+              | ExprWithBlock '=' ExprWithoutBlock
+              | ExprWithBlock '=' ExprWithBlock
+              ;
+
+ComparisonExpr: ExprWithoutBlock EQUAL ExprWithoutBlock
+              | ExprWithoutBlock EQUAL ExprWithBlock
+              | ExprWithBlock EQUAL ExprWithoutBlock
+              | ExprWithBlock EQUAL ExprWithBlock
+              | ExprWithoutBlock NOT_EQUAL ExprWithoutBlock
+              | ExprWithoutBlock NOT_EQUAL ExprWithBlock
+              | ExprWithBlock NOT_EQUAL ExprWithoutBlock
+              | ExprWithBlock NOT_EQUAL ExprWithBlock
+              | ExprWithoutBlock '>' ExprWithoutBlock
+              | ExprWithoutBlock '>' ExprWithBlock
+              | ExprWithBlock '>' ExprWithoutBlock
+              | ExprWithBlock '>' ExprWithBlock
+              | ExprWithoutBlock '<' ExprWithoutBlock
+              | ExprWithoutBlock '<' ExprWithBlock
+              | ExprWithBlock '<' ExprWithoutBlock
+              | ExprWithBlock '<' ExprWithBlock
+              | ExprWithoutBlock GREATER_EQUAL ExprWithoutBlock
+              | ExprWithoutBlock GREATER_EQUAL ExprWithBlock
+              | ExprWithBlock GREATER_EQUAL ExprWithoutBlock
+              | ExprWithBlock GREATER_EQUAL ExprWithBlock
+              | ExprWithoutBlock LESS_EQUAL ExprWithoutBlock
+              | ExprWithoutBlock LESS_EQUAL ExprWithBlock
+              | ExprWithBlock LESS_EQUAL ExprWithoutBlock
+              | ExprWithBlock LESS_EQUAL ExprWithBlock
+              ;
+
+GroupedExpr: '(' ExprWithoutBlock ')'
+           | '(' ExprWithBlock ')'
+           ;
+
+LiteralExpression: CHAR_LITERAL
+                 | STRING_LITERAL
+                 | RAW_STRING_LITERAL
+                 | INT_LITERAL
+                 | FLOAT_LITERAL
+                 | TRUE
+                 | FALSE
+                 ;
 
 ExprWithBlock: BlockExpr
              | LoopExpr
              | IfExpr
              ;
 
-BlockExpr: Statements
+BlockExpr:  /* empty */
+         | '{' Statements '}'
          ;
 
 Statements: Stmt
@@ -231,14 +448,20 @@ LoopExpr: InfiniteLoopExpr
 InfiniteLoopExpr: LOOP BlockExpr
                 ;
 
-PredicateLoopExpr: WHILE Expr BlockExpr
+PredicateLoopExpr: WHILE ExprWithBlock BlockExpr
+                 | WHILE ExprWithoutBlock BlockExpr
+                 ;
+
+IteratorLoopExpr: FOR ID IN ExprWithBlock BlockExpr
+                | FOR ID IN ExprWithoutBlock BlockExpr
                 ;
 
-IteratorLoopExpr: FOR ID IN Expr BlockExpr
-                ;
-
-IfExpr: IF Expr BlockExpr
-      | IF Expr BlockExpr ELSE BlockExpr
+IfExpr: IF ExprWithoutBlock BlockExpr
+      | IF ExprWithBlock BlockExpr
+      | IF ExprWithoutBlock BlockExpr ELSE BlockExpr
+      | IF ExprWithBlock BlockExpr ELSE BlockExpr
+      | IF ExprWithoutBlock BlockExpr ELSE IfExpr
+      | IF ExprWithBlock BlockExpr ELSE IfExpr
       ;
 
 /*-------------------------TYPE -------------------------- */
