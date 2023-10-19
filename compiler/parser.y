@@ -44,7 +44,7 @@ StmtList: Stmt
 Stmt: ';'
     | Item
     | LetStmt
-    | Expr ';'
+    | ExprStmt
     ;
 
 Item: SimpleItem
@@ -198,15 +198,48 @@ LetStmt: LET ID '=' Expr ';'
        | LET MUT ID ':' Type '=' Expr ';'
        ;
 
+/* === Expression Statement === */
+ExprStmt: ExprWithoutBlock ';'
+        | ExprWithBlock ';'
+        ;
+
+
 /*----------------------- EXPRESSION ---------------------- */
 
 Expr: ExprWithoutBlock
     | ExprWithBlock
     ;
 
-BlockExpr: '{' '}'
-         | '{' Stmt '}'
+ExprWithBlock: BlockExpr
+             | LoopExpr
+             | IfExpr
+             ;
+
+BlockExpr: Statements
          ;
+
+Statements: Stmt
+          | Stmt ExprWithoutBlock
+          | ExprWithoutBlock
+          ;
+
+LoopExpr: InfiniteLoopExpr
+        | PredicateLoopExpr
+        | IteratorLoopExpr
+        ;
+
+InfiniteLoopExpr: LOOP BlockExpr
+                ;
+
+PredicateLoopExpr: WHILE Expr BlockExpr
+                ;
+
+IteratorLoopExpr: FOR ID IN Expr BlockExpr
+                ;
+
+IfExpr: IF Expr BlockExpr
+      | IF Expr BlockExpr ELSE BlockExpr
+      ;
 
 /*-------------------------TYPE -------------------------- */
 
