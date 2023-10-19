@@ -242,13 +242,13 @@ ReturnExpr: RETURN
           | RETURN ExprWithBlock
           ;
 
-RangeExpr: RangeExpr
+RangeExpr: RangeExprn
          | RangeFromExpr
          | RangeToExpr
          | RangeFullExpr
          ;
 
-RangeExpr: ExprWithoutBlock RANGE ExprWithoutBlock
+RangeExprn: ExprWithoutBlock RANGE ExprWithoutBlock
          | ExprWithoutBlock RANGE ExprWithBlock
          | ExprWithBlock RANGE ExprWithoutBlock
          | ExprWithBlock RANGE ExprWithBlock
@@ -311,6 +311,7 @@ StructExprFieldList: StructExprField
 
 StructExprFields: StructExprFieldList ',' StructBase
                 | StructExprFieldList ','
+                | StructExprFieldList
                 ;
 
 StructExprField: ID
