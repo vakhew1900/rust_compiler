@@ -152,8 +152,10 @@ EnumItemList: EnumItem
 
 EnumItem: ID
         | Visibility ID
-        | ID '=' Expr
-        | Visibility ID '=' Expr
+        | ID '=' ExprWithBlock
+        | ID '=' ExprWithoutBlock
+        | Visibility ID '=' ExprWithBlock
+        | Visibility ID '=' ExprWithoutBlock
         ;
 
 /* =========== IMPL ================ */
@@ -185,22 +187,28 @@ TraitStmt: TRAIT ID '{' AssociatedItemListEmpty '}'
 
 /* ============ CONST =============== */
 
-ConstStmt: CONST ID ':' Type '=' Expr ';'
+ConstStmt: CONST ID ':' Type '=' ExprWithBlock ';'
+ConstStmt: CONST ID ':' Type '=' ExprWithoutBlock ';'
          | CONST ID ':' Type ';'
          ;
 
 /* ========= LetStmt ============ */
-LetStmt: LET ID '=' Expr ';'
-       | LET ID ':' Type '=' Expr ';'
+LetStmt: LET ID '=' ExprWithBlock ';'
+LetStmt: LET ID '=' ExprWithoutBlock ';'
+       | LET ID ':' Type '=' ExprWithBlock ';'
+       | LET ID ':' Type '=' ExprWithoutBlock ';'
        | LET MUT ID ';'
        | LET MUT ID ':' Type ';'
-       | LET MUT ID '=' Expr ';'
-       | LET MUT ID ':' Type '=' Expr ';'
+       | LET MUT ID '=' ExprWithBlock ';'
+       | LET MUT ID '=' ExprWithoutBlock ';'
+       | LET MUT ID ':' Type '=' ExprWithBlock ';'
+       | LET MUT ID ':' Type '=' ExprWithoutBlock ';'
        ;
 
 /* === Expression Statement === */
 ExprStmt: ExprWithoutBlock ';'
         | ExprWithBlock ';'
+        | ExprWithBlock
         ;
 
 
@@ -470,14 +478,10 @@ ExprWithBlock: BlockExpr
              | IfExpr
              ;
 
-BlockExpr:  /* empty */
-         | '{' Statements '}'
+BlockExpr: '{' StmtListEmpty '}'
          ;
 
-Statements: Stmt
-          | Stmt ExprWithoutBlock
-          | ExprWithoutBlock
-          ;
+
 
 LoopExpr: InfiniteLoopExpr
         | PredicateLoopExpr
@@ -511,7 +515,8 @@ Type: BOOL
     | INT
     | STRING
     | ID
-    | '[' Type ';' Expr ']'
+    | '[' Type ';' ExprWithBlock ']'
+    | '[' Type ';' ExprWithoutBlock ']'
     ;
     /* Не доделан. Можно добавить TupleType */
 
