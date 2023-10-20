@@ -311,10 +311,6 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 | ExprWithBlock '[' ExprWithBlock ']'
                 | ExprWithoutBlock '.' INT_LITERAL // Обращаемся к элементу tuple
                 | ExprWithBlock '.' INT_LITERAL
-                | DOUBLEDOTS ID  //Path // С ID мб  будет конфликт
-                | DOUBLEDOTS SUPER
-                | DOUBLEDOTS SELF
-                | DOUBLEDOTS BIG_SELF
                 | CONTINUE
                 | RANGE
                 | BREAK ExprWithoutBlock
@@ -338,10 +334,25 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 | ExprWithBlock '.' ID
                 | ExprWithoutBlock '.' ID '(' ExprListEmpty ')' // Конфликт вроде как решается сдвигом т.е. действием по умолчанию
                 | ExprWithBlock '.' ID '(' ExprListEmpty ')'
+                | SUPER
+                | PathCallExpr
+                | PathCallExpr '(' ExprListEmpty ')' //Вызов функции по пути // Cпросить можно ли сделать более простую реализацию
+                | PathCallExpr '{' StructExprField '}'
                 ;
 
-           /*     | '(' ExprListEmpty ')' // Конфликт */
-           /* CRATE DOLLAR_CRATE  отправляются на свалку*/
+           /* CRATE DOLLAR_CRATE  отправляются на свалку Struct Tuple тоже) */
+
+PathCallExpr: ID DOUBLEDOTS ID
+            | SUPER DOUBLEDOTS  ID
+            | SELF DOUBLEDOTS ID
+            | PathCallExpr DOUBLEDOTS ID
+
+StructExprFieldList: StructExprField
+                     StructExprField ',' StructExprField
+
+StructExprField: ID
+               | ID ':' ExprWithoutBlock
+               | ID ':' ExprWithBlock  // Мб сделать проще и юзать тут тип?
 
 
 ExprWithBlock: BlockExpr
@@ -351,6 +362,8 @@ ExprWithBlock: BlockExpr
 
 BlockExpr: '{' StmtListEmpty '}'
          ;
+
+
 
 
 
