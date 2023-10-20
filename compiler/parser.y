@@ -48,8 +48,17 @@ Stmt: ';'
     | ExprStmt
     ;
 
+ItemListEmpty: /*empty*/
+             | ItemList
+             ;
+
+ ItemList: Item
+         | ItemList Item
+         ;
+
 Item: SimpleItem
-      Visibility SimpleItem
+     | Visibility SimpleItem
+     ;
 
 SimpleItem:  FuncStmt
           | StructStmt
@@ -57,6 +66,7 @@ SimpleItem:  FuncStmt
           | ImplStmt
           | TraitStmt
           | ConstStmt
+          | ModuleStmt
           ;
           /* ModuleStmt */ /// Можно добавить
 
@@ -192,6 +202,11 @@ ConstStmt: CONST ID ':' Type '=' ExprWithBlock ';'
 ConstStmt: CONST ID ':' Type '=' ExprWithoutBlock ';'
          | CONST ID ':' Type ';'
          ;
+
+/* =========== Module ================= */
+
+ModuleStmt: MOD ID ';'
+            MOD ID '{' ItemListEmpty '}'
 
 /* ========= LetStmt ============ */
 LetStmt: LET ID '=' ExprWithBlock ';'
@@ -337,7 +352,7 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 | SUPER
                 | PathCallExpr
                 | PathCallExpr '(' ExprListEmpty ')' //Вызов функции по пути // Cпросить можно ли сделать более простую реализацию
-                | PathCallExpr '{' StructExprField '}'
+                | PathCallExpr '{' StructExprFieldList '}' // тут че-то все поплыло
                 ;
 
            /* CRATE DOLLAR_CRATE  отправляются на свалку Struct Tuple тоже) */
@@ -362,9 +377,6 @@ ExprWithBlock: BlockExpr
 
 BlockExpr: '{' StmtListEmpty '}'
          ;
-
-
-
 
 
 LoopExpr: InfiniteLoopExpr
