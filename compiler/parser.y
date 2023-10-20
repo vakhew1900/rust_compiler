@@ -6,7 +6,7 @@
 %token LET MUT CONST
 %token FN ENUM STRUCT TRAIT
 %token IMPL SELF BIG_SELF PUB SELF_REF MUT_SELF_REF MUT_REF MOD SUPER
-%token ';'  '{' RIGHT_ARROW
+%token ';'  RIGHT_ARROW
 
 /* BREAK и RETURN  в документации почему-то присуствует в приоритетах операций. Стоит наверное с этим разобраться */
 
@@ -22,8 +22,8 @@
 %left '*' '/' '%'
 %left '!' '&' UMINUS USTAR /*  - * */
 %nonassoc '?'
-%left '.' '[' ']' DOUBLEDOTS
-%nonassoc '(' ')'
+%left '.' '['  DOUBLEDOTS
+%nonassoc  '(' ')'
 
 %%
 
@@ -296,8 +296,8 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 | '!' ExprWithBlock
                 | ExprWithoutBlock '?' //
                 | ExprWithBlock '?'
-                | '*' ExprWithoutBlock // ГАДОСТЬ
-                | '*' ExprWithBlock
+                | '*' ExprWithoutBlock %prec USTAR // ГАДОСТЬ
+                | '*' ExprWithBlock %prec USTAR
                 | '&' ExprWithoutBlock
                 | '&' ExprWithBlock
                 | '[' ExprListEmpty ']'  // ЗАДАЕМ МАССИВ
@@ -320,6 +320,24 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 | BREAK ExprWithoutBlock
                 | BREAK ExprWithBlock
                 | BREAK
+                | RANGE ExprWithoutBlock // диапозон
+                | RANGE ExprWithBlock
+                | ExprWithoutBlock RANGE
+                | ExprWithBlock RANGE
+                | ExprWithoutBlock RANGE ExprWithoutBlock
+                | ExprWithoutBlock RANGE ExprWithBlock
+                | ExprWithBlock RANGE ExprWithoutBlock
+                | ExprWithBlock RANGE ExprWithBlock
+                | RETURN
+                | RETURN ExprWithoutBlock
+                | RETURN ExprWithBlock
+                | '(' ExprListEmpty ')'
+                | ExprWithoutBlock '(' ExprListEmpty ')'
+                | ExprWithBlock '(' ExprListEmpty ')'
+                | ExprWithoutBlock '.' ID
+                | ExprWithBlock '.' ID
+                | ExprWithoutBlock '.' ID '(' ExprListEmpty ')' // Конфликт вроде как решается сдвигом т.е. действием по умолчанию
+                | ExprWithBlock '.' ID '(' ExprListEmpty ')'
                 ;
 
            /*     | '(' ExprListEmpty ')' // Конфликт */
