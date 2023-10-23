@@ -85,21 +85,13 @@ ImplFuncStmt: FN ID '(' FuncParamListEmpty ')' BlockExpr
             ;
 
 FuncParamListEmpty: /* empty */
-               | FullFuncParamList
+               | FuncParamList
                ;
 
-FullFuncParamList: SelfParam
-                 | SelfParam ',' FuncParamList
-                 | FuncParamList
-                 ;
-
-SelfParam: SELF
-         | SELF_REF
-         | MUT_SELF_REF
-         ;
-
-FuncParamList: FuncParam
-             | FuncParamList ',' FuncParam
+FuncParamList: SELF
+             | SELF_REF
+             | MUT_SELF_REF
+             | FuncParamList FuncParam
              ;
 
 FuncParam: ID ':' Type /* Возможен конфликт */
