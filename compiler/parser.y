@@ -11,7 +11,7 @@
 /* BREAK и RETURN  в документации почему-то присуствует в приоритетах операций. Стоит наверное с этим разобраться */
 
 %nonassoc BREAK RETURN
-// %nonassoc '{' '}'
+%nonassoc '{' '}'
 %right ':'
 %right '='
 %nonassoc RANGE   /* .. */
@@ -215,7 +215,6 @@ LetStmt: LET ID '=' ExprWithoutBlock ';'
 /* === Expression Statement === */
 ExprStmt: ExprWithoutBlock ';'
         | ExprWithBlock ';'
-        ;
         /* конфликт при  "| ExprWithBlock"
 
 
@@ -316,10 +315,10 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 | ExprWithoutBlock '.' INT_LITERAL // Обращаемся к элементу tuple
                 | ExprWithBlock '.' INT_LITERAL
                 | CONTINUE
-                | RANGE
                 | BREAK ExprWithoutBlock
                 | BREAK ExprWithBlock
                 | BREAK
+                | RANGE
                 | RANGE ExprWithoutBlock // диапозон
                 | RANGE ExprWithBlock
                 | ExprWithoutBlock RANGE
@@ -338,8 +337,9 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 | SUPER
                 | PathCallExpr
                 | PathCallExpr '(' ExprListEmpty ')' //Вызов функции по пути // Cпросить можно ли сделать более простую реализацию
-                | PathCallExpr'{' StructExprFieldListEmpty '}'
                 | '(' ExprListEmpty ')'
+                | PathCallExpr '{' StructExprFieldListEmpty '}'
+                | ID
                 ;
 
                 /*
@@ -373,7 +373,9 @@ ExprWithBlock: BlockExpr
              ;
 
 BlockExpr: '{' StmtListEmpty '}'
+         | '{' ExprWithoutBlock '}'
          ;
+
 
 
 LoopExpr: InfiniteLoopExpr
