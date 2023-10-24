@@ -64,7 +64,6 @@ SimpleItem:  FuncStmt
           | ConstStmt
           | ModuleStmt
           ;
-          /* ModuleStmt */ /// Можно добавить
 
 /* ---------- Function ------------ */
 
@@ -151,7 +150,7 @@ EnumItemList: EnumItem
 
 EnumItem: ID
         | Visibility ID
-        | ID '=' ExprWithBlock
+        | ID '=' ExprWithBlock /* В таком случае ID  должен быть всегда только целочисленным числом. Нельзя на парсере определить такое*/
         | ID '=' ExprWithoutBlock
         | Visibility ID '=' ExprWithBlock
         | Visibility ID '=' ExprWithoutBlock
