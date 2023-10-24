@@ -155,6 +155,8 @@ EnumItem: ID
         | ID '=' ExprWithoutBlock
         | Visibility ID '=' ExprWithBlock
         | Visibility ID '=' ExprWithoutBlock
+        | Visibility ID '{' StructFieldListEmpty '}'
+        | ID '{' StructFieldListEmpty '}'
         ;
 
 /* =========== IMPL ================ */
