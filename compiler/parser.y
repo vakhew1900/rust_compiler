@@ -334,12 +334,10 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 | ExprWithBlock '.' ID
                 | ExprWithoutBlock '.' ID '(' ExprListEmpty ')' // Конфликт вроде как решается сдвигом т.е. действием по умолчанию
                 | ExprWithBlock '.' ID '(' ExprListEmpty ')'
-                | SUPER
                 | PathCallExpr
                 | PathCallExpr '(' ExprListEmpty ')' //Вызов функции по пути // Cпросить можно ли сделать более простую реализацию
                 | '(' ExprListEmpty ')'
                 | PathCallExpr '{' StructExprFieldListEmpty '}'
-                | ID
                 ;
 
                 /*
@@ -349,9 +347,9 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
 
            /* CRATE DOLLAR_CRATE  отправляются на свалку Struct Tuple тоже) */
 
-PathCallExpr: ID DOUBLEDOTS ID
-            | SUPER DOUBLEDOTS  ID
-            | SELF DOUBLEDOTS ID
+PathCallExpr: ID
+            | SUPER
+            | SELF
             | PathCallExpr DOUBLEDOTS ID
             ;
 
