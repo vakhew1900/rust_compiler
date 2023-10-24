@@ -34,9 +34,6 @@ Program: ItemListEmpty /* Необходимо уточнить, надо ли �
 
 /* ----------------------------- STATEMENT -----------------------------  */
 
-StmtListEmpty: /* empty */
-             | StmtList
-             ;
 
 StmtList: Stmt
         | StmtList Stmt
@@ -97,7 +94,7 @@ FuncParam: ID ':' Type /* Возможен конфликт */
          | MUT ID ':' Type
          | ID ':' MUT_REF Type
          | ID ':' '&' Type
-
+         ;
 
 /* ========== Struct =========== */
 
@@ -190,14 +187,15 @@ TraitStmt: TRAIT ID '{' AssociatedItemListEmpty '}'
 /* ============ CONST =============== */
 
 ConstStmt: CONST ID ':' Type '=' ExprWithBlock ';'
-ConstStmt: CONST ID ':' Type '=' ExprWithoutBlock ';'
+         | CONST ID ':' Type '=' ExprWithoutBlock ';'
          | CONST ID ':' Type ';'
          ;
 
 /* =========== Module ================= */
 
 ModuleStmt: MOD ID ';'
-            MOD ID '{' ItemListEmpty '}'
+          | MOD ID '{' ItemListEmpty '}'
+          ;
 
 /* ========= LetStmt ============ */
 LetStmt: LET ID '=' ExprWithBlock ';'
@@ -215,6 +213,7 @@ LetStmt: LET ID '=' ExprWithoutBlock ';'
 /* === Expression Statement === */
 ExprStmt: ExprWithoutBlock ';'
         | ExprWithBlock ';'
+        | ExprWithBlock
         /* конфликт при  "| ExprWithBlock"
 
 
