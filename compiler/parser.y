@@ -372,8 +372,10 @@ ExprWithBlock: BlockExpr
              | IfExpr
              ;
 
-BlockExpr: '{' StmtListEmpty '}'
+BlockExpr: '{' StmtList '}'
          | '{' ExprWithoutBlock '}'
+         |  '{' StmtList ExprWithoutBlock '}'
+         | '{' '}'
          ;
 
 
