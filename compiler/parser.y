@@ -11,7 +11,7 @@
 /* BREAK и RETURN  в документации почему-то присуствует в приоритетах операций. Стоит наверное с этим разобраться */
 
 %nonassoc BREAK RETURN
-%nonassoc '{' '}'
+// %nonassoc '{' '}'
 %right ':'
 %right '='
 %nonassoc RANGE   /* .. */
@@ -30,7 +30,7 @@
 
 /* ---------------------- PROGRAM --------------------------- */
 
-Program: StmtListEmpty /* Необходимо уточнить, надо ли как-то обозначить, что Stmt все должны быть Item, иначе программа не заработает */
+Program: ItemListEmpty /* Необходимо уточнить, надо ли как-то обозначить, что Stmt все должны быть Item, иначе программа не заработает */
 
 /* ----------------------------- STATEMENT -----------------------------  */
 
@@ -43,7 +43,6 @@ StmtList: Stmt
         ;
 
 Stmt: ';'
-    | Item
     | LetStmt
     | ExprStmt
     ;
@@ -295,8 +294,6 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 | ExprWithoutBlock LESS_EQUAL ExprWithBlock
                 | ExprWithBlock LESS_EQUAL ExprWithoutBlock
                 | ExprWithBlock LESS_EQUAL ExprWithBlock
-                | '(' ExprWithBlock ')'
-                | '(' ExprWithoutBlock ')'
                 | '-' ExprWithoutBlock %prec UMINUS // ОТРИЦАНИЕ
                 | '-' ExprWithBlock %prec UMINUS
                 | '!' ExprWithoutBlock
@@ -334,9 +331,6 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 | RETURN
                 | RETURN ExprWithoutBlock
                 | RETURN ExprWithBlock
-                | '(' ExprListEmpty ')'
-                | ExprWithoutBlock '(' ExprListEmpty ')'
-                | ExprWithBlock '(' ExprListEmpty ')'
                 | ExprWithoutBlock '.' ID
                 | ExprWithBlock '.' ID
                 | ExprWithoutBlock '.' ID '(' ExprListEmpty ')' // Конфликт вроде как решается сдвигом т.е. действием по умолчанию
@@ -344,8 +338,14 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 | SUPER
                 | PathCallExpr
                 | PathCallExpr '(' ExprListEmpty ')' //Вызов функции по пути // Cпросить можно ли сделать более простую реализацию
-                | PathCallExpr '{' StructExprFieldList '}' // тут че-то все поплыло
+                | PathCallExpr'{' StructExprFieldListEmpty '}'
+                | '(' ExprListEmpty ')'
                 ;
+
+                /*
+                | '(' ExprWithBlock ')'
+                | '(' ExprWithoutBlock ')'
+                */
 
            /* CRATE DOLLAR_CRATE  отправляются на свалку Struct Tuple тоже) */
 
@@ -353,14 +353,19 @@ PathCallExpr: ID DOUBLEDOTS ID
             | SUPER DOUBLEDOTS  ID
             | SELF DOUBLEDOTS ID
             | PathCallExpr DOUBLEDOTS ID
+            ;
 
-StructExprFieldList: StructExprField
-                     StructExprField ',' StructExprField
+StructExprFieldListEmpty: /*empty*/
+                        | StructExprFieldList
+                        ;
 
+StructExprFieldList: ',' StructExprField
+                    | StructExprFieldList StructExprField
+                    ;
 StructExprField: ID
                | ID ':' ExprWithoutBlock
                | ID ':' ExprWithBlock  // Мб сделать проще и юзать тут тип?
-
+               ;
 
 ExprWithBlock: BlockExpr
              | LoopExpr
@@ -415,3 +420,5 @@ Visibility: PUB
           | PUB '(' SUPER ')'
           | PUB '(' SELF ')'
           ;
+
+%%
