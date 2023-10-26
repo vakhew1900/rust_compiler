@@ -214,7 +214,8 @@ LetStmt: LET ID '=' ExprWithoutBlock ';'
 /* === Expression Statement === */
 ExprStmt: ExprWithoutBlock ';'
         | ExprWithBlock ';'
-        | ExprWithBlock
+        | ExprWithBlock ///
+        ;
         /* конфликт при  "| ExprWithBlock"
 
 
@@ -315,8 +316,6 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 | ExprWithoutBlock '.' INT_LITERAL // Обращаемся к элементу tuple
                 | ExprWithBlock '.' INT_LITERAL
                 | CONTINUE
-                | BREAK ExprWithoutBlock
-                | BREAK ExprWithBlock
                 | BREAK
                 | RANGE
                 | RANGE ExprWithoutBlock // диапозон
@@ -328,24 +327,26 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 | ExprWithBlock RANGE ExprWithoutBlock
                 | ExprWithBlock RANGE ExprWithBlock
                 | RETURN
-                | RETURN ExprWithoutBlock
+                | RETURN ExprWithoutBlock // if else конфликт
                 | RETURN ExprWithBlock
                 | ExprWithoutBlock '.' ID
                 | ExprWithBlock '.' ID
                 | ExprWithoutBlock '.' ID '(' ExprListEmpty ')' // Конфликт вроде как решается сдвигом т.е. действием по умолчанию
                 | ExprWithBlock '.' ID '(' ExprListEmpty ')'
                 | PathCallExpr
-                | PathCallExpr '(' ExprListEmpty ')' //Вызов функции по пути // Cпросить можно ли сделать более простую реализацию
-                | '(' ExprListEmpty ')'
-                | PathCallExpr '{' StructExprFieldListEmpty '}'
+                | PathCallExpr '(' ExprListEmpty ')' // Вызов функции по пути // Cпросить можно ли сделать более простую реализацию
+                | PathCallExpr '{' StructExprFieldListEmpty '}' // конфликт
+                | '(' ExprWithBlock ')'
+                |'(' ExprWithoutBlock ')'
                 ;
 
                 /*
                 | '(' ExprWithBlock ')'
-                | '(' ExprWithoutBlock ')'
+                |'(' ExprWithoutBlock ')'
+                '(' ExprWithBlock ')'
                 */
 
-           /* CRATE DOLLAR_CRATE  отправляются на свалку Struct Tuple тоже) */
+           /* CRATE DOLLAR_CRATE  отправляются на свалку Struct Tuple тоже) ID */
 
 PathCallExpr: ID
             | SUPER
@@ -419,8 +420,8 @@ Type: BOOL
 /*---------------------- VISIBILITY ------------------------- */
 
 Visibility: PUB
-          | PUB '(' SUPER ')'
-          | PUB '(' SELF ')'
+              | PUB '(' SUPER ')'
+              | PUB '(' SELF ')'
           ;
 
 %%
