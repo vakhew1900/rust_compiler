@@ -213,8 +213,7 @@ LetStmt: LET ID '=' ExprWithoutBlock ';'
 
 /* === Expression Statement === */
 ExprStmt: ExprWithoutBlock ';'
-        | ExprWithBlock ';'
-        | ExprWithBlock ///
+        | ExprWithBlock
         ;
         /* конфликт при  "| ExprWithBlock"
 
@@ -359,7 +358,7 @@ StructExprFieldListEmpty: /*empty*/
                         ;
 
 StructExprFieldList: ',' StructExprField
-                    | StructExprFieldList StructExprField
+                    | StructExprFieldList ',' StructExprField
                     ;
 StructExprField: ID
                | ID ':' ExprWithoutBlock
