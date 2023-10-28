@@ -213,7 +213,7 @@ LetStmt: LET ID '=' ExprWithoutBlock ';'
 
 /* === Expression Statement === */
 ExprStmt: ExprWithoutBlock ';'
-        | ExprWithBlock
+        | ExprWithBlock ';'
         ;
         /* конфликт при  "| ExprWithBlock"
 
