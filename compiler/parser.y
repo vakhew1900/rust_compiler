@@ -370,9 +370,9 @@ ExprWithBlock: BlockExpr
              | IfExpr
              ;
 
+
 BlockExpr: '{' StmtList '}'
          | '{' ExprWithoutBlock '}'
-         |  '{' StmtList ExprWithoutBlock '}'
          | '{' '}'
          ;
 
@@ -394,13 +394,17 @@ IteratorLoopExpr: FOR ID IN ExprWithBlock BlockExpr
                 | FOR ID IN ExprWithoutBlock BlockExpr
                 ;
 
-IfExpr: IF ExprWithoutBlock BlockExpr
-      | IF ExprWithBlock BlockExpr
-      | IF ExprWithoutBlock BlockExpr ELSE BlockExpr
-      | IF ExprWithBlock BlockExpr ELSE BlockExpr
-      | IF ExprWithoutBlock BlockExpr ELSE IfExpr
-      | IF ExprWithBlock BlockExpr ELSE IfExpr
+IfExpr: SimpleIfElseExpr
+      | SimpleIfElseExpr ELSE BlockExpr
       ;
+
+
+SimpleIfElseExpr: SimpleIfExpr
+                | SimpleIfElseExpr ELSE SimpleIfExpr
+
+SimpleIfExpr: IF ExprWithoutBlock BlockExpr
+            | IF ExprWithBlock BlockExpr
+            ;
 
 
 /*-------------------------TYPE -------------------------- */
