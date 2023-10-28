@@ -339,12 +339,6 @@ ExprWithoutBlock: CHAR_LITERAL // Литераллы
                 |'(' ExprWithoutBlock ')'
                 ;
 
-                /*
-                | '(' ExprWithBlock ')'
-                |'(' ExprWithoutBlock ')'
-                '(' ExprWithBlock ')'
-                */
-
            /* CRATE DOLLAR_CRATE  отправляются на свалку Struct Tuple тоже) ID */
 
 PathCallExpr: ID
@@ -360,7 +354,7 @@ StructExprFieldListEmpty: /*empty*/
 StructExprFieldList: ',' StructExprField
                     | StructExprFieldList ',' StructExprField
                     ;
-StructExprField: ID
+StructExprField:
                | ID ':' ExprWithoutBlock
                | ID ':' ExprWithBlock  // Мб сделать проще и юзать тут тип?
                ;
@@ -373,6 +367,7 @@ ExprWithBlock: BlockExpr
 
 BlockExpr: '{' StmtList '}'
          | '{' ExprWithoutBlock '}'
+         | '{' StmtList ExprWithoutBlock '}'
          | '{' '}'
          ;
 
@@ -386,12 +381,12 @@ LoopExpr: InfiniteLoopExpr
 InfiniteLoopExpr: LOOP BlockExpr
                 ;
 
-PredicateLoopExpr: WHILE ExprWithBlock BlockExpr
-                 | WHILE ExprWithoutBlock BlockExpr
+PredicateLoopExpr: WHILE '(' ExprWithBlock ')' BlockExpr
+                 | WHILE '(' ExprWithoutBlock ')' BlockExpr
                  ;
 
-IteratorLoopExpr: FOR ID IN ExprWithBlock BlockExpr
-                | FOR ID IN ExprWithoutBlock BlockExpr
+IteratorLoopExpr: FOR '(' ID IN ExprWithBlock ')' BlockExpr
+                | FOR '(' ID IN ExprWithoutBlock ')' BlockExpr
                 ;
 
 IfExpr: SimpleIfElseExpr
@@ -402,8 +397,8 @@ IfExpr: SimpleIfElseExpr
 SimpleIfElseExpr: SimpleIfExpr
                 | SimpleIfElseExpr ELSE SimpleIfExpr
 
-SimpleIfExpr: IF ExprWithoutBlock BlockExpr
-            | IF ExprWithBlock BlockExpr
+SimpleIfExpr: IF '(' ExprWithoutBlock ')' BlockExpr
+            | IF '(' ExprWithBlock ')' BlockExpr
             ;
 
 
