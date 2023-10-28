@@ -396,6 +396,7 @@ IfExpr: SimpleIfElseExpr
 
 SimpleIfElseExpr: SimpleIfExpr
                 | SimpleIfElseExpr ELSE SimpleIfExpr
+                ;
 
 SimpleIfExpr: IF '(' ExprWithoutBlock ')' BlockExpr
             | IF '(' ExprWithBlock ')' BlockExpr
