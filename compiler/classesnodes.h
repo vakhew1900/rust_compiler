@@ -1,0 +1,8 @@
+//
+// Created by arsen on 01.11.2023.
+//
+
+#ifndef COMPILER_CLASSESNODES_H
+#define COMPILER_CLASSESNODES_H
+
+#endif //COMPILER_CLASSESNODES_H

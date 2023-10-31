@@ -1,3 +1,18 @@
+%{
+    #include <iostream>
+    void yyerror(char const* s);
+    extern int yylex(void);
+    using namespace std;
+%}
+
+%union {
+    int int_literal;
+    char char_literal;
+    bool boolean_literal;
+    string *string_literal;
+    string *identifier;
+}
+
 %token BOOL CHAR FLOAT INT STRING
 %token TRUE FALSE CHAR_LITERAL INT_LITERAL FLOAT_LITERAL STRING_LITERAL RAW_STRING_LITERAL
 %token ID
@@ -24,6 +39,8 @@
 %nonassoc '?'
 %left '.' '['  DOUBLEDOTS
 %nonassoc  '(' ')'
+
+%start program
 
 %%
 
