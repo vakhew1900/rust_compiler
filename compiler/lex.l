@@ -262,8 +262,8 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     strncpy(right_number, str + right_number_index, length);
     right_number[length] = '\0';
 
-    translateNumberByBase(left_number);
-    translateNumberByBase(right_number);
+    if(translateNumberByBase(left_number) != -1) { return INT_LITERAL; }
+    if(translateNumberByBase(right_number) != -1) { return INT_LITERAL; }
 }
 
 [0-9][_0-9]*(i32)? {
@@ -422,26 +422,20 @@ int translateNumberByBase(char *input_string) {
 
     if (len == 1 && (input_string[0] >= '0' && input_string[0] <= '9')) {
         printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
-        return INT_LITERAL;
     } else if (len >= 2 && (input_string[0] >= '0' && input_string[0] <= '9') && (input_string[1] >= '0' && input_string[1] <= '9')) {
         printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
-        return INT_LITERAL;
     }
 
 
     if (input_string[0] == '0' && (len > 2)){
         if (input_string[1] == 'x'){
             printf("Found RANGE_HEXADECIMAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 16));
-            return INT_LITERAL;
         } else if (input_string[1] == 'b') {
             printf("Found RANGE_BIN_NUMBER: %ld\n", strtol(input_string + 2, NULL, 2));
-            return INT_LITERAL;
         } else if (input_string[1] == 'o'){
             printf("Found RANGE_OCTAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 8));
-            return INT_LITERAL;
         } else {
             printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
-            return INT_LITERAL;
         }
     }
 
