@@ -39,76 +39,76 @@ DIGIT [0-9]
 [[:space:]] { }
 
 as { printf("Found KW_AS: %s\n", yytext); }
-break { printf("Found KW_BREAK: %s\n", yytext); }
-const { printf("Found KW_CONST: %s\n", yytext); }
-continue { printf("Found KW_CONTINUE: %s\n", yytext); }
-crate { printf("Found KW_CRATE: %s\n", yytext); }
-else { printf("Found KW_ELSE: %s\n", yytext); }
-enum { printf("Found KW_ENUM: %s\n", yytext); }
+break { printf("Found KW_BREAK: %s\n", yytext); return BREAK;}
+const { printf("Found KW_CONST: %s\n", yytext); return CONST;}
+continue { printf("Found KW_CONTINUE: %s\n", yytext); return CONTINUE;}
+crate { printf("Found KW_CRATE: %s\n", yytext); return CRATE;}
+else { printf("Found KW_ELSE: %s\n", yytext); return ELSE;}
+enum { printf("Found KW_ENUM: %s\n", yytext); return ENUM;}
 extern { printf("Found KW_EXTERN: %s\n", yytext); }
-false { printf("Found KW_FALSE: %s\n", yytext); }
-fn { printf("Found KW_FN: %s\n", yytext); }
-for { printf("Found KW_FOR: %s\n", yytext); }
-if { printf("Found KW_IF: %s\n", yytext); }
-impl { printf("Found KW_IMPL: %s\n", yytext); }
-in { printf("Found KW_IN: %s\n", yytext); }
-let { printf("Found KW_LET: %s\n", yytext); }
-loop { printf("Found KW_LOOP: %s\n", yytext); }
+false { printf("Found KW_FALSE: %s\n", yytext); return FALSE;}
+fn { printf("Found KW_FN: %s\n", yytext); return FN;}
+for { printf("Found KW_FOR: %s\n", yytext); return FOR;}
+if { printf("Found KW_IF: %s\n", yytext); return IF;}
+impl { printf("Found KW_IMPL: %s\n", yytext); return IMPL;}
+in { printf("Found KW_IN: %s\n", yytext); return IN;}
+let { printf("Found KW_LET: %s\n", yytext); return LET;}
+loop { printf("Found KW_LOOP: %s\n", yytext); return LOOP;}
 match { printf("Found KW_MATCH: %s\n", yytext); }
 mod { printf("Found KW_MOD: %s\n", yytext); }
 move { printf("Found KW_MOVE: %s\n", yytext); }
-mut { printf("Found KW_MUT: %s\n", yytext); }
-pub { printf("Found KW_PUB: %s\n", yytext); }
+mut { printf("Found KW_MUT: %s\n", yytext); return MUT;}
+pub { printf("Found KW_PUB: %s\n", yytext); return PUB;}
 ref { printf("Found KW_REF: %s\n", yytext); }
-return { printf("Found KW_RETURN: %s\n", yytext); }
-self { printf("Found KW_SELFVALUE: %s\n", yytext); }
-Self { printf("Found KW_SELFTYPE: %s\n", yytext); }
+return { printf("Found KW_RETURN: %s\n", yytext); return RETURN;}
+self { printf("Found KW_SELFVALUE: %s\n", yytext); return SELF;}
+Self { printf("Found KW_SELFTYPE: %s\n", yytext); return BIG_SELF}
 static { printf("Found KW_STATIC: %s\n", yytext); }
-struct { printf("Found KW_STRUCT: %s\n", yytext); }
-super { printf("Found KW_SUPER: %s\n", yytext); }
-trait { printf("Found KW_TRAIT: %s\n", yytext); }
-true  { printf("Found KW_TRUE: %s\n", yytext); }
+struct { printf("Found KW_STRUCT: %s\n", yytext); return STRUCT;}
+super { printf("Found KW_SUPER: %s\n", yytext); return SUPER;}
+trait { printf("Found KW_TRAIT: %s\n", yytext); return TRAIT;}
+true  { printf("Found KW_TRUE: %s\n", yytext); return TRUE;}
 type { printf("Found KW_TYPE: %s\n", yytext); }
 unsafe { printf("Found KW_UNSAFE: %s\n", yytext); }
 use { printf("Found KW_USE: %s\n", yytext); }
 where { printf("Found KW_WHERE: %s\n", yytext); }
-while { printf("Found KW_WHILE: %s\n", yytext); }
-&mut { printf("Found KW_MUT_REF: %s\n", yytext); }
-&self { printf("Found KW_SELF_REF: %s\n", yytext); }
-&mut[[:space:]]+self { printf("Found KW_MUT_SELF_REF: %s\n", yytext); }
+while { printf("Found KW_WHILE: %s\n", yytext); return WHILE;}
+&mut { printf("Found KW_MUT_REF: %s\n", yytext); return MUT_REF;}
+&self { printf("Found KW_SELF_REF: %s\n", yytext); return SELF_REF;}
+&mut[[:space:]]+self { printf("Found KW_MUT_SELF_REF: %s\n", yytext); return MUT_SELF_REF;}
 
-bool { printf("Found TYPE_BOOL: %s\n", yytext); }
-i32 { printf("Found TYPE_I32: %s\n", yytext); }
-i64 { printf("Found TYPE_I64: %s\n", yytext); }
-f32 { printf("Found TYPE_F32: %s\n", yytext); }
-f64 { printf("Found TYPE_F64: %s\n", yytext); }
-String { printf("Found TYPE_STRING: %s\n", yytext); }
-char { printf("Found TYPE_CHAR: %s\n", yytext); }
+bool { printf("Found TYPE_BOOL: %s\n", yytext); return BOOL;}
+i32 { printf("Found TYPE_I32: %s\n", yytext); return INT;}
+i64 { printf("Found TYPE_I64: %s\n", yytext); return INT;}
+f32 { printf("Found TYPE_F32: %s\n", yytext); return FLOAT;}
+f64 { printf("Found TYPE_F64: %s\n", yytext); return FLOAT;}
+String { printf("Found TYPE_STRING: %s\n", yytext); return STRING;}
+char { printf("Found TYPE_CHAR: %s\n", yytext); return CHAR;}
 
 
-"+" { printf("Found OPERATOR_PLUS: %s\n", yytext); }
-"-" { printf("Found OPERATOR_MINUS: %s\n", yytext); }
-"*" { printf("Found OPERATOR_MUL: %s\n", yytext); }
-"/" { printf("Found OPERATOR_DIV: %s\n", yytext); }
-"%" { printf("Found OPERATOR_MOD: %s\n", yytext); }
+"+" { printf("Found OPERATOR_PLUS: %s\n", yytext); return '+';}
+"-" { printf("Found OPERATOR_MINUS: %s\n", yytext); return '-';}
+"*" { printf("Found OPERATOR_MUL: %s\n", yytext); return '*';}
+"/" { printf("Found OPERATOR_DIV: %s\n", yytext); return '/';}
+"%" { printf("Found OPERATOR_MOD: %s\n", yytext); return '%';}
 
-"=" { printf("Found OPERATOR_ASSIGNMENT: %s\n", yytext); }
-"==" { printf("Found OPERATOR_EQUAL: %s\n", yytext); }
-"!=" { printf("Found OPERATOR_NOT_EQUAL: %s\n", yytext); }
-"<" { printf("Found OPERATOR_LESS: %s\n", yytext); }
-">" { printf("Found OPERATOR_MORE: %s\n", yytext); }
-"<=" { printf("Found OPERATOR_LESS_OR_EQUAL: %s\n", yytext); }
-">=" { printf("Found OPERATOR_MORE_OR_EQUAL: %s\n", yytext); }
+"=" { printf("Found OPERATOR_ASSIGNMENT: %s\n", yytext); return '=';}
+"==" { printf("Found OPERATOR_EQUAL: %s\n", yytext); return EQUAL;}
+"!=" { printf("Found OPERATOR_NOT_EQUAL: %s\n", yytext); return NOT_EQUAL;}
+"<" { printf("Found OPERATOR_LESS: %s\n", yytext); return '<';}
+">" { printf("Found OPERATOR_MORE: %s\n", yytext); return '>';}
+"<=" { printf("Found OPERATOR_LESS_OR_EQUAL: %s\n", yytext); return LESS_EQUAL;}
+">=" { printf("Found OPERATOR_MORE_OR_EQUAL: %s\n", yytext); return GREATER_EQUAL;}
 
-"&" { printf("Found OPERATOR_AMPERSAND: %s\n", yytext); }
-"|" { printf("Found OPERATOR_BIT_OR: %s\n", yytext); }
-"!" { printf("Found OPERATOR_BIT_NOT: %s\n", yytext); }
+"&" { printf("Found OPERATOR_AMPERSAND: %s\n", yytext); return '&'; }
+"|" { printf("Found OPERATOR_BIT_OR: %s\n", yytext); return '|';}
+"!" { printf("Found OPERATOR_BIT_NOT: %s\n", yytext); return '!';}
 "^" { printf("Found OPERATOR_BIT_XOR: %s\n", yytext); }
 "<<" { printf("Found OPERATOR_BIT_LEFT_SHIFT: %s\n", yytext); }
 ">>" { printf("Found OPERATOR_BIT_RIGHT_SHIFT: %s\n", yytext); }
 
-"&&" { printf("Found OPERATOR_AND: %s\n", yytext); }
-"||" { printf("Found OPERATOR_OR: %s\n", yytext); }
+"&&" { printf("Found OPERATOR_AND: %s\n", yytext); return AND;}
+"||" { printf("Found OPERATOR_OR: %s\n", yytext); return OR;}
 
 "+=" { printf("Found OPERATOR_PLUS_ASSIGNMENT: %s\n", yytext); }
 "-=" { printf("Found OPERATOR_MINUS_ASSIGNMENT: %s\n", yytext); }
@@ -121,22 +121,22 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
 "<<=" { printf("Found OPERATOR_BIT_LEFT_SHIFT_ASSIGNMENT: %s\n", yytext); }
 ">>=" { printf("Found OPERATOR_BIT_RIGHT_SHIFT_ASSIGNMENT: %s\n", yytext); }
 
-"." { printf("Found OPERATOR_POINT: %s\n", yytext); }
-".." { printf("Found OPERATOR_RANGE: %s\n", yytext); }
+"." { printf("Found OPERATOR_POINT: %s\n", yytext); return '.';}
+".." { printf("Found OPERATOR_RANGE: %s\n", yytext); return RANGE;}
 "..=" { printf("Found OPERATOR_RANGE_ASSIGMENT: %s\n", yytext); }
-"->" { printf("Found OPERATOR_ARROW: %s\n", yytext); }
+"->" { printf("Found OPERATOR_ARROW: %s\n", yytext); return RIGHT_ARROW;}
 
-"(" { printf("Found LEFT_ROUND_BRACKET: %s\n", yytext); }
-")" { printf("Found RIGHT_ROUND_BRACKET: %s\n", yytext); }
-"[" { printf("Found LEFT_SQUARE_BRACKET: %s\n", yytext); }
-"]" { printf("Found RIGHT_SQUARE_BRACKET: %s\n", yytext); }
-"{" { printf("Found LEFT_FIGURE_BRACKET: %s\n", yytext); }
-"}" { printf("Found RIGHT_FIGURE_BRACKET: %s\n", yytext); }
+"(" { printf("Found LEFT_ROUND_BRACKET: %s\n", yytext); return '(';}
+")" { printf("Found RIGHT_ROUND_BRACKET: %s\n", yytext); return ')';}
+"[" { printf("Found LEFT_SQUARE_BRACKET: %s\n", yytext); return '[';}
+"]" { printf("Found RIGHT_SQUARE_BRACKET: %s\n", yytext); return ']';}
+"{" { printf("Found LEFT_FIGURE_BRACKET: %s\n", yytext);  return '{';}
+"}" { printf("Found RIGHT_FIGURE_BRACKET: %s\n", yytext); return '}';}
 
-"," { printf("Found COMMA: %s\n", yytext); }
-";" { printf("Found SEMICOLON: %s\n", yytext); }
-":" { printf("Found COLON: %s\n", yytext); }
-"::" { printf("Found TWO_COLON: %s\n", yytext); }
+"," { printf("Found COMMA: %s\n", yytext); return ',';}
+";" { printf("Found SEMICOLON: %s\n", yytext); return ';';}
+":" { printf("Found COLON: %s\n", yytext); return ':';}
+"::" { printf("Found TWO_COLON: %s\n", yytext); return DOUBLEDOTS;}
 
 
 "/*" { strcpy(str,""); BEGIN(ML_COMMENT); }
@@ -176,7 +176,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); }
     convertCharacterCodeToString(yytext, 2, string);
     stdstr += string;
 }
-<STRING>\" { cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL);}
+<STRING>\" { cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL); return STRING_LITERAL;}
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 <STRING>\\ { printf("STRING Error in line %d: slash\n", lineNumber); }
 
@@ -187,7 +187,8 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     int tmp  = strlen(yytext) - 1;
     if(tmp == octothorpeCount)
     {
-        cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL);
+        cout << "Found RAW STRING: " << stdstr << endl; BEGIN(INITIAL);
+        return RAW_STRING_LITERAL;
     }
     else
     {
@@ -229,6 +230,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 <CHAR>\' {
     if(stdstr.size() == 1) {
         cout << "Found CHAR:  " << stdstr << endl;
+        return CHAR_LITERAL;
     }
     else if(stdstr.size() == 0)
     {
@@ -269,6 +271,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     removeType(str, "i32");
     removeUnderline(str);
     printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
+    return INT_LITERAL;
 }
 
 0b([_0-1])+(i32)? {
@@ -278,6 +281,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     if(strlen(str) > 2)
     {
          printf("Found BIN_NUMBER: %d\n", strtol(str + 2, NULL, 2));
+         return INT_LITERAL;
     }
     else
     {
@@ -292,6 +296,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     if(strlen(str) > 2)
     {
          printf("Found OCTAL_NUMBER: %d\n", strtol(str + 2, NULL, 8));
+         return INT_LITERAL;
     }
     else
     {
@@ -305,7 +310,8 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     removeUnderline(str);
     if(strlen(str) > 2)
     {
-         printf("Found HEXADECIMAL_NUMBER: %d\n", strtol(str + 2, NULL, 16));
+        printf("Found HEXADECIMAL_NUMBER: %d\n", strtol(str + 2, NULL, 16));
+        return INT_LITERAL;
     }
     else
     {
@@ -321,15 +327,17 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     removeType(str, "f64");
     removeUnderline(str);
     printf("Found DOUBLE: %lf\n", atof(str), str);
+    return FLOAT_LITERAL;
 }
 
 [0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?(f64)? {
     removeType(str, "f64");
     removeUnderline(str);
     printf("Found DOUBLE: %lf\n", atof(str));
+    return FLOAT_LITERAL;
 }
 
-[a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext);}
+[a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext); return ID;}
 [a-zA-Z_][a-zA-Z0-9_]*! { printf("Found MACROS: %s\n", yytext);}
 [0-9]+[a-zA-Z_][a-zA-Z0-9_]* { printf("Error in line %d: incorrect IDENTIFIER\n", lineNumber); }
 . { printf("Error in line %d: incorrect character in code\n", lineNumber); }
@@ -414,20 +422,26 @@ int translateNumberByBase(char *input_string) {
 
     if (len == 1 && (input_string[0] >= '0' && input_string[0] <= '9')) {
         printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+        return INT_LITERAL;
     } else if (len >= 2 && (input_string[0] >= '0' && input_string[0] <= '9') && (input_string[1] >= '0' && input_string[1] <= '9')) {
         printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+        return INT_LITERAL;
     }
 
 
     if (input_string[0] == '0' && (len > 2)){
         if (input_string[1] == 'x'){
             printf("Found RANGE_HEXADECIMAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 16));
+            return INT_LITERAL;
         } else if (input_string[1] == 'b') {
             printf("Found RANGE_BIN_NUMBER: %ld\n", strtol(input_string + 2, NULL, 2));
+            return INT_LITERAL;
         } else if (input_string[1] == 'o'){
             printf("Found RANGE_OCTAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 8));
+            return INT_LITERAL;
         } else {
             printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+            return INT_LITERAL;
         }
     }
 
