@@ -7,11 +7,26 @@
 
 %union {
     int int_literal;
-    char char_literal;
-    bool boolean_literal;
-    string *string_literal;
-    string *identifier;
+	string* string_literal;
+	string* identifier;
+	bool bool_literal;
+	float float_literal;
+	char char_literal;
+    ProgramNode* prg;
+    StmtNode* stmt;
 }
+
+%type <prg>Program
+%type <stmt>Stmt
+%type <int_literal>INT_LITERAL
+%type <string_literal>STRING_LITERAL
+%type <string_literal>RAW_STRING_LITERAL
+%type <identifier>ID
+%type <bool_literal>TRUE
+%type <bool_literal>FALSE
+%type <float_literal>FLOAT_LITERAL
+%type <char_literal>CHAR_LITERAL
+
 
 %token BOOL CHAR FLOAT INT STRING
 %token TRUE FALSE CHAR_LITERAL INT_LITERAL FLOAT_LITERAL STRING_LITERAL RAW_STRING_LITERAL
@@ -40,7 +55,7 @@
 %left '.' '['  DOUBLEDOTS
 %nonassoc  '(' ')'
 
-%start program
+%start Program
 
 %%
 
@@ -217,7 +232,7 @@ ModuleStmt: MOD ID ';'
 
 /* ========= LetStmt ============ */
 LetStmt: LET ID '=' ExprWithBlock ';'
-LetStmt: LET ID '=' ExprWithoutBlock ';'
+       | LET ID '=' ExprWithoutBlock ';'
        | LET ID ':' Type '=' ExprWithBlock ';'
        | LET ID ':' Type '=' ExprWithoutBlock ';'
        | LET MUT ID ';'
