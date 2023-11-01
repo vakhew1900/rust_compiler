@@ -1,3 +1,8 @@
+%{
+#include "_tab.h"
+extern int yyparse();
+%}
+
 %option noyywrap
 %option never-interactive
 
@@ -46,7 +51,7 @@ crate { printf("Found KW_CRATE: %s\n", yytext); return CRATE;}
 else { printf("Found KW_ELSE: %s\n", yytext); return ELSE;}
 enum { printf("Found KW_ENUM: %s\n", yytext); return ENUM;}
 extern { printf("Found KW_EXTERN: %s\n", yytext); }
-false { printf("Found KW_FALSE: %s\n", yytext); return FALSE;}
+false { printf("Found KW_FALSE: %s\n", yytext); yylval.bool_literal = false; return FALSE;}
 fn { printf("Found KW_FN: %s\n", yytext); return FN;}
 for { printf("Found KW_FOR: %s\n", yytext); return FOR;}
 if { printf("Found KW_IF: %s\n", yytext); return IF;}
@@ -67,7 +72,7 @@ static { printf("Found KW_STATIC: %s\n", yytext); }
 struct { printf("Found KW_STRUCT: %s\n", yytext); return STRUCT;}
 super { printf("Found KW_SUPER: %s\n", yytext); return SUPER;}
 trait { printf("Found KW_TRAIT: %s\n", yytext); return TRAIT;}
-true  { printf("Found KW_TRUE: %s\n", yytext); return TRUE;}
+true  { printf("Found KW_TRUE: %s\n", yytext); yylval.bool_literal = true; return TRUE;}
 type { printf("Found KW_TYPE: %s\n", yytext); }
 unsafe { printf("Found KW_UNSAFE: %s\n", yytext); }
 use { printf("Found KW_USE: %s\n", yytext); }
@@ -337,7 +342,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     return FLOAT_LITERAL;
 }
 
-[a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext); return ID;}
+[a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext); yylval.identifier = new string(yytext); return ID;}
 [a-zA-Z_][a-zA-Z0-9_]*! { printf("Found MACROS: %s\n", yytext);}
 [0-9]+[a-zA-Z_][a-zA-Z0-9_]* { printf("Error in line %d: incorrect IDENTIFIER\n", lineNumber); }
 . { printf("Error in line %d: incorrect character in code\n", lineNumber); }
