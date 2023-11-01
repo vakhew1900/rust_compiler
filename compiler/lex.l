@@ -51,7 +51,6 @@ crate { printf("Found KW_CRATE: %s\n", yytext); return CRATE;}
 else { printf("Found KW_ELSE: %s\n", yytext); return ELSE;}
 enum { printf("Found KW_ENUM: %s\n", yytext); return ENUM;}
 extern { printf("Found KW_EXTERN: %s\n", yytext); }
-false { printf("Found KW_FALSE: %s\n", yytext); yylval.bool_literal = false; return FALSE;}
 fn { printf("Found KW_FN: %s\n", yytext); return FN;}
 for { printf("Found KW_FOR: %s\n", yytext); return FOR;}
 if { printf("Found KW_IF: %s\n", yytext); return IF;}
@@ -72,7 +71,6 @@ static { printf("Found KW_STATIC: %s\n", yytext); }
 struct { printf("Found KW_STRUCT: %s\n", yytext); return STRUCT;}
 super { printf("Found KW_SUPER: %s\n", yytext); return SUPER;}
 trait { printf("Found KW_TRAIT: %s\n", yytext); return TRAIT;}
-true  { printf("Found KW_TRUE: %s\n", yytext); yylval.bool_literal = true; return TRUE;}
 type { printf("Found KW_TYPE: %s\n", yytext); }
 unsafe { printf("Found KW_UNSAFE: %s\n", yytext); }
 use { printf("Found KW_USE: %s\n", yytext); }
@@ -81,6 +79,9 @@ while { printf("Found KW_WHILE: %s\n", yytext); return WHILE;}
 &mut { printf("Found KW_MUT_REF: %s\n", yytext); return MUT_REF;}
 &self { printf("Found KW_SELF_REF: %s\n", yytext); return SELF_REF;}
 &mut[[:space:]]+self { printf("Found KW_MUT_SELF_REF: %s\n", yytext); return MUT_SELF_REF;}
+
+true  { printf("Found KW_TRUE: %s\n", yytext); yylval.bool_literal = true; return TRUE;}
+false { printf("Found KW_FALSE: %s\n", yytext); yylval.bool_literal = false; return FALSE;}
 
 bool { printf("Found TYPE_BOOL: %s\n", yytext); return BOOL;}
 i32 { printf("Found TYPE_I32: %s\n", yytext); return INT;}
@@ -181,7 +182,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); return CHAR;}
     convertCharacterCodeToString(yytext, 2, string);
     stdstr += string;
 }
-<STRING>\" { cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL); return STRING_LITERAL;}
+<STRING>\" { cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL); yylval.string_literal = new string(stdstr); return STRING_LITERAL;}
 <STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 <STRING>\\ { printf("STRING Error in line %d: slash\n", lineNumber); }
 
@@ -193,6 +194,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     if(tmp == octothorpeCount)
     {
         cout << "Found RAW STRING: " << stdstr << endl; BEGIN(INITIAL);
+        yylval.string_literal = new string(stdstr);
         return RAW_STRING_LITERAL;
     }
     else
@@ -235,6 +237,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 <CHAR>\' {
     if(stdstr.size() == 1) {
         cout << "Found CHAR:  " << stdstr << endl;
+        yylval.char_literal = stdstr[0];
         return CHAR_LITERAL;
     }
     else if(stdstr.size() == 0)
