@@ -12,12 +12,71 @@
 	bool bool_literal;
 	float float_literal;
 	char char_literal;
+
     ProgramNode* prg;
+    ExprNode* expr;
+    ExprListNode * expr_list;
     StmtNode* stmt;
+    StmtListNode* stmt_list;
+    LetStmtNode* let_stmt;
+    ItemNode* item;
+    ItemListNode* item_list;
+    StructFieldNode* struct_item;
+    StructFieldListNode* struct_items;
+    StructStructNode* struct;
+    EnumStmtNode* enum_stmt;
+    EnumItemNode* enum_item;
+    EnumItemListNode* enum_items;
+    FuncStmtNode* function_stmt;
+    FuncParamNode* function_param;
+    FuncParamListNode* function_params;
+    ConstStmtNode* const_stmt;
+    AssociatedItemNode* associated_item;
+    AssociatedItemListNode* associated_items;
+    TraitNode* trait;
+    ImplStmtNode* impl_stmt;
+    TypeNode* type;
+    VisibilityNode* vis;
 }
 
 %type <prg>Program
+%type <expr>ExprWithoutBlock
+%type <expr>ExprWithBlock
+%type <expr>BlockExpr
+%type <expr>StructExprField
+%type <expr_list>ExprList
+%type <expr_list>ExprListEmpty
+%type <expr_list>StructExprFieldList
+%type <expr_list>StructExprFieldListEmpty
 %type <stmt>Stmt
+%type <stmt_list>StmtList
+%type <stmt_list>ItemListEmpty
+%type <let_stmt>LetStmt
+%type <item>Item
+%type <item>SimpleItem
+%type <item_list>ItemList
+%type <item_list>ItemListEmpty
+%type <struct>StructStruct
+%type <struct_item>StructField
+%type <struct_items>StructFieldList
+%type <struct_items>StructFieldListEmpty
+%type <enum_stmt>EnumStmt
+%type <enum_item>EnumItem
+%type <enum_items>EnumItemList
+%type <enum_items>EnumItemListEmpty
+%type <function_stmt>FuncStmt
+%type <function_param>FuncParam
+%type <function_params>FuncParamList
+%type <function_params>FuncParamListEmpty
+%type <const_stmt>ConstStmt
+%type <associated_item>AssociatedItem
+%type <associated_items>AssociatedItemList
+%type <associated_items>AssociatedItemListEmpty
+%type <impl_stmt>ImplStmt
+%type <trait>TraitStmt
+%type <type>Type
+%type <vis>Visibility
+
 %type <int_literal>INT_LITERAL
 %type <string_literal>STRING_LITERAL
 %type <string_literal>RAW_STRING_LITERAL

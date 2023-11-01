@@ -1,5 +1,5 @@
 //
-// Created by arsen on 01.11.2023.
+// Created by arsen on 27.10.2023.
 //
 #pragma once
 #include <iostream>
@@ -27,6 +27,7 @@ class FuncParamListNode; // function_params_node
 class ConstStmtNode; // const_stmt_node
 class AssociatedItemNode; // associated_item_node
 class AssociatedItemListNode; // associated_items_node
+class TraitNode; //trait_node
 class ImplStmtNode; // impl_node
 class TypeNode; // type_node
 class VisibilityNode; // enum visibility vis;
