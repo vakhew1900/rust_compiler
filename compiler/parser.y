@@ -322,7 +322,7 @@ ExprList: ExprWithBlock
         | ExprList ',' ExprWithBlock
         | ExprList ',' ExprWithoutBlock
 
-ExprWithoutBlock: CHAR_LITERAL // Литераллы
+ExprWithoutBlock: CHAR_LITERAL // Литералы
                 | STRING_LITERAL
                 | RAW_STRING_LITERAL
                 | INT_LITERAL

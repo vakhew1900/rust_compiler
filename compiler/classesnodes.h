@@ -36,29 +36,73 @@ class ProgramNode{
 
 };
 
-class StmtListNode{
-public:
-
-    int id;
-    StmtListNode(Type type);
-    static void Append(string* identifier, Expression* expression = NULL);
-};
-
-class StmtNode
-{
-public:
-    enum Type
-    {
-        type_Empty,
-        type_LetStmt,
-        type_ExprStmt
+class VisibilityNode{
+    enum Type {
+        emptyVisibility, pub, crate, self, super, big_self
     };
 
     int id;
     Type type;
-    LetStmtNode* stmtNode = NULL;
 
-    StmtNode(Type type, LetStmtNode* letStmt);
-    StmtNode(Type type, ExprStmtNode* exprStmt);
+    VisibilityNode(Type type);
 };
+
+class TypeNode{
+public:
+    enum Type{
+        emptyType, int_, char_, string_, float_, bool_, id_, array_
+    };
+
+    int id;
+    enum Type type;
+    TypeNode* typeArr;
+    ExprNode* exprArr;
+};
+
+class ExprNode{
+public:
+    // мб не нужны arrayexpr, array_expr_auto_fill
+    enum Type{
+        int_lit, float_lit, char_lit, string_lit, raw_string_lit,  bool_lit,
+        plus, minus, mul_expr, div_expr, mod, or_, and_, asign, equal, not_equal, greater, less, greater_equal,
+        less_equal, uminus, negotation, question, ustar, link, array_expr, array_expr_auto_fill, index_expr,
+        field_access_expr, call_expr, method_expr,
+        continue_expr, break_expr, range_right, range_left, range_expr, return_expr,
+
+        id_, self_expr, if_expr, loop_expr, loop_while, loop_for, block_expr,
+        struct_expr, struct_field_expr, static_method
+    };
+
+    int id;
+    Type type;
+    char Char = 0;
+    string* String = NULL;
+    string* RawString = NULL;
+    int Int = 0;
+    float Float = 0;
+    bool Bool;
+    string* ParentID = NULL;
+    string* Name = NULL;
+
+    ExprNode* expr_left = NULL;
+    ExprNode* expr_right = NULL;
+    ExprNode* next = NULL;
+    ExprListNode* expr_list = NULL;
+    ExprNode* body = NULL;
+    ExprNode* else_body = NULL;
+    StmtListNode* stmt_list = NULL;
+};
+
+class ExprListNode
+{
+public:
+    int id;
+    list<ExprNode*>* exprs = NULL;
+
+    ExprListNode(ExprNode* expr);
+    static void Append(ExprListNode* list, ExprNode* expr);
+};
+
+//!---до этой отметки сделано по черновому---!//
+
 
