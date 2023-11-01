@@ -7,54 +7,29 @@
 #include <list>
 using namespace std;
 
-class ProgramNode;
-class StmtListNode;
-class StmtNode;
-class ItemListEmptyNode;
-class ItemListNode;
-class ItemNode;
-class SimpleItemNode;
-class FuncStmtNode;
-class DecFuncStmtNode;
-class ImplFuncStmtNode;
-class FuncParamNode;
-class StructStmtNode;
-class StructStructNode;
-class StructFieldListEmptyNode;
-class StructFieldListNode;
-class StructFieldNode;
-class TupleStructNode;
-class TupleFieldListNode;
-class EnumStmtNode;
-class EnumItemListEmptyNode;
-class EnumItemListNode;
-class EnumItemNode;
-class ImplStmtNode;
-class AssociatedItemListEmptyNode;
-class AssociatedItemListNode;
-class AssociatedItemNode;
-class TraitStmtNode;
-class ConstStmtNode;
-class ModuleStmtNode;
-class LetStmtNode;
-class ExprListEmptyNode;
-class ExprListNode;
-class ExprWithoutBlockNode;
-class PathCallExprNode;
-class StructExprFieldListEmptyNode;
-class StructExprFieldListNode;
-class StructExprFieldNode;
-class ExprWithBlockNode;
-class BlockExprNode;
-class LoopExprNode;
-class InfiniteLoopExprNode;
-class PredicateLoopExprNode;
-class IteratorLoopExprNode;
-class IfExprNode;
-class SimpleIfElseExprNode;
-class SimpleIfExprNode;
-class TypeNode;
-class VisibilityNode;
+class ProgramNode; // ProgramNode
+class ExprNode; // ExprNode
+class ExprListNode; // expr_list_node
+class StmtNode; // stmt_node
+class StmtListNode; // stmt_list_node
+class LetStmtNode; // let_stmt_node
+class ItemNode; // decl_stmt_node
+class ItemListNode; // -----
+class StructFieldNode; // StructItemNode
+class StructFieldListNode; // StructListNode
+class StructStructNode; // StructNode
+class EnumStmtNode; // EnumNode
+class EnumItemNode; // enum_item_node
+class EnumItemListNode; // enum_list_node
+class FuncStmtNode; // function_node
+class FuncParamNode; // function_param_node
+class FuncParamListNode; // function_params_node
+class ConstStmtNode; // const_stmt_node
+class AssociatedItemNode; // associated_item_node
+class AssociatedItemListNode; // associated_items_node
+class ImplStmtNode; // impl_node
+class TypeNode; // type_node
+class VisibilityNode; // enum visibility vis;
 
 class ProgramNode{
 
