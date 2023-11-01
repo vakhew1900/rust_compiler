@@ -80,7 +80,7 @@ ItemListEmpty: /*empty*/
              | ItemList
              ;
 
- ItemList: Item
+ItemList: Item
          | ItemList Item
          ;
 
@@ -118,7 +118,8 @@ FuncParamListEmpty: /* empty */
 FuncParamList: SELF
              | SELF_REF
              | MUT_SELF_REF
-             | FuncParamList FuncParam
+             | FuncParam
+             | FuncParamList ',' FuncParam
              ;
 
 FuncParam: ID ':' Type /* Возможен конфликт */
