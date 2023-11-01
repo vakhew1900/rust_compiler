@@ -267,8 +267,10 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     strncpy(right_number, str + right_number_index, length);
     right_number[length] = '\0';
 
-    if(translateNumberByBase(left_number) != -1) { return INT_LITERAL; }
-    if(translateNumberByBase(right_number) != -1) { return INT_LITERAL; }
+    int res = translateNumberByBase(left_number);
+    if(res != -1) { yylval.int_literal = res; return INT_LITERAL; }
+    int res2 = translateNumberByBase(right_number);
+    if(res2 != -1) { yylval.int_literal = res2; return INT_LITERAL; }
 }
 
 [0-9][_0-9]*(i32)? {
@@ -276,6 +278,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     removeType(str, "i32");
     removeUnderline(str);
     printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
+    yylval.int_literal = atoi(str);
     return INT_LITERAL;
 }
 
@@ -286,6 +289,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     if(strlen(str) > 2)
     {
          printf("Found BIN_NUMBER: %d\n", strtol(str + 2, NULL, 2));
+         yylval.int_literal = strtol(str + 2, NULL, 2);
          return INT_LITERAL;
     }
     else
@@ -301,6 +305,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     if(strlen(str) > 2)
     {
          printf("Found OCTAL_NUMBER: %d\n", strtol(str + 2, NULL, 8));
+         yylval.int_literal = strtol(str + 2, NULL, 8);
          return INT_LITERAL;
     }
     else
@@ -316,6 +321,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     if(strlen(str) > 2)
     {
         printf("Found HEXADECIMAL_NUMBER: %d\n", strtol(str + 2, NULL, 16));
+        yylval.int_literal = strtol(str + 2, NULL, 16);
         return INT_LITERAL;
     }
     else
@@ -332,6 +338,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     removeType(str, "f64");
     removeUnderline(str);
     printf("Found DOUBLE: %lf\n", atof(str), str);
+    yylval.float_literal = atof(str);
     return FLOAT_LITERAL;
 }
 
@@ -339,6 +346,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     removeType(str, "f64");
     removeUnderline(str);
     printf("Found DOUBLE: %lf\n", atof(str));
+    yylval.float_literal = atof(str);
     return FLOAT_LITERAL;
 }
 
@@ -424,27 +432,34 @@ void removeSpacesAndUnderlines(char* input) {
 int translateNumberByBase(char *input_string) {
     removeSpacesAndUnderlines(input_string);
     int len = strlen(input_string);
+    int result = -1;
 
     if (len == 1 && (input_string[0] >= '0' && input_string[0] <= '9')) {
         printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+        result = atoi(input_string);
     } else if (len >= 2 && (input_string[0] >= '0' && input_string[0] <= '9') && (input_string[1] >= '0' && input_string[1] <= '9')) {
         printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+        result = atoi(input_string);
     }
 
 
     if (input_string[0] == '0' && (len > 2)){
         if (input_string[1] == 'x'){
             printf("Found RANGE_HEXADECIMAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 16));
+            result = strtol(input_string + 2, NULL, 16);
         } else if (input_string[1] == 'b') {
             printf("Found RANGE_BIN_NUMBER: %ld\n", strtol(input_string + 2, NULL, 2));
+            result = strtol(input_string + 2, NULL, 2);
         } else if (input_string[1] == 'o'){
             printf("Found RANGE_OCTAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 8));
+            result = strtol(input_string + 2, NULL, 8);
         } else {
             printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+            result = atoi(input_string);
         }
     }
 
-    return -1; // не удалось произвести операцию перевода с числом
+    return result; // не удалось произвести операцию перевода с числом
 }
 
 int main(int argc, char** argv) {
