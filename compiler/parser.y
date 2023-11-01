@@ -19,6 +19,7 @@
     StmtNode* stmt;
     StmtListNode* stmt_list;
     LetStmtNode* let_stmt;
+    ModuleStmtNode* mod_stmt;
     ItemNode* item;
     ItemListNode* item_list;
     StructFieldNode* struct_item;
@@ -52,6 +53,7 @@
 %type <stmt_list>StmtList
 %type <stmt_list>ItemListEmpty
 %type <let_stmt>LetStmt
+%type <mod_stmt>ModuleStmt
 %type <item>Item
 %type <item>SimpleItem
 %type <item_list>ItemList
