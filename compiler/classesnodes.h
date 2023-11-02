@@ -30,24 +30,16 @@ class AssociatedItemListNode; // associated_items_node
 class TraitNode; //trait_node
 class ImplStmtNode; // impl_node
 class TypeNode; // type_node
-class VisibilityNode; // enum visibility vis;
 class ModuleStmtNode; // -----
+
+enum Visibility {
+    emptyVisibility, pub, crate, self, super
+};
 
 class ProgramNode{
 public:
     int id;
     ItemListNode* item_list = NULL;
-};
-
-class VisibilityNode{
-    enum Type {
-        emptyVisibility, pub, crate, self, super, big_self
-    };
-
-    int id;
-    Type type;
-
-    VisibilityNode(Type type);
 };
 
 class TypeNode{
@@ -162,7 +154,7 @@ public:
     };
     int id;
     Type decl_type;
-    VisibilityNode* visibility;
+    Visibility visibility;
 
     FuncStmtNode* function_item;
     StructStructNode* struct_item;
@@ -206,7 +198,7 @@ class StructFieldNode{
 public:
     int id;
     string* name = NULL;
-    VisibilityNode* visibility = NULL;
+    Visibility visibility;
     TypeNode* type = NULL;
 };
 
@@ -229,7 +221,7 @@ public:
 class EnumItemNode{
 public:
     int id;
-    VisibilityNode* visibility = NULL;
+    Visibility visibility;
     string* name = NULL;
     ExprNode* expr = NULL;
     StructFieldListNode* struct_list = NULL;
@@ -287,7 +279,7 @@ public:
 class AssociatedItemNode{
 public:
     int id;
-    VisibilityNode* visibility = NULL;
+    Visibility visibility;
     FuncStmtNode* fn = NULL;
     ConstStmtNode* const_stmt = NULL;
 };
