@@ -213,6 +213,7 @@ public:
     static ItemNode* DeclarationEnum(Visibility visibility, EnumStmtNode* node);
     static ItemNode* DeclarationConst(Visibility visibility, ConstStmtNode* node);
     static ItemNode* DeclarationStruct(Visibility visibility, StructStructNode* node);
+    static ItemNode* DeclarationImpl(Visibility visibility, ImplStmtNode* node);
 
     string* toDot();
     string* toXml();

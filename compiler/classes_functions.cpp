@@ -439,6 +439,16 @@ ItemNode* ItemNode::DeclarationStruct(Visibility visibility, StructStructNode* n
     return new_node;
 }
 
+ItemNode* ItemNode::DeclarationImpl(Visibility visibility, ImplStmtNode* node){
+    ItemNode* new_node = new ItemNode();
+    new_node->id = ++globId;
+
+    new_node->type=impl_;
+    new_node->visibility = visibility;
+    new_node->impl_item = node;
+    return new_node;
+}
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 
