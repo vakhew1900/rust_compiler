@@ -62,9 +62,12 @@
 %type <item_list>ItemListEmpty
 %type <struct_>StructStruct
 %type <struct_>StructStmt
+%type <struct_>TupleStruct
 %type <struct_item>StructField
 %type <struct_items>StructFieldList
 %type <struct_items>StructFieldListEmpty
+%type <struct_items>TupleFieldList
+%type <struct_items>TupleFieldListEmpty
 %type <enum_stmt>EnumStmt
 %type <enum_item>EnumItem
 %type <enum_items>EnumItemList
