@@ -61,6 +61,20 @@ ExprNode::ExprNode(Type type, string* value){
     this->String = value;
 }
 
+ExprNode::ExprNode(Type type, ExprNode* expr, ExprListNode* expr_list){
+    this->id = ++globId;
+    this->type = type;
+    this->expr_left = expr;
+    this->expr_list = expr_list;
+}
+
+ExprNode::ExprNode(Type type, ExprNode* expr, StructFieldListNode* field_list){
+    this->id = ++globId;
+    this->type = type;
+    this->expr_left = expr;
+    this->field_list = field_list;
+}
+
 ExprNode::ExprNode(Type type, string* name, ExprNode* expr, ExprListNode* expr_list){
     this->id = ++globId;
     this->type = type;
@@ -69,6 +83,7 @@ ExprNode::ExprNode(Type type, string* name, ExprNode* expr, ExprListNode* expr_l
     this->expr_list = expr_list;
 }
 
+// StaticMethodExpr
 ExprNode::ExprNode(Type type, string* name, string* parent_id, ExprListNode* expr_list){
     this->id = ++globId;
     this->type = type;
@@ -91,15 +106,25 @@ ExprNode::ExprNode(Type type, ExprNode* expr, int value){
 }
 
 ExprNode::ExprNode(Type type, ExprNode* condition, ExprNode* body, string* id){
-
+    this->id = ++globId;
+    this->type = type;
+    this->body = body;
+    this->expr_left = condition;
+    this->Name = id;
 }
 
 ExprNode::ExprNode(Type type, string* name, ExprListNode* expr_list){
-
+    this->id = ++globId;
+    this->type = type;
+    this->expr_list = expr_list;
+    this->Name = name;
 }
 
 ExprNode::ExprNode(Type type, string* name, ExprNode* expr){
-
+    this->id = ++globId;
+    this->type = type;
+    this->expr_left = expr;
+    this->Name = name;
 }
 
 // --- toDot, toXml функции ---

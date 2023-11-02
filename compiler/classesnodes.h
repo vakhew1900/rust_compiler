@@ -74,7 +74,8 @@ public:
         continue_expr, break_expr, range_right, range_left, range_expr, return_expr,
 
         id_, self_expr, if_expr, loop_expr, loop_while, loop_for, block_expr,
-        struct_expr, struct_field_expr, static_method, tuple_expr
+        struct_expr, struct_field_expr, static_method, tuple_expr, super_expr,
+        path_call_expr
     };
 
     int id;
@@ -93,6 +94,7 @@ public:
     ExprListNode* expr_list = NULL;
     ExprNode* body = NULL;
     ExprNode* else_body = NULL;
+    StructFieldListNode* field_list = NULL;
     StmtListNode* stmt_list = NULL;
 
     //ф-ии
@@ -109,6 +111,8 @@ public:
     ExprNode(Type type, string* name, ExprListNode* expr_list);
     ExprNode(Type type, string* name, ExprNode* expr);
     ExprNode(Type type, ExprNode* expr ,int value); // tuple_expr
+    ExprNode(Type type, ExprNode* expr, ExprListNode* expr_list);
+    ExprNode(Type type, ExprNode* expr, StructFieldListNode* field_list);
     string* toDot();
     string* toXml();
 };

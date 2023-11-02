@@ -323,6 +323,7 @@ ExprList: ExprWithBlock
         | ExprWithoutBlock
         | ExprList ',' ExprWithBlock
         | ExprList ',' ExprWithoutBlock
+        ;
 
 ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode(char_lit, $1); }
                 | STRING_LITERAL { $$ = ExprNode(string_lit, $1); }
@@ -426,18 +427,18 @@ ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode(char_lit, $1); }
                 | ExprWithBlock '.' ID { $$ = ExprNode(field_access_expr, $3, $1, 0); }
                 | ExprWithoutBlock '.' ID '(' ExprListEmpty ')' { $$ = ExprNode(method_expr, $3, $1, $5); }
                 | ExprWithBlock '.' ID '(' ExprListEmpty ')' { $$ = ExprNode(method_expr, $3, $1, $5); }
-                | PathCallExpr // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                | PathCallExpr '(' ExprListEmpty ')' // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                | PathCallExpr '{' StructExprFieldListEmpty '}' // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                | PathCallExpr { $$ = ExprNode(path_call_expr, $1, 0); } // ????????
+                | PathCallExpr '(' ExprListEmpty ')' { $$ = ExprNode(static_method, $1, $3); } // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                | PathCallExpr '{' StructExprFieldListEmpty '}' { $$ = ExprNode(static_method, $1, $3); } // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 | '(' ExprWithBlock ')' { $$ = $2; }
                 |'(' ExprWithoutBlock ')' { $$ = $2; }
                 ;
 
 
-PathCallExpr: ID
-            | SUPER
-            | SELF
-            | PathCallExpr DOUBLEDOTS ID
+PathCallExpr: ID { $$ = ExprNode(id_, $1, 0, 0); }
+            | SUPER { $$ = ExprNode(super_expr, "self", 0, 0); }
+            | SELF { $$ = ExprNode(self_expr, "self", 0, 0); }
+            | PathCallExpr DOUBLEDOTS ID { $$ = ExprNode(path_call_expr, $3, $1); }
             ;
 
 StructExprFieldListEmpty: /*empty*/
