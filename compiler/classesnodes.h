@@ -348,7 +348,7 @@ public:
 class FuncParamNode{
 public:
     enum Type{
-        noMut, mut
+        noMut, mut, mut_ref, link
     };
     int id;
     Type param_type;

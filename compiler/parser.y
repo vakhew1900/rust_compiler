@@ -178,21 +178,21 @@ ImplFuncStmt: FN ID '(' FuncParamListEmpty ')' BlockExpr { $$ = new FuncStmtNode
             | FN ID '(' FuncParamListEmpty ')' RIGHT_ARROW  Type BlockExpr { $$ = new FuncStmtNode($2, $7, $4, $8); }
             ;
 
-FuncParamListEmpty: /* empty */
-               | FuncParamList
+FuncParamListEmpty: /* empty */ { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::associated, 0); }
+               | FuncParamList { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::associated, $1); }
                ;
 
-FuncParamList: SELF
-             | SELF_REF
-             | MUT_SELF_REF
-             | FuncParam
-             | FuncParamList ',' FuncParam
+FuncParamList: SELF { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::self, 0); }
+             | SELF_REF { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::self_ref, 0); }
+             | MUT_SELF_REF { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::mut_self_ref, 0); }
+             | FuncParam  { $$ = new FuncParamListNode($1); }
+             | FuncParamList ',' FuncParam { $$ = FuncParamListNode::Append($1, $3); }
              ;
 
-FuncParam: ID ':' Type /* Возможен конфликт */
-         | MUT ID ':' Type
-         | ID ':' MUT_REF Type
-         | ID ':' '&' Type
+FuncParam: ID ':' Type { $$ = new FuncParamNode($1, $3, FuncParamNode::noMut); }
+         | MUT ID ':' Type { $$ = new FuncParamNode($1, $3, FuncParamNode::mut); }
+         | ID ':' MUT_REF Type { $$ = new FuncParamNode($1, $4, FuncParamNode::mut_ref); }
+         | ID ':' '&' Type { $$ = new FuncParamNode($1, $4, FuncParamNode::link); }
          ;
 
 /* ========== Struct =========== */
