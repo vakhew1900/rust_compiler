@@ -276,7 +276,6 @@ public:
     StructFieldListNode(StructFieldListNode* list);
     static void Append(StructFieldListNode* list, StructFieldNode* item);
 
-
     string* toDot();
     string* toXml();
 };
@@ -322,11 +321,11 @@ class FuncStmtNode{
 public:
     int id;
     string* name = NULL;
-    TypeNode* retutnType = NULL;
+    TypeNode* returnType = NULL;
     FuncParamListNode* params = NULL;
     ExprNode* body = NULL;
 
-
+    FuncStmtNode(string* name, TypeNode* returnType, FuncParamListNode* params, ExprNode* body);
     string* toDot();
     string* toXml();
 };

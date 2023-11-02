@@ -306,6 +306,23 @@ void StructFieldListNode::Append(StructFieldListNode *list, StructFieldNode* ite
     list->items->push_back(item);
 }
 
+//Function
+FuncStmtNode::FuncStmtNode(string* name, TypeNode* returnType, FuncParamListNode* params, ExprNode* body){
+    this->id = ++globId;
+    this->name = name;
+
+    if(returnType == NULL){
+        TypeNode* new_type_node = new TypeNode(TypeNode::emptyType_);
+        new_type_node->id = ++globId;
+        this->returnType=new_type_node;
+    } else{
+        this->returnType=returnType;
+    }
+    this->params=params;
+    this->body=body;
+}
+
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 
