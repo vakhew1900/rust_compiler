@@ -323,9 +323,9 @@ ExprStmt: ExprWithoutBlock ';' {$$ = new StmtNode(StmtNode::expression, $1, 0, 0
 
 /*----------------------- EXPRESSION ---------------------- */
 
-ExprListEmpty: /*empty*/
-             | ExprList ','
-             | ExprList
+ExprListEmpty: /*empty*/ { $$ = 0; }
+             | ExprList ',' { $$ = new ExprListNode($1); }
+             | ExprList { $$ = new ExprListNode($1); }
              ;
 
 ExprList: ExprWithBlock { $$ = new ExprListNode($1); }
