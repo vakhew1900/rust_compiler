@@ -414,31 +414,31 @@ ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode::ExprFromCharLiteral(char_lit, $1
                 | RANGE { $$ = ExprNode::RangeExpr(range_right, 0, 0); }
                 | RANGE ExprWithoutBlock { $$ = ExprNode::RangeExpr(range_right, $2, 0); }
                 | RANGE ExprWithBlock { $$ = ExprNode::RangeExpr(range_right, $2, 0); }
-                | ExprWithoutBlock RANGE { $$ = ExprNode(range_left, $1, 0); }
-                | ExprWithBlock RANGE { $$ = ExprNode(range_left, $1, 0); }
-                | ExprWithoutBlock RANGE ExprWithoutBlock { $$ = ExprNode(range_expr, $1, $3); }
-                | ExprWithoutBlock RANGE ExprWithBlock { $$ = ExprNode(range_expr, $1, $3); }
-                | ExprWithBlock RANGE ExprWithoutBlock { $$ = ExprNode(range_expr, $1, $3); }
-                | ExprWithBlock RANGE ExprWithBlock { $$ = ExprNode(range_expr, $1, $3); }
-                | RETURN { $$ = ExprNode(return_expr, 0, 0); }
-                | RETURN ExprWithoutBlock { $$ = ExprNode(return_expr, $2, 0); }
-                | RETURN ExprWithBlock { $$ = ExprNode(return_expr, $2, 0); }
-                | ExprWithoutBlock '.' ID { $$ = ExprNode(field_access_expr, $3, $1, 0); }
-                | ExprWithBlock '.' ID { $$ = ExprNode(field_access_expr, $3, $1, 0); }
-                | ExprWithoutBlock '.' ID '(' ExprListEmpty ')' { $$ = ExprNode(method_expr, $3, $1, $5); }
-                | ExprWithBlock '.' ID '(' ExprListEmpty ')' { $$ = ExprNode(method_expr, $3, $1, $5); }
-                | PathCallExpr { $$ = ExprNode(path_call_expr, $1, 0); } // ????????
-                | PathCallExpr '(' ExprListEmpty ')' { $$ = ExprNode(static_method, $1, $3); } // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                | PathCallExpr '{' StructExprFieldListEmpty '}' { $$ = ExprNode(static_method, $1, $3); } // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                | ExprWithoutBlock RANGE { $$ = ExprNode::RangeExpr(range_left, $1, 0); }
+                | ExprWithBlock RANGE { $$ = ExprNode::RangeExpr(range_left, $1, 0); }
+                | ExprWithoutBlock RANGE ExprWithoutBlock { $$ = ExprNode::RangeExpr(range_expr, $1, $3); }
+                | ExprWithoutBlock RANGE ExprWithBlock { $$ = ExprNode::RangeExpr(range_expr, $1, $3); }
+                | ExprWithBlock RANGE ExprWithoutBlock { $$ = ExprNode::RangeExpr(range_expr, $1, $3); }
+                | ExprWithBlock RANGE ExprWithBlock { $$ = ExprNode::RangeExpr(range_expr, $1, $3); }
+                | RETURN { $$ = ExprNode::OperatorExpr(return_expr, 0, 0); }
+                | RETURN ExprWithoutBlock { $$ = ExprNode::OperatorExpr(return_expr, $2, 0); }
+                | RETURN ExprWithBlock { $$ = ExprNode::OperatorExpr(return_expr, $2, 0); }
+                | ExprWithoutBlock '.' ID { $$ = ExprNode::CallAccessExpr(field_access_expr, $3, $1, 0); }
+                | ExprWithBlock '.' ID { $$ =  ExprNode::CallAccessExpr(field_access_expr, $3, $1, 0); }
+                | ExprWithoutBlock '.' ID '(' ExprListEmpty ')' { $$ =  ExprNode::CallAccessExpr(method_expr, $3, $1, $5); }
+                | ExprWithBlock '.' ID '(' ExprListEmpty ')' { $$ =  ExprNode::CallAccessExpr(method_expr, $3, $1, $5); }
+                | PathCallExpr { $$ = $1 } // ????????
+                | PathCallExpr '(' ExprListEmpty ')' { $$ = ExprNode::StaticMethod(static_method, $1, $3); } // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                | PathCallExpr '{' StructExprFieldListEmpty '}' { $$ = ExprNode::FieldListAccess(static_method, $1, $3); } // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 | '(' ExprWithBlock ')' { $$ = $2; }
                 |'(' ExprWithoutBlock ')' { $$ = $2; }
                 ;
 
 
-PathCallExpr: ID { $$ = ExprNode(id_, $1, 0, 0); }
-            | SUPER { $$ = ExprNode(super_expr, "self", 0, 0); }
-            | SELF { $$ = ExprNode(self_expr, "self", 0, 0); }
-            | PathCallExpr DOUBLEDOTS ID { $$ = ExprNode(path_call_expr, $3, $1); }
+PathCallExpr: ID { $$ =  ExprNode::CallAccessExpr(id_, $1, 0, 0); }
+            | SUPER { $$ =  ExprNode::CallAccessExpr(super_expr, "super", 0, 0); }
+            | SELF { $$ =  ExprNode::CallAccessExpr(self_expr, "self", 0, 0); }
+            | PathCallExpr DOUBLEDOTS ID { $$ = ExprNode::PathCallExpr(path_call_expr, $3, $1); }
             ;
 
 StructExprFieldListEmpty: /*empty*/

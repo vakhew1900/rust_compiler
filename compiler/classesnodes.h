@@ -116,7 +116,7 @@ public:
 
     static ExprNode* ExprFromStructField(Type type, string* name, ExprNode* expr);
     static ExprNode* TupleExpr(Type type, ExprNode* expr, int value); // tuple_expr
-
+    static ExprNode* PathCallExpr(Type type, string* name, ExprNode* expr);
     static ExprNode* StaticMethod(Type type, ExprNode* expr, ExprListNode* expr_list);
     static ExprNode* FieldListAccess(Type type, ExprNode* expr, StructFieldListNode* field_list);
     static ExprNode* AddIfBlock(Type type, ExprNode* expr, ExprNode* condition, ExprNode* body);

@@ -33,6 +33,15 @@ ExprNode* ExprNode::OperatorExpr(Type type, ExprNode* left, ExprNode* right){
     return new_node;
 }
 
+ExprNode* ExprNode::PathCallExpr(Type type, string* name, ExprNode* expr){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->Name = name;
+    new_node->expr_left = expr;
+    return new_node;
+}
+
 ExprNode* ExprNode::ExprFromBoolLiteral(Type type, bool value){
     ExprNode* new_node = new ExprNode();
     new_node->id = ++globId;
