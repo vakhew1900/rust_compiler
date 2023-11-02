@@ -40,6 +40,10 @@ class ProgramNode{
 public:
     int id;
     ItemListNode* item_list = NULL;
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class TypeNode{
@@ -49,12 +53,14 @@ public:
     };
 
     int id;
-    enum Type type;
+    Type type;
     TypeNode* typeArr = NULL;
     ExprNode* exprArr = NULL;
 
     //ф-ии
-
+    TypeNode();
+    string* toDot();
+    string* toXml();
 };
 
 class ExprNode{
@@ -91,6 +97,8 @@ public:
 
     //ф-ии
 
+    string* toDot();
+    string* toXml();
 };
 
 class ExprListNode
@@ -101,6 +109,9 @@ public:
 
     ExprListNode(ExprNode* expr);
     static void Append(ExprListNode* list, ExprNode* expr);
+
+    string* toDot();
+    string* toXml();
 };
 
 class StmtNode
@@ -121,6 +132,9 @@ public:
     StmtNode(Type type, LetStmtNode* letStmt);
     StmtNode(Type type, StmtNode* stmt);
     StmtNode(Type type, ExprNode* exprstmt); // Делаем ExprStmt
+
+    string* toDot();
+    string* toXml();
 };
 
 class StmtListNode
@@ -144,6 +158,10 @@ public:
     string* name = NULL;
     TypeNode* type = NULL;
     ExprNode* expr = NULL;
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class ItemNode{
@@ -163,6 +181,9 @@ public:
     TraitNode* trait_item;
     ConstStmtNode* const_stmt_item;
     ModuleStmtNode* module_item;
+
+    string* toDot();
+    string* toXml();
 };
 
 class ItemListNode
@@ -173,6 +194,10 @@ public:
 
     ItemListNode(ItemNode* item);
     static void Append(ItemListNode* list, ItemNode* item);
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class ModuleStmtNode{
@@ -185,6 +210,10 @@ public:
     Type type;
     string* name;
     EnumItemListNode* items = NULL;
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class StructStructNode{
@@ -192,6 +221,10 @@ public:
     int id;
     string* name = NULL;
     StructFieldListNode* items = NULL;
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class StructFieldNode{
@@ -200,6 +233,9 @@ public:
     string* name = NULL;
     Visibility visibility;
     TypeNode* type = NULL;
+
+    string* toDot();
+    string* toXml();
 };
 
 class StructFieldListNode{
@@ -209,6 +245,10 @@ public:
 
     StructFieldListNode(StmtNode* item);
     static void Append(StructFieldListNode* list, StructFieldNode* item);
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class EnumStmtNode{
@@ -216,6 +256,10 @@ public:
     int id;
     string* name = NULL;
     EnumItemListNode* items = NULL;
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class EnumItemNode{
@@ -225,6 +269,10 @@ public:
     string* name = NULL;
     ExprNode* expr = NULL;
     StructFieldListNode* struct_list = NULL;
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class EnumItemListNode{
@@ -234,6 +282,10 @@ public:
 
     EnumItemListNode(EnumItemNode* item);
     static void Append(EnumItemListNode* list, EnumItemNode* item);
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class FuncStmtNode{
@@ -243,6 +295,10 @@ public:
     TypeNode* retutnType = NULL;
     FuncParamListNode* params = NULL;
     ExprNode* body = NULL;
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class FuncParamNode{
@@ -254,6 +310,10 @@ public:
     Type param_type;
     string* name = NULL;
     TypeNode* type = NULL;
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class FuncParamListNode{
@@ -266,6 +326,10 @@ public:
 
     FuncParamListNode(FuncParamNode* item);
     static void Append(FuncParamListNode* list, FuncParamNode* item);
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class ConstStmtNode{
@@ -274,6 +338,10 @@ public:
     string* name = NULL;
     TypeNode* type = NULL;
     ExprNode* expr = NULL;
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class AssociatedItemNode{
@@ -282,6 +350,10 @@ public:
     Visibility visibility;
     FuncStmtNode* fn = NULL;
     ConstStmtNode* const_stmt = NULL;
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class TraitNode{
@@ -289,6 +361,10 @@ public:
     int id;
     string* name = NULL;
     AssociatedItemListNode* items = NULL;
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class AssociatedItemListNode{
@@ -298,6 +374,10 @@ public:
 
     AssociatedItemListNode(AssociatedItemNode* item);
     static void Append(AssociatedItemListNode* list, AssociatedItemNode* item);
+
+
+    string* toDot();
+    string* toXml();
 };
 
 class ImplStmtNode{
@@ -310,5 +390,9 @@ public:
     string* name;
     TypeNode* type = NULL;
     AssociatedItemListNode* items = NULL;
+
+
+    string* toDot();
+    string* toXml();
 };
 
