@@ -429,6 +429,15 @@ ItemNode* ItemNode::DeclarationConst(Visibility visibility, ConstStmtNode* node)
     return new_node;
 }
 
+ItemNode* ItemNode::DeclarationStruct(Visibility visibility, StructStructNode* node){
+    ItemNode* new_node = new ItemNode();
+    new_node->id = ++globId;
+
+    new_node->type=struct_;
+    new_node->visibility = visibility;
+    new_node->struct_item = node;
+    return new_node;
+}
 
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
