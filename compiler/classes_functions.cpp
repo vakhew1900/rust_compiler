@@ -127,6 +127,16 @@ ExprNode::ExprNode(Type type, string* name, ExprNode* expr){
     this->Name = name;
 }
 
+// expr list
+ExprListNode::ExprListNode(ExprNode* expr){
+    this->id = ++globId;
+    this->exprs = new list <ExprNode*>{ expr };
+}
+
+void ExprListNode::Append(ExprListNode *list, ExprNode *expr) {
+    list->exprs->push_back(expr);
+}
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 
