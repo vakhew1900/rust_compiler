@@ -351,52 +351,52 @@ ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode(char_lit, $1); }
                 | ExprWithoutBlock '%' ExprWithBlock { $$ = ExprNode(mod, $1, $3); }
                 | ExprWithBlock '%' ExprWithoutBlock { $$ = ExprNode(mod, $1, $3); }
                 | ExprWithBlock '%' ExprWithBlock { $$ = ExprNode(mod, $1, $3); }
-                | ExprWithoutBlock AND ExprWithoutBlock // Логические операции
-                | ExprWithoutBlock AND ExprWithBlock
-                | ExprWithBlock AND ExprWithoutBlock
-                | ExprWithBlock AND ExprWithBlock
-                | ExprWithoutBlock OR ExprWithoutBlock
-                | ExprWithoutBlock OR ExprWithBlock
-                | ExprWithBlock OR ExprWithoutBlock
-                | ExprWithBlock OR ExprWithBlock
-                | ExprWithoutBlock '=' ExprWithoutBlock // ПРИСВАИВАНИЕ
-                | ExprWithoutBlock '=' ExprWithBlock
-                | ExprWithBlock '=' ExprWithoutBlock
-                | ExprWithBlock '=' ExprWithBlock
-                | ExprWithoutBlock EQUAL ExprWithoutBlock  // СРАВНЕНИЕ
-                | ExprWithoutBlock EQUAL ExprWithBlock
-                | ExprWithBlock EQUAL ExprWithoutBlock
-                | ExprWithBlock EQUAL ExprWithBlock
-                | ExprWithoutBlock NOT_EQUAL ExprWithoutBlock
-                | ExprWithoutBlock NOT_EQUAL ExprWithBlock
-                | ExprWithBlock NOT_EQUAL ExprWithoutBlock
-                | ExprWithBlock NOT_EQUAL ExprWithBlock
-                | ExprWithoutBlock '>' ExprWithoutBlock
-                | ExprWithoutBlock '>' ExprWithBlock
-                | ExprWithBlock '>' ExprWithoutBlock
-                | ExprWithBlock '>' ExprWithBlock
-                | ExprWithoutBlock '<' ExprWithoutBlock
-                | ExprWithoutBlock '<' ExprWithBlock
-                | ExprWithBlock '<' ExprWithoutBlock
-                | ExprWithBlock '<' ExprWithBlock
-                | ExprWithoutBlock GREATER_EQUAL ExprWithoutBlock
-                | ExprWithoutBlock GREATER_EQUAL ExprWithBlock
-                | ExprWithBlock GREATER_EQUAL ExprWithoutBlock
-                | ExprWithBlock GREATER_EQUAL ExprWithBlock
-                | ExprWithoutBlock LESS_EQUAL ExprWithoutBlock
-                | ExprWithoutBlock LESS_EQUAL ExprWithBlock
-                | ExprWithBlock LESS_EQUAL ExprWithoutBlock
-                | ExprWithBlock LESS_EQUAL ExprWithBlock
-                | '-' ExprWithoutBlock %prec UMINUS // ОТРИЦАНИЕ
-                | '-' ExprWithBlock %prec UMINUS
-                | '!' ExprWithoutBlock
-                | '!' ExprWithBlock
-                | ExprWithoutBlock '?' //
-                | ExprWithBlock '?'
-                | '*' ExprWithoutBlock %prec USTAR // ГАДОСТЬ
-                | '*' ExprWithBlock %prec USTAR
-                | '&' ExprWithoutBlock
-                | '&' ExprWithBlock
+                | ExprWithoutBlock AND ExprWithoutBlock { $$ = ExprNode(and_, $1, $3); }
+                | ExprWithoutBlock AND ExprWithBlock { $$ = ExprNode(and_, $1, $3); }
+                | ExprWithBlock AND ExprWithoutBlock { $$ = ExprNode(and_, $1, $3); }
+                | ExprWithBlock AND ExprWithBlock { $$ = ExprNode(and_, $1, $3); }
+                | ExprWithoutBlock OR ExprWithoutBlock { $$ = ExprNode(or_, $1, $3); }
+                | ExprWithoutBlock OR ExprWithBlock { $$ = ExprNode(or_, $1, $3); }
+                | ExprWithBlock OR ExprWithoutBlock { $$ = ExprNode(or_, $1, $3); }
+                | ExprWithBlock OR ExprWithBlock { $$ = ExprNode(or_, $1, $3); }
+                | ExprWithoutBlock '=' ExprWithoutBlock { $$ = ExprNode(asign, $1, $3); }
+                | ExprWithoutBlock '=' ExprWithBlock { $$ = ExprNode(asign, $1, $3); }
+                | ExprWithBlock '=' ExprWithoutBlock { $$ = ExprNode(asign, $1, $3); }
+                | ExprWithBlock '=' ExprWithBlock { $$ = ExprNode(asign, $1, $3); }
+                | ExprWithoutBlock EQUAL ExprWithoutBlock { $$ = ExprNode(equal, $1, $3); }
+                | ExprWithoutBlock EQUAL ExprWithBlock { $$ = ExprNode(equal, $1, $3); }
+                | ExprWithBlock EQUAL ExprWithoutBlock { $$ = ExprNode(equal, $1, $3); }
+                | ExprWithBlock EQUAL ExprWithBlock { $$ = ExprNode(equal, $1, $3); }
+                | ExprWithoutBlock NOT_EQUAL ExprWithoutBlock { $$ = ExprNode(not_equal, $1, $3); }
+                | ExprWithoutBlock NOT_EQUAL ExprWithBlock { $$ = ExprNode(not_equal, $1, $3); }
+                | ExprWithBlock NOT_EQUAL ExprWithoutBlock { $$ = ExprNode(not_equal, $1, $3); }
+                | ExprWithBlock NOT_EQUAL ExprWithBlock { $$ = ExprNode(not_equal, $1, $3); }
+                | ExprWithoutBlock '>' ExprWithoutBlock { $$ = ExprNode(greater, $1, $3); }
+                | ExprWithoutBlock '>' ExprWithBlock { $$ = ExprNode(greater, $1, $3); }
+                | ExprWithBlock '>' ExprWithoutBlock { $$ = ExprNode(greater, $1, $3); }
+                | ExprWithBlock '>' ExprWithBlock { $$ = ExprNode(greater, $1, $3); }
+                | ExprWithoutBlock '<' ExprWithoutBlock { $$ = ExprNode(less, $1, $3); }
+                | ExprWithoutBlock '<' ExprWithBlock { $$ = ExprNode(less, $1, $3); }
+                | ExprWithBlock '<' ExprWithoutBlock { $$ = ExprNode(less, $1, $3); }
+                | ExprWithBlock '<' ExprWithBlock { $$ = ExprNode(less, $1, $3); }
+                | ExprWithoutBlock GREATER_EQUAL ExprWithoutBlock { $$ = ExprNode(greater_equal, $1, $3); }
+                | ExprWithoutBlock GREATER_EQUAL ExprWithBlock { $$ = ExprNode(greater_equal, $1, $3); }
+                | ExprWithBlock GREATER_EQUAL ExprWithoutBlock { $$ = ExprNode(greater_equal, $1, $3); }
+                | ExprWithBlock GREATER_EQUAL ExprWithBlock { $$ = ExprNode(greater_equal, $1, $3); }
+                | ExprWithoutBlock LESS_EQUAL ExprWithoutBlock { $$ = ExprNode(less_equal, $1, $3); }
+                | ExprWithoutBlock LESS_EQUAL ExprWithBlock { $$ = ExprNode(less_equal, $1, $3); }
+                | ExprWithBlock LESS_EQUAL ExprWithoutBlock { $$ = ExprNode(less_equal, $1, $3); }
+                | ExprWithBlock LESS_EQUAL ExprWithBlock { $$ = ExprNode(less_equal, $1, $3); }
+                | '-' ExprWithoutBlock %prec UMINUS { $$ = ExprNode(uminus, $2, 0); }
+                | '-' ExprWithBlock %prec UMINUS { $$ = ExprNode(uminus, $2, 0); }
+                | '!' ExprWithoutBlock { $$ = ExprNode(negotation, $2, 0); }
+                | '!' ExprWithBlock { $$ = ExprNode(negotation, $2, 0); }
+                | ExprWithoutBlock '?' { $$ = ExprNode(question, $1, 0); }
+                | ExprWithBlock '?' { $$ = ExprNode(question, $1, 0); }
+                | '*' ExprWithoutBlock %prec USTAR { $$ = ExprNode(ustar, $2, 0); }
+                | '*' ExprWithBlock %prec USTAR { $$ = ExprNode(ustar, $2, 0); }
+                | '&' ExprWithoutBlock { $$ = ExprNode(link, $2, 0); }
+                | '&' ExprWithBlock { $$ = ExprNode(link, $2, 0); }
                 | '[' ExprListEmpty ']'  // ЗАДАЕМ МАССИВ
                 | '[' ExprWithoutBlock ';' ExprWithoutBlock ']'
                 | '[' ExprWithoutBlock ';' ExprWithBlock ']'
