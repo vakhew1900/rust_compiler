@@ -49,7 +49,7 @@ public:
 class TypeNode{
 public:
     enum Type{
-        emptyType, int_, char_, string_, float_, bool_, id_, array_
+        emptyType_, int_, char_, string_, float_, bool_, id_, array_
     };
 
     int id;
@@ -58,7 +58,8 @@ public:
     ExprNode* exprArr = NULL;
 
     //ф-ии
-    TypeNode();
+    TypeNode(Type type);
+    TypeNode(Type type, TypeNode* type_node, ExprNode* expr);
     string* toDot();
     string* toXml();
 };
