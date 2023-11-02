@@ -298,12 +298,12 @@ ConstStmt: CONST ID ':' Type '=' ExprWithBlock ';' { $$ = new ConstStmtNode($2, 
 
 /* =========== Module ================= */
 
-ModuleStmt: MOD ID ';'
-          | MOD ID '{' ItemListEmpty '}'
+ModuleStmt: MOD ID ';' { $$ = new ModuleStmtNode(0, $2, 0); }
+          | MOD ID '{' ItemListEmpty '}' { $$ = new ModuleStmtNode(0, $2, $4); }
           ;
 
 /* ========= LetStmt ============ */
-LetStmt: LET ID '=' ExprWithBlock ';'
+LetStmt: LET ID '=' ExprWithBlock ';' {  }
        | LET ID '=' ExprWithoutBlock ';'
        | LET ID ':' Type '=' ExprWithBlock ';'
        | LET ID ':' Type '=' ExprWithoutBlock ';'
