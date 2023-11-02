@@ -197,11 +197,12 @@ FuncParam: ID ':' Type { $$ = new FuncParamNode($1, $3, FuncParamNode::noMut); }
 
 /* ========== Struct =========== */
 
-StructStmt: StructStruct
-          | TupleStruct  /* Надо ли ? */
+StructStmt: StructStruct { $$ = $1; }
+          | TupleStruct  { $$ = $1; }
           ;
 
-StructStruct : STRUCT ID '{' StructFieldListEmpty '}'
+StructStruct : STRUCT ID '{' StructFieldListEmpty '}' { $$ = new StructStructNode($2, $4); }
+             | STRUCT ID ';' { $$ = new StructStructNode($2, 0); }
              ;
 
 StructFieldListEmpty: /* empty */
@@ -213,24 +214,24 @@ StructFieldList: StructField
                | StructFieldList ',' StructField
                ;
 
-StructField: ID ':' Type  /* Возможен конфликт с FunctionParam */
+StructField: ID ':' Type
            | Visibility ID ':' Type
            ;
 
 /*--- TupleStruct ----*/
 
-TupleStruct: STRUCT ID '(' TupleFieldListEmpty ')'
+TupleStruct: STRUCT ID '(' TupleFieldListEmpty ')' { $$ = new StructStructNode($2, $4); }
            ;
 
-TupleFieldListEmpty: /* empty */
-                    | TupleFieldList
-                    | TupleFieldList ','
+TupleFieldListEmpty: /* empty */ { $$ = 0; }
+                    | TupleFieldList { $$ = new StructFieldListNode($1); }
+                    | TupleFieldList ',' { $$ = new StructFieldListNode($1); }
                     ;
 
-TupleFieldList: Type /* Возможен конфликт */
-               | Visibility Type
-               | TupleFieldList ',' Type
-               | TupleFieldList ',' Visibility Type
+TupleFieldList: Type { $$ = new StructFieldListNode(new StructFieldNode(0, $1, self)); }
+               | Visibility Type { $$ = new StructFieldListNode(new StructFieldNode(0, $2, $1)); }
+               | TupleFieldList ',' Type { $$ = StructFieldListNode::Append($1, new StructFieldNode(0, $3, self)); }
+               | TupleFieldList ',' Visibility Type { $$ = StructFieldListNode::Append($1, new StructFieldNode(0, $4, $3)); }
                ;
 
 /* ============= ENUM ================ */

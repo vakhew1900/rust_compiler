@@ -254,8 +254,8 @@ public:
 
     ModuleStmtNode(Type type, string* name, EnumItemListNode* items);
 
-   void toDot(string &dot);
-   void toXml(string &xml);
+    void toDot(string &dot);
+    void toXml(string &xml);
 };
 
 class StructStructNode{
@@ -265,8 +265,8 @@ public:
     StructFieldListNode* items = NULL;
 
     StructStructNode(string* name, StructFieldListNode* items);
-   void toDot(string &dot);
-   void toXml(string &xml);
+    void toDot(string &dot);
+    void toXml(string &xml);
 };
 
 class StructFieldNode{
@@ -277,8 +277,8 @@ public:
     TypeNode* type = NULL;
 
     StructFieldNode(string* name, TypeNode* type, Visibility visibility);
-   void toDot(string &dot);
-   void toXml(string &xml);
+    void toDot(string &dot);
+    void toXml(string &xml);
 };
 
 class StructFieldListNode{
