@@ -311,6 +311,7 @@ public:
     list<EnumItemNode*>* items = NULL;
 
     EnumItemListNode(EnumItemNode* item);
+    EnumItemListNode(EnumItemListNode* list);
     static void Append(EnumItemListNode* list, EnumItemNode* item);
 
 

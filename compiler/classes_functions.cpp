@@ -370,6 +370,20 @@ EnumItemNode::EnumItemNode(string* name, Visibility visibility, StructFieldListN
     this->visibility=visibility;
 }
 
+EnumItemListNode::EnumItemListNode(EnumItemNode *item){
+    this->id = ++globId;
+    this->items = new list <EnumItemNode*>{ item };
+}
+
+EnumItemListNode::EnumItemListNode(EnumItemListNode *list){
+    this->id = ++globId;
+    this->items = list->items;
+}
+
+void EnumItemListNode::Append(EnumItemListNode *list, EnumItemNode* item) {
+    list->items->push_back(item);
+}
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 
