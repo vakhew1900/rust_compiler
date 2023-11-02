@@ -140,25 +140,25 @@ Stmt: ';' { $$ = new StmtNode(StmtNode::semicolon, 0, 0, 0); }
     | ExprStmt { $$ =  new StmtNode(StmtNode::exprstmt, $1);}
     ;
 
-ItemListEmpty: /*empty*/
-             | ItemList
+ItemListEmpty: /*empty*/ { $$ = 0; }
+             | ItemList { $$ = new ItemListNode($1); }
              ;
 
-ItemList: Item
-         | ItemList Item
+ItemList: Item { $$ = new ItemListNode($1); }
+         | ItemList Item { $$ = ItemListNode::Append($1, $2); }
          ;
 
-Item: SimpleItem
-     | Visibility SimpleItem
+Item: SimpleItem { $$ = new ItemNode(self, $1);}
+     | Visibility SimpleItem { $$ = new ItemNode($1, $2);}
      ;
 
-SimpleItem:  FuncStmt
-          | StructStmt
-          | EnumStmt
-          | ImplStmt
-          | TraitStmt
-          | ConstStmt
-          | ModuleStmt
+SimpleItem:  FuncStmt  { $$ = ItemNode::DeclarationFunction(self, $1); }
+          | StructStmt { $$ = ItemNode::DeclarationStruct(self, $1); }
+          | EnumStmt { $$ = ItemNode::DeclarationEnum(self, $1); }
+          | ImplStmt { $$ = ItemNode::DeclarationImpl(self, $1); }
+          | TraitStmt { $$ = ItemNode::DeclarationTrait(self, $1); }
+          | ConstStmt { $$ = ItemNode::DeclarationConst(self, $1); }
+          | ModuleStmt { $$ = ItemNode::DeclarationModule(self, $1); }
           ;
 
 /* ---------- Function ------------ */
