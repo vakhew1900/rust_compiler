@@ -94,7 +94,7 @@ public:
     ExprListNode* expr_list = NULL;
     ExprNode* body = NULL;
     ExprNode* else_body = NULL;
-    StructFieldListNode* field_list = NULL;
+    ExprListNode* field_list = NULL;
     StmtListNode* stmt_list = NULL;
 
     //ф-ии
@@ -118,7 +118,7 @@ public:
     static ExprNode* TupleExpr(Type type, ExprNode* expr, int value); // tuple_expr
     static ExprNode* PathCallExpr(Type type, string* name, ExprNode* expr);
     static ExprNode* StaticMethod(Type type, ExprNode* expr, ExprListNode* expr_list);
-    static ExprNode* FieldListAccess(Type type, ExprNode* expr, StructFieldListNode* field_list);
+    static ExprNode* FieldListAccess(Type type, ExprNode* expr, ExprListNode* field_list);
     static ExprNode* AddIfBlock(Type type, ExprNode* expr, ExprNode* condition, ExprNode* body);
 
     void toDot(string &dot);

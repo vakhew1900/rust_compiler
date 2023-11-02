@@ -91,7 +91,7 @@ ExprNode* ExprNode::StaticMethod(Type type, ExprNode* expr, ExprListNode* expr_l
     return new_node;
 }
 
-ExprNode* ExprNode::FieldListAccess(Type type, ExprNode* expr, StructFieldListNode* field_list){
+ExprNode* ExprNode::FieldListAccess(Type type, ExprNode* expr, ExprListNode* field_list){
     ExprNode* new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
