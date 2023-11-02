@@ -499,14 +499,14 @@ SimpleIfExpr: IF '(' ExprWithoutBlock ')' BlockExpr
 
 /*-------------------------TYPE -------------------------- */
 
-Type: BOOL
-    | CHAR
-    | FLOAT
-    | INT
-    | STRING
-    | ID
-    | '[' Type ';' ExprWithBlock ']'
-    | '[' Type ';' ExprWithoutBlock ']'
+Type: BOOL { $$ = TypeNode(bool_); }
+    | CHAR { $$ = TypeNode(char_); }
+    | FLOAT { $$ = TypeNode(float_); }
+    | INT { $$ = TypeNode(int_); }
+    | STRING { $$ = TypeNode(string_); }
+    | ID { $$ = TypeNode(id_); }
+    | '[' Type ';' ExprWithBlock ']' { $$ = TypeNode(array_, $2, $4); }
+    | '[' Type ';' ExprWithoutBlock ']' { $$ = TypeNode(array_, $2, $4); }
     ;
     /* Не доделан. Можно добавить TupleType */
 
