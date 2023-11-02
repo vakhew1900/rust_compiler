@@ -419,6 +419,16 @@ ItemNode* ItemNode::DeclarationEnum(Visibility visibility, EnumStmtNode* node){
     return new_node;
 }
 
+ItemNode* ItemNode::DeclarationFunction(Visibility visibility, FuncStmtNode* node){
+    ItemNode* new_node = new ItemNode();
+    new_node->id = ++globId;
+
+    new_node->type=function_;
+    new_node->visibility = visibility;
+    new_node->function_item = node;
+    return new_node;
+}
+
 ItemNode* ItemNode::DeclarationConst(Visibility visibility, ConstStmtNode* node){
     ItemNode* new_node = new ItemNode();
     new_node->id = ++globId;
