@@ -286,14 +286,14 @@ AssociatedItem: FuncStmt { $$ = new AssociatedItemNode(self, $1, 0); }
 
 /* ============ TRAIT ================ */
 
-TraitStmt: TRAIT ID '{' AssociatedItemListEmpty '}'
+TraitStmt: TRAIT ID '{' AssociatedItemListEmpty '}' { $$ = new TraitNode($2, $4); }
          ;
 
 /* ============ CONST =============== */
 
-ConstStmt: CONST ID ':' Type '=' ExprWithBlock ';'
-         | CONST ID ':' Type '=' ExprWithoutBlock ';'
-         | CONST ID ':' Type ';'
+ConstStmt: CONST ID ':' Type '=' ExprWithBlock ';' { $$ = new ConstStmtNode($2, $4, $6); }
+         | CONST ID ':' Type '=' ExprWithoutBlock ';' { $$ = new ConstStmtNode($2, $4, $6); }
+         | CONST ID ':' Type ';' { $$ = new ConstStmtNode($2, $4, 0); }
          ;
 
 /* =========== Module ================= */
