@@ -250,7 +250,7 @@ public:
     string* name = NULL;
     StructFieldListNode* items = NULL;
 
-
+    StructStructNode(string* name, StructFieldListNode* items);
     string* toDot();
     string* toXml();
 };
@@ -262,6 +262,7 @@ public:
     Visibility visibility;
     TypeNode* type = NULL;
 
+    StructFieldNode(string* name, TypeNode* type, Visibility visibility);
     string* toDot();
     string* toXml();
 };
@@ -271,7 +272,8 @@ public:
     int id;
     list<StructFieldNode*>* items = NULL;
 
-    StructFieldListNode(StmtNode* item);
+    StructFieldListNode(StructFieldNode* item);
+    StructFieldListNode(StructFieldListNode* list);
     static void Append(StructFieldListNode* list, StructFieldNode* item);
 
 

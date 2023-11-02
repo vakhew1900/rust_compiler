@@ -278,6 +278,34 @@ ImplStmtNode::ImplStmtNode(Type impl_type, TypeNode* type, string* name, Associa
     this->items = list;
 }
 
+//Struct
+StructStructNode::StructStructNode(string* name, StructFieldListNode* items){
+    this->id = ++globId;
+    this->name = name;
+    this->items = items;
+}
+
+StructFieldNode::StructFieldNode(string* name, TypeNode* type, Visibility visibility){
+    this->id = ++globId;
+    this->name = name;
+    this->type = type;
+    this->visibility = visibility;
+}
+
+StructFieldListNode::StructFieldListNode(StructFieldNode *item){
+    this->id = ++globId;
+    this->items = new list <StructFieldNode*>{ item };
+}
+
+StructFieldListNode::StructFieldListNode(StructFieldListNode *list){
+    this->id = ++globId;
+    this->items = list->items;
+}
+
+void StructFieldListNode::Append(StructFieldListNode *list, StructFieldNode* item) {
+    list->items->push_back(item);
+}
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 
