@@ -44,6 +44,7 @@
 %type <expr>ExprWithoutBlock
 %type <expr>ExprWithBlock
 %type <expr>BlockExpr
+%type <expr>PathCallExpr
 %type <expr>StructExprField
 %type <expr_list>ExprList
 %type <expr_list>ExprListEmpty
@@ -493,7 +494,7 @@ SimpleIfElseExpr: SimpleIfExpr
                 ;
 
 SimpleIfExpr: IF '(' ExprWithoutBlock ')' BlockExpr
-            | IF '(' ExprWithBlock ')' BlockExpr
+            | IF '(' ExprWithBlock ')' BlockExpr  // list <condition> list <body>  blockexpr else
             ;
 
 

@@ -544,6 +544,7 @@ StmtNode::StmtNode(Type type, ExprNode* expr_node, ItemNode* decl_node, LetStmtN
 // --- toDot, toXml функции ---
 void ProgramNode::toDot(string &dot){
 
+    dot += ""
 }
 
 void ProgramNode::toXml(string &xml){
@@ -733,3 +734,4 @@ void ImplStmtNode::toDot(string &dot){
 void ImplStmtNode::toXml(string &xml){
 
 }
+
