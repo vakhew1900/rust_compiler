@@ -51,7 +51,6 @@
 %type <expr_list>StructExprFieldListEmpty
 %type <stmt>Stmt
 %type <stmt_list>StmtList
-%type <stmt_list>ItemListEmpty
 %type <let_stmt>LetStmt
 %type <mod_stmt>ModuleStmt
 %type <item>Item
