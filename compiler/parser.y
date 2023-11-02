@@ -208,7 +208,7 @@ StructStruct : STRUCT ID '{' StructFieldListEmpty '}' { $$ = new StructStructNod
              | STRUCT ID ';' { $$ = new StructStructNode($2, 0); }
              ;
 
-StructFieldListEmpty: /* empty */ { $$ = new StructFieldListNode(0); }
+StructFieldListEmpty: /* empty */ { $$ = 0; }
                     | StructFieldList { $$ = new StructFieldListNode($1); }
                     | StructFieldList ',' { $$ = new StructFieldListNode($1); }
                     ;
@@ -217,8 +217,8 @@ StructFieldList: StructField { $$ = new StructFieldListNode($1); }
                | StructFieldList ',' StructField { $$ = StructFieldListNode::Append($1, $3); }
                ;
 
-StructField: ID ':' Type { $$ = StructFieldNode($1, $3, self); }
-           | Visibility ID ':' Type { $$ = StructFieldNode($2, $4, $1); }
+StructField: ID ':' Type { $$ = new StructFieldNode($1, $3, self); }
+           | Visibility ID ':' Type { $$ = new StructFieldNode($2, $4, $1); }
            ;
 
 /*--- TupleStruct ----*/
@@ -239,27 +239,27 @@ TupleFieldList: Type { $$ = new StructFieldListNode(new StructFieldNode(0, $1, s
 
 /* ============= ENUM ================ */
 
-EnumStmt: ENUM ID '{' EnumItemListEmpty '}'
+EnumStmt: ENUM ID '{' EnumItemListEmpty '}' { $$ = new EnumStmtNode($2, $4); }
         ;
 
-EnumItemListEmpty: /* empty */
-                 | ','
-                 | EnumItemList
-                 | EnumItemList ','
+EnumItemListEmpty: /* empty */ { $$ = 0; }
+                 | ',' { $$ = 0; }
+                 | EnumItemList { $$ = new EnumItemListNode($1); }
+                 | EnumItemList ',' { $$ = new EnumItemListNode($1); }
                  ;
 
-EnumItemList: EnumItem
-            | EnumItemList ',' EnumItem
+EnumItemList: EnumItem { $$ = new EnumItemListNode($1); }
+            | EnumItemList ',' EnumItem { $$ = EnumItemListNode::Append($1, $3); }
             ;
 
-EnumItem: ID
-        | Visibility ID
-        | ID '=' ExprWithBlock /* В таком случае ID  должен быть всегда только целочисленным числом. Нельзя на парсере определить такое*/
-        | ID '=' ExprWithoutBlock
-        | Visibility ID '=' ExprWithBlock
-        | Visibility ID '=' ExprWithoutBlock
-        | Visibility ID '{' StructFieldListEmpty '}'
-        | ID '{' StructFieldListEmpty '}'
+EnumItem: ID { $$ = new EnumItemNode($1, self, 0, 0); }
+        | Visibility ID { $$ = new EnumItemNode($2, $1, 0, 0); }
+        | ID '=' ExprWithBlock { $$ = new EnumItemNode($1, self, NULL, $3); } /* В таком случае ID  должен быть всегда только целочисленным числом. Нельзя на парсере определить такое*/
+        | ID '=' ExprWithoutBlock { $$ = new EnumItemNode($1, self, 0, $3); }
+        | Visibility ID '=' ExprWithBlock { $$ = new EnumItemNode($2, $1, 0, $4); }
+        | Visibility ID '=' ExprWithoutBlock { $$ = new EnumItemNode($2, $1, 0, $4); }
+        | Visibility ID '{' StructFieldListEmpty '}' { $$ = new EnumItemNode($2, $1, $4, 0); }
+        | ID '{' StructFieldListEmpty '}' { $$ = new EnumItemNode($1, self, $3, 0); }
         ;
 
 /* =========== IMPL ================ */

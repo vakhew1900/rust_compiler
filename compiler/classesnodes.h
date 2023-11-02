@@ -301,8 +301,8 @@ public:
     EnumItemListNode* items = NULL;
 
     EnumStmtNode(string* name, EnumItemListNode* items);
-   void toDot(string &dot);
-   void toXml(string &xml);
+    void toDot(string &dot);
+    void toXml(string &xml);
 };
 
 class EnumItemNode{
