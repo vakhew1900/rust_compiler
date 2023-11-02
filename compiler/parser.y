@@ -12,6 +12,7 @@
 	bool bool_literal;
 	float float_literal;
 	char char_literal;
+    enum Visibility vis;
 
     ProgramNode* prg;
     ExprNode* expr;
@@ -37,7 +38,6 @@
     TraitNode* trait;
     ImplStmtNode* impl_stmt;
     TypeNode* type;
-    VisibilityNode* vis;
 }
 
 %type <prg>Program
