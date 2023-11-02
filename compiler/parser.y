@@ -70,6 +70,8 @@
 %type <enum_items>EnumItemList
 %type <enum_items>EnumItemListEmpty
 %type <function_stmt>FuncStmt
+%type <function_stmt>ImplFuncStmt
+%type <function_stmt>DecFuncStmt
 %type <function_param>FuncParam
 %type <function_params>FuncParamList
 %type <function_params>FuncParamListEmpty
@@ -164,16 +166,16 @@ SimpleItem:  FuncStmt  { $$ = ItemNode::DeclarationFunction(self, $1); }
 
 /* ---------- Function ------------ */
 
-FuncStmt: DecFuncStmt
-        | ImplFuncStmt
+FuncStmt: DecFuncStmt { $$ = $1; }
+        | ImplFuncStmt { $$ = $1; }
         ;
 
-DecFuncStmt: FN ID '(' FuncParamListEmpty ')' ';'
-           | FN ID '(' FuncParamListEmpty ')' RIGHT_ARROW  Type ';'
+DecFuncStmt: FN ID '(' FuncParamListEmpty ')' ';' { $$ = new FuncStmtNode($2, 0, $4, 0); }
+           | FN ID '(' FuncParamListEmpty ')' RIGHT_ARROW  Type ';' { $$ = new FuncStmtNode($2, $7, $4, 0); }
            ;
 
-ImplFuncStmt: FN ID '(' FuncParamListEmpty ')' BlockExpr
-            | FN ID '(' FuncParamListEmpty ')' RIGHT_ARROW  Type BlockExpr
+ImplFuncStmt: FN ID '(' FuncParamListEmpty ')' BlockExpr { $$ = new FuncStmtNode($2, 0, $4, $6); }
+            | FN ID '(' FuncParamListEmpty ')' RIGHT_ARROW  Type BlockExpr { $$ = new FuncStmtNode($2, $7, $4, $8); }
             ;
 
 FuncParamListEmpty: /* empty */
