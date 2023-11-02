@@ -384,6 +384,17 @@ void EnumItemListNode::Append(EnumItemListNode *list, EnumItemNode* item) {
     list->items->push_back(item);
 }
 
+// ModuleStmt
+ModuleStmtNode::ModuleStmtNode(Type type, string* name, EnumItemListNode* items){
+    this->id = ++globId;
+    this->type = type;
+    this->name = name;
+    this->items = items;
+}
+
+// Items (declarations)
+
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 

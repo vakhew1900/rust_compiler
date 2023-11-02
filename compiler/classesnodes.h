@@ -239,6 +239,7 @@ public:
     string* name;
     EnumItemListNode* items = NULL;
 
+    ModuleStmtNode(Type type, string* name, EnumItemListNode* items);
 
     string* toDot();
     string* toXml();
@@ -313,7 +314,6 @@ public:
     EnumItemListNode(EnumItemNode* item);
     EnumItemListNode(EnumItemListNode* list);
     static void Append(EnumItemListNode* list, EnumItemNode* item);
-
 
     string* toDot();
     string* toXml();
