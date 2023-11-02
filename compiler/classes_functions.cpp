@@ -489,6 +489,21 @@ ItemNode* ItemNode::DeclarationModule(Visibility visibility, ModuleStmtNode* nod
     return new_node;
 }
 
+// ItemListNode
+ItemListNode::ItemListNode(ItemNode *item){
+    this->id = ++globId;
+    this->items = new list <ItemNode*>{ item };
+}
+
+ItemListNode::ItemListNode(ItemListNode *list){
+    this->id = ++globId;
+    this->items = list->items;
+}
+
+void ItemListNode::Append(ItemListNode *list, ItemNode* item) {
+    list->items->push_back(item);
+}
+
 // LetStmt
 LetStmtNode::LetStmtNode(string* name, TypeNode* type, Type let_type, ExprNode* expr){
     this->id = ++globId;

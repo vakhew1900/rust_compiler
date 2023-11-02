@@ -230,6 +230,7 @@ public:
     list<ItemNode*>* items = NULL;
 
     ItemListNode(ItemNode* item);
+    ItemListNode(ItemListNode* list);
     static void Append(ItemListNode* list, ItemNode* item);
 
     string* toDot();
