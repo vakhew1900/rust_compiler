@@ -331,26 +331,26 @@ ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode(char_lit, $1); }
                 | FLOAT_LITERAL { $$ = ExprNode(float_lit, $1); }
                 | TRUE { $$ = ExprNode(bool_lit, $1); }
                 | FALSE { $$ = ExprNode(bool_lit, $1); }
-                | ExprWithoutBlock '+' ExprWithoutBlock
-                | ExprWithoutBlock '+' ExprWithBlock
-                | ExprWithBlock '+' ExprWithoutBlock
-                | ExprWithBlock '+' ExprWithBlock
-                | ExprWithoutBlock '-' ExprWithoutBlock
-                | ExprWithoutBlock '-' ExprWithBlock
-                | ExprWithBlock '-' ExprWithoutBlock
-                | ExprWithBlock '-' ExprWithBlock
-                | ExprWithoutBlock '/' ExprWithoutBlock
-                | ExprWithoutBlock '/' ExprWithBlock
-                | ExprWithBlock '/' ExprWithoutBlock
-                | ExprWithBlock '/' ExprWithBlock
-                | ExprWithoutBlock '*' ExprWithoutBlock
-                | ExprWithoutBlock '*' ExprWithBlock
-                | ExprWithBlock '*' ExprWithoutBlock
-                | ExprWithBlock '*' ExprWithBlock
-                | ExprWithoutBlock '%' ExprWithoutBlock
-                | ExprWithoutBlock '%' ExprWithBlock
-                | ExprWithBlock '%' ExprWithoutBlock
-                | ExprWithBlock '%' ExprWithBlock
+                | ExprWithoutBlock '+' ExprWithoutBlock { $$ = ExprNode(plus, $1, $3); }
+                | ExprWithoutBlock '+' ExprWithBlock { $$ = ExprNode(plus, $1, $3); }
+                | ExprWithBlock '+' ExprWithoutBlock { $$ = ExprNode(plus, $1, $3); }
+                | ExprWithBlock '+' ExprWithBlock { $$ = ExprNode(plus, $1, $3); }
+                | ExprWithoutBlock '-' ExprWithoutBlock { $$ = ExprNode(minus, $1, $3); }
+                | ExprWithoutBlock '-' ExprWithBlock { $$ = ExprNode(minus, $1, $3); }
+                | ExprWithBlock '-' ExprWithoutBlock { $$ = ExprNode(minus, $1, $3); }
+                | ExprWithBlock '-' ExprWithBlock { $$ = ExprNode(minus, $1, $3); }
+                | ExprWithoutBlock '/' ExprWithoutBlock { $$ = ExprNode(div_expr, $1, $3); }
+                | ExprWithoutBlock '/' ExprWithBlock { $$ = ExprNode(div_expr, $1, $3); }
+                | ExprWithBlock '/' ExprWithoutBlock { $$ = ExprNode(div_expr, $1, $3); }
+                | ExprWithBlock '/' ExprWithBlock { $$ = ExprNode(div_expr, $1, $3); }
+                | ExprWithoutBlock '*' ExprWithoutBlock { $$ = ExprNode(mul_expr, $1, $3); }
+                | ExprWithoutBlock '*' ExprWithBlock { $$ = ExprNode(mul_expr, $1, $3); }
+                | ExprWithBlock '*' ExprWithoutBlock { $$ = ExprNode(mul_expr, $1, $3); }
+                | ExprWithBlock '*' ExprWithBlock { $$ = ExprNode(mul_expr, $1, $3); }
+                | ExprWithoutBlock '%' ExprWithoutBlock { $$ = ExprNode(mod, $1, $3); }
+                | ExprWithoutBlock '%' ExprWithBlock { $$ = ExprNode(mod, $1, $3); }
+                | ExprWithBlock '%' ExprWithoutBlock { $$ = ExprNode(mod, $1, $3); }
+                | ExprWithBlock '%' ExprWithBlock { $$ = ExprNode(mod, $1, $3); }
                 | ExprWithoutBlock AND ExprWithoutBlock // Логические операции
                 | ExprWithoutBlock AND ExprWithBlock
                 | ExprWithBlock AND ExprWithoutBlock
