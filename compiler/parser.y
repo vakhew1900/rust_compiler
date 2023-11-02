@@ -25,7 +25,7 @@
     ItemListNode* item_list;
     StructFieldNode* struct_item;
     StructFieldListNode* struct_items;
-    StructStructNode* struct;
+    StructStructNode* struct_;
     EnumStmtNode* enum_stmt;
     EnumItemNode* enum_item;
     EnumItemListNode* enum_items;
@@ -57,7 +57,7 @@
 %type <item>SimpleItem
 %type <item_list>ItemList
 %type <item_list>ItemListEmpty
-%type <struct>StructStruct
+%type <struct_>StructStruct
 %type <struct_item>StructField
 %type <struct_items>StructFieldList
 %type <struct_items>StructFieldListEmpty
@@ -512,9 +512,9 @@ Type: BOOL { $$ = new TypeNode(bool_); }
 
 /*---------------------- VISIBILITY ------------------------- */
 
-Visibility: PUB
-          | PUB '(' SUPER ')'
-          | PUB '(' SELF ')'
+Visibility: PUB               { $$ = pub; }
+          | PUB '(' SUPER ')' { $$ = self; }
+          | PUB '(' SELF ')'  { $$ = super; }
           ;
 
 %%

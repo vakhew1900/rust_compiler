@@ -404,15 +404,12 @@ ItemNode* ItemNode::DeclarationEnum(Visibility visibility, EnumStmtNode* node){
     if(visibility != pub){
         current_vis = self;
     }
+
     if(node->items!=NULL){
-        auto iter { node->items->items->front() };
-        EnumItemNode *current = iter;
-        while(current != NULL){
-            if(current->visibility == emptyVisibility){
-                current->visibility = current_vis;
+        for(auto iter = node->items->items->begin(); iter != node->items->items->end(); ++iter){
+            if((*iter)->visibility == emptyVisibility){
+                (*iter)->visibility = current_vis;
             }
-            ++iter;
-            current = iter;
         }
     }
 
@@ -449,6 +446,29 @@ ItemNode* ItemNode::DeclarationStruct(Visibility visibility, StructStructNode* n
     return new_node;
 }
 
+ItemNode* ItemNode::DeclarationTrait(Visibility visibility, TraitNode* node){
+    ItemNode* new_node = new ItemNode();
+    new_node->id = ++globId;
+    new_node->type=trait_;
+    new_node->visibility = visibility;
+    new_node->trait_item = node;
+
+    Visibility currentVisibility = visibility;
+    if (visibility != pub){
+        currentVisibility = self;
+    }
+
+    if(node->items!=NULL){
+        for(auto iter = node->items->items->begin(); iter != node->items->items->end(); ++iter){
+            if((*iter)->visibility == emptyVisibility){
+                (*iter)->visibility = currentVisibility;
+            }
+        }
+    }
+
+    return new_node;
+}
+
 ItemNode* ItemNode::DeclarationImpl(Visibility visibility, ImplStmtNode* node){
     ItemNode* new_node = new ItemNode();
     new_node->id = ++globId;
@@ -467,6 +487,58 @@ ItemNode* ItemNode::DeclarationModule(Visibility visibility, ModuleStmtNode* nod
     new_node->visibility = visibility;
     new_node->module_item = node;
     return new_node;
+}
+
+// ItemListNode
+ItemListNode::ItemListNode(ItemNode *item){
+    this->id = ++globId;
+    this->items = new list <ItemNode*>{ item };
+}
+
+ItemListNode::ItemListNode(ItemListNode *list){
+    this->id = ++globId;
+    this->items = list->items;
+}
+
+void ItemListNode::Append(ItemListNode *list, ItemNode* item) {
+    list->items->push_back(item);
+}
+
+// LetStmt
+LetStmtNode::LetStmtNode(string* name, TypeNode* type, Type let_type, ExprNode* expr){
+    this->id = ++globId;
+    this->name = name;
+
+    if(type == NULL){
+        TypeNode* new_type_node = new TypeNode(TypeNode::emptyType_);
+        new_type_node->id = ++globId;
+        this->type = new_type_node;
+    } else {
+        this->type = type;
+    }
+
+    this->expr = expr;
+    this->let_type = let_type;
+}
+
+//StmtListNode
+StmtListNode::StmtListNode(StmtNode *item){
+    this->id = ++globId;
+    this->stmts = new list <StmtNode*>{ item };
+}
+
+
+void StmtListNode::Append(StmtListNode *list, StmtNode* item) {
+    list->stmts->push_back(item);
+}
+
+// StmtNode
+StmtNode::StmtNode(Type type, ExprNode* expr_node, ItemNode* decl_node, LetStmtNode* let_node){
+    this->id = ++globId;
+    this->type = type;
+    this->expr = expr_node;
+    this->decl_stmt = decl_node;
+    this->let_stmt = let_node;
 }
 
 // --- toDot, toXml функции ---
