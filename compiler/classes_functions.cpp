@@ -449,6 +449,29 @@ ItemNode* ItemNode::DeclarationStruct(Visibility visibility, StructStructNode* n
     return new_node;
 }
 
+ItemNode* ItemNode::DeclarationTrait(Visibility visibility, TraitNode* node){
+    ItemNode* new_node = new ItemNode();
+    new_node->id = ++globId;
+    new_node->type=trait_;
+    new_node->visibility = visibility;
+    new_node->trait_item = node;
+
+    Visibility currentVisibility = visibility;
+    if (visibility != pub){
+        currentVisibility = self;
+    }
+
+    if(node->items!=NULL){
+        for(auto iter = node->items->items->begin(); iter != node->items->items->end(); ++iter){
+            if((*iter)->visibility == emptyVisibility){
+                (*iter)->visibility = currentVisibility;
+            }
+        }
+    }
+
+    return new_node;
+}
+
 ItemNode* ItemNode::DeclarationImpl(Visibility visibility, ImplStmtNode* node){
     ItemNode* new_node = new ItemNode();
     new_node->id = ++globId;

@@ -216,6 +216,7 @@ public:
     static ItemNode* DeclarationStruct(Visibility visibility, StructStructNode* node);
     static ItemNode* DeclarationImpl(Visibility visibility, ImplStmtNode* node);
     static ItemNode* DeclarationModule(Visibility visibility, ModuleStmtNode* node);
+    static ItemNode* DeclarationTrait(Visibility visibility, TraitNode* node);
 
     string* toDot();
     string* toXml();
