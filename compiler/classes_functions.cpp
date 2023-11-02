@@ -253,6 +253,22 @@ AssociatedItemNode::AssociatedItemNode(Visibility vis, FuncStmtNode* fn, ConstSt
     this->const_stmt = const_stmt;
 }
 
+//AssociatedItemList
+AssociatedItemListNode::AssociatedItemListNode(AssociatedItemNode* item){
+    this->id = ++globId;
+    this->items = new list <AssociatedItemNode*>{ item };
+
+}
+
+AssociatedItemListNode::AssociatedItemListNode(AssociatedItemListNode* list){
+    this->id = ++globId;
+    this->items = list->items;
+}
+
+void AssociatedItemListNode::Append(AssociatedItemListNode* list, AssociatedItemNode* item) {
+    list->items->push_back(item);
+}
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 

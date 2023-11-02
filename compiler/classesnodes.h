@@ -404,6 +404,7 @@ public:
     list<AssociatedItemNode*>* items = NULL;
 
     AssociatedItemListNode(AssociatedItemNode* item);
+    AssociatedItemListNode(AssociatedItemListNode* list);
     static void Append(AssociatedItemListNode* list, AssociatedItemNode* item);
 
 
