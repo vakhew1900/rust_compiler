@@ -391,6 +391,7 @@ public:
     string* name = NULL;
     AssociatedItemListNode* items = NULL;
 
+    TraitNode(string* name, AssociatedItemListNode* items);
 
     string* toDot();
     string* toXml();

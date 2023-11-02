@@ -238,6 +238,12 @@ ConstStmtNode* ConstStmtNode::ConstStmt(string* name, TypeNode* type, ExprNode* 
     return new_node;
 }
 
+// Trait
+TraitNode::TraitNode(string* name, AssociatedItemListNode* items){
+    this->id = ++globId;
+    this->name=name;
+    this->items=items;
+}
 
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
