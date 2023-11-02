@@ -12,6 +12,7 @@
 	bool bool_literal;
 	float float_literal;
 	char char_literal;
+    enum Visibility vis;
 
     ProgramNode* prg;
     ExprNode* expr;
@@ -37,7 +38,6 @@
     TraitNode* trait;
     ImplStmtNode* impl_stmt;
     TypeNode* type;
-    VisibilityNode* vis;
 }
 
 %type <prg>Program
@@ -122,7 +122,8 @@
 
 /* ---------------------- PROGRAM --------------------------- */
 
-Program: ItemListEmpty /* Необходимо уточнить, надо ли как-то обозначить, что Stmt все должны быть Item, иначе программа не заработает */
+Program: ItemListEmpty { $$ = new ProgramNode($1); }
+/* Необходимо уточнить, надо ли как-то обозначить, что Stmt все должны быть Item, иначе программа не заработает */
 
 /* ----------------------------- STATEMENT -----------------------------  */
 
@@ -318,126 +319,126 @@ ExprListEmpty: /*empty*/
              | ExprList
              ;
 
-ExprList: ExprWithBlock
-        | ExprWithoutBlock
-        | ExprList ',' ExprWithBlock
-        | ExprList ',' ExprWithoutBlock
+ExprList: ExprWithBlock { $$ = new ExprListNode($1); }
+        | ExprWithoutBlock { $$ = new ExprListNode($1); }
+        | ExprList ',' ExprWithBlock { $$ = ExprListNode::Append($1, $3); }
+        | ExprList ',' ExprWithoutBlock { $$ = ExprListNode::Append($1, $3); }
+        ;
 
-ExprWithoutBlock: CHAR_LITERAL // Литералы
-                | STRING_LITERAL
-                | RAW_STRING_LITERAL
-                | INT_LITERAL
-                | FLOAT_LITERAL
-                | TRUE
-                | FALSE
-                | ExprWithoutBlock '+' ExprWithoutBlock // Мат операции
-                | ExprWithoutBlock '+' ExprWithBlock
-                | ExprWithBlock '+' ExprWithoutBlock
-                | ExprWithBlock '+' ExprWithBlock
-                | ExprWithoutBlock '-' ExprWithoutBlock
-                | ExprWithoutBlock '-' ExprWithBlock
-                | ExprWithBlock '-' ExprWithoutBlock
-                | ExprWithBlock '-' ExprWithBlock
-                | ExprWithoutBlock '/' ExprWithoutBlock
-                | ExprWithoutBlock '/' ExprWithBlock
-                | ExprWithBlock '/' ExprWithoutBlock
-                | ExprWithBlock '/' ExprWithBlock
-                | ExprWithoutBlock '*' ExprWithoutBlock
-                | ExprWithoutBlock '*' ExprWithBlock
-                | ExprWithBlock '*' ExprWithoutBlock
-                | ExprWithBlock '*' ExprWithBlock
-                | ExprWithoutBlock '%' ExprWithoutBlock
-                | ExprWithoutBlock '%' ExprWithBlock
-                | ExprWithBlock '%' ExprWithoutBlock
-                | ExprWithBlock '%' ExprWithBlock
-                | ExprWithoutBlock AND ExprWithoutBlock // Логические операции
-                | ExprWithoutBlock AND ExprWithBlock
-                | ExprWithBlock AND ExprWithoutBlock
-                | ExprWithBlock AND ExprWithBlock
-                | ExprWithoutBlock OR ExprWithoutBlock
-                | ExprWithoutBlock OR ExprWithBlock
-                | ExprWithBlock OR ExprWithoutBlock
-                | ExprWithBlock OR ExprWithBlock
-                | ExprWithoutBlock '=' ExprWithoutBlock // ПРИСВАИВАНИЕ
-                | ExprWithoutBlock '=' ExprWithBlock
-                | ExprWithBlock '=' ExprWithoutBlock
-                | ExprWithBlock '=' ExprWithBlock
-                | ExprWithoutBlock EQUAL ExprWithoutBlock  // СРАВНЕНИЕ
-                | ExprWithoutBlock EQUAL ExprWithBlock
-                | ExprWithBlock EQUAL ExprWithoutBlock
-                | ExprWithBlock EQUAL ExprWithBlock
-                | ExprWithoutBlock NOT_EQUAL ExprWithoutBlock
-                | ExprWithoutBlock NOT_EQUAL ExprWithBlock
-                | ExprWithBlock NOT_EQUAL ExprWithoutBlock
-                | ExprWithBlock NOT_EQUAL ExprWithBlock
-                | ExprWithoutBlock '>' ExprWithoutBlock
-                | ExprWithoutBlock '>' ExprWithBlock
-                | ExprWithBlock '>' ExprWithoutBlock
-                | ExprWithBlock '>' ExprWithBlock
-                | ExprWithoutBlock '<' ExprWithoutBlock
-                | ExprWithoutBlock '<' ExprWithBlock
-                | ExprWithBlock '<' ExprWithoutBlock
-                | ExprWithBlock '<' ExprWithBlock
-                | ExprWithoutBlock GREATER_EQUAL ExprWithoutBlock
-                | ExprWithoutBlock GREATER_EQUAL ExprWithBlock
-                | ExprWithBlock GREATER_EQUAL ExprWithoutBlock
-                | ExprWithBlock GREATER_EQUAL ExprWithBlock
-                | ExprWithoutBlock LESS_EQUAL ExprWithoutBlock
-                | ExprWithoutBlock LESS_EQUAL ExprWithBlock
-                | ExprWithBlock LESS_EQUAL ExprWithoutBlock
-                | ExprWithBlock LESS_EQUAL ExprWithBlock
-                | '-' ExprWithoutBlock %prec UMINUS // ОТРИЦАНИЕ
-                | '-' ExprWithBlock %prec UMINUS
-                | '!' ExprWithoutBlock
-                | '!' ExprWithBlock
-                | ExprWithoutBlock '?' //
-                | ExprWithBlock '?'
-                | '*' ExprWithoutBlock %prec USTAR // ГАДОСТЬ
-                | '*' ExprWithBlock %prec USTAR
-                | '&' ExprWithoutBlock
-                | '&' ExprWithBlock
-                | '[' ExprListEmpty ']'  // ЗАДАЕМ МАССИВ
-                | '[' ExprWithoutBlock ';' ExprWithoutBlock ']'
-                | '[' ExprWithoutBlock ';' ExprWithBlock ']'
-                | '[' ExprWithBlock ';' ExprWithoutBlock ']'
-                | '[' ExprWithBlock ';' ExprWithBlock ']'
-                | ExprWithoutBlock '[' ExprWithoutBlock ']' // Обращаемся к элементу массива
-                | ExprWithoutBlock '[' ExprWithBlock ']'
-                | ExprWithBlock '[' ExprWithoutBlock ']'
-                | ExprWithBlock '[' ExprWithBlock ']'
-                | ExprWithoutBlock '.' INT_LITERAL // Обращаемся к элементу tuple
-                | ExprWithBlock '.' INT_LITERAL
-                | CONTINUE
-                | BREAK
-                | RANGE
-                | RANGE ExprWithoutBlock // диапозон
-                | RANGE ExprWithBlock
-                | ExprWithoutBlock RANGE
-                | ExprWithBlock RANGE
-                | ExprWithoutBlock RANGE ExprWithoutBlock
-                | ExprWithoutBlock RANGE ExprWithBlock
-                | ExprWithBlock RANGE ExprWithoutBlock
-                | ExprWithBlock RANGE ExprWithBlock
-                | RETURN
-                | RETURN ExprWithoutBlock // if else конфликт
-                | RETURN ExprWithBlock
-                | ExprWithoutBlock '.' ID
-                | ExprWithBlock '.' ID
-                | ExprWithoutBlock '.' ID '(' ExprListEmpty ')' // Конфликт вроде как решается сдвигом т.е. действием по умолчанию
-                | ExprWithBlock '.' ID '(' ExprListEmpty ')'
-                | PathCallExpr
-                | PathCallExpr '(' ExprListEmpty ')' // Вызов функции по пути // Cпросить можно ли сделать более простую реализацию
-                | PathCallExpr '{' StructExprFieldListEmpty '}' // конфликт
-                | '(' ExprWithBlock ')'
-                |'(' ExprWithoutBlock ')'
+ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode::ExprFromCharLiteral(char_lit, $1); }
+                | STRING_LITERAL { $$ = ExprNode::ExprFromStringLiteral(string_lit, $1);  }
+                | RAW_STRING_LITERAL { $$ = ExprNode::ExprFromStringLiteral(raw_string_lit, $1); }
+                | INT_LITERAL { $$ = ExprNode::ExprFromIntLiteral(int_lit, $1); }
+                | FLOAT_LITERAL { $$ = ExprNode::ExprFromFloatLiteral(float_lit, $1); }
+                | TRUE { $$ = ExprNode::ExprFromBoolLiteral(bool_lit, $1); }
+                | FALSE { $$ = ExprNode::ExprFromBoolLiteral(bool_lit, $1); }
+                | ExprWithoutBlock '+' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(plus, $1, $3); }
+                | ExprWithoutBlock '+' ExprWithBlock { $$ = ExprNode::OperatorExpr(plus, $1, $3); }
+                | ExprWithBlock '+' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(plus, $1, $3); }
+                | ExprWithBlock '+' ExprWithBlock { $$ = ExprNode::OperatorExpr(plus, $1, $3); }
+                | ExprWithoutBlock '-' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(minus, $1, $3); }
+                | ExprWithoutBlock '-' ExprWithBlock { $$ = ExprNode::OperatorExpr(minus, $1, $3); }
+                | ExprWithBlock '-' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(minus, $1, $3); }
+                | ExprWithBlock '-' ExprWithBlock { $$ = ExprNode::OperatorExpr(minus, $1, $3); }
+                | ExprWithoutBlock '/' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(div_expr, $1, $3); }
+                | ExprWithoutBlock '/' ExprWithBlock { $$ = ExprNode::OperatorExpr(div_expr, $1, $3); }
+                | ExprWithBlock '/' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(div_expr, $1, $3); }
+                | ExprWithBlock '/' ExprWithBlock { $$ = ExprNode::OperatorExpr(div_expr, $1, $3); }
+                | ExprWithoutBlock '*' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(mul_expr, $1, $3); }
+                | ExprWithoutBlock '*' ExprWithBlock { $$ = ExprNode::OperatorExpr(mul_expr, $1, $3); }
+                | ExprWithBlock '*' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(mul_expr, $1, $3); }
+                | ExprWithBlock '*' ExprWithBlock { $$ = ExprNode::OperatorExpr(mul_expr, $1, $3); }
+                | ExprWithoutBlock '%' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(mod, $1, $3); }
+                | ExprWithoutBlock '%' ExprWithBlock { $$ = ExprNode::OperatorExpr(mod, $1, $3); }
+                | ExprWithBlock '%' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(mod, $1, $3); }
+                | ExprWithBlock '%' ExprWithBlock { $$ = ExprNode::OperatorExpr(mod, $1, $3); }
+                | ExprWithoutBlock AND ExprWithoutBlock { $$ = ExprNode::OperatorExpr(and_, $1, $3); }
+                | ExprWithoutBlock AND ExprWithBlock { $$ = ExprNode::OperatorExpr(and_, $1, $3); }
+                | ExprWithBlock AND ExprWithoutBlock { $$ = ExprNode::OperatorExpr(and_, $1, $3); }
+                | ExprWithBlock AND ExprWithBlock { $$ = ExprNode::OperatorExpr(and_, $1, $3); }
+                | ExprWithoutBlock OR ExprWithoutBlock { $$ = ExprNode::OperatorExpr(or_, $1, $3); }
+                | ExprWithoutBlock OR ExprWithBlock { $$ = ExprNode::OperatorExpr(or_, $1, $3); }
+                | ExprWithBlock OR ExprWithoutBlock { $$ = ExprNode::OperatorExpr(or_, $1, $3); }
+                | ExprWithBlock OR ExprWithBlock { $$ = ExprNode::OperatorExpr(or_, $1, $3); }
+                | ExprWithoutBlock '=' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(asign, $1, $3); }
+                | ExprWithoutBlock '=' ExprWithBlock { $$ = ExprNode::OperatorExpr(asign, $1, $3); }
+                | ExprWithBlock '=' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(asign, $1, $3); }
+                | ExprWithBlock '=' ExprWithBlock { $$ = ExprNode::OperatorExpr(asign, $1, $3); }
+                | ExprWithoutBlock EQUAL ExprWithoutBlock { $$ = ExprNode::OperatorExpr(equal, $1, $3); }
+                | ExprWithoutBlock EQUAL ExprWithBlock { $$ = ExprNode::OperatorExpr(equal, $1, $3); }
+                | ExprWithBlock EQUAL ExprWithoutBlock { $$ = ExprNode::OperatorExpr(equal, $1, $3); }
+                | ExprWithBlock EQUAL ExprWithBlock { $$ = ExprNode::OperatorExpr(equal, $1, $3); }
+                | ExprWithoutBlock NOT_EQUAL ExprWithoutBlock { $$ = ExprNode::OperatorExpr(not_equal, $1, $3); }
+                | ExprWithoutBlock NOT_EQUAL ExprWithBlock { $$ = ExprNode::OperatorExpr(not_equal, $1, $3); }
+                | ExprWithBlock NOT_EQUAL ExprWithoutBlock { $$ = ExprNode::OperatorExpr(not_equal, $1, $3); }
+                | ExprWithBlock NOT_EQUAL ExprWithBlock { $$ = ExprNode::OperatorExpr(not_equal, $1, $3); }
+                | ExprWithoutBlock '>' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(greater, $1, $3); }
+                | ExprWithoutBlock '>' ExprWithBlock { $$ = ExprNode::OperatorExpr(greater, $1, $3); }
+                | ExprWithBlock '>' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(greater, $1, $3); }
+                | ExprWithBlock '>' ExprWithBlock { $$ = ExprNode::OperatorExpr(greater, $1, $3); }
+                | ExprWithoutBlock '<' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(less, $1, $3); }
+                | ExprWithoutBlock '<' ExprWithBlock { $$ = ExprNode::OperatorExpr(less, $1, $3); }
+                | ExprWithBlock '<' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(less, $1, $3); }
+                | ExprWithBlock '<' ExprWithBlock { $$ = ExprNode::OperatorExpr(less, $1, $3); }
+                | ExprWithoutBlock GREATER_EQUAL ExprWithoutBlock { $$ = ExprNode::OperatorExpr(greater_equal, $1, $3); }
+                | ExprWithoutBlock GREATER_EQUAL ExprWithBlock { $$ = ExprNode::OperatorExpr(greater_equal, $1, $3); }
+                | ExprWithBlock GREATER_EQUAL ExprWithoutBlock { $$ = ExprNode::OperatorExpr(greater_equal, $1, $3); }
+                | ExprWithBlock GREATER_EQUAL ExprWithBlock { $$ = ExprNode::OperatorExpr(greater_equal, $1, $3); }
+                | ExprWithoutBlock LESS_EQUAL ExprWithoutBlock { $$ = ExprNode::OperatorExpr(less_equal, $1, $3); }
+                | ExprWithoutBlock LESS_EQUAL ExprWithBlock { $$ = ExprNode::OperatorExpr(less_equal, $1, $3); }
+                | ExprWithBlock LESS_EQUAL ExprWithoutBlock { $$ = ExprNode::OperatorExpr(less_equal, $1, $3); }
+                | ExprWithBlock LESS_EQUAL ExprWithBlock { $$ = ExprNode::OperatorExpr(less_equal, $1, $3); }
+                | '-' ExprWithoutBlock %prec UMINUS { $$ = ExprNode::OperatorExpr(uminus, $2, 0); }
+                | '-' ExprWithBlock %prec UMINUS { $$ = ExprNode::OperatorExpr(uminus, $2, 0); }
+                | '!' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(negotation, $2, 0); }
+                | '!' ExprWithBlock { $$ = ExprNode::OperatorExpr(negotation, $2, 0); }
+                | ExprWithoutBlock '?' { $$ = ExprNode::OperatorExpr(question, $1, 0); }
+                | ExprWithBlock '?' { $$ = ExprNode::OperatorExpr(question, $1, 0); }
+                | '*' ExprWithoutBlock %prec USTAR { $$ = ExprNode::OperatorExpr(ustar, $2, 0); }
+                | '*' ExprWithBlock %prec USTAR { $$ = ExprNode::OperatorExpr(ustar, $2, 0); }
+                | '&' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(link, $2, 0); }
+                | '&' ExprWithBlock { $$ = ExprNode::OperatorExpr(link, $2, 0); }
+                | '[' ExprListEmpty ']'  { $$ = ExprNode::ArrExprFromList(array_expr, $2); }
+                | '[' ExprWithoutBlock ';' ExprWithoutBlock ']' { $$ = ExprNode::ArrExprAutoFill(array_expr_auto_fill, $2, $4); }
+                | '[' ExprWithoutBlock ';' ExprWithBlock ']' { $$ = ExprNode::ArrExprAutoFill(array_expr_auto_fill, $2, $4); }
+                | '[' ExprWithBlock ';' ExprWithoutBlock ']' { $$ = ExprNode::ArrExprAutoFill(array_expr_auto_fill, $2, $4); }
+                | '[' ExprWithBlock ';' ExprWithBlock ']' { $$ = ExprNode::ArrExprAutoFill(array_expr_auto_fill, $2, $4); }
+                | ExprWithoutBlock '[' ExprWithoutBlock ']' { $$ = ExprNode::OperatorExpr(index_expr, $1, $3); }
+                | ExprWithoutBlock '[' ExprWithBlock ']' { $$ = ExprNode::OperatorExpr(index_expr, $1, $3); }
+                | ExprWithBlock '[' ExprWithoutBlock ']' { $$ = ExprNode::OperatorExpr(index_expr, $1, $3); }
+                | ExprWithBlock '[' ExprWithBlock ']' { $$ = ExprNode::OperatorExpr(index_expr, $1, $3); }
+                | ExprWithoutBlock '.' INT_LITERAL { $$ = ExprNode::TupleExpr(tuple_expr, $1, $3); }
+                | ExprWithBlock '.' INT_LITERAL { $$ = ExprNode::TupleExpr(tuple_expr, $1, $3); }
+                | CONTINUE { $$ = ExprNode::OperatorExpr(continue_expr, 0, 0); }
+                | BREAK { $$ = ExprNode::OperatorExpr(break_expr, 0, 0); }
+                | RANGE { $$ = ExprNode::RangeExpr(range_right, 0, 0); }
+                | RANGE ExprWithoutBlock { $$ = ExprNode::RangeExpr(range_right, $2, 0); }
+                | RANGE ExprWithBlock { $$ = ExprNode::RangeExpr(range_right, $2, 0); }
+                | ExprWithoutBlock RANGE { $$ = ExprNode::RangeExpr(range_left, $1, 0); }
+                | ExprWithBlock RANGE { $$ = ExprNode::RangeExpr(range_left, $1, 0); }
+                | ExprWithoutBlock RANGE ExprWithoutBlock { $$ = ExprNode::RangeExpr(range_expr, $1, $3); }
+                | ExprWithoutBlock RANGE ExprWithBlock { $$ = ExprNode::RangeExpr(range_expr, $1, $3); }
+                | ExprWithBlock RANGE ExprWithoutBlock { $$ = ExprNode::RangeExpr(range_expr, $1, $3); }
+                | ExprWithBlock RANGE ExprWithBlock { $$ = ExprNode::RangeExpr(range_expr, $1, $3); }
+                | RETURN { $$ = ExprNode::OperatorExpr(return_expr, 0, 0); }
+                | RETURN ExprWithoutBlock { $$ = ExprNode::OperatorExpr(return_expr, $2, 0); }
+                | RETURN ExprWithBlock { $$ = ExprNode::OperatorExpr(return_expr, $2, 0); }
+                | ExprWithoutBlock '.' ID { $$ = ExprNode::CallAccessExpr(field_access_expr, $3, $1, 0); }
+                | ExprWithBlock '.' ID { $$ =  ExprNode::CallAccessExpr(field_access_expr, $3, $1, 0); }
+                | ExprWithoutBlock '.' ID '(' ExprListEmpty ')' { $$ =  ExprNode::CallAccessExpr(method_expr, $3, $1, $5); }
+                | ExprWithBlock '.' ID '(' ExprListEmpty ')' { $$ =  ExprNode::CallAccessExpr(method_expr, $3, $1, $5); }
+                | PathCallExpr { $$ = $1 } // ????????
+                | PathCallExpr '(' ExprListEmpty ')' { $$ = ExprNode::StaticMethod(static_method, $1, $3); } // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                | PathCallExpr '{' StructExprFieldListEmpty '}' { $$ = ExprNode::FieldListAccess(static_method, $1, $3); } // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                | '(' ExprWithBlock ')' { $$ = $2; }
+                |'(' ExprWithoutBlock ')' { $$ = $2; }
                 ;
 
-           /* CRATE DOLLAR_CRATE  отправляются на свалку Struct Tuple тоже) ID */
 
-PathCallExpr: ID
-            | SUPER
-            | SELF
-            | PathCallExpr DOUBLEDOTS ID
+PathCallExpr: ID { $$ =  ExprNode::CallAccessExpr(id_, $1, 0, 0); }
+            | SUPER { $$ =  ExprNode::CallAccessExpr(super_expr, "super", 0, 0); }
+            | SELF { $$ =  ExprNode::CallAccessExpr(self_expr, "self", 0, 0); }
+            | PathCallExpr DOUBLEDOTS ID { $$ = ExprNode::PathCallExpr(path_call_expr, $3, $1); }
             ;
 
 StructExprFieldListEmpty: /*empty*/
@@ -498,14 +499,14 @@ SimpleIfExpr: IF '(' ExprWithoutBlock ')' BlockExpr
 
 /*-------------------------TYPE -------------------------- */
 
-Type: BOOL
-    | CHAR
-    | FLOAT
-    | INT
-    | STRING
-    | ID
-    | '[' Type ';' ExprWithBlock ']'
-    | '[' Type ';' ExprWithoutBlock ']'
+Type: BOOL { $$ = new TypeNode(bool_); }
+    | CHAR { $$ = new TypeNode(char_); }
+    | FLOAT { $$ = new TypeNode(float_); }
+    | INT { $$ = new TypeNode(int_); }
+    | STRING { $$ = new TypeNode(string_); }
+    | ID { $$ = new TypeNode(id_); }
+    | '[' Type ';' ExprWithBlock ']' { $$ = new TypeNode(array_, $2, $4); }
+    | '[' Type ';' ExprWithoutBlock ']' { $$ = new TypeNode(array_, $2, $4); }
     ;
     /* Не доделан. Можно добавить TupleType */
 
@@ -517,3 +518,8 @@ Visibility: PUB
           ;
 
 %%
+
+void yyerror(char const *s)
+{
+    printf("%s\n",s);
+}
