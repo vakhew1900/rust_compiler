@@ -423,6 +423,7 @@ public:
     TypeNode* type = NULL;
     AssociatedItemListNode* items = NULL;
 
+    ImplStmtNode(Type impl_type, TypeNode* type, string* name, AssociatedItemListNode* list);
 
     string* toDot();
     string* toXml();

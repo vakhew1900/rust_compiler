@@ -269,6 +269,15 @@ void AssociatedItemListNode::Append(AssociatedItemListNode* list, AssociatedItem
     list->items->push_back(item);
 }
 
+//ImplNode
+ImplStmtNode::ImplStmtNode(Type impl_type, TypeNode* type, string* name, AssociatedItemListNode* list){
+    this->id = ++globId;
+    this->impl_type = impl_type;
+    this->type = type;
+    this->name = name;
+    this->items = list;
+}
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 
