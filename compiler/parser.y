@@ -52,6 +52,7 @@
 %type <expr_list>StructExprFieldList
 %type <expr_list>StructExprFieldListEmpty
 %type <stmt>Stmt
+%type <stmt>ExprStmt
 %type <stmt_list>StmtList
 %type <let_stmt>LetStmt
 %type <mod_stmt>ModuleStmt
@@ -130,13 +131,13 @@ Program: ItemListEmpty { $$ = new ProgramNode($1); }
 /* ----------------------------- STATEMENT -----------------------------  */
 
 
-StmtList: Stmt
-        | StmtList Stmt
+StmtList: Stmt { $$ = new StmtListNode($1); }
+        | StmtList Stmt { $$ = StmtListNode::Append($1, $2); }
         ;
 
-Stmt: ';'
-    | LetStmt
-    | ExprStmt
+Stmt: ';' { $$ = new StmtNode(StmtNode::semicolon, 0, 0, 0); }
+    | LetStmt { $$ = new StmtNode(StmtNode::let, 0, 0, $1); }
+    | ExprStmt { $$ =  new StmtNode(StmtNode::exprstmt, $1);}
     ;
 
 ItemListEmpty: /*empty*/
@@ -308,10 +309,9 @@ LetStmt: LET ID '=' ExprWithBlock ';'
        ;
 
 /* === Expression Statement === */
-ExprStmt: ExprWithoutBlock ';'
-        | ExprWithBlock ';'
+ExprStmt: ExprWithoutBlock ';' {$$ = new StmtNode(StmtNode::expr, $1, 0, 0);}
+        | ExprWithBlock ';' {$$ = new StmtNode(StmtNode::expr, $1, 0, 0);}
         ;
-        /* конфликт при  "| ExprWithBlock"
 
 
 /*----------------------- EXPRESSION ---------------------- */
