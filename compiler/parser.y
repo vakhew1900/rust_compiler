@@ -1,5 +1,6 @@
 %{
     #include <iostream>
+    #include "classesnodes.h"
     void yyerror(char const* s);
     extern int yylex(void);
     using namespace std;
