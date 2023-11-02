@@ -322,6 +322,12 @@ FuncStmtNode::FuncStmtNode(string* name, TypeNode* returnType, FuncParamListNode
     this->body=body;
 }
 
+FuncParamNode::FuncParamNode(string* name, TypeNode* type, Type param_type){
+    this->id = ++globId;
+    this->name = name;
+    this->type = type;
+    this->param_type = param_type;
+}
 
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){

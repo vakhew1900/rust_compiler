@@ -340,6 +340,7 @@ public:
     string* name = NULL;
     TypeNode* type = NULL;
 
+    FuncParamNode(string* name, TypeNode* type, Type param_type);
 
     string* toDot();
     string* toXml();
@@ -354,6 +355,7 @@ public:
     list<FuncParamNode*>* items = NULL;
 
     FuncParamListNode(FuncParamNode* item);
+    FuncParamListNode(FuncParamListNode* list);
     static void Append(FuncParamListNode* list, FuncParamNode* item);
 
 
