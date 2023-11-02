@@ -61,6 +61,7 @@
 %type <item_list>ItemList
 %type <item_list>ItemListEmpty
 %type <struct_>StructStruct
+%type <struct_>StructStmt
 %type <struct_item>StructField
 %type <struct_items>StructFieldList
 %type <struct_items>StructFieldListEmpty
@@ -309,8 +310,8 @@ LetStmt: LET ID '=' ExprWithBlock ';'
        ;
 
 /* === Expression Statement === */
-ExprStmt: ExprWithoutBlock ';' {$$ = new StmtNode(StmtNode::expr, $1, 0, 0);}
-        | ExprWithBlock ';' {$$ = new StmtNode(StmtNode::expr, $1, 0, 0);}
+ExprStmt: ExprWithoutBlock ';' {$$ = new StmtNode(StmtNode::expression, $1, 0, 0);}
+        | ExprWithBlock ';' {$$ = new StmtNode(StmtNode::expression, $1, 0, 0);}
         ;
 
 
