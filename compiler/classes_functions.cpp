@@ -449,6 +449,16 @@ ItemNode* ItemNode::DeclarationImpl(Visibility visibility, ImplStmtNode* node){
     return new_node;
 }
 
+ItemNode* ItemNode::DeclarationModule(Visibility visibility, ModuleStmtNode* node){
+    ItemNode* new_node = new ItemNode();
+    new_node->id = ++globId;
+
+    new_node->type=module_;
+    new_node->visibility = visibility;
+    new_node->module_item = node;
+    return new_node;
+}
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 

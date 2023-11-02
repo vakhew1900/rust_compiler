@@ -214,6 +214,7 @@ public:
     static ItemNode* DeclarationConst(Visibility visibility, ConstStmtNode* node);
     static ItemNode* DeclarationStruct(Visibility visibility, StructStructNode* node);
     static ItemNode* DeclarationImpl(Visibility visibility, ImplStmtNode* node);
+    static ItemNode* DeclarationModule(Visibility visibility, ModuleStmtNode* node);
 
     string* toDot();
     string* toXml();
