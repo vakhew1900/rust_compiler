@@ -454,3 +454,5 @@ public:
    void toXml(string &xml);
 };
 
+void connectVerticesDots(string &s, int parentId, int childId);
+void createVertexDot(string &s, int id, string name="", string type="", string value = "");
