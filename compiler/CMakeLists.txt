@@ -8,4 +8,5 @@ include_directories(.)
 add_executable(compiler "lex.yy.cpp"
         unistd.h
         classes_functions.cpp
-        classesnodes.h)
+        classesnodes.h
+        print_tree.cpp)
