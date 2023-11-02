@@ -93,7 +93,7 @@ public:
     ExprNode* expr_right = NULL;
     ExprListNode* expr_list = NULL;
     ExprNode* body = NULL;
-    StructFieldListNode* field_list = NULL;
+    ExprListNode* field_list = NULL;
     StmtListNode* stmt_list = NULL;
 
     list<ExprNode*>* ifList = NULL;
@@ -120,7 +120,7 @@ public:
     static ExprNode* TupleExpr(Type type, ExprNode* expr, int value); // tuple_expr
     static ExprNode* PathCallExpr(Type type, string* name, ExprNode* expr);
     static ExprNode* StaticMethod(Type type, ExprNode* expr, ExprListNode* expr_list);
-    static ExprNode* FieldListAccess(Type type, ExprNode* expr, StructFieldListNode* field_list);
+    static ExprNode* FieldListAccess(Type type, ExprNode* expr, ExprListNode* field_list);
 
     static ExprNode* IfExpr(Type type, ExprNode* condition, ExprNode* body);
     static ExprNode* AddIfBlock(ExprNode* ifExpr, ExprNode* someIfExpr);
@@ -249,15 +249,15 @@ public:
 class ModuleStmtNode{
 public:
     enum Type{
-        semicolon, block
+        semicolon, block, empty
     };
 
     int id;
     Type type;
     string* name;
-    EnumItemListNode* items = NULL;
+    ItemListNode* items = NULL;
 
-    ModuleStmtNode(Type type, string* name, EnumItemListNode* items);
+    ModuleStmtNode(Type type, string* name, ItemListNode* items);
 
     void toDot(string &dot);
     void toXml(string &xml);

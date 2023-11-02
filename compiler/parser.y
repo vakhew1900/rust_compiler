@@ -291,22 +291,22 @@ TraitStmt: TRAIT ID '{' AssociatedItemListEmpty '}' { $$ = new TraitNode($2, $4)
 
 /* ============ CONST =============== */
 
-ConstStmt: CONST ID ':' Type '=' ExprWithBlock ';' { $$ = new ConstStmtNode($2, $4, $6); }
-         | CONST ID ':' Type '=' ExprWithoutBlock ';' { $$ = new ConstStmtNode($2, $4, $6); }
-         | CONST ID ':' Type ';' { $$ = new ConstStmtNode($2, $4, 0); }
+ConstStmt: CONST ID ':' Type '=' ExprWithBlock ';' { $$ = ConstStmtNode::ConstStmt($2, $4, $6); }
+         | CONST ID ':' Type '=' ExprWithoutBlock ';' { $$ = ConstStmtNode::ConstStmt($2, $4, $6); }
+         | CONST ID ':' Type ';' { $$ = ConstStmtNode::ConstStmt($2, $4, 0); }
          ;
 
 /* =========== Module ================= */
 
-ModuleStmt: MOD ID ';' { $$ = new ModuleStmtNode(0, $2, 0); }
-          | MOD ID '{' ItemListEmpty '}' { $$ = new ModuleStmtNode(0, $2, $4); }
+ModuleStmt: MOD ID ';' { $$ = new ModuleStmtNode(ModuleStmtNode::empty, $2, 0); }
+          | MOD ID '{' ItemListEmpty '}' { $$ = new ModuleStmtNode(ModuleStmtNode::empty, $2, $4); }
           ;
 
 /* ========= LetStmt ============ */
-LetStmt: LET ID '=' ExprWithBlock ';' { $$ = new LetStmtNode($2, 0, LetStmtNode::notMut, $4); }
-       | LET ID '=' ExprWithoutBlock ';' { $$ = new LetStmtNode($2, 0, LetStmtNode::notMut, $4); }
-       | LET ID ':' Type '=' ExprWithBlock ';' { $$ = new LetStmtNode($2, $4, LetStmtNode::notMut, $6); }
-       | LET ID ':' Type '=' ExprWithoutBlock ';' { $$ = new LetStmtNode($2, $4, LetStmtNode::notMut, $6); }
+LetStmt: LET ID '=' ExprWithBlock ';' { $$ = new LetStmtNode($2, 0, LetStmtNode::noMut, $4); }
+       | LET ID '=' ExprWithoutBlock ';' { $$ = new LetStmtNode($2, 0, LetStmtNode::noMut, $4); }
+       | LET ID ':' Type '=' ExprWithBlock ';' { $$ = new LetStmtNode($2, $4, LetStmtNode::noMut, $6); }
+       | LET ID ':' Type '=' ExprWithoutBlock ';' { $$ = new LetStmtNode($2, $4, LetStmtNode::noMut, $6); }
        | LET MUT ID ';' { $$ = new LetStmtNode($3, 0, LetStmtNode::mut, 0); }
        | LET MUT ID ':' Type ';' { $$ = new LetStmtNode($3, $5, LetStmtNode::mut, 0); }
        | LET MUT ID '=' ExprWithBlock ';' { $$ = new LetStmtNode($3, 0, LetStmtNode::mut, $5); }
