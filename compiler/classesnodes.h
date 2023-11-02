@@ -42,8 +42,8 @@ public:
     ItemListNode* item_list = NULL;
 
     ProgramNode(ItemListNode* item_list);
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class TypeNode{
@@ -60,8 +60,8 @@ public:
     //ф-ии
     TypeNode(Type type);
     TypeNode(Type type, TypeNode* type_node, ExprNode* expr);
-    string* toDot();
-    string* toXml();
+    void toDot(string &dot);
+    void toXml(string &xml);
 };
 
 class ExprNode{
@@ -120,8 +120,9 @@ public:
     static ExprNode* StaticMethod(Type type, ExprNode* expr, ExprListNode* expr_list);
     static ExprNode* FieldListAccess(Type type, ExprNode* expr, StructFieldListNode* field_list);
     static ExprNode* AddIfBlock(Type type, ExprNode* expr, ExprNode* condition, ExprNode* body);
-    string* toDot();
-    string* toXml();
+
+    void toDot(string &dot);
+    void toXml(string &xml);
 
 };
 
@@ -135,8 +136,8 @@ public:
     ExprListNode(ExprListNode* exprs);
     static void Append(ExprListNode* list, ExprNode* expr);
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class StmtNode
@@ -155,8 +156,8 @@ public:
 
     StmtNode(Type type, ExprNode* expr_node, ItemNode* decl_node, LetStmtNode* let_node);
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class StmtListNode
@@ -168,8 +169,8 @@ public:
     StmtListNode(StmtNode* stmt);
     static void Append(StmtListNode* list, StmtNode* stmt);
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+  void toXml(string &xml);
 };
 
 class LetStmtNode{
@@ -186,8 +187,8 @@ public:
 
     LetStmtNode(string* name, TypeNode* type, Type let_type, ExprNode* expr);
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class ItemNode{
@@ -216,8 +217,8 @@ public:
     static ItemNode* DeclarationModule(Visibility visibility, ModuleStmtNode* node);
     static ItemNode* DeclarationTrait(Visibility visibility, TraitNode* node);
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class ItemListNode
@@ -231,8 +232,8 @@ public:
     static void Append(ItemListNode* list, ItemNode* item);
 
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class ModuleStmtNode{
@@ -248,8 +249,8 @@ public:
 
     ModuleStmtNode(Type type, string* name, EnumItemListNode* items);
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class StructStructNode{
@@ -259,8 +260,8 @@ public:
     StructFieldListNode* items = NULL;
 
     StructStructNode(string* name, StructFieldListNode* items);
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class StructFieldNode{
@@ -271,8 +272,8 @@ public:
     TypeNode* type = NULL;
 
     StructFieldNode(string* name, TypeNode* type, Visibility visibility);
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class StructFieldListNode{
@@ -284,8 +285,8 @@ public:
     StructFieldListNode(StructFieldListNode* list);
     static void Append(StructFieldListNode* list, StructFieldNode* item);
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class EnumStmtNode{
@@ -295,8 +296,8 @@ public:
     EnumItemListNode* items = NULL;
 
     EnumStmtNode(string* name, EnumItemListNode* items);
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class EnumItemNode{
@@ -309,8 +310,8 @@ public:
 
     EnumItemNode(string* name, Visibility visibility, StructFieldListNode* struct_list, ExprNode* expr);
     EnumItemNode();
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class EnumItemListNode{
@@ -322,8 +323,8 @@ public:
     EnumItemListNode(EnumItemListNode* list);
     static void Append(EnumItemListNode* list, EnumItemNode* item);
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class FuncStmtNode{
@@ -335,8 +336,8 @@ public:
     ExprNode* body = NULL;
 
     FuncStmtNode(string* name, TypeNode* returnType, FuncParamListNode* params, ExprNode* body);
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class FuncParamNode{
@@ -351,8 +352,8 @@ public:
 
     FuncParamNode(string* name, TypeNode* type, Type param_type);
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class FuncParamListNode{
@@ -370,8 +371,8 @@ public:
     static void Append(FuncParamListNode* list, FuncParamNode* item);
 
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class ConstStmtNode{
@@ -383,8 +384,8 @@ public:
 
     static ConstStmtNode* ConstStmt(string* name, TypeNode* type, ExprNode* expr);
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class AssociatedItemNode{
@@ -396,8 +397,8 @@ public:
 
     AssociatedItemNode(Visibility vis, FuncStmtNode* fn, ConstStmtNode* const_stmt);
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class TraitNode{
@@ -408,8 +409,8 @@ public:
 
     TraitNode(string* name, AssociatedItemListNode* items);
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+  void toXml(string &xml);
 };
 
 class AssociatedItemListNode{
@@ -422,8 +423,8 @@ public:
     static void Append(AssociatedItemListNode* list, AssociatedItemNode* item);
 
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 
 class ImplStmtNode{
@@ -439,7 +440,7 @@ public:
 
     ImplStmtNode(Type impl_type, TypeNode* type, string* name, AssociatedItemListNode* list);
 
-    string* toDot();
-    string* toXml();
+   void toDot(string &dot);
+   void toXml(string &xml);
 };
 

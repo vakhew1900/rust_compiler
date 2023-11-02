@@ -9,4 +9,4 @@ add_executable(compiler "lex.yy.cpp"
         unistd.h
         classes_functions.cpp
         classesnodes.h
-        print_tree.cpp)
+)

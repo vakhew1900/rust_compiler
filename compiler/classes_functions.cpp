@@ -542,194 +542,194 @@ StmtNode::StmtNode(Type type, ExprNode* expr_node, ItemNode* decl_node, LetStmtN
 }
 
 // --- toDot, toXml функции ---
-string* ProgramNode::toDot(){
+void ProgramNode::toDot(string &dot){
 
 }
 
-string* ProgramNode::toXml(){
+void ProgramNode::toXml(string &xml){
 
 }
 
-string* TypeNode::toDot(){
+void TypeNode::toDot(string &dot){
 
 }
 
-string* TypeNode::toXml(){
+void TypeNode::toXml(string &xml){
 
 }
 
-string* ExprNode::toDot(){
+void ExprNode::toDot(string &dot){
 
 }
 
-string* ExprNode::toXml(){
+void ExprNode::toXml(string &xml){
 
 }
 
-string* ExprListNode::toDot(){
+void ExprListNode::toDot(string &dot){
 
 }
 
-string* ExprListNode::toXml(){
+void ExprListNode::toXml(string &xml){
 
 }
 
-string* StmtNode::toDot(){
+void StmtNode::toDot(string &dot){
 
 }
 
-string* StmtNode::toXml(){
+void StmtNode::toXml(string &xml){
 
 }
 
-string* StmtListNode::toDot(){
+void StmtListNode::toDot(string &dot){
 
 }
 
-string* StmtListNode::toXml(){
+void StmtListNode::toXml(string &xml){
 
 }
 
-string* LetStmtNode::toDot(){
+void LetStmtNode::toDot(string &dot){
 
 }
 
-string* LetStmtNode::toXml(){
+void LetStmtNode::toXml(string &xml){
 
 }
 
-string* ItemNode::toDot(){
+void ItemNode::toDot(string &dot){
 
 }
 
-string* ItemNode::toXml(){
+void ItemNode::toXml(string &xml){
 
 }
 
-string* ItemListNode::toDot(){
+void ItemListNode::toDot(string &dot){
 
 }
 
-string* ItemListNode::toXml(){
+void ItemListNode::toXml(string &xml){
 
 }
 
-string* ModuleStmtNode::toDot(){
+void ModuleStmtNode::toDot(string &dot){
 
 }
 
-string* ModuleStmtNode::toXml(){
+void ModuleStmtNode::toXml(string &xml){
 
 }
 
-string* StructStructNode::toDot(){
+void StructStructNode::toDot(string &dot){
 
 }
 
-string* StructStructNode::toXml(){
+void StructStructNode::toXml(string &xml){
 
 }
 
-string* StructFieldNode::toDot(){
+void StructFieldNode::toDot(string &dot){
 
 }
 
-string* StructFieldNode::toXml(){
+void StructFieldNode::toXml(string &xml){
 
 }
 
-string* StructFieldListNode::toDot(){
+void StructFieldListNode::toDot(string &dot){
 
 }
 
-string* StructFieldListNode::toXml(){
+void StructFieldListNode::toXml(string &xml){
 
 }
 
-string* EnumStmtNode::toXml(){
+void EnumStmtNode::toXml(string &xml){
 
 }
 
-string* EnumStmtNode::toDot(){
+void EnumStmtNode::toDot(string &dot){
 
 }
 
-string* EnumItemNode::toXml(){
+void EnumItemNode::toXml(string &xml){
 
 }
 
-string* EnumItemNode::toDot(){
+void EnumItemNode::toDot(string &dot){
 
 }
 
-string* EnumItemListNode::toXml(){
+void EnumItemListNode::toXml(string &xml){
 
 }
 
-string* EnumItemListNode::toDot(){
+void EnumItemListNode::toDot(string &dot){
 
 }
 
-string* FuncStmtNode::toXml(){
+void FuncStmtNode::toXml(string &xml){
 
 }
 
-string* FuncStmtNode::toDot(){
+void FuncStmtNode::toDot(string &dot){
 
 }
 
-string* FuncParamNode::toDot(){
+void FuncParamNode::toDot(string &dot){
 
 }
 
-string* FuncParamNode::toXml(){
+void FuncParamNode::toXml(string &xml){
 
 }
 
-string* FuncParamListNode::toDot(){
+void FuncParamListNode::toDot(string &dot){
 
 }
 
-string* FuncParamListNode::toXml(){
+void FuncParamListNode::toXml(string &xml){
 
 }
 
-string* ConstStmtNode::toXml(){
+void ConstStmtNode::toXml(string &xml){
 
 }
 
-string* ConstStmtNode::toDot(){
+void ConstStmtNode::toDot(string &dot){
 
 }
 
-string* AssociatedItemNode::toDot(){
+void AssociatedItemNode::toDot(string &dot){
 
 }
 
-string* AssociatedItemNode::toXml(){
+void AssociatedItemNode::toXml(string &xml){
 
 }
 
-string* TraitNode::toDot(){
+void TraitNode::toDot(string &dot){
 
 }
 
-string* TraitNode::toXml(){
+void TraitNode::toXml(string &xml){
 
 }
 
-string* AssociatedItemListNode::toDot(){
+void AssociatedItemListNode::toDot(string &dot){
 
 }
 
-string* AssociatedItemListNode::toXml(){
+void AssociatedItemListNode::toXml(string &xml){
 
 }
 
-string* ImplStmtNode::toDot(){
+void ImplStmtNode::toDot(string &dot){
 
 }
 
-string* ImplStmtNode::toXml(){
+void ImplStmtNode::toXml(string &xml){
 
 }
