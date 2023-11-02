@@ -450,46 +450,44 @@ PathCallExpr: ID { $$ =  ExprNode::CallAccessExpr(ExprNode::id_, $1, 0, 0); }
             | PathCallExpr DOUBLEDOTS ID { $$ = ExprNode::PathCallExpr(ExprNode::path_call_expr, $3, $1); }
             ;
 
-StructExprFieldListEmpty: /*empty*/
-                        | StructExprFieldList
+StructExprFieldListEmpty: /*empty*/ { $$ = 0; }
+                        | StructExprFieldList { $$ = new ExprListNode($1); }
                         ;
 
-StructExprFieldList: ',' StructExprField
-                    | StructExprFieldList ',' StructExprField
+StructExprFieldList: ',' StructExprField { $$ = new ExprListNode($2); }
+                    | StructExprFieldList ',' StructExprField { $$ = ExprListNode::Append($1, $2); }
                     ;
-StructExprField:
-               | ID ':' ExprWithoutBlock
-               | ID ':' ExprWithBlock  // Мб сделать проще и юзать тут тип?
+StructExprField: /*empty*/ { $$ = 0; }
+               | ID ':' ExprWithoutBlock  { $$ = ExprNode::ExprFromStructField(ExprNode::struct_field_expr, $1, $3); }
+               | ID ':' ExprWithBlock   { $$ = ExprNode::ExprFromStructField(ExprNode::struct_field_expr, $1, $3); }
                ;
 
-ExprWithBlock: BlockExpr
-             | LoopExpr
-             | IfExpr
+ExprWithBlock: BlockExpr { $$ = $1; }
+             | LoopExpr { $$ = $1; }
+             | IfExpr { $$ = $1; }
              ;
 
 
-BlockExpr: '{' StmtList '}'
-         | '{' ExprWithoutBlock '}'
-         | '{' StmtList ExprWithoutBlock '}'
-         | '{' '}'
+BlockExpr: '{' StmtList '}' { $$ = ExprNode::BlockExpr(ExprNode::block_expr, 0, $2); }
+         | '{' ExprWithoutBlock '}' { $$ = ExprNode::BlockExpr(ExprNode::block_expr, $2, 0); }
+         | '{' StmtList ExprWithoutBlock '}' { $$ = ExprNode::BlockExpr(ExprNode::block_expr, $3, $2); }
+         | '{' '}' { $$ = ExprNode::BlockExpr(ExprNode::block_expr, 0, 0); }
          ;
 
-
-
-LoopExpr: InfiniteLoopExpr
-        | PredicateLoopExpr
-        | IteratorLoopExpr
+LoopExpr: InfiniteLoopExpr { $$ = $1; }
+        | PredicateLoopExpr { $$ = $1; }
+        | IteratorLoopExpr { $$ = $1; }
         ;
 
-InfiniteLoopExpr: LOOP BlockExpr
+InfiniteLoopExpr: LOOP BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_expr, 0, $2, 0); }
                 ;
 
-PredicateLoopExpr: WHILE '(' ExprWithBlock ')' BlockExpr
-                 | WHILE '(' ExprWithoutBlock ')' BlockExpr
+PredicateLoopExpr: WHILE '(' ExprWithBlock ')' BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_while, $3, $5, 0); }
+                 | WHILE '(' ExprWithoutBlock ')' BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_while, $3, $5, 0); }
                  ;
 
-IteratorLoopExpr: FOR '(' ID IN ExprWithBlock ')' BlockExpr
-                | FOR '(' ID IN ExprWithoutBlock ')' BlockExpr
+IteratorLoopExpr: FOR '(' ID IN ExprWithBlock ')' BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_for, $5, $7, $3); }
+                | FOR '(' ID IN ExprWithoutBlock ')' BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_for, $5, $7, $3); }
                 ;
 
 IfExpr: SimpleIfElseExpr { $$ = $1; }
