@@ -190,7 +190,7 @@ FuncParamList: SELF { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListN
              ;
 
 FuncParam: ID ':' Type { $$ = new FuncParamNode($1, $3, FuncParamNode::noMut); }
-         | MUT ID ':' Type { $$ = new FuncParamNode($1, $3, FuncParamNode::mut); }
+         | MUT ID ':' Type { $$ = new FuncParamNode($2, $4, FuncParamNode::mut); }
          | ID ':' MUT_REF Type { $$ = new FuncParamNode($1, $4, FuncParamNode::mut_ref); }
          | ID ':' '&' Type { $$ = new FuncParamNode($1, $4, FuncParamNode::link); }
          ;
