@@ -286,7 +286,7 @@ public:
     string* name = NULL;
     EnumItemListNode* items = NULL;
 
-
+    EnumStmtNode(string* name, EnumItemListNode* items);
     string* toDot();
     string* toXml();
 };

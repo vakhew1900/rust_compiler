@@ -355,6 +355,13 @@ void FuncParamListNode::Append(FuncParamListNode *list, FuncParamNode* item) {
     list->items->push_back(item);
 }
 
+// Enum
+EnumStmtNode::EnumStmtNode(string* name, EnumItemListNode* items){
+    this->id = ++globId;
+    this->name = name;
+    this->items=items;
+}
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 
