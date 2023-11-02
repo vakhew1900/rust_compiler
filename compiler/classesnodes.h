@@ -134,7 +134,7 @@ public:
 
     ExprListNode(ExprNode* expr);
     ExprListNode(ExprListNode* exprs);
-    static void Append(ExprListNode* list, ExprNode* expr);
+    static ExprListNode* Append(ExprListNode* list, ExprNode* expr);
 
    void toDot(string &dot);
    void toXml(string &xml);
@@ -167,7 +167,7 @@ public:
     list<StmtNode*>* stmts = NULL;
 
     StmtListNode(StmtNode* stmt);
-    static void Append(StmtListNode* list, StmtNode* stmt);
+    static StmtListNode* Append(StmtListNode* list, StmtNode* stmt);
 
    void toDot(string &dot);
   void toXml(string &xml);
@@ -229,7 +229,7 @@ public:
 
     ItemListNode(ItemNode* item);
     ItemListNode(ItemListNode* list);
-    static void Append(ItemListNode* list, ItemNode* item);
+    static ItemListNode* Append(ItemListNode* list, ItemNode* item);
 
 
    void toDot(string &dot);
@@ -283,7 +283,7 @@ public:
 
     StructFieldListNode(StructFieldNode* item);
     StructFieldListNode(StructFieldListNode* list);
-    static void Append(StructFieldListNode* list, StructFieldNode* item);
+    static StructFieldListNode* Append(StructFieldListNode* list, StructFieldNode* item);
 
    void toDot(string &dot);
    void toXml(string &xml);
@@ -321,7 +321,7 @@ public:
 
     EnumItemListNode(EnumItemNode* item);
     EnumItemListNode(EnumItemListNode* list);
-    static void Append(EnumItemListNode* list, EnumItemNode* item);
+    static EnumItemListNode* Append(EnumItemListNode* list, EnumItemNode* item);
 
    void toDot(string &dot);
    void toXml(string &xml);
@@ -368,7 +368,7 @@ public:
     FuncParamListNode(FuncParamNode* item);
     FuncParamListNode(FuncParamListNode* list);
     static FuncParamListNode* FunctionParamsFinal(Type func_type, FuncParamListNode* list);
-    static void Append(FuncParamListNode* list, FuncParamNode* item);
+    static FuncParamListNode* Append(FuncParamListNode* list, FuncParamNode* item);
 
 
    void toDot(string &dot);
@@ -420,7 +420,7 @@ public:
 
     AssociatedItemListNode(AssociatedItemNode* item);
     AssociatedItemListNode(AssociatedItemListNode* list);
-    static void Append(AssociatedItemListNode* list, AssociatedItemNode* item);
+    static AssociatedItemListNode* Append(AssociatedItemListNode* list, AssociatedItemNode* item);
 
 
    void toDot(string &dot);
