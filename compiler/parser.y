@@ -492,17 +492,17 @@ IteratorLoopExpr: FOR '(' ID IN ExprWithBlock ')' BlockExpr
                 | FOR '(' ID IN ExprWithoutBlock ')' BlockExpr
                 ;
 
-IfExpr: SimpleIfElseExpr
-      | SimpleIfElseExpr ELSE BlockExpr
+IfExpr: SimpleIfElseExpr { $$ = $1; }
+      | SimpleIfElseExpr ELSE BlockExpr { $$ = ExprNode::AddElseBlock($1, $3) }
       ;
 
 
-SimpleIfElseExpr: SimpleIfExpr
-                | SimpleIfElseExpr ELSE SimpleIfExpr
+SimpleIfElseExpr: SimpleIfExpr  { $$ = $1; }
+                | SimpleIfElseExpr ELSE SimpleIfExpr { $$ = ExprNode::AddIfBlock($1, $3); }
                 ;
 
-SimpleIfExpr: IF '(' ExprWithoutBlock ')' BlockExpr
-            | IF '(' ExprWithBlock ')' BlockExpr  // list <condition> list <body>  blockexpr else
+SimpleIfExpr: IF '(' ExprWithoutBlock ')' BlockExpr { $$ = ExprNode::IfExpr(ExprNode::if_expr, $3, $5); }
+            | IF '(' ExprWithBlock ')' BlockExpr  { $$ = ExprNode::IfExpr(ExprNode::if_expr, $3, $5); }
             ;
 
 
