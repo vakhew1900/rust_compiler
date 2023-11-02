@@ -23,8 +23,61 @@ TypeNode::TypeNode(Type type, TypeNode* type_node, ExprNode* expr) {
     this->exprArr = expr;
 }
 
+// Expr from + - * / и тд
+ExprNode::ExprNode(Type type, ExprNode* left, ExprNode* right){
+    this->id = ++globId;
+    this->type = type;
+    this->expr_left = left;
+    this->expr_right = right;
+}
 
-// --- toDot, toXml ---
+ExprNode::ExprNode(Type type, bool value){
+    this->id = ++globId;
+    this->type = type;
+    this->Bool = value;
+}
+
+ExprNode::ExprNode(Type type, int value){
+    this->id = ++globId;
+    this->type = type;
+    this->Int = value;
+}
+
+ExprNode::ExprNode(Type type, float value){
+    this->id = ++globId;
+    this->type = type;
+    this->Float = value;
+}
+
+ExprNode::ExprNode(Type type, char value){
+    this->id = ++globId;
+    this->type = type;
+    this->Char = value;
+}
+
+ExprNode::ExprNode(Type type, string* value){
+    this->id = ++globId;
+    this->type = type;
+    this->String = value;
+}
+
+ExprNode::ExprNode(Type type, string* name, ExprNode* expr, ExprListNode* expr_list){
+    this->id = ++globId;
+    this->type = type;
+    this->Name = name;
+    this->expr_left = expr;
+    this->expr_list = expr_list;
+}
+
+ExprNode::ExprNode(Type type, string* name, string* parent_id, ExprListNode* expr_list){
+    this->id = ++globId;
+    this->type = type;
+    this->Name = name;
+    this->ParentID = parent_id;
+    this->expr_list = expr_list;
+}
+
+// --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 
 }
