@@ -122,7 +122,7 @@
 
 /* ---------------------- PROGRAM --------------------------- */
 
-Program: ItemListEmpty { $$ = ProgramNode($1); }
+Program: ItemListEmpty { $$ = new ProgramNode($1); }
 /* Необходимо уточнить, надо ли как-то обозначить, что Stmt все должны быть Item, иначе программа не заработает */
 
 /* ----------------------------- STATEMENT -----------------------------  */
@@ -319,15 +319,15 @@ ExprListEmpty: /*empty*/
              | ExprList
              ;
 
-ExprList: ExprWithBlock
-        | ExprWithoutBlock
-        | ExprList ',' ExprWithBlock
-        | ExprList ',' ExprWithoutBlock
+ExprList: ExprWithBlock { $$ = new ExprListNode($1); }
+        | ExprWithoutBlock { $$ = new ExprListNode($1); }
+        | ExprList ',' ExprWithBlock { $$ = ExprListNode::Append($1, $3); }
+        | ExprList ',' ExprWithoutBlock { $$ = ExprListNode::Append($1, $3); }
         ;
 
-ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode(char_lit, $1); }
-                | STRING_LITERAL { $$ = ExprNode(string_lit, $1); }
-                | RAW_STRING_LITERAL { $$ = ExprNode(raw_string_lit, $1); }
+ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode::ExprFromCharLiteral($1); }
+                | STRING_LITERAL { $$ = ExprFromStringLiteral($1);  }
+                | RAW_STRING_LITERAL { $$ = new ExprNode(raw_string_lit, $1); }
                 | INT_LITERAL { $$ = ExprNode(int_lit, $1); }
                 | FLOAT_LITERAL { $$ = ExprNode(float_lit, $1); }
                 | TRUE { $$ = ExprNode(bool_lit, $1); }
@@ -499,14 +499,14 @@ SimpleIfExpr: IF '(' ExprWithoutBlock ')' BlockExpr
 
 /*-------------------------TYPE -------------------------- */
 
-Type: BOOL { $$ = TypeNode(bool_); }
-    | CHAR { $$ = TypeNode(char_); }
-    | FLOAT { $$ = TypeNode(float_); }
-    | INT { $$ = TypeNode(int_); }
-    | STRING { $$ = TypeNode(string_); }
-    | ID { $$ = TypeNode(id_); }
-    | '[' Type ';' ExprWithBlock ']' { $$ = TypeNode(array_, $2, $4); }
-    | '[' Type ';' ExprWithoutBlock ']' { $$ = TypeNode(array_, $2, $4); }
+Type: BOOL { $$ = new TypeNode(bool_); }
+    | CHAR { $$ = new TypeNode(char_); }
+    | FLOAT { $$ = new TypeNode(float_); }
+    | INT { $$ = new TypeNode(int_); }
+    | STRING { $$ = new TypeNode(string_); }
+    | ID { $$ = new TypeNode(id_); }
+    | '[' Type ';' ExprWithBlock ']' { $$ = new TypeNode(array_, $2, $4); }
+    | '[' Type ';' ExprWithoutBlock ']' { $$ = new TypeNode(array_, $2, $4); }
     ;
     /* Не доделан. Можно добавить TupleType */
 

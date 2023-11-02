@@ -24,113 +24,194 @@ TypeNode::TypeNode(Type type, TypeNode* type_node, ExprNode* expr) {
 }
 
 // Expr from + - * / и тд
-ExprNode::ExprNode(Type type, ExprNode* left, ExprNode* right){
-    this->id = ++globId;
-    this->type = type;
-    this->expr_left = left;
-    this->expr_right = right;
+ExprNode* ExprNode::OperatorExpr(Type type, ExprNode* left, ExprNode* right){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->expr_left = left;
+    new_node->expr_right = right;
+    return new_node;
 }
 
-ExprNode::ExprNode(Type type, bool value){
-    this->id = ++globId;
-    this->type = type;
-    this->Bool = value;
+ExprNode* ExprNode::ExprFromBoolLiteral(Type type, bool value){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->Bool = value;
+    return new_node;
 }
 
-ExprNode::ExprNode(Type type, int value){
-    this->id = ++globId;
-    this->type = type;
-    this->Int = value;
+ExprNode* ExprNode::ExprFromIntLiteral(Type type, int value){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->Int = value;
+    return new_node;
 }
 
-ExprNode::ExprNode(Type type, float value){
-    this->id = ++globId;
-    this->type = type;
-    this->Float = value;
+ExprNode* ExprNode::ExprFromFloatLiteral(Type type, float value){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->Float = value;
+    return new_node;
 }
 
-ExprNode::ExprNode(Type type, char value){
-    this->id = ++globId;
-    this->type = type;
-    this->Char = value;
+ExprNode* ExprNode::ExprFromCharLiteral(Type type, char value){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->Char = value;
+    return new_node;
 }
 
-ExprNode::ExprNode(Type type, string* value){
-    this->id = ++globId;
-    this->type = type;
-    this->String = value;
+ExprNode* ExprNode::ExprFromStringLiteral(Type type, string* value){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->String = value;
+    return new_node;
 }
 
-ExprNode::ExprNode(Type type, ExprNode* expr, ExprListNode* expr_list){
-    this->id = ++globId;
-    this->type = type;
-    this->expr_left = expr;
-    this->expr_list = expr_list;
+ExprNode* ExprNode::StaticMethod(Type type, ExprNode* expr, ExprListNode* expr_list){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->expr_left = expr;
+    new_node->expr_list = expr_list;
+    return new_node;
 }
 
-ExprNode::ExprNode(Type type, ExprNode* expr, StructFieldListNode* field_list){
-    this->id = ++globId;
-    this->type = type;
-    this->expr_left = expr;
-    this->field_list = field_list;
+ExprNode* ExprNode::FieldListAccess(Type type, ExprNode* expr, StructFieldListNode* field_list){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->expr_left = expr;
+    new_node->field_list = field_list;
+    return new_node;
 }
 
-ExprNode::ExprNode(Type type, string* name, ExprNode* expr, ExprListNode* expr_list){
-    this->id = ++globId;
-    this->type = type;
-    this->Name = name;
-    this->expr_left = expr;
-    this->expr_list = expr_list;
+ExprNode* ExprNode::CallAccessExpr(Type type, string* name, ExprNode* expr, ExprListNode* expr_list){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->Name = name;
+    new_node->expr_left = expr;
+    new_node->expr_list = expr_list;
+    return new_node;
 }
 
 // StaticMethodExpr
-ExprNode::ExprNode(Type type, string* name, string* parent_id, ExprListNode* expr_list){
-    this->id = ++globId;
-    this->type = type;
-    this->Name = name;
-    this->ParentID = parent_id;
-    this->expr_list = expr_list;
+ExprNode* ExprNode::StaticMethodExpr(Type type, string* name, string* parent_id, ExprListNode* expr_list){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->Name = name;
+    new_node->ParentID = parent_id;
+    new_node->expr_list = expr_list;
+    return new_node;
 }
 
-ExprNode::ExprNode(Type type, ExprListNode* expr_list){
-    this->id = ++globId;
-    this->type = type;
-    this->expr_list = expr_list;
+ExprNode* ExprNode::BlockExpr(Type type, ExprListNode* expr_list){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->expr_list = expr_list;
+    return new_node;
 }
 
-ExprNode::ExprNode(Type type, ExprNode* expr, int value){
-    this->id = ++globId;
-    this->type = type;
-    this->expr_left = expr;
-    this->Int = value;
+ExprNode* ExprNode::ArrExprFromList(Type type, ExprListNode* expr_list){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->expr_list = expr_list;
+    return new_node;
 }
 
-ExprNode::ExprNode(Type type, ExprNode* condition, ExprNode* body, string* id){
-    this->id = ++globId;
-    this->type = type;
-    this->body = body;
-    this->expr_left = condition;
-    this->Name = id;
+ExprNode* ExprNode::ArrExprAutoFill(Type type, ExprNode* first, ExprNode* second){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->expr_left = first;
+    new_node->expr_right = second;
+    return new_node;
 }
 
-ExprNode::ExprNode(Type type, string* name, ExprListNode* expr_list){
-    this->id = ++globId;
-    this->type = type;
-    this->expr_list = expr_list;
-    this->Name = name;
+ExprNode* ExprNode::TupleExpr(Type type, ExprNode* expr, int value){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->expr_left = expr;
+    new_node->Int = value;
+    return new_node;
 }
 
-ExprNode::ExprNode(Type type, string* name, ExprNode* expr){
-    this->id = ++globId;
-    this->type = type;
-    this->expr_left = expr;
-    this->Name = name;
+ExprNode* ExprNode::CycleExpr(Type type, ExprNode* condition, ExprNode* body, string* id){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->body = body;
+    new_node->expr_left = condition;
+    new_node->Name = id;
+    return new_node;
+}
+
+ExprNode* ExprNode::RangeExpr(Type type, ExprNode* left, ExprNode* right){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->expr_left = left;
+    new_node->expr_right = right;
+    return new_node;
+}
+
+ExprNode* ExprNode::IfExpr(Type type, ExprNode* condition, ExprNode* body, ExprNode* else_body){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->expr_left = condition;
+    new_node->body = body;
+    new_node->else_body = else_body;
+    return new_node;
+}
+
+ExprNode* ExprNode::AddIfBlock(Type type, ExprNode* expr, ExprNode* condition, ExprNode* body){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->expr_left = expr;
+    new_node->expr_right = condition;
+    new_node->body = body;
+    return new_node;
+}
+
+ExprNode* ExprNode::StructExpr(Type type, string* name, ExprListNode* expr_list){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->expr_list = expr_list;
+    new_node->Name = name;
+    return new_node;
+}
+
+ExprNode* ExprNode::ExprFromStructField(Type type, string* name, ExprNode* expr){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->expr_left = expr;
+    new_node->Name = name;
+    return new_node;
 }
 
 // expr list
 ExprListNode::ExprListNode(ExprNode* expr){
     this->id = ++globId;
     this->exprs = new list <ExprNode*>{ expr };
+}
+
+ExprListNode::ExprListNode(ExprListNode* exprs_list){
+    this->id = ++globId;
+    this->exprs = exprs_list->exprs;
 }
 
 void ExprListNode::Append(ExprListNode *list, ExprNode *expr) {

@@ -75,7 +75,7 @@ public:
 
         id_, self_expr, if_expr, loop_expr, loop_while, loop_for, block_expr,
         struct_expr, struct_field_expr, static_method, tuple_expr, super_expr,
-        path_call_expr
+        path_call_expr, add_if_block
     };
 
     int id;
@@ -98,23 +98,31 @@ public:
     StmtListNode* stmt_list = NULL;
 
     //ф-ии
-    ExprNode(Type type, ExprNode* left, ExprNode* right);
-    ExprNode(Type type, bool value);
-    ExprNode(Type type, int value);
-    ExprNode(Type type, float value);
-    ExprNode(Type type, char value);
-    ExprNode(Type type, string* value);
-    ExprNode(Type type, string* name, ExprNode* expr, ExprListNode* expr_list);
-    ExprNode(Type type, string* name, string* parent_id, ExprListNode* expr_list);
-    ExprNode(Type type, ExprListNode* expr_list);
-    ExprNode(Type type, ExprNode* condition, ExprNode* body, string* id);
-    ExprNode(Type type, string* name, ExprListNode* expr_list);
-    ExprNode(Type type, string* name, ExprNode* expr);
-    ExprNode(Type type, ExprNode* expr ,int value); // tuple_expr
-    ExprNode(Type type, ExprNode* expr, ExprListNode* expr_list);
-    ExprNode(Type type, ExprNode* expr, StructFieldListNode* field_list);
+    static ExprNode* OperatorExpr(Type type, ExprNode* left, ExprNode* right);
+    static ExprNode* ExprFromBoolLiteral(Type type, bool value);
+    static ExprNode* ExprFromIntLiteral(Type type, int value);
+    static ExprNode* ExprFromFloatLiteral(Type type, float value);
+    static ExprNode* ExprFromCharLiteral(Type type, char value);
+    static ExprNode* ExprFromStringLiteral(Type type, string* value);
+    static ExprNode* CallAccessExpr(Type type, string* name, ExprNode* expr, ExprListNode* expr_list);
+    static ExprNode* StaticMethodExpr(Type type, string* name, string* parent_id, ExprListNode* expr_list);
+    static ExprNode* ArrExprFromList(Type type, ExprListNode* expr_list);
+    static ExprNode* ArrExprAutoFill(Type type, ExprNode* first, ExprNode* second);
+    static ExprNode* RangeExpr(Type type, ExprNode* left, ExprNode* right);
+    static ExprNode* IfExpr(Type type, ExprNode* condition, ExprNode* body, ExprNode* else_body);
+    static ExprNode* CycleExpr(Type type, ExprNode* condition, ExprNode* body, string* id);
+    static ExprNode* BlockExpr(Type type, ExprListNode* expr_list);
+    static ExprNode* StructExpr(Type type, string* name, ExprListNode* expr_list);
+
+    static ExprNode* ExprFromStructField(Type type, string* name, ExprNode* expr);
+    static ExprNode* TupleExpr(Type type, ExprNode* expr, int value); // tuple_expr
+
+    static ExprNode* StaticMethod(Type type, ExprNode* expr, ExprListNode* expr_list);
+    static ExprNode* FieldListAccess(Type type, ExprNode* expr, StructFieldListNode* field_list);
+    static ExprNode* AddIfBlock(Type type, ExprNode* expr, ExprNode* condition, ExprNode* body);
     string* toDot();
     string* toXml();
+
 };
 
 class ExprListNode
@@ -124,6 +132,7 @@ public:
     list<ExprNode*>* exprs = NULL;
 
     ExprListNode(ExprNode* expr);
+    ExprListNode(ExprListNode* exprs);
     static void Append(ExprListNode* list, ExprNode* expr);
 
     string* toDot();
