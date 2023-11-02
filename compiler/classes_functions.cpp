@@ -4,3 +4,7 @@
 #include "classesnodes.h"
 int globId = 0;
 
+ProgramNode::ProgramNode(ItemListNode *item_list) {
+    this->id = ++globId;
+    this->item_list = item_list;
+}

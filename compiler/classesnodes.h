@@ -41,7 +41,7 @@ public:
     int id;
     ItemListNode* item_list = NULL;
 
-
+    ProgramNode(ItemListNode* item_list);
     string* toDot();
     string* toXml();
 };
