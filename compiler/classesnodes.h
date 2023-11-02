@@ -66,7 +66,6 @@ public:
 
 class ExprNode{
 public:
-    // мб не нужны arrayexpr, array_expr_auto_fill
     enum Type{
         int_lit, float_lit, char_lit, string_lit, raw_string_lit,  bool_lit,
         plus, minus, mul_expr, div_expr, mod, or_, and_, asign, equal, not_equal, greater, less, greater_equal,
@@ -75,7 +74,7 @@ public:
         continue_expr, break_expr, range_right, range_left, range_expr, return_expr,
 
         id_, self_expr, if_expr, loop_expr, loop_while, loop_for, block_expr,
-        struct_expr, struct_field_expr, static_method
+        struct_expr, struct_field_expr, static_method, tuple_expr
     };
 
     int id;
@@ -105,6 +104,11 @@ public:
     ExprNode(Type type, string* value);
     ExprNode(Type type, string* name, ExprNode* expr, ExprListNode* expr_list);
     ExprNode(Type type, string* name, string* parent_id, ExprListNode* expr_list);
+    ExprNode(Type type, ExprListNode* expr_list);
+    ExprNode(Type type, ExprNode* condition, ExprNode* body, string* id);
+    ExprNode(Type type, string* name, ExprListNode* expr_list);
+    ExprNode(Type type, string* name, ExprNode* expr);
+    ExprNode(Type type, ExprNode* expr ,int value); // tuple_expr
     string* toDot();
     string* toXml();
 };

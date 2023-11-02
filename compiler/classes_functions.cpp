@@ -77,6 +77,31 @@ ExprNode::ExprNode(Type type, string* name, string* parent_id, ExprListNode* exp
     this->expr_list = expr_list;
 }
 
+ExprNode::ExprNode(Type type, ExprListNode* expr_list){
+    this->id = ++globId;
+    this->type = type;
+    this->expr_list = expr_list;
+}
+
+ExprNode::ExprNode(Type type, ExprNode* expr, int value){
+    this->id = ++globId;
+    this->type = type;
+    this->expr_left = expr;
+    this->Int = value;
+}
+
+ExprNode::ExprNode(Type type, ExprNode* condition, ExprNode* body, string* id){
+
+}
+
+ExprNode::ExprNode(Type type, string* name, ExprListNode* expr_list){
+
+}
+
+ExprNode::ExprNode(Type type, string* name, ExprNode* expr){
+
+}
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 

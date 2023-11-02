@@ -397,43 +397,42 @@ ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode(char_lit, $1); }
                 | '*' ExprWithBlock %prec USTAR { $$ = ExprNode(ustar, $2, 0); }
                 | '&' ExprWithoutBlock { $$ = ExprNode(link, $2, 0); }
                 | '&' ExprWithBlock { $$ = ExprNode(link, $2, 0); }
-                | '[' ExprListEmpty ']'  // ЗАДАЕМ МАССИВ
-                | '[' ExprWithoutBlock ';' ExprWithoutBlock ']'
-                | '[' ExprWithoutBlock ';' ExprWithBlock ']'
-                | '[' ExprWithBlock ';' ExprWithoutBlock ']'
-                | '[' ExprWithBlock ';' ExprWithBlock ']'
-                | ExprWithoutBlock '[' ExprWithoutBlock ']' // Обращаемся к элементу массива
-                | ExprWithoutBlock '[' ExprWithBlock ']'
-                | ExprWithBlock '[' ExprWithoutBlock ']'
-                | ExprWithBlock '[' ExprWithBlock ']'
-                | ExprWithoutBlock '.' INT_LITERAL // Обращаемся к элементу tuple
-                | ExprWithBlock '.' INT_LITERAL
-                | CONTINUE
-                | BREAK
-                | RANGE
-                | RANGE ExprWithoutBlock // диапозон
-                | RANGE ExprWithBlock
-                | ExprWithoutBlock RANGE
-                | ExprWithBlock RANGE
-                | ExprWithoutBlock RANGE ExprWithoutBlock
-                | ExprWithoutBlock RANGE ExprWithBlock
-                | ExprWithBlock RANGE ExprWithoutBlock
-                | ExprWithBlock RANGE ExprWithBlock
-                | RETURN
-                | RETURN ExprWithoutBlock // if else конфликт
-                | RETURN ExprWithBlock
-                | ExprWithoutBlock '.' ID
-                | ExprWithBlock '.' ID
-                | ExprWithoutBlock '.' ID '(' ExprListEmpty ')' // Конфликт вроде как решается сдвигом т.е. действием по умолчанию
-                | ExprWithBlock '.' ID '(' ExprListEmpty ')'
-                | PathCallExpr
-                | PathCallExpr '(' ExprListEmpty ')' // Вызов функции по пути // Cпросить можно ли сделать более простую реализацию
-                | PathCallExpr '{' StructExprFieldListEmpty '}' // конфликт
-                | '(' ExprWithBlock ')'
-                |'(' ExprWithoutBlock ')'
+                | '[' ExprListEmpty ']'  { $$ = ExprNode(array_expr, $2); }
+                | '[' ExprWithoutBlock ';' ExprWithoutBlock ']' { $$ = ExprNode(array_expr_auto_fill, $2, $4); }
+                | '[' ExprWithoutBlock ';' ExprWithBlock ']' { $$ = ExprNode(array_expr_auto_fill, $2, $4); }
+                | '[' ExprWithBlock ';' ExprWithoutBlock ']' { $$ = ExprNode(array_expr_auto_fill, $2, $4); }
+                | '[' ExprWithBlock ';' ExprWithBlock ']' { $$ = ExprNode(array_expr_auto_fill, $2, $4); }
+                | ExprWithoutBlock '[' ExprWithoutBlock ']' { $$ = ExprNode(index_expr, $1, $3); }
+                | ExprWithoutBlock '[' ExprWithBlock ']' { $$ = ExprNode(index_expr, $1, $3); }
+                | ExprWithBlock '[' ExprWithoutBlock ']' { $$ = ExprNode(index_expr, $1, $3); }
+                | ExprWithBlock '[' ExprWithBlock ']' { $$ = ExprNode(index_expr, $1, $3); }
+                | ExprWithoutBlock '.' INT_LITERAL { $$ = ExprNode(tuple_expr, $1, $3); }
+                | ExprWithBlock '.' INT_LITERAL { $$ = ExprNode(tuple_expr, $1, $3); }
+                | CONTINUE { $$ = ExprNode(continue_expr, 0, 0); }
+                | BREAK { $$ = ExprNode(break_expr, 0, 0); }
+                | RANGE { $$ = ExprNode(range_right, 0, 0); }
+                | RANGE ExprWithoutBlock { $$ = ExprNode(range_right, $2, 0); }
+                | RANGE ExprWithBlock { $$ = ExprNode(range_right, $2, 0); }
+                | ExprWithoutBlock RANGE { $$ = ExprNode(range_left, $1, 0); }
+                | ExprWithBlock RANGE { $$ = ExprNode(range_left, $1, 0); }
+                | ExprWithoutBlock RANGE ExprWithoutBlock { $$ = ExprNode(range_expr, $1, $3); }
+                | ExprWithoutBlock RANGE ExprWithBlock { $$ = ExprNode(range_expr, $1, $3); }
+                | ExprWithBlock RANGE ExprWithoutBlock { $$ = ExprNode(range_expr, $1, $3); }
+                | ExprWithBlock RANGE ExprWithBlock { $$ = ExprNode(range_expr, $1, $3); }
+                | RETURN { $$ = ExprNode(return_expr, 0, 0); }
+                | RETURN ExprWithoutBlock { $$ = ExprNode(return_expr, $2, 0); }
+                | RETURN ExprWithBlock { $$ = ExprNode(return_expr, $2, 0); }
+                | ExprWithoutBlock '.' ID { $$ = ExprNode(field_access_expr, $3, $1, 0); }
+                | ExprWithBlock '.' ID { $$ = ExprNode(field_access_expr, $3, $1, 0); }
+                | ExprWithoutBlock '.' ID '(' ExprListEmpty ')' { $$ = ExprNode(method_expr, $3, $1, $5); }
+                | ExprWithBlock '.' ID '(' ExprListEmpty ')' { $$ = ExprNode(method_expr, $3, $1, $5); }
+                | PathCallExpr // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                | PathCallExpr '(' ExprListEmpty ')' // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                | PathCallExpr '{' StructExprFieldListEmpty '}' // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                | '(' ExprWithBlock ')' { $$ = $2; }
+                |'(' ExprWithoutBlock ')' { $$ = $2; }
                 ;
 
-           /* CRATE DOLLAR_CRATE  отправляются на свалку Struct Tuple тоже) ID */
 
 PathCallExpr: ID
             | SUPER
