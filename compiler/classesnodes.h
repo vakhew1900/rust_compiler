@@ -150,13 +150,10 @@ public:
     int id;
     Type type;
     ExprNode* expr = NULL;
-    StmtNode* decl_stmt = NULL; //ExprStmt (Expr ';')
+    ItemNode* decl_stmt = NULL; //ExprStmt (Expr ';')
     LetStmtNode* let_stmt = NULL;
 
-    StmtNode(Type type);
-    StmtNode(Type type, LetStmtNode* letStmt);
-    StmtNode(Type type, StmtNode* stmt);
-    StmtNode(Type type, ExprNode* exprstmt); // Делаем ExprStmt
+    StmtNode(Type type, ExprNode* expr_node, ItemNode* decl_node, LetStmtNode* let_node);
 
     string* toDot();
     string* toXml();
