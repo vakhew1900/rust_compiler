@@ -582,7 +582,44 @@ void ProgramNode::toDot(string &dot){
 
 void TypeNode::toDot(string &dot){
 
+    switch (this->type) {
+        case TypeNode::emptyType_:
+            createVertexDot(dot, this->id,"", "", "empty_type");
+            break;
 
+        case TypeNode:: int_:
+            createVertexDot(dot, this->id,"", "", "int_type");
+            break;
+
+        case TypeNode:: char_:
+            createVertexDot(dot, this->id,"", "", "char_type");
+            break;
+
+        case TypeNode::string_:
+            createVertexDot(dot, this->id,"", "", "string_type");
+            break;
+
+        case TypeNode::float_:
+            createVertexDot(dot, this->id,"", "", "float_type");
+            break;
+
+        case TypeNode:: id_:
+            createVertexDot(dot, this->id,"", "", "id_type");
+            break;
+
+        case TypeNode:: array_:
+            createVertexDot(dot, this->id,"", "", "array_type");
+            this->typeArr->toDot(dot);
+            connectVerticesDots(dot, this->id, this->typeArr->id);
+
+            if(this->exprArr != NULL) {
+                this->exprArr->toDot(dot);
+                connectVerticesDots(dot, this->id, this->exprArr->id);
+            }
+
+            break;
+
+    }
 }
 
 void ProgramNode::toXml(string &xml){
@@ -775,14 +812,18 @@ void connectVerticesDots(int parentId, int childId, string &s) {
     s += tmp;
 }
 
-void createVertexDot(string &s, int id, string name, string type) {
+void createVertexDot(string &s, int id, string name, string type, string value) {
 
     if(!type.empty()){
-        type = "type="+type;
+        type = "type=" + type;
+    }
+
+    if(!value.empty()){
+        value = "value=" + value;
     }
 
     string tmp = to_string(id) + to_string(id) +
-                " [label=\"" + name + type + "id="+ to_string(id) + "\"]";
+                " [label=\"" + name + type + value + "id="+ to_string(id) + "\"]";
 
     s += tmp;
 }
