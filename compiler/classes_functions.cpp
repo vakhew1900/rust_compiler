@@ -404,15 +404,12 @@ ItemNode* ItemNode::DeclarationEnum(Visibility visibility, EnumStmtNode* node){
     if(visibility != pub){
         current_vis = self;
     }
+
     if(node->items!=NULL){
-        auto iter { node->items->items->front() };
-        EnumItemNode *current = iter;
-        while(current != NULL){
-            if(current->visibility == emptyVisibility){
-                current->visibility = current_vis;
+        for(auto iter = node->items->items->begin(); iter != node->items->items->end(); ++iter){
+            if((*iter)->visibility == emptyVisibility){
+                (*iter)->visibility = current_vis;
             }
-            ++iter;
-            current = iter;
         }
     }
 
