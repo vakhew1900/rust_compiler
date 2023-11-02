@@ -352,10 +352,12 @@ public:
         self, self_ref, mut_self_ref, associated
     };
     int id;
+    Type func_type;
     list<FuncParamNode*>* items = NULL;
 
     FuncParamListNode(FuncParamNode* item);
     FuncParamListNode(FuncParamListNode* list);
+    static FuncParamListNode* FunctionParamsFinal(Type func_type, FuncParamListNode* list);
     static void Append(FuncParamListNode* list, FuncParamNode* item);
 
 

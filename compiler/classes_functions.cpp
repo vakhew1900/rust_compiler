@@ -339,6 +339,18 @@ FuncParamListNode::FuncParamListNode(FuncParamListNode *list){
     this->items = list->items;
 }
 
+FuncParamListNode* FuncParamListNode::FunctionParamsFinal(Type func_type, FuncParamListNode *list){
+    if(list == NULL){
+        FuncParamListNode* new_node = new FuncParamListNode(list);
+        new_node->id = ++globId;
+        new_node->func_type = func_type;
+        return new_node;
+    }else{
+        list->func_type = func_type;
+        return list;
+    }
+}
+
 void FuncParamListNode::Append(FuncParamListNode *list, FuncParamNode* item) {
     list->items->push_back(item);
 }
