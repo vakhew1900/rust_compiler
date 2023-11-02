@@ -299,6 +299,7 @@ public:
     ExprNode* expr = NULL;
     StructFieldListNode* struct_list = NULL;
 
+    EnumItemNode(string* name, Visibility visibility, StructFieldListNode* struct_list, ExprNode* expr);
 
     string* toDot();
     string* toXml();

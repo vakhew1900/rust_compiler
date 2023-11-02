@@ -362,6 +362,14 @@ EnumStmtNode::EnumStmtNode(string* name, EnumItemListNode* items){
     this->items=items;
 }
 
+EnumItemNode::EnumItemNode(string* name, Visibility visibility, StructFieldListNode* struct_list, ExprNode* expr){
+    this->id = ++globId;
+    this->name = name;
+    this-> expr = expr;
+    this-> struct_list = struct_list;
+    this->visibility=visibility;
+}
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 
