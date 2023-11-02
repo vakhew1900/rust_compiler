@@ -62,9 +62,12 @@
 %type <item_list>ItemListEmpty
 %type <struct_>StructStruct
 %type <struct_>StructStmt
+%type <struct_>TupleStruct
 %type <struct_item>StructField
 %type <struct_items>StructFieldList
 %type <struct_items>StructFieldListEmpty
+%type <struct_items>TupleFieldList
+%type <struct_items>TupleFieldListEmpty
 %type <enum_stmt>EnumStmt
 %type <enum_item>EnumItem
 %type <enum_items>EnumItemList
@@ -178,137 +181,138 @@ ImplFuncStmt: FN ID '(' FuncParamListEmpty ')' BlockExpr { $$ = new FuncStmtNode
             | FN ID '(' FuncParamListEmpty ')' RIGHT_ARROW  Type BlockExpr { $$ = new FuncStmtNode($2, $7, $4, $8); }
             ;
 
-FuncParamListEmpty: /* empty */
-               | FuncParamList
+FuncParamListEmpty: /* empty */ { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::associated, 0); }
+               | FuncParamList { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::associated, $1); }
                ;
 
-FuncParamList: SELF
-             | SELF_REF
-             | MUT_SELF_REF
-             | FuncParam
-             | FuncParamList ',' FuncParam
+FuncParamList: SELF { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::self, 0); }
+             | SELF_REF { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::self_ref, 0); }
+             | MUT_SELF_REF { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::mut_self_ref, 0); }
+             | FuncParam  { $$ = new FuncParamListNode($1); }
+             | FuncParamList ',' FuncParam { $$ = FuncParamListNode::Append($1, $3); }
              ;
 
-FuncParam: ID ':' Type /* Возможен конфликт */
-         | MUT ID ':' Type
-         | ID ':' MUT_REF Type
-         | ID ':' '&' Type
+FuncParam: ID ':' Type { $$ = new FuncParamNode($1, $3, FuncParamNode::noMut); }
+         | MUT ID ':' Type { $$ = new FuncParamNode($2, $4, FuncParamNode::mut); }
+         | ID ':' MUT_REF Type { $$ = new FuncParamNode($1, $4, FuncParamNode::mut_ref); }
+         | ID ':' '&' Type { $$ = new FuncParamNode($1, $4, FuncParamNode::link); }
          ;
 
 /* ========== Struct =========== */
 
-StructStmt: StructStruct
-          | TupleStruct  /* Надо ли ? */
+StructStmt: StructStruct { $$ = $1; }
+          | TupleStruct  { $$ = $1; }
           ;
 
-StructStruct : STRUCT ID '{' StructFieldListEmpty '}'
+StructStruct : STRUCT ID '{' StructFieldListEmpty '}' { $$ = new StructStructNode($2, $4); }
+             | STRUCT ID ';' { $$ = new StructStructNode($2, 0); }
              ;
 
-StructFieldListEmpty: /* empty */
-                    | StructFieldList
-                    | StructFieldList ','
+StructFieldListEmpty: /* empty */ { $$ = 0; }
+                    | StructFieldList { $$ = new StructFieldListNode($1); }
+                    | StructFieldList ',' { $$ = new StructFieldListNode($1); }
                     ;
 
-StructFieldList: StructField
-               | StructFieldList ',' StructField
+StructFieldList: StructField { $$ = new StructFieldListNode($1); }
+               | StructFieldList ',' StructField { $$ = StructFieldListNode::Append($1, $3); }
                ;
 
-StructField: ID ':' Type  /* Возможен конфликт с FunctionParam */
-           | Visibility ID ':' Type
+StructField: ID ':' Type { $$ = new StructFieldNode($1, $3, self); }
+           | Visibility ID ':' Type { $$ = new StructFieldNode($2, $4, $1); }
            ;
 
 /*--- TupleStruct ----*/
 
-TupleStruct: STRUCT ID '(' TupleFieldListEmpty ')'
+TupleStruct: STRUCT ID '(' TupleFieldListEmpty ')' { $$ = new StructStructNode($2, $4); }
            ;
 
-TupleFieldListEmpty: /* empty */
-                    | TupleFieldList
-                    | TupleFieldList ','
+TupleFieldListEmpty: /* empty */ { $$ = 0; }
+                    | TupleFieldList { $$ = new StructFieldListNode($1); }
+                    | TupleFieldList ',' { $$ = new StructFieldListNode($1); }
                     ;
 
-TupleFieldList: Type /* Возможен конфликт */
-               | Visibility Type
-               | TupleFieldList ',' Type
-               | TupleFieldList ',' Visibility Type
+TupleFieldList: Type { $$ = new StructFieldListNode(new StructFieldNode(0, $1, self)); }
+               | Visibility Type { $$ = new StructFieldListNode(new StructFieldNode(0, $2, $1)); }
+               | TupleFieldList ',' Type { $$ = StructFieldListNode::Append($1, new StructFieldNode(0, $3, self)); }
+               | TupleFieldList ',' Visibility Type { $$ = StructFieldListNode::Append($1, new StructFieldNode(0, $4, $3)); }
                ;
 
 /* ============= ENUM ================ */
 
-EnumStmt: ENUM ID '{' EnumItemListEmpty '}'
+EnumStmt: ENUM ID '{' EnumItemListEmpty '}' { $$ = new EnumStmtNode($2, $4); }
         ;
 
-EnumItemListEmpty: /* empty */
-                 | ','
-                 | EnumItemList
-                 | EnumItemList ','
+EnumItemListEmpty: /* empty */ { $$ = 0; }
+                 | ',' { $$ = 0; }
+                 | EnumItemList { $$ = new EnumItemListNode($1); }
+                 | EnumItemList ',' { $$ = new EnumItemListNode($1); }
                  ;
 
-EnumItemList: EnumItem
-            | EnumItemList ',' EnumItem
+EnumItemList: EnumItem { $$ = new EnumItemListNode($1); }
+            | EnumItemList ',' EnumItem { $$ = EnumItemListNode::Append($1, $3); }
             ;
 
-EnumItem: ID
-        | Visibility ID
-        | ID '=' ExprWithBlock /* В таком случае ID  должен быть всегда только целочисленным числом. Нельзя на парсере определить такое*/
-        | ID '=' ExprWithoutBlock
-        | Visibility ID '=' ExprWithBlock
-        | Visibility ID '=' ExprWithoutBlock
-        | Visibility ID '{' StructFieldListEmpty '}'
-        | ID '{' StructFieldListEmpty '}'
+EnumItem: ID { $$ = new EnumItemNode($1, self, 0, 0); }
+        | Visibility ID { $$ = new EnumItemNode($2, $1, 0, 0); }
+        | ID '=' ExprWithBlock { $$ = new EnumItemNode($1, self, NULL, $3); } /* В таком случае ID  должен быть всегда только целочисленным числом. Нельзя на парсере определить такое*/
+        | ID '=' ExprWithoutBlock { $$ = new EnumItemNode($1, self, 0, $3); }
+        | Visibility ID '=' ExprWithBlock { $$ = new EnumItemNode($2, $1, 0, $4); }
+        | Visibility ID '=' ExprWithoutBlock { $$ = new EnumItemNode($2, $1, 0, $4); }
+        | Visibility ID '{' StructFieldListEmpty '}' { $$ = new EnumItemNode($2, $1, $4, 0); }
+        | ID '{' StructFieldListEmpty '}' { $$ = new EnumItemNode($1, self, $3, 0); }
         ;
 
 /* =========== IMPL ================ */
 
-ImplStmt: IMPL Type '{'AssociatedItemListEmpty '}'
-        | IMPL ID FOR Type '{'AssociatedItemListEmpty '}'
+ImplStmt: IMPL Type '{'AssociatedItemListEmpty '}' { $$ = new ImplStmtNode(ImplStmtNode::inherent, $2, 0, $4); }
+        | IMPL ID FOR Type '{'AssociatedItemListEmpty '}' { $$ = new ImplStmtNode(ImplStmtNode::trait, $4, $2, $6); }
         ;
 
-AssociatedItemListEmpty: /* empty */
-                       | AssociatedItemList
+AssociatedItemListEmpty: /* empty */ { $$ = 0; }
+                       | AssociatedItemList { $$ = new AssociatedItemListNode($1); }
                        ;
 
-AssociatedItemList: AssociatedItem
-                  | AssociatedItemList AssociatedItem
+AssociatedItemList: AssociatedItem { $$ = new AssociatedItemListNode($1); }
+                  | AssociatedItemList AssociatedItem { $$ = AssociatedItemListNode::Append($1, $2); }
                   ;
 
 /* Необходима еще проверка для Impl то что FuncStmt является именно реализацией */
-AssociatedItem: FuncStmt
-              | ConstStmt
-              | Visibility FuncStmt
-              | Visibility ConstStmt
+AssociatedItem: FuncStmt { $$ = new AssociatedItemNode(self, $1, 0); }
+              | ConstStmt { $$ = new AssociatedItemNode(self, 0, $1); }
+              | Visibility FuncStmt { $$ = new AssociatedItemNode($1, $2, 0); }
+              | Visibility ConstStmt { $$ = new AssociatedItemNode($1, 0, $2); }
               ;
 
 
 /* ============ TRAIT ================ */
 
-TraitStmt: TRAIT ID '{' AssociatedItemListEmpty '}'
+TraitStmt: TRAIT ID '{' AssociatedItemListEmpty '}' { $$ = new TraitNode($2, $4); }
          ;
 
 /* ============ CONST =============== */
 
-ConstStmt: CONST ID ':' Type '=' ExprWithBlock ';'
-         | CONST ID ':' Type '=' ExprWithoutBlock ';'
-         | CONST ID ':' Type ';'
+ConstStmt: CONST ID ':' Type '=' ExprWithBlock ';' { $$ = new ConstStmtNode($2, $4, $6); }
+         | CONST ID ':' Type '=' ExprWithoutBlock ';' { $$ = new ConstStmtNode($2, $4, $6); }
+         | CONST ID ':' Type ';' { $$ = new ConstStmtNode($2, $4, 0); }
          ;
 
 /* =========== Module ================= */
 
-ModuleStmt: MOD ID ';'
-          | MOD ID '{' ItemListEmpty '}'
+ModuleStmt: MOD ID ';' { $$ = new ModuleStmtNode(0, $2, 0); }
+          | MOD ID '{' ItemListEmpty '}' { $$ = new ModuleStmtNode(0, $2, $4); }
           ;
 
 /* ========= LetStmt ============ */
-LetStmt: LET ID '=' ExprWithBlock ';'
-       | LET ID '=' ExprWithoutBlock ';'
-       | LET ID ':' Type '=' ExprWithBlock ';'
-       | LET ID ':' Type '=' ExprWithoutBlock ';'
-       | LET MUT ID ';'
-       | LET MUT ID ':' Type ';'
-       | LET MUT ID '=' ExprWithBlock ';'
-       | LET MUT ID '=' ExprWithoutBlock ';'
-       | LET MUT ID ':' Type '=' ExprWithBlock ';'
-       | LET MUT ID ':' Type '=' ExprWithoutBlock ';'
+LetStmt: LET ID '=' ExprWithBlock ';' { $$ = new LetStmtNode($2, 0, LetStmtNode::notMut, $4); }
+       | LET ID '=' ExprWithoutBlock ';' { $$ = new LetStmtNode($2, 0, LetStmtNode::notMut, $4); }
+       | LET ID ':' Type '=' ExprWithBlock ';' { $$ = new LetStmtNode($2, $4, LetStmtNode::notMut, $6); }
+       | LET ID ':' Type '=' ExprWithoutBlock ';' { $$ = new LetStmtNode($2, $4, LetStmtNode::notMut, $6); }
+       | LET MUT ID ';' { $$ = new LetStmtNode($3, 0, LetStmtNode::mut, 0); }
+       | LET MUT ID ':' Type ';' { $$ = new LetStmtNode($3, $5, LetStmtNode::mut, 0); }
+       | LET MUT ID '=' ExprWithBlock ';' { $$ = new LetStmtNode($3, 0, LetStmtNode::mut, $5); }
+       | LET MUT ID '=' ExprWithoutBlock ';' { $$ = new LetStmtNode($3, 0, LetStmtNode::mut, $5); }
+       | LET MUT ID ':' Type '=' ExprWithBlock ';' { $$ = new LetStmtNode($3, $5, LetStmtNode::mut, $7); }
+       | LET MUT ID ':' Type '=' ExprWithoutBlock ';' { $$ = new LetStmtNode($3, $5, LetStmtNode::mut, $7); }
        ;
 
 /* === Expression Statement === */
@@ -319,9 +323,9 @@ ExprStmt: ExprWithoutBlock ';' {$$ = new StmtNode(StmtNode::expression, $1, 0, 0
 
 /*----------------------- EXPRESSION ---------------------- */
 
-ExprListEmpty: /*empty*/
-             | ExprList ','
-             | ExprList
+ExprListEmpty: /*empty*/ { $$ = 0; }
+             | ExprList ',' { $$ = new ExprListNode($1); }
+             | ExprList { $$ = new ExprListNode($1); }
              ;
 
 ExprList: ExprWithBlock { $$ = new ExprListNode($1); }
