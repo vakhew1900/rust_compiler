@@ -489,6 +489,24 @@ ItemNode* ItemNode::DeclarationModule(Visibility visibility, ModuleStmtNode* nod
     return new_node;
 }
 
+// LetStmt
+LetStmtNode::LetStmtNode(string* name, TypeNode* type, Type let_type, ExprNode* expr){
+    this->id = ++globId;
+    this->name = name;
+
+    if(type == NULL){
+        TypeNode* new_type_node = new TypeNode(TypeNode::emptyType_);
+        new_type_node->id = ++globId;
+        this->type = new_type_node;
+    } else {
+        this->type = type;
+    }
+
+    this->expr = expr;
+    this->let_type = let_type;
+}
+
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 

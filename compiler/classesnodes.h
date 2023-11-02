@@ -187,6 +187,7 @@ public:
     TypeNode* type = NULL;
     ExprNode* expr = NULL;
 
+    LetStmtNode(string* name, TypeNode* type, Type let_type, ExprNode* expr);
 
     string* toDot();
     string* toXml();
@@ -230,7 +231,6 @@ public:
 
     ItemListNode(ItemNode* item);
     static void Append(ItemListNode* list, ItemNode* item);
-
 
     string* toDot();
     string* toXml();
