@@ -521,6 +521,16 @@ LetStmtNode::LetStmtNode(string* name, TypeNode* type, Type let_type, ExprNode* 
     this->let_type = let_type;
 }
 
+//StmtListNode
+StmtListNode::StmtListNode(StmtNode *item){
+    this->id = ++globId;
+    this->stmts = new list <StmtNode*>{ item };
+}
+
+
+void StmtListNode::Append(StmtListNode *list, StmtNode* item) {
+    list->stmts->push_back(item);
+}
 
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
