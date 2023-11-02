@@ -264,23 +264,23 @@ EnumItem: ID { $$ = new EnumItemNode($1, self, 0, 0); }
 
 /* =========== IMPL ================ */
 
-ImplStmt: IMPL Type '{'AssociatedItemListEmpty '}'
-        | IMPL ID FOR Type '{'AssociatedItemListEmpty '}'
+ImplStmt: IMPL Type '{'AssociatedItemListEmpty '}' { $$ = new ImplStmtNode(ImplStmtNode::inherent, $2, 0, $4); }
+        | IMPL ID FOR Type '{'AssociatedItemListEmpty '}' { $$ = new ImplStmtNode(ImplStmtNode::trait, $4, $2, $6); }
         ;
 
-AssociatedItemListEmpty: /* empty */
-                       | AssociatedItemList
+AssociatedItemListEmpty: /* empty */ { $$ = 0; }
+                       | AssociatedItemList { $$ = new AssociatedItemListNode($1); }
                        ;
 
-AssociatedItemList: AssociatedItem
-                  | AssociatedItemList AssociatedItem
+AssociatedItemList: AssociatedItem { $$ = new AssociatedItemListNode($1); }
+                  | AssociatedItemList AssociatedItem { $$ = AssociatedItemListNode::Append($1, $2); }
                   ;
 
 /* Необходима еще проверка для Impl то что FuncStmt является именно реализацией */
-AssociatedItem: FuncStmt
-              | ConstStmt
-              | Visibility FuncStmt
-              | Visibility ConstStmt
+AssociatedItem: FuncStmt { $$ = new AssociatedItemNode(self, $1, 0); }
+              | ConstStmt { $$ = new AssociatedItemNode(self, 0, $1); }
+              | Visibility FuncStmt { $$ = new AssociatedItemNode($1, $2, 0); }
+              | Visibility ConstStmt { $$ = new AssociatedItemNode($1, 0, $2); }
               ;
 
 
