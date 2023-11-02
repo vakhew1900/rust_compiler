@@ -512,9 +512,9 @@ Type: BOOL { $$ = new TypeNode(bool_); }
 
 /*---------------------- VISIBILITY ------------------------- */
 
-Visibility: PUB
-              | PUB '(' SUPER ')'
-              | PUB '(' SELF ')'
+Visibility: PUB               { $$ = pub; }
+          | PUB '(' SUPER ')' { $$ = self; }
+          | PUB '(' SELF ')'  { $$ = super; }
           ;
 
 %%
