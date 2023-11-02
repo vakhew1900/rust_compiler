@@ -567,14 +567,25 @@ StmtNode::StmtNode(Type type, StmtNode* stmt){
 // --- toDot, toXml функции ---
 void ProgramNode::toDot(string &dot){
 
-    dot += "";
-}
+    dot = "digraph rustProgram {\n";
 
-void ProgramNode::toXml(string &xml){
+    for(auto item : *this->item_list->items)
+    {
+        createVertexDot(dot, this->id, "program");
+        item->toDot(dot);
+        connectVerticesDots(dot, this->id, this->item_list->id);
+    }
+
+    dot += "}\n";
 
 }
 
 void TypeNode::toDot(string &dot){
+
+
+}
+
+void ProgramNode::toXml(string &xml){
 
 }
 
@@ -758,3 +769,20 @@ void ImplStmtNode::toXml(string &xml){
 
 }
 
+void connectVerticesDots(int parentId, int childId, string &s) {
+
+    string tmp = "id" + to_string(parentId) + " -> " + "id" + to_string(childId) + ";";
+    s += tmp;
+}
+
+void createVertexDot(string &s, int id, string name, string type) {
+
+    if(!type.empty()){
+        type = "type="+type;
+    }
+
+    string tmp = to_string(id) + to_string(id) +
+                " [label=\"" + name + type + "id="+ to_string(id) + "\"]";
+
+    s += tmp;
+}
