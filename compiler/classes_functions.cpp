@@ -223,8 +223,9 @@ ExprListNode::ExprListNode(ExprListNode* exprs_list){
     this->exprs = exprs_list->exprs;
 }
 
-void ExprListNode::Append(ExprListNode *list, ExprNode *expr) {
+ExprListNode* ExprListNode::Append(ExprListNode *list, ExprNode *expr) {
     list->exprs->push_back(expr);
+    return list;
 }
 
 // STATEMENT FUNCTIONS
@@ -265,8 +266,9 @@ AssociatedItemListNode::AssociatedItemListNode(AssociatedItemListNode* list){
     this->items = list->items;
 }
 
-void AssociatedItemListNode::Append(AssociatedItemListNode* list, AssociatedItemNode* item) {
+AssociatedItemListNode* AssociatedItemListNode::Append(AssociatedItemListNode* list, AssociatedItemNode* item) {
     list->items->push_back(item);
+    return list;
 }
 
 //ImplNode
@@ -302,8 +304,9 @@ StructFieldListNode::StructFieldListNode(StructFieldListNode *list){
     this->items = list->items;
 }
 
-void StructFieldListNode::Append(StructFieldListNode *list, StructFieldNode* item) {
+StructFieldListNode* StructFieldListNode::Append(StructFieldListNode *list, StructFieldNode* item) {
     list->items->push_back(item);
+    return list;
 }
 
 //Function
@@ -351,8 +354,9 @@ FuncParamListNode* FuncParamListNode::FunctionParamsFinal(Type func_type, FuncPa
     }
 }
 
-void FuncParamListNode::Append(FuncParamListNode *list, FuncParamNode* item) {
+FuncParamListNode* FuncParamListNode::Append(FuncParamListNode *list, FuncParamNode* item) {
     list->items->push_back(item);
+    return list;
 }
 
 // Enum
@@ -380,8 +384,9 @@ EnumItemListNode::EnumItemListNode(EnumItemListNode *list){
     this->items = list->items;
 }
 
-void EnumItemListNode::Append(EnumItemListNode *list, EnumItemNode* item) {
+EnumItemListNode* EnumItemListNode::Append(EnumItemListNode *list, EnumItemNode* item) {
     list->items->push_back(item);
+    return list;
 }
 
 // ModuleStmt
@@ -500,8 +505,9 @@ ItemListNode::ItemListNode(ItemListNode *list){
     this->items = list->items;
 }
 
-void ItemListNode::Append(ItemListNode *list, ItemNode* item) {
+ItemListNode* ItemListNode::Append(ItemListNode *list, ItemNode* item) {
     list->items->push_back(item);
+    return list;
 }
 
 // LetStmt
@@ -528,8 +534,9 @@ StmtListNode::StmtListNode(StmtNode *item){
 }
 
 
-void StmtListNode::Append(StmtListNode *list, StmtNode* item) {
+StmtListNode* StmtListNode::Append(StmtListNode *list, StmtNode* item) {
     list->stmts->push_back(item);
+    return list;
 }
 
 // StmtNode
@@ -544,7 +551,7 @@ StmtNode::StmtNode(Type type, ExprNode* expr_node, ItemNode* decl_node, LetStmtN
 // --- toDot, toXml функции ---
 void ProgramNode::toDot(string &dot){
 
-    dot += ""
+    dot += "";
 }
 
 void ProgramNode::toXml(string &xml){
