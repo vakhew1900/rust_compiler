@@ -145,6 +145,9 @@ public:
 
     StmtListNode(StmtNode* stmt);
     static void Append(StmtListNode* list, StmtNode* stmt);
+
+    string* toDot();
+    string* toXml();
 };
 
 class LetStmtNode{
