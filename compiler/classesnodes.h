@@ -199,7 +199,7 @@ public:
         enum_, function_, constStmt_, struct_, trait_, impl_, module_
     };
     int id;
-    Type decl_type;
+    Type type;
     Visibility visibility;
 
     FuncStmtNode* function_item;
@@ -209,6 +209,8 @@ public:
     TraitNode* trait_item;
     ConstStmtNode* const_stmt_item;
     ModuleStmtNode* module_item;
+
+    static ItemNode* DeclarationEnum(Visibility visibility, EnumStmtNode* node);
 
     string* toDot();
     string* toXml();
@@ -301,7 +303,7 @@ public:
     StructFieldListNode* struct_list = NULL;
 
     EnumItemNode(string* name, Visibility visibility, StructFieldListNode* struct_list, ExprNode* expr);
-
+    EnumItemNode();
     string* toDot();
     string* toXml();
 };

@@ -393,7 +393,31 @@ ModuleStmtNode::ModuleStmtNode(Type type, string* name, EnumItemListNode* items)
 }
 
 // Items (declarations)
+ItemNode* ItemNode::DeclarationEnum(Visibility visibility, EnumStmtNode* node){
+    ItemNode* new_node = new ItemNode();
+    new_node->id = ++globId;
+    new_node->type = enum_;
+    new_node->visibility=visibility;
+    new_node->enum_item=node;
 
+    Visibility current_vis = visibility;
+    if(visibility != pub){
+        current_vis = self;
+    }
+    if(node->items!=NULL){
+        auto iter { node->items->items->front() };
+        EnumItemNode *current = iter;
+        while(current != NULL){
+            if(current->visibility == emptyVisibility){
+                current->visibility = current_vis;
+            }
+            ++iter;
+            current = iter;
+        }
+    }
+
+    return new_node;
+}
 
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
