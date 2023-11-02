@@ -329,6 +329,20 @@ FuncParamNode::FuncParamNode(string* name, TypeNode* type, Type param_type){
     this->param_type = param_type;
 }
 
+FuncParamListNode::FuncParamListNode(FuncParamNode *item){
+    this->id = ++globId;
+    this->items = new list <FuncParamNode*>{ item };
+}
+
+FuncParamListNode::FuncParamListNode(FuncParamListNode *list){
+    this->id = ++globId;
+    this->items = list->items;
+}
+
+void FuncParamListNode::Append(FuncParamListNode *list, FuncParamNode* item) {
+    list->items->push_back(item);
+}
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 
