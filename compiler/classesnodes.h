@@ -102,9 +102,9 @@ public:
     ExprNode(Type type, int value);
     ExprNode(Type type, float value);
     ExprNode(Type type, char value);
-    ExprNode(Type type, string value);
-    ExprNode(Type type, string name, ExprNode* expr, ExprListNode* expr_list);
-    ExprNode(Type type, string name, string* parent_id, ExprListNode* expr_list);
+    ExprNode(Type type, string* value);
+    ExprNode(Type type, string* name, ExprNode* expr, ExprListNode* expr_list);
+    ExprNode(Type type, string* name, string* parent_id, ExprListNode* expr_list);
     string* toDot();
     string* toXml();
 };
