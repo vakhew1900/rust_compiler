@@ -174,24 +174,28 @@ ExprNode* ExprNode::RangeExpr(Type type, ExprNode* left, ExprNode* right){
     return new_node;
 }
 
-ExprNode* ExprNode::IfExpr(Type type, ExprNode* condition, ExprNode* body, ExprNode* else_body){
+ExprNode* ExprNode::IfExpr(Type type, ExprNode* condition, ExprNode* body){
     ExprNode* new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
-    new_node->expr_left = condition;
-    new_node->body = body;
-    new_node->else_body = else_body;
+
+    ExprNode* if_node = new ExprNode();
+    if_node->expr_left = condition;
+    if_node->body = body;
+
+    new_node->ifList = new list<ExprNode*> {if_node};
+
     return new_node;
 }
 
-ExprNode* ExprNode::AddIfBlock(Type type, ExprNode* expr, ExprNode* condition, ExprNode* body){
-    ExprNode* new_node = new ExprNode();
-    new_node->id = ++globId;
-    new_node->type = type;
-    new_node->expr_left = expr;
-    new_node->expr_right = condition;
-    new_node->body = body;
-    return new_node;
+ExprNode* ExprNode::AddIfBlock(ExprNode* ifExpr, ExprNode* someIfExpr){
+    ifExpr->ifList->push_back(someIfExpr);
+    return ifExpr;
+}
+
+ExprNode* ExprNode::AddElseBlock(ExprNode* ifExpr, ExprNode* else_body){
+    ifExpr->else_body = else_body;
+    return else_body;
 }
 
 ExprNode* ExprNode::StructExpr(Type type, string* name, ExprListNode* expr_list){

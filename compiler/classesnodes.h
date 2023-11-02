@@ -93,9 +93,11 @@ public:
     ExprNode* expr_right = NULL;
     ExprListNode* expr_list = NULL;
     ExprNode* body = NULL;
-    ExprNode* else_body = NULL;
-    ExprListNode* field_list = NULL;
+    StructFieldListNode* field_list = NULL;
     StmtListNode* stmt_list = NULL;
+
+    list<ExprNode*>* ifList = NULL;
+    ExprNode* else_body = NULL;
 
     //ф-ии
     static ExprNode* OperatorExpr(Type type, ExprNode* left, ExprNode* right);
@@ -118,8 +120,11 @@ public:
     static ExprNode* TupleExpr(Type type, ExprNode* expr, int value); // tuple_expr
     static ExprNode* PathCallExpr(Type type, string* name, ExprNode* expr);
     static ExprNode* StaticMethod(Type type, ExprNode* expr, ExprListNode* expr_list);
-    static ExprNode* FieldListAccess(Type type, ExprNode* expr, ExprListNode* field_list);
-    static ExprNode* AddIfBlock(Type type, ExprNode* expr, ExprNode* condition, ExprNode* body);
+    static ExprNode* FieldListAccess(Type type, ExprNode* expr, StructFieldListNode* field_list);
+
+    static ExprNode* IfExpr(Type type, ExprNode* condition, ExprNode* body);
+    static ExprNode* AddIfBlock(ExprNode* ifExpr, ExprNode* someIfExpr);
+    static ExprNode* AddElseBlock(ExprNode* ifExpr, ExprNode* else_body);
 
     void toDot(string &dot);
     void toXml(string &xml);
