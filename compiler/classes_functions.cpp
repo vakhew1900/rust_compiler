@@ -548,6 +548,12 @@ StmtNode::StmtNode(Type type, ExprNode* expr_node, ItemNode* decl_node, LetStmtN
     this->let_stmt = let_node;
 }
 
+StmtNode::StmtNode(Type type, StmtNode* stmt){
+    this->id = ++globId;
+    this->type = type;
+    this->stmt= stmt;
+}
+
 // --- toDot, toXml функции ---
 void ProgramNode::toDot(string &dot){
 

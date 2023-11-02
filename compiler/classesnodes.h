@@ -151,10 +151,12 @@ public:
     int id;
     Type type;
     ExprNode* expr = NULL;
-    ItemNode* decl_stmt = NULL; //ExprStmt (Expr ';')
+    StmtNode* stmt = NULL;
+    ItemNode* decl_stmt = NULL;
     LetStmtNode* let_stmt = NULL;
 
     StmtNode(Type type, ExprNode* expr_node, ItemNode* decl_node, LetStmtNode* let_node);
+    StmtNode(Type type, StmtNode* stmt);
 
    void toDot(string &dot);
    void toXml(string &xml);
@@ -170,7 +172,7 @@ public:
     static StmtListNode* Append(StmtListNode* list, StmtNode* stmt);
 
    void toDot(string &dot);
-  void toXml(string &xml);
+   void toXml(string &xml);
 };
 
 class LetStmtNode{
