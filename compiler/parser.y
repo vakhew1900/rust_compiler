@@ -303,16 +303,16 @@ ModuleStmt: MOD ID ';' { $$ = new ModuleStmtNode(0, $2, 0); }
           ;
 
 /* ========= LetStmt ============ */
-LetStmt: LET ID '=' ExprWithBlock ';' {  }
-       | LET ID '=' ExprWithoutBlock ';'
-       | LET ID ':' Type '=' ExprWithBlock ';'
-       | LET ID ':' Type '=' ExprWithoutBlock ';'
-       | LET MUT ID ';'
-       | LET MUT ID ':' Type ';'
-       | LET MUT ID '=' ExprWithBlock ';'
-       | LET MUT ID '=' ExprWithoutBlock ';'
-       | LET MUT ID ':' Type '=' ExprWithBlock ';'
-       | LET MUT ID ':' Type '=' ExprWithoutBlock ';'
+LetStmt: LET ID '=' ExprWithBlock ';' { $$ = new LetStmtNode($2, 0, LetStmtNode::notMut, $4); }
+       | LET ID '=' ExprWithoutBlock ';' { $$ = new LetStmtNode($2, 0, LetStmtNode::notMut, $4); }
+       | LET ID ':' Type '=' ExprWithBlock ';' { $$ = new LetStmtNode($2, $4, LetStmtNode::notMut, $6); }
+       | LET ID ':' Type '=' ExprWithoutBlock ';' { $$ = new LetStmtNode($2, $4, LetStmtNode::notMut, $6); }
+       | LET MUT ID ';' { $$ = new LetStmtNode($3, 0, LetStmtNode::mut, 0); }
+       | LET MUT ID ':' Type ';' { $$ = new LetStmtNode($3, $5, LetStmtNode::mut, 0); }
+       | LET MUT ID '=' ExprWithBlock ';' { $$ = new LetStmtNode($3, 0, LetStmtNode::mut, $5); }
+       | LET MUT ID '=' ExprWithoutBlock ';' { $$ = new LetStmtNode($3, 0, LetStmtNode::mut, $5); }
+       | LET MUT ID ':' Type '=' ExprWithBlock ';' { $$ = new LetStmtNode($3, $5, LetStmtNode::mut, $7); }
+       | LET MUT ID ':' Type '=' ExprWithoutBlock ';' { $$ = new LetStmtNode($3, $5, LetStmtNode::mut, $7); }
        ;
 
 /* === Expression Statement === */
