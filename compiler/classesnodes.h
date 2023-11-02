@@ -31,9 +31,12 @@ class TraitNode; //trait_node
 class ImplStmtNode; // impl_node
 class TypeNode; // type_node
 class VisibilityNode; // enum visibility vis;
+class ModuleStmtNode; // -----
 
 class ProgramNode{
-
+public:
+    int id;
+    ItemListNode* item_list = NULL;
 };
 
 class VisibilityNode{
@@ -55,8 +58,11 @@ public:
 
     int id;
     enum Type type;
-    TypeNode* typeArr;
-    ExprNode* exprArr;
+    TypeNode* typeArr = NULL;
+    ExprNode* exprArr = NULL;
+
+    //ф-ии
+
 };
 
 class ExprNode{
@@ -86,11 +92,13 @@ public:
 
     ExprNode* expr_left = NULL;
     ExprNode* expr_right = NULL;
-    ExprNode* next = NULL;
     ExprListNode* expr_list = NULL;
     ExprNode* body = NULL;
     ExprNode* else_body = NULL;
     StmtListNode* stmt_list = NULL;
+
+    //ф-ии
+
 };
 
 class ExprListNode
@@ -103,6 +111,212 @@ public:
     static void Append(ExprListNode* list, ExprNode* expr);
 };
 
-//!---до этой отметки сделано по черновому---!//
+class StmtNode
+{
+public:
+    enum Type
+    {
+        semicolon, expression, exprstmt, let
+    };
 
+    int id;
+    Type type;
+    ExprNode* expr = NULL;
+    StmtNode* decl_stmt = NULL; //ExprStmt (Expr ';')
+    LetStmtNode* let_stmt = NULL;
+
+    StmtNode(Type type);
+    StmtNode(Type type, LetStmtNode* letStmt);
+    StmtNode(Type type, StmtNode* stmt);
+    StmtNode(Type type, ExprNode* exprstmt); // Делаем ExprStmt
+};
+
+class StmtListNode
+{
+public:
+    int id;
+    list<StmtNode*>* stmts = NULL;
+
+    StmtListNode(StmtNode* stmt);
+    static void Append(StmtListNode* list, StmtNode* stmt);
+};
+
+class LetStmtNode{
+public:
+    enum Type
+    {
+        noMut, mut
+    };
+    int id;
+    Type let_type;
+    string* name = NULL;
+    TypeNode* type = NULL;
+    ExprNode* expr = NULL;
+};
+
+class ItemNode{
+public:
+    enum Type
+    {
+        enum_, function_, constStmt_, struct_, trait_, impl_, module_
+    };
+    int id;
+    Type decl_type;
+    VisibilityNode* visibility;
+
+    FuncStmtNode* function_item;
+    StructStructNode* struct_item;
+    EnumStmtNode* enum_item;
+    ImplStmtNode* impl_item;
+    TraitNode* trait_item;
+    ConstStmtNode* const_stmt_item;
+    ModuleStmtNode* module_item;
+};
+
+class ItemListNode
+{
+public:
+    int id;
+    list<ItemNode*>* items = NULL;
+
+    ItemListNode(ItemNode* item);
+    static void Append(ItemListNode* list, ItemNode* item);
+};
+
+class ModuleStmtNode{
+public:
+    enum Type{
+        semicolon, block
+    };
+
+    int id;
+    Type type;
+    string* name;
+    EnumItemListNode* items = NULL;
+};
+
+class StructStructNode{
+public:
+    int id;
+    string* name = NULL;
+    StructFieldListNode* items = NULL;
+};
+
+class StructFieldNode{
+public:
+    int id;
+    string* name = NULL;
+    VisibilityNode* visibility = NULL;
+    TypeNode* type = NULL;
+};
+
+class StructFieldListNode{
+public:
+    int id;
+    list<StructFieldNode*>* items = NULL;
+
+    StructFieldListNode(StmtNode* item);
+    static void Append(StructFieldListNode* list, StructFieldNode* item);
+};
+
+class EnumStmtNode{
+public:
+    int id;
+    string* name = NULL;
+    EnumItemListNode* items = NULL;
+};
+
+class EnumItemNode{
+public:
+    int id;
+    VisibilityNode* visibility = NULL;
+    string* name = NULL;
+    ExprNode* expr = NULL;
+    StructFieldListNode* struct_list = NULL;
+};
+
+class EnumItemListNode{
+public:
+    int id;
+    list<EnumItemNode*>* items = NULL;
+
+    EnumItemListNode(EnumItemNode* item);
+    static void Append(EnumItemListNode* list, EnumItemNode* item);
+};
+
+class FuncStmtNode{
+public:
+    int id;
+    string* name = NULL;
+    TypeNode* retutnType = NULL;
+    FuncParamListNode* params = NULL;
+    ExprNode* body = NULL;
+};
+
+class FuncParamNode{
+public:
+    enum Type{
+        noMut, mut
+    };
+    int id;
+    Type param_type;
+    string* name = NULL;
+    TypeNode* type = NULL;
+};
+
+class FuncParamListNode{
+public:
+    enum Type{
+        self, self_ref, mut_self_ref, associated
+    };
+    int id;
+    list<FuncParamNode*>* items = NULL;
+
+    FuncParamListNode(FuncParamNode* item);
+    static void Append(FuncParamListNode* list, FuncParamNode* item);
+};
+
+class ConstStmtNode{
+public:
+    int id;
+    string* name = NULL;
+    TypeNode* type = NULL;
+    ExprNode* expr = NULL;
+};
+
+class AssociatedItemNode{
+public:
+    int id;
+    VisibilityNode* visibility = NULL;
+    FuncStmtNode* fn = NULL;
+    ConstStmtNode* const_stmt = NULL;
+};
+
+class TraitNode{
+public:
+    int id;
+    string* name = NULL;
+    AssociatedItemListNode* items = NULL;
+};
+
+class AssociatedItemListNode{
+public:
+    int id;
+    list<AssociatedItemNode*>* items = NULL;
+
+    AssociatedItemListNode(AssociatedItemNode* item);
+    static void Append(AssociatedItemListNode* list, AssociatedItemNode* item);
+};
+
+class ImplStmtNode{
+public:
+    enum Type{
+        inherent, trait
+    };
+    int id;
+    Type impl_type;
+    string* name;
+    TypeNode* type = NULL;
+    AssociatedItemListNode* items = NULL;
+};
 
