@@ -324,14 +324,14 @@ ExprList: ExprWithBlock
         | ExprList ',' ExprWithBlock
         | ExprList ',' ExprWithoutBlock
 
-ExprWithoutBlock: CHAR_LITERAL // Литералы
-                | STRING_LITERAL
-                | RAW_STRING_LITERAL
-                | INT_LITERAL
-                | FLOAT_LITERAL
-                | TRUE
-                | FALSE
-                | ExprWithoutBlock '+' ExprWithoutBlock // Мат операции
+ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode(char_lit, $1); }
+                | STRING_LITERAL { $$ = ExprNode(string_lit, $1); }
+                | RAW_STRING_LITERAL { $$ = ExprNode(raw_string_lit, $1); }
+                | INT_LITERAL { $$ = ExprNode(int_lit, $1); }
+                | FLOAT_LITERAL { $$ = ExprNode(float_lit, $1); }
+                | TRUE { $$ = ExprNode(bool_lit, $1); }
+                | FALSE { $$ = ExprNode(bool_lit, $1); }
+                | ExprWithoutBlock '+' ExprWithoutBlock
                 | ExprWithoutBlock '+' ExprWithBlock
                 | ExprWithBlock '+' ExprWithoutBlock
                 | ExprWithBlock '+' ExprWithBlock
