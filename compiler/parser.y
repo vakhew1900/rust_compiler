@@ -426,7 +426,7 @@ ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode::ExprFromCharLiteral(ExprNode::ch
                 | RETURN ExprWithoutBlock { $$ = ExprNode::OperatorExpr(ExprNode::return_expr, $2, 0); }
                 | RETURN ExprWithBlock { $$ = ExprNode::OperatorExpr(ExprNode::return_expr, $2, 0); }
                 | ExprWithoutBlock '.' ID { $$ = ExprNode::CallAccessExpr(ExprNode::field_access_expr, $3, $1, 0); }
-                | ExprWithBlock '.' ID { $$ =  ExprNode::CallAccessExprExprNode::field_access_expr, $3, $1, 0); }
+                | ExprWithBlock '.' ID { $$ =  ExprNode::CallAccessExpr(ExprNode::field_access_expr, $3, $1, 0); }
                 | ExprWithoutBlock '.' ID '(' ExprListEmpty ')' { $$ =  ExprNode::CallAccessExpr(ExprNode::method_expr, $3, $1, $5); }
                 | ExprWithBlock '.' ID '(' ExprListEmpty ')' { $$ =  ExprNode::CallAccessExpr(ExprNode::method_expr, $3, $1, $5); }
                 | PathCallExpr { $$ = $1 }
@@ -437,9 +437,9 @@ ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode::ExprFromCharLiteral(ExprNode::ch
                 ;
 
 
-PathCallExpr: ID { $$ =  ExprNode::CallAccessExpr(id_, $1, 0, 0); }
-            | SUPER { $$ =  ExprNode::CallAccessExpr(ExprNode::super_expr, "super", 0, 0); }
-            | SELF { $$ =  ExprNode::CallAccessExpr(ExprNode::self_expr, "self", 0, 0); }
+PathCallExpr: ID { $$ =  ExprNode::CallAccessExpr(ExprNode::id_, $1, 0, 0); }
+            | SUPER { $$ =  ExprNode::CallAccessExpr(ExprNode::super_expr, new string("super"), 0, 0); }
+            | SELF { $$ =  ExprNode::CallAccessExpr(ExprNode::self_expr, new string("self"), 0, 0); }
             | PathCallExpr DOUBLEDOTS ID { $$ = ExprNode::PathCallExpr(ExprNode::path_call_expr, $3, $1); }
             ;
 
