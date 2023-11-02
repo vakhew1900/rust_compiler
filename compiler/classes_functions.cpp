@@ -419,6 +419,17 @@ ItemNode* ItemNode::DeclarationEnum(Visibility visibility, EnumStmtNode* node){
     return new_node;
 }
 
+ItemNode* ItemNode::DeclarationConst(Visibility visibility, ConstStmtNode* node){
+    ItemNode* new_node = new ItemNode();
+    new_node->id = ++globId;
+
+    new_node->type=constStmt_;
+    new_node->visibility = visibility;
+    new_node->const_stmt_item = node;
+    return new_node;
+}
+
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 

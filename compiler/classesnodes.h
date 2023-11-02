@@ -211,6 +211,7 @@ public:
     ModuleStmtNode* module_item;
 
     static ItemNode* DeclarationEnum(Visibility visibility, EnumStmtNode* node);
+    static ItemNode* DeclarationConst(Visibility visibility, ConstStmtNode* node);
 
     string* toDot();
     string* toXml();
