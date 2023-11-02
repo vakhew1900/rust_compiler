@@ -494,6 +494,12 @@ ItemNode* ItemNode::DeclarationModule(Visibility visibility, ModuleStmtNode* nod
     return new_node;
 }
 
+ItemNode::ItemNode(Visibility visibility, ItemNode* node){
+    this->id = ++globId;
+    this->item_node = node;
+    this->item_node->visibility = visibility;
+}
+
 // ItemListNode
 ItemListNode::ItemListNode(ItemNode *item){
     this->id = ++globId;

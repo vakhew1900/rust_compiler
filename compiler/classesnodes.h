@@ -210,6 +210,7 @@ public:
     TraitNode* trait_item;
     ConstStmtNode* const_stmt_item;
     ModuleStmtNode* module_item;
+    ItemNode* item_node;
 
     static ItemNode* DeclarationEnum(Visibility visibility, EnumStmtNode* node);
     static ItemNode* DeclarationFunction(Visibility visibility, FuncStmtNode* node);
@@ -218,6 +219,8 @@ public:
     static ItemNode* DeclarationImpl(Visibility visibility, ImplStmtNode* node);
     static ItemNode* DeclarationModule(Visibility visibility, ModuleStmtNode* node);
     static ItemNode* DeclarationTrait(Visibility visibility, TraitNode* node);
+    ItemNode(Visibility visibility, ItemNode* node);
+    ItemNode();
 
    void toDot(string &dot);
    void toXml(string &xml);
