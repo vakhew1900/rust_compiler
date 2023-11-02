@@ -227,6 +227,18 @@ void ExprListNode::Append(ExprListNode *list, ExprNode *expr) {
     list->exprs->push_back(expr);
 }
 
+// STATEMENT FUNCTIONS
+// ConstStmt
+ConstStmtNode* ConstStmtNode::ConstStmt(string* name, TypeNode* type, ExprNode* expr){
+    ConstStmtNode* new_node = new ConstStmtNode();
+    new_node->id = ++globId;
+    new_node->type = type;
+    new_node->name = name;
+    new_node->expr = expr;
+    return new_node;
+}
+
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 

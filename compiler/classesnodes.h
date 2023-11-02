@@ -367,6 +367,7 @@ public:
     TypeNode* type = NULL;
     ExprNode* expr = NULL;
 
+    static ConstStmtNode* ConstStmt(string* name, TypeNode* type, ExprNode* expr);
 
     string* toDot();
     string* toXml();
