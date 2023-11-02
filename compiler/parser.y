@@ -208,17 +208,17 @@ StructStruct : STRUCT ID '{' StructFieldListEmpty '}' { $$ = new StructStructNod
              | STRUCT ID ';' { $$ = new StructStructNode($2, 0); }
              ;
 
-StructFieldListEmpty: /* empty */
-                    | StructFieldList
-                    | StructFieldList ','
+StructFieldListEmpty: /* empty */ { $$ = new StructFieldListNode(0); }
+                    | StructFieldList { $$ = new StructFieldListNode($1); }
+                    | StructFieldList ',' { $$ = new StructFieldListNode($1); }
                     ;
 
-StructFieldList: StructField
-               | StructFieldList ',' StructField
+StructFieldList: StructField { $$ = new StructFieldListNode($1); }
+               | StructFieldList ',' StructField { $$ = StructFieldListNode::Append($1, $3); }
                ;
 
-StructField: ID ':' Type
-           | Visibility ID ':' Type
+StructField: ID ':' Type { $$ = StructFieldNode($1, $3, self); }
+           | Visibility ID ':' Type { $$ = StructFieldNode($2, $4, $1); }
            ;
 
 /*--- TupleStruct ----*/
