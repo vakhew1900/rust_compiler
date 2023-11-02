@@ -380,6 +380,7 @@ public:
     FuncStmtNode* fn = NULL;
     ConstStmtNode* const_stmt = NULL;
 
+    AssociatedItemNode(Visibility vis, FuncStmtNode* fn, ConstStmtNode* const_stmt);
 
     string* toDot();
     string* toXml();

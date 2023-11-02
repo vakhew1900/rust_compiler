@@ -245,6 +245,14 @@ TraitNode::TraitNode(string* name, AssociatedItemListNode* items){
     this->items=items;
 }
 
+// AssociatedItemNode
+AssociatedItemNode::AssociatedItemNode(Visibility vis, FuncStmtNode* fn, ConstStmtNode* const_stmt){
+    this->id = ++globId;
+    this->visibility = vis;
+    this->fn = fn;
+    this->const_stmt = const_stmt;
+}
+
 // --- toDot, toXml функции ---
 string* ProgramNode::toDot(){
 
