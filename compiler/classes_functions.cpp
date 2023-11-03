@@ -929,10 +929,43 @@ void StmtNode::toDot(string &dot){
 
 void StmtListNode::toDot(string &dot, const string &type){
 
+    createVertexDot(dot, this->id, "stmt_list", type);
+
+    for(auto elem : *this->stmts)
+    {
+        int exprNum = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot);
+    }
 }
 
 void LetStmtNode::toDot(string &dot){
 
+    string name = "noMut";
+    string type = "";
+    string value = "";
+
+    if(this->name != NULL)
+    {
+        value = *this->name;
+    }
+
+    if(this->let_type == mut)
+    {
+        name = "mut";
+    }
+
+    createVertexDot(dot, this->id, "stmt_list", type, value);
+
+    if(this->expr != NULL){
+        connectVerticesDots(dot, this->id, this->expr->id);
+        this->expr->toDot(dot);
+    }
+
+    if(this->type != NULL){
+        connectVerticesDots(dot, this->id, this->type->id);
+        this->type->toDot(dot);
+    }
 }
 
 void ItemNode::toDot(string &dot){
