@@ -619,31 +619,266 @@ void TypeNode::toDot(string &dot){
             }
 
             break;
-
     }
 }
 
-void ProgramNode::toXml(string &xml){
+void ExprNode::toDot(string &dot, const string &type){
 
+
+    string name = "";
+    string value = "";
+
+    switch (this->type) {
+        case int_lit:
+            name = "int_lit";
+            value = to_string(this->Int);
+            break;
+
+        case float_lit:
+            name = "float_lit";
+            value = to_string(this->Float);
+            break;
+
+        case char_lit:
+            name = "char_lit";
+            value = to_string(this->Char);
+            break;
+
+        case string_lit:
+            name = "string_lit";
+            value = *(this->String);
+            break;
+
+        case raw_string_lit:
+            name = "raw_string_lit";
+            value = *(this->RawString);
+            break;
+
+        case bool_lit:
+            name = "bool_lit";
+            value = to_string(this->Bool);
+            break;
+
+        case plus:
+            name = "plus";
+            break;
+
+        case minus:
+            name = "minus";
+            break;
+
+        case mul_expr:
+            name = "mul_expr";
+            break;
+
+        case div_expr:
+            name = "div_expr";
+            break;
+
+        case mod:
+            name = "mod";
+            break;
+
+        case or_:
+            name = "or";
+            break;
+
+        case and_:
+            name = "and";
+            break;
+
+        case asign:
+            name = "asign";
+            break;
+
+        case equal:
+            name = "equal";
+            break;
+
+        case not_equal:
+            name = "not_equal";
+            break;
+
+        case greater:
+            name = "greater";
+            break;
+
+        case less:
+            name = "less";
+            break;
+
+        case greater_equal:
+            name = "greater_equal";
+            break;
+
+        case less_equal:
+            name = "less_equal";
+            break;
+
+        case uminus:
+            name = "uminus";
+            break;
+
+        case negotation:
+            name = "negotation";
+            break;
+
+        case question:
+            name = "question";
+            break;
+
+        case ustar:
+            name = "ustar";
+            break;
+
+        case link:
+            name = "link";
+            break;
+
+        case array_expr:
+            name = "array_expr";
+            break;
+
+        case array_expr_auto_fill:
+            name = "array_expr_auto_fill";
+            break;
+
+        case index_expr:
+            name = "index_expr";
+            break;
+
+        case field_access_expr:
+            name = "field_access_expr";
+            break;
+
+        case call_expr:
+            name = "call_expr";
+            break;
+
+        case method_expr:
+            name = "method_expr";
+            break;
+
+        case continue_expr:
+            name = "continue_expr";
+            break;
+
+        case break_expr:
+            name = "break_expr";
+            break;
+
+        case range_right:
+            name = "range_right";
+            break;
+
+        case range_left:
+            name = "range_left";
+            break;
+
+        case return_expr:
+            name = "return_expr";
+            break;
+
+        case id_:
+            name = "id_";
+            value = *(this->Name);
+            break;
+
+        case self_expr:
+            name = "self_expr";
+            break;
+
+        case if_expr:
+            name = "self_expr";
+            break;
+
+        case loop_expr:
+            name = "loop_expr";
+            break;
+
+        case loop_while:
+            name = "loop_while";
+            break;
+
+        case block_expr:
+            name = "block_expr";
+            break;
+
+        case struct_expr:
+            name = "struct_expr";
+            break;
+
+        case struct_field_expr:
+            name = "struct_field_expr";
+            break;
+
+        case static_method:
+            name = "static_method";
+            break;
+
+        case tuple_expr:
+            name = "tuple_expr";
+            break;
+
+        case super_expr:
+            name = "super_expr";
+            break;
+
+        case path_call_expr:
+            name = "path_call_expr";
+            break;
+    }
+
+    createVertexDot(dot, this->id, name, type, value);
+
+    if(this->expr_left != NULL){
+        connectVerticesDots(dot, this->id, this->expr_left->id);
+        this->expr_left->toDot(dot, "expr_left");
+    }
+
+    if(this->expr_right != NULL){
+        connectVerticesDots(dot, this->id, this->expr_right->id);
+        this->expr_right->toDot(dot, "expr_right");
+    }
+
+    if(this->expr_list != NULL){
+        connectVerticesDots(dot, this->id, this->expr_list->id);
+        this->expr_list->toDot(dot);
+    }
+
+    if(this->body != NULL){
+        connectVerticesDots(dot, this->id, this->body->id);
+        this->body->toDot(dot, "body");
+    }
+
+    if(this->field_list != NULL){
+        connectVerticesDots(dot, this->id, this->field_list->id);
+        this->field_list->toDot(dot, "field_list");
+    }
+
+    if(this->stmt_list != NULL){
+        connectVerticesDots(dot, this->id, this->stmt_list->id);
+        this->stmt_list->toDot(dot);
+    }
+
+    if(!(this->ifList->empty())){
+
+        int ifCount = 1;
+
+        for(auto elem : *this->ifList)
+        {
+            connectVerticesDots(dot, this->id, elem->id);
+            elem->toDot(dot, "condition" + to_string(ifCount++));
+        }
+    }
+
+    if(this->else_body != NULL){
+        connectVerticesDots(dot, this->id, this->else_body->id);
+        this->else_body->toDot(dot, "else_body");
+    }
 }
 
-void TypeNode::toXml(string &xml){
-
-}
-
-void ExprNode::toDot(string &dot){
-
-}
-
-void ExprNode::toXml(string &xml){
-
-}
-
-void ExprListNode::toDot(string &dot){
-
-}
-
-void ExprListNode::toXml(string &xml){
+void ExprListNode::toDot(string &dot, const string &type){
 
 }
 
@@ -651,15 +886,7 @@ void StmtNode::toDot(string &dot){
 
 }
 
-void StmtNode::toXml(string &xml){
-
-}
-
-void StmtListNode::toDot(string &dot){
-
-}
-
-void StmtListNode::toXml(string &xml){
+void StmtListNode::toDot(string &dot, const string &type){
 
 }
 
@@ -667,15 +894,7 @@ void LetStmtNode::toDot(string &dot){
 
 }
 
-void LetStmtNode::toXml(string &xml){
-
-}
-
 void ItemNode::toDot(string &dot){
-
-}
-
-void ItemNode::toXml(string &xml){
 
 }
 
@@ -683,15 +902,7 @@ void ItemListNode::toDot(string &dot){
 
 }
 
-void ItemListNode::toXml(string &xml){
-
-}
-
 void ModuleStmtNode::toDot(string &dot){
-
-}
-
-void ModuleStmtNode::toXml(string &xml){
 
 }
 
@@ -699,27 +910,7 @@ void StructStructNode::toDot(string &dot){
 
 }
 
-void StructStructNode::toXml(string &xml){
-
-}
-
 void StructFieldNode::toDot(string &dot){
-
-}
-
-void StructFieldNode::toXml(string &xml){
-
-}
-
-void StructFieldListNode::toDot(string &dot){
-
-}
-
-void StructFieldListNode::toXml(string &xml){
-
-}
-
-void EnumStmtNode::toXml(string &xml){
 
 }
 
@@ -727,23 +918,15 @@ void EnumStmtNode::toDot(string &dot){
 
 }
 
-void EnumItemNode::toXml(string &xml){
-
-}
-
 void EnumItemNode::toDot(string &dot){
 
 }
 
-void EnumItemListNode::toXml(string &xml){
+void StructFieldListNode::toDot(string &dot){
 
 }
 
 void EnumItemListNode::toDot(string &dot){
-
-}
-
-void FuncStmtNode::toXml(string &xml){
 
 }
 
@@ -755,11 +938,99 @@ void FuncParamNode::toDot(string &dot){
 
 }
 
-void FuncParamNode::toXml(string &xml){
+void ConstStmtNode::toDot(string &dot){
+
+}
+
+void AssociatedItemNode::toDot(string &dot){
+
+}
+
+void ImplStmtNode::toDot(string &dot){
 
 }
 
 void FuncParamListNode::toDot(string &dot){
+
+}
+
+void AssociatedItemListNode::toDot(string &dot){
+
+}
+
+void TraitNode::toDot(string &dot){
+
+}
+
+void ProgramNode::toXml(string &xml){
+
+}
+
+void TypeNode::toXml(string &xml){
+
+}
+
+void ExprNode::toXml(string &xml){
+
+}
+
+void ExprListNode::toXml(string &xml){
+
+}
+
+void StmtNode::toXml(string &xml){
+
+}
+
+void StmtListNode::toXml(string &xml){
+
+}
+
+void LetStmtNode::toXml(string &xml){
+
+}
+
+void ItemNode::toXml(string &xml){
+
+}
+
+void ItemListNode::toXml(string &xml){
+
+}
+
+void ModuleStmtNode::toXml(string &xml){
+
+}
+
+void StructStructNode::toXml(string &xml){
+
+}
+
+void StructFieldNode::toXml(string &xml){
+
+}
+
+void StructFieldListNode::toXml(string &xml){
+
+}
+
+void EnumStmtNode::toXml(string &xml){
+
+}
+
+void EnumItemNode::toXml(string &xml){
+
+}
+
+void EnumItemListNode::toXml(string &xml){
+
+}
+
+void FuncStmtNode::toXml(string &xml){
+
+}
+
+void FuncParamNode::toXml(string &xml){
 
 }
 
@@ -771,19 +1042,7 @@ void ConstStmtNode::toXml(string &xml){
 
 }
 
-void ConstStmtNode::toDot(string &dot){
-
-}
-
-void AssociatedItemNode::toDot(string &dot){
-
-}
-
 void AssociatedItemNode::toXml(string &xml){
-
-}
-
-void TraitNode::toDot(string &dot){
 
 }
 
@@ -791,15 +1050,7 @@ void TraitNode::toXml(string &xml){
 
 }
 
-void AssociatedItemListNode::toDot(string &dot){
-
-}
-
 void AssociatedItemListNode::toXml(string &xml){
-
-}
-
-void ImplStmtNode::toDot(string &dot){
 
 }
 
@@ -823,7 +1074,7 @@ void createVertexDot(string &s, int id, string name, string type, string value) 
         value = "value=" + value;
     }
 
-    string tmp = to_string(id) + to_string(id) +
+    string tmp = "id" + to_string(id) +
                 " [label=\"" + name + type + value + "id="+ to_string(id) + "\"]";
 
     s += tmp;
