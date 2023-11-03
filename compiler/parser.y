@@ -45,6 +45,13 @@
 %type <expr>ExprWithoutBlock
 %type <expr>ExprWithBlock
 %type <expr>BlockExpr
+%type <expr>IfExpr
+%type <expr>SimpleIfElseExpr
+%type <expr>SimpleIfExpr
+%type <expr>InfiniteLoopExpr
+%type <expr>LoopExpr
+%type <expr>PredicateLoopExpr
+%type <expr>IteratorLoopExpr
 %type <expr>PathCallExpr
 %type <expr>StructExprField
 %type <expr_list>ExprList
@@ -455,7 +462,7 @@ StructExprFieldListEmpty: /*empty*/ { $$ = 0; }
                         ;
 
 StructExprFieldList: ',' StructExprField { $$ = new ExprListNode($2); }
-                    | StructExprFieldList ',' StructExprField { $$ = ExprListNode::Append($1, $2); }
+                    | StructExprFieldList ',' StructExprField { $$ = ExprListNode::Append($1, $3); }
                     ;
 StructExprField: /*empty*/ { $$ = 0; }
                | ID ':' ExprWithoutBlock  { $$ = ExprNode::ExprFromStructField(ExprNode::struct_field_expr, $1, $3); }
