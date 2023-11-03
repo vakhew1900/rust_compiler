@@ -113,7 +113,7 @@ public:
     static ExprNode* RangeExpr(Type type, ExprNode* left, ExprNode* right);
     static ExprNode* IfExpr(Type type, ExprNode* condition, ExprNode* body, ExprNode* else_body);
     static ExprNode* CycleExpr(Type type, ExprNode* condition, ExprNode* body, string* id);
-    static ExprNode* BlockExpr(Type type, ExprListNode* expr_list, StmtListNode* stmt_list);
+    static ExprNode* BlockExpr(Type type, ExprNode* body, StmtListNode* stmt_list);
     static ExprNode* StructExpr(Type type, string* name, ExprListNode* expr_list);
 
     static ExprNode* ExprFromStructField(Type type, string* name, ExprNode* expr);

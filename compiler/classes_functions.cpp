@@ -121,11 +121,11 @@ ExprNode* ExprNode::StaticMethodExpr(Type type, string* name, string* parent_id,
     return new_node;
 }
 
-ExprNode* ExprNode::BlockExpr(Type type, ExprListNode* expr_list, StmtListNode* stmt_list){
+ExprNode* ExprNode::BlockExpr(Type type, ExprNode* body, StmtListNode* stmt_list){
     ExprNode* new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
-    new_node->expr_list = expr_list;
+    new_node->body = body;
     new_node->stmt_list = stmt_list;
     return new_node;
 }
