@@ -231,6 +231,7 @@ public:
    void toXml(string &xml);
 };
 
+
 class ItemListNode
 {
 public:

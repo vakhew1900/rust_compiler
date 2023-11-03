@@ -880,10 +880,51 @@ void ExprNode::toDot(string &dot, const string &type){
 
 void ExprListNode::toDot(string &dot, const string &type){
 
+    createVertexDot(dot, this->id, "expr_list", type);
+
+    for(auto elem : *this->exprs)
+    {
+        int exprNum = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot, "condition" + to_string(exprNum++));
+    }
 }
 
 void StmtNode::toDot(string &dot){
 
+    string name = "";
+    string type = "";
+
+    switch (this->type) {
+
+        case semicolon:
+            name = "semilicon";
+            break;
+
+        case expression:
+            name = "expression";
+            break;
+
+        case exprstmt:
+            name = "exprstmt";
+            break;
+
+        case let:
+            name = "let";
+            break;
+    }
+
+    createVertexDot(dot, this->id, name, type);
+
+    if(this->expr != NULL){
+        connectVerticesDots(dot, this->id, this->expr->id);
+        this->expr->toDot(dot, "expr");
+    }
+
+    if(this->let_stmt != NULL){
+        connectVerticesDots(dot, this->id, this->let_stmt->id);
+        this->let_stmt->toDot(dot);
+    }
 }
 
 void StmtListNode::toDot(string &dot, const string &type){
