@@ -1003,7 +1003,13 @@ void ItemNode::toDot(string &dot){
             break;
     }
 
-    createVertexDot(dot, this->id, "name");
+    string visibility = "";
+    if(this->visibility == pub)
+    {
+        visibility = "pub";
+    }
+
+    createVertexDot(dot, this->id, name, "", "", visibility);
 
     if(this->function_item != NULL){
         connectVerticesDots(dot, this->id, this->function_item->id);
@@ -1051,6 +1057,14 @@ void ItemNode::toDot(string &dot){
 
 void ItemListNode::toDot(string &dot){
 
+    createVertexDot(dot, this->id, "item_list");
+
+    for(auto elem : *this->items)
+    {
+        int exprNum = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot);
+    }
 }
 
 void ModuleStmtNode::toDot(string &dot){
@@ -1215,7 +1229,7 @@ void connectVerticesDots(int parentId, int childId, string &s) {
     s += tmp;
 }
 
-void createVertexDot(string &s, int id, string name, string type, string value) {
+void createVertexDot(string &s, int id, string name, string type, string value, string visibility) {
 
     if(!type.empty()){
         type = "type=" + type;
@@ -1225,8 +1239,12 @@ void createVertexDot(string &s, int id, string name, string type, string value) 
         value = "value=" + value;
     }
 
+    if(!visibility.empty()){
+        visibility = "visibility=" + value;
+    }
+
     string tmp = "id" + to_string(id) +
-                " [label=\"" + name + type + value + "id="+ to_string(id) + "\"]";
+                " [label=\"" + name + type + value + visibility + "id="+ to_string(id) + "\"]";
 
     s += tmp;
 }
