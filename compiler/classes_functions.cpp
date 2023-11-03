@@ -955,7 +955,7 @@ void LetStmtNode::toDot(string &dot){
         name = "mut";
     }
 
-    createVertexDot(dot, this->id, "stmt_list", type, value);
+    createVertexDot(dot, this->id, name + "let_stmt" , type, value);
 
     if(this->expr != NULL){
         connectVerticesDots(dot, this->id, this->expr->id);
@@ -970,6 +970,83 @@ void LetStmtNode::toDot(string &dot){
 
 void ItemNode::toDot(string &dot){
 
+    string name = "";
+    switch (this->type) {
+        case enum_:
+            name = "enum_";
+            break;
+
+        case function_:
+            name = "function_";
+            break;
+
+
+        case constStmt_:
+            name = "constStmt_";
+            break;
+
+
+        case struct_:
+            name = "struct_";
+            break;
+
+        case trait_:
+            name = "trait_";
+            break;
+
+        case impl_:
+            name = "impl_";
+            break;
+
+        case module_:
+            name = "module_";
+            break;
+    }
+
+    createVertexDot(dot, this->id, "name");
+
+    if(this->function_item != NULL){
+        connectVerticesDots(dot, this->id, this->function_item->id);
+        this->function_item->toDot(dot);
+    }
+
+    if(this->struct_item != NULL){
+        connectVerticesDots(dot, this->id, this->struct_item->id);
+        this->struct_item->toDot(dot);
+    }
+
+    if(this->enum_item != NULL){
+        connectVerticesDots(dot, this->id, this->enum_item->id);
+        this->enum_item->toDot(dot);
+    }
+
+    if(this->impl_item != NULL){
+        connectVerticesDots(dot, this->id, this->impl_item->id);
+        this->impl_item->toDot(dot);
+    }
+
+    if(this->trait_item != NULL){
+        connectVerticesDots(dot, this->id, this->trait_item->id);
+        this->trait_item->toDot(dot);
+    }
+
+
+    if(this->const_stmt_item != NULL){
+        connectVerticesDots(dot, this->id, this->const_stmt_item->id);
+        this->const_stmt_item->toDot(dot);
+    }
+
+
+    if(this->module_item != NULL){
+        connectVerticesDots(dot, this->id, this->module_item->id);
+        this->module_item->toDot(dot);
+    }
+
+
+    if(this->item_node != NULL){
+        connectVerticesDots(dot, this->id, this->item_node->id);
+        this->item_node->toDot(dot);
+    }
 }
 
 void ItemListNode::toDot(string &dot){
