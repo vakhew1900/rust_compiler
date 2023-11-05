@@ -23,9 +23,9 @@ impl Rectangle {
 fn main() {
     let rectangle1 = Rectangle::new(5.0, 3.0);
 
-    println!("Прямоугольник 1:");
-    println!("Ширина: {}", rectangle1.width);
-    println!("Высота: {}", rectangle1.height);
-    println!("Площадь: {}", rectangle1.area());
-    println!("Периметр: {}", rectangle1.perimeter());
+    println("Прямоугольник 1:");
+    println("Ширина: {}", rectangle1.width);
+    println("Высота: {}", rectangle1.height);
+    println("Площадь: {}", rectangle1.area());
+    println("Периметр: {}", rectangle1.perimeter());
 }

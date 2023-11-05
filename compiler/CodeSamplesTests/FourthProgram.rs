@@ -14,9 +14,9 @@ fn main() {
     let mut current = 1;
     while current <= number {
         if current.is_even() {
-            println!("Число {} - четное.", current);
+            println("Число {} - четное.", current);
         } else {
-            println!("Число {} - нечетное.", current);
+            println("Число {} - нечетное.", current);
         }
         current += 1;
     }
@@ -26,7 +26,7 @@ fn main() {
         if counter > number {
             break;
         }
-        println!("Counter: {}", counter);
+        println("Counter: {}", counter);
         counter += 1;
     }
 }
