@@ -126,7 +126,7 @@ public:
     static ExprNode* AddIfBlock(ExprNode* ifExpr, ExprNode* someIfExpr);
     static ExprNode* AddElseBlock(ExprNode* ifExpr, ExprNode* else_body);
 
-    void toDot(string &dot, const string &type = "");
+    void toDot(string &dot, const string &pos = "");
     void toXml(string &xml);
 
 };
@@ -456,4 +456,4 @@ public:
 };
 
 void connectVerticesDots(string &s, int parentId, int childId);
-void createVertexDot(string &s, int id, string name="", string type="", string value = "", string visibility = "");
+void createVertexDot(string &s, int id, string name="", string type="", string value = "", string visibility = "", string pos = "");

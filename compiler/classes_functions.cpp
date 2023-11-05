@@ -572,7 +572,7 @@ void ProgramNode::toDot(string &dot){
 
     for(auto item : *this->item_list->items)
     {
-        createVertexDot(dot, this->id, "program");
+        createVertexDot(dot, this->id, "", "program");
         item->toDot(dot);
         connectVerticesDots(dot, this->id, this->item_list->id);
     }
@@ -585,31 +585,31 @@ void TypeNode::toDot(string &dot){
 
     switch (this->type) {
         case TypeNode::emptyType_:
-            createVertexDot(dot, this->id,"", "", "empty_type");
+            createVertexDot(dot, this->id,"", "empty_type", "");
             break;
 
         case TypeNode:: int_:
-            createVertexDot(dot, this->id,"", "", "int_type");
+            createVertexDot(dot, this->id,"", "int_type", "");
             break;
 
         case TypeNode:: char_:
-            createVertexDot(dot, this->id,"", "", "char_type");
+            createVertexDot(dot, this->id,"literal", "char_type", "");
             break;
 
         case TypeNode::string_:
-            createVertexDot(dot, this->id,"", "", "string_type");
+            createVertexDot(dot, this->id,"", "string_type", "");
             break;
 
         case TypeNode::float_:
-            createVertexDot(dot, this->id,"", "", "float_type");
+            createVertexDot(dot, this->id,"", "float_type", "");
             break;
 
         case TypeNode:: id_:
-            createVertexDot(dot, this->id,"", "", "id_type");
+            createVertexDot(dot, this->id,"", "id_type", "");
             break;
 
         case TypeNode:: array_:
-            createVertexDot(dot, this->id,"", "", "array_type");
+            createVertexDot(dot, this->id,"", "array_type", "array_type");
             this->typeArr->toDot(dot);
             connectVerticesDots(dot, this->id, this->typeArr->id);
 
@@ -622,214 +622,214 @@ void TypeNode::toDot(string &dot){
     }
 }
 
-void ExprNode::toDot(string &dot, const string &type){
+void ExprNode::toDot(string &dot, const string &pos){
 
 
-    string name = "";
+    string type = "";
     string value = "";
 
     switch (this->type) {
         case int_lit:
-            name = "int_lit";
+            type = "int_lit";
             value = to_string(this->Int);
             break;
 
         case float_lit:
-            name = "float_lit";
+            type = "float_lit";
             value = to_string(this->Float);
             break;
 
         case char_lit:
-            name = "char_lit";
+            type = "char_lit";
             value = to_string(this->Char);
             break;
 
         case string_lit:
-            name = "string_lit";
+            type = "string_lit";
             value = *(this->String);
             break;
 
         case raw_string_lit:
-            name = "raw_string_lit";
+            type = "raw_string_lit";
             value = *(this->RawString);
             break;
 
         case bool_lit:
-            name = "bool_lit";
+            type = "bool_lit";
             value = to_string(this->Bool);
             break;
 
         case plus:
-            name = "plus";
+            type = "plus";
             break;
 
         case minus:
-            name = "minus";
+            type = "minus";
             break;
 
         case mul_expr:
-            name = "mul_expr";
+            type = "mul_expr";
             break;
 
         case div_expr:
-            name = "div_expr";
+            type = "div_expr";
             break;
 
         case mod:
-            name = "mod";
+            type = "mod";
             break;
 
         case or_:
-            name = "or";
+            type = "or";
             break;
 
         case and_:
-            name = "and";
+            type = "and";
             break;
 
         case asign:
-            name = "asign";
+            type = "asign";
             break;
 
         case equal:
-            name = "equal";
+            type = "equal";
             break;
 
         case not_equal:
-            name = "not_equal";
+            type = "not_equal";
             break;
 
         case greater:
-            name = "greater";
+            type = "greater";
             break;
 
         case less:
-            name = "less";
+            type = "less";
             break;
 
         case greater_equal:
-            name = "greater_equal";
+            type = "greater_equal";
             break;
 
         case less_equal:
-            name = "less_equal";
+            type = "less_equal";
             break;
 
         case uminus:
-            name = "uminus";
+            type = "uminus";
             break;
 
         case negotation:
-            name = "negotation";
+            type = "negotation";
             break;
 
         case question:
-            name = "question";
+            type = "question";
             break;
 
         case ustar:
-            name = "ustar";
+            type = "ustar";
             break;
 
         case link:
-            name = "link";
+            type = "link";
             break;
 
         case array_expr:
-            name = "array_expr";
+            type = "array_expr";
             break;
 
         case array_expr_auto_fill:
-            name = "array_expr_auto_fill";
+            type = "array_expr_auto_fill";
             break;
 
         case index_expr:
-            name = "index_expr";
+            type = "index_expr";
             break;
 
         case field_access_expr:
-            name = "field_access_expr";
+            type = "field_access_expr";
             break;
 
         case call_expr:
-            name = "call_expr";
+            type = "call_expr";
             break;
 
         case method_expr:
-            name = "method_expr";
+            type = "method_expr";
             break;
 
         case continue_expr:
-            name = "continue_expr";
+            type = "continue_expr";
             break;
 
         case break_expr:
-            name = "break_expr";
+            type = "break_expr";
             break;
 
         case range_right:
-            name = "range_right";
+            type = "range_right";
             break;
 
         case range_left:
-            name = "range_left";
+            type = "range_left";
             break;
 
         case return_expr:
-            name = "return_expr";
+            type = "return_expr";
             break;
 
         case id_:
-            name = "id_";
+            type = "id_";
             value = *(this->Name);
             break;
 
         case self_expr:
-            name = "self_expr";
+            type = "self_expr";
             break;
 
         case if_expr:
-            name = "self_expr";
+            type = "self_expr";
             break;
 
         case loop_expr:
-            name = "loop_expr";
+            type = "loop_expr";
             break;
 
         case loop_while:
-            name = "loop_while";
+            type = "loop_while";
             break;
 
         case block_expr:
-            name = "block_expr";
+            type = "block_expr";
             break;
 
         case struct_expr:
-            name = "struct_expr";
+            type = "struct_expr";
             break;
 
         case struct_field_expr:
-            name = "struct_field_expr";
+            type = "struct_field_expr";
             break;
 
         case static_method:
-            name = "static_method";
+            type = "static_method";
             break;
 
         case tuple_expr:
-            name = "tuple_expr";
+            type = "tuple_expr";
             break;
 
         case super_expr:
-            name = "super_expr";
+            type = "super_expr";
             break;
 
         case path_call_expr:
-            name = "path_call_expr";
+            type = "path_call_expr";
             break;
     }
 
-    createVertexDot(dot, this->id, name, type, value);
+    createVertexDot(dot, this->id, "", type, value, "", pos);
 
     if(this->expr_left != NULL){
         connectVerticesDots(dot, this->id, this->expr_left->id);
@@ -892,29 +892,29 @@ void ExprListNode::toDot(string &dot, const string &type){
 
 void StmtNode::toDot(string &dot){
 
-    string name = "";
+
     string type = "";
 
     switch (this->type) {
 
         case semicolon:
-            name = "semilicon";
+            type = "semilicon";
             break;
 
         case expression:
-            name = "expression";
+            type = "expression";
             break;
 
         case exprstmt:
-            name = "exprstmt";
+            type = "exprstmt";
             break;
 
         case let:
-            name = "let";
+            type = "let";
             break;
     }
 
-    createVertexDot(dot, this->id, name, type);
+    createVertexDot(dot, this->id, "", type);
 
     if(this->expr != NULL){
         connectVerticesDots(dot, this->id, this->expr->id);
@@ -941,8 +941,8 @@ void StmtListNode::toDot(string &dot, const string &type){
 
 void LetStmtNode::toDot(string &dot){
 
-    string name = "noMut";
     string type = "";
+//    string type = "";
     string value = "";
 
     if(this->name != NULL)
@@ -952,10 +952,10 @@ void LetStmtNode::toDot(string &dot){
 
     if(this->let_type == mut)
     {
-        name = "mut";
+        type = "mut_";
     }
 
-    createVertexDot(dot, this->id, name + "let_stmt" , type, value);
+    createVertexDot(dot, this->id, *name,type + "let_stmt" , value);
 
     if(this->expr != NULL){
         connectVerticesDots(dot, this->id, this->expr->id);
@@ -970,36 +970,36 @@ void LetStmtNode::toDot(string &dot){
 
 void ItemNode::toDot(string &dot){
 
-    string name = "";
+    string type = "";
     switch (this->type) {
         case enum_:
-            name = "enum_";
+            type = "enum_";
             break;
 
         case function_:
-            name = "function_";
+            type = "function_";
             break;
 
 
         case constStmt_:
-            name = "constStmt_";
+            type = "constStmt_";
             break;
 
 
         case struct_:
-            name = "struct_";
+            type = "struct_";
             break;
 
         case trait_:
-            name = "trait_";
+            type = "trait_";
             break;
 
         case impl_:
-            name = "impl_";
+            type = "impl_";
             break;
 
         case module_:
-            name = "module_";
+            type = "module_";
             break;
     }
 
@@ -1009,7 +1009,7 @@ void ItemNode::toDot(string &dot){
         visibility = "pub";
     }
 
-    createVertexDot(dot, this->id, name, "", "", visibility);
+    createVertexDot(dot, this->id, "", type, "", visibility);
 
     if(this->function_item != NULL){
         connectVerticesDots(dot, this->id, this->function_item->id);
@@ -1069,9 +1069,32 @@ void ItemListNode::toDot(string &dot){
 
 void ModuleStmtNode::toDot(string &dot){
 
+    string type = "";
+    switch (this->type) {
+        case semicolon:
+            type = "semicolon";
+            break;
+
+        case empty:
+            type = "empty";
+            break;
+
+        case block:
+            type = "block";
+            break;
+    }
+
+    createVertexDot(dot, this->id, *name, type);
+
+    if(this->items != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->items->id);
+        this->items->toDot(dot);
+    }
 }
 
 void StructStructNode::toDot(string &dot){
+
 
 }
 
@@ -1225,11 +1248,11 @@ void ImplStmtNode::toXml(string &xml){
 
 void connectVerticesDots(int parentId, int childId, string &s) {
 
-    string tmp = "id" + to_string(parentId) + " -> " + "id" + to_string(childId) + ";";
+    string tmp = "id" + to_string(parentId) + " -> " + "id" + to_string(childId) + ";\n";
     s += tmp;
 }
 
-void createVertexDot(string &s, int id, string name, string type, string value, string visibility) {
+void createVertexDot(string &s, int id, string name, string type, string value, string visibility, string pos) {
 
     if(!type.empty()){
         type = "type=" + type;
@@ -1240,11 +1263,15 @@ void createVertexDot(string &s, int id, string name, string type, string value, 
     }
 
     if(!visibility.empty()){
-        visibility = "visibility=" + value;
+        visibility = "visibility=" + visibility;
+    }
+    if(!pos.empty())
+    {
+        pos = "position=" + pos;
     }
 
     string tmp = "id" + to_string(id) +
-                " [label=\"" + name + type + value + visibility + "id="+ to_string(id) + "\"]";
+                " [label=\"" + name + type + value + visibility + pos + "id="+ to_string(id) + "\"];\n";
 
     s += tmp;
 }
