@@ -1095,11 +1095,27 @@ void ModuleStmtNode::toDot(string &dot){
 
 void StructStructNode::toDot(string &dot){
 
+    createVertexDot(dot, this->id, *name, "struct_dec");
 
+    if(this->items != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->items->id);
+        this->items->toDot(dot);
+    }
 }
 
 void StructFieldNode::toDot(string &dot){
 
+    string visibility = "";
+    if(this->visibility == pub)
+    {
+        visibility = "pub";
+    }
+
+    createVertexDot(dot, this->id, *name, "struct_field", "", visibility);
+
+    connectVerticesDots(dot, this->id, this->type->id);
+    this->type->toDot(dot);
 }
 
 void EnumStmtNode::toDot(string &dot){
