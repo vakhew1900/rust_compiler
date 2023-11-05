@@ -126,7 +126,7 @@ public:
     static ExprNode* AddIfBlock(ExprNode* ifExpr, ExprNode* someIfExpr);
     static ExprNode* AddElseBlock(ExprNode* ifExpr, ExprNode* else_body);
 
-    void toDot(string &dot);
+    void toDot(string &dot, const string &type = "");
     void toXml(string &xml);
 
 };
@@ -141,7 +141,7 @@ public:
     ExprListNode(ExprListNode* exprs);
     static ExprListNode* Append(ExprListNode* list, ExprNode* expr);
 
-   void toDot(string &dot);
+   void toDot(string &dot, const string &type="expr_list");
    void toXml(string &xml);
 };
 
@@ -176,7 +176,7 @@ public:
     StmtListNode(StmtNode* stmt);
     static StmtListNode* Append(StmtListNode* list, StmtNode* stmt);
 
-   void toDot(string &dot);
+   void toDot(string &dot, const string &type = "stmt_list");
    void toXml(string &xml);
 };
 
@@ -230,6 +230,7 @@ public:
    void toDot(string &dot);
    void toXml(string &xml);
 };
+
 
 class ItemListNode
 {
@@ -455,4 +456,4 @@ public:
 };
 
 void connectVerticesDots(string &s, int parentId, int childId);
-void createVertexDot(string &s, int id, string name="", string type="", string value = "");
+void createVertexDot(string &s, int id, string name="", string type="", string value = "", string visibility = "");
