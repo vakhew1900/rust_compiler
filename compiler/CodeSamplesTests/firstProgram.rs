@@ -8,5 +8,5 @@ fn main() {
 
     let name = name.trim();
 
-    println!("Привет!", name);
+    println!("Привет! {}", name);
 }
