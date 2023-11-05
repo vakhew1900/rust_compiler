@@ -4,6 +4,7 @@
     void yyerror(char const* s);
     extern int yylex(void);
     using namespace std;
+    ProgramNode* global_program;
 %}
 
 %union {
@@ -138,7 +139,7 @@
 
 /* ---------------------- PROGRAM --------------------------- */
 
-Program: ItemListEmpty { $$ = new ProgramNode($1); }
+Program: ItemListEmpty { $$ = global_program = new ProgramNode($1); }
 /* Необходимо уточнить, надо ли как-то обозначить, что Stmt все должны быть Item, иначе программа не заработает */
 
 /* ----------------------------- STATEMENT -----------------------------  */
