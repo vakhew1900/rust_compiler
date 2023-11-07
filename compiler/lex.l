@@ -8,8 +8,8 @@ extern int yyparse();
 
 DIGIT [0-9]
 
-%x CHAR
-%x STRING
+%x CHAR_EL
+%x STRING_EL
 %x ML_COMMENT
 %x SHIELD_STRING
 
@@ -154,16 +154,16 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); return CHAR;}
 
  \/\/[^\n]* { printf("Found COMMENT: %s\n", yytext); }
 
-\" { stdstr = ""; BEGIN(STRING); }
-<STRING>[^\\\"\n]+ { stdstr += yytext; }
-<STRING>\n  { lineNumber++; }
-<STRING>\\n  { stdstr += "\n"; }
-<STRING>\\r  { stdstr += "\r"; }
-<STRING>\\t  { stdstr += "\t"; }
-<STRING>\\0  { stdstr.push_back('\0'); }
-<STRING>\\\\ { stdstr += "\\"; }
-<STRING>\\\" { stdstr += "\""; }
-<STRING>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
+\" { stdstr = ""; BEGIN(STRING_EL); }
+<STRING_EL>[^\\\"\n]+ { stdstr += yytext; }
+<STRING_EL>\n  { lineNumber++; }
+<STRING_EL>\\n  { stdstr += "\n"; }
+<STRING_EL>\\r  { stdstr += "\r"; }
+<STRING_EL>\\t  { stdstr += "\t"; }
+<STRING_EL>\\0  { stdstr.push_back('\0'); }
+<STRING_EL>\\\\ { stdstr += "\\"; }
+<STRING_EL>\\\" { stdstr += "\""; }
+<STRING_EL>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
     int x = strtol(yytext + 3,NULL, 16); 
     if(x <= 127)
     {
@@ -177,14 +177,14 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); return CHAR;}
      printf("CHAR Error in line %d: Unicode is not support\n", lineNumber);
     }
 }
-<STRING>\\x[0-7][a-zA-Z0-9] {
+<STRING_EL>\\x[0-7][a-zA-Z0-9] {
     char string[2];
     convertCharacterCodeToString(yytext, 2, string);
     stdstr += string;
 }
-<STRING>\" { cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL); yylval.string_literal = new string(stdstr); return STRING_LITERAL;}
-<STRING><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
-<STRING>\\ { printf("STRING Error in line %d: slash\n", lineNumber); }
+<STRING_EL>\" { cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL); yylval.string_literal = new string(stdstr); return STRING_LITERAL;}
+<STRING_EL><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
+<STRING_EL>\\ { printf("STRING Error in line %d: slash\n", lineNumber); }
 
 r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING);}
 <SHIELD_STRING>[^\"\n]+ { stdstr += yytext; }
@@ -206,16 +206,16 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 <SHIELD_STRING><<EOF>> { printf("SHIELD_STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 
 
-\' { stdstr = ""; BEGIN(CHAR); }
-<CHAR>[^\\\']+ { stdstr += yytext; }
-<CHAR>\\n { stdstr += "\n"; }
-<CHAR>\\r { stdstr += "\r"; }
-<CHAR>\\t { stdstr += "\t"; }
-<CHAR>\\0 { stdstr.push_back('\0'); }
-<CHAR>\\\\ { stdstr += "\\"; }
-<CHAR>\\\' { stdstr += "\'"; }
-<CHAR>\\\" { stdstr += "\""; }
-<CHAR>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
+\' { stdstr = ""; BEGIN(CHAR_EL); }
+<CHAR_EL>[^\\\']+ { stdstr += yytext; }
+<CHAR_EL>\\n { stdstr += "\n"; }
+<CHAR_EL>\\r { stdstr += "\r"; }
+<CHAR_EL>\\t { stdstr += "\t"; }
+<CHAR_EL>\\0 { stdstr.push_back('\0'); }
+<CHAR_EL>\\\\ { stdstr += "\\"; }
+<CHAR_EL>\\\' { stdstr += "\'"; }
+<CHAR_EL>\\\" { stdstr += "\""; }
+<CHAR_EL>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
     int x = strtol(yytext + 3,NULL, 16);
     if(x <= 127)
     {
@@ -229,12 +229,12 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
      printf("CHAR Error in line %d: Unicode is not support\n", lineNumber);
     }
 }
-<CHAR>\\x[0-7][a-zA-Z0-9] {
+<CHAR_EL>\\x[0-7][a-zA-Z0-9] {
     char string[2];
     convertCharacterCodeToString(yytext, 2, string);
     stdstr += string;
 }
-<CHAR>\' {
+<CHAR_EL>\' {
     if(stdstr.size() == 1) {
         cout << "Found CHAR:  " << stdstr << endl;
         yylval.char_literal = stdstr[0];
@@ -250,8 +250,8 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     }
     BEGIN(INITIAL);
 }
-<CHAR><<EOF>> { printf("CHAR Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
-<CHAR>\\ { printf("CHAR Error in line %d: slash\n", lineNumber); }
+<CHAR_EL><<EOF>> { printf("CHAR Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
+<CHAR_EL>\\ { printf("CHAR Error in line %d: slash\n", lineNumber); }
 
 (([0-9][_0-9]*)|(0b([_0-1])+)|(0o([_0-7])+)|(0x([_0-9a-fA-F])+))[[:space:]]*\.\.[[:space:]]*(([0-9][_0-9]*)|(0b([_0-1])+)|(0o([_0-7])+)|(0x([_0-9a-fA-F])+)) {
 
