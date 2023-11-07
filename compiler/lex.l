@@ -465,6 +465,7 @@ int translateNumberByBase(char *input_string) {
     return result; // не удалось произвести операцию перевода с числом
 }
 
+/*
 int main(int argc, char** argv) {
 
     if (argc != 2) {
@@ -485,6 +486,6 @@ int main(int argc, char** argv) {
     fclose(file);
 
     return 0;
-}
+} */
 
 
