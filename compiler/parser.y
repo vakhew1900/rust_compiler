@@ -538,3 +538,25 @@ void yyerror(char const *s)
 {
     printf("%s\n",s);
 }
+
+int main(int argc, char** argv) {
+
+    if (argc != 2) {
+        printf("Filename is not found");
+        return 1;
+    }
+
+    const char *filename= argv[1];
+
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("File opening error");
+        return 1;
+    }
+
+  /*  yyin = file;
+    yyparser();
+    fclose(file); */
+
+    return 0;
+}
