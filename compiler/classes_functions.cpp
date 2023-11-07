@@ -585,31 +585,31 @@ void TypeNode::toDot(string &dot){
 
     switch (this->type) {
         case TypeNode::emptyType_:
-            createVertexDot(dot, this->id,"", "empty_type", "");
+            createVertexDot(dot, this->id,"empty_type", "", "");
             break;
 
         case TypeNode:: int_:
-            createVertexDot(dot, this->id,"", "int_type", "");
+            createVertexDot(dot, this->id,"int_type", "", "");
             break;
 
         case TypeNode:: char_:
-            createVertexDot(dot, this->id,"literal", "char_type", "");
+            createVertexDot(dot, this->id,"char_type", "", "");
             break;
 
         case TypeNode::string_:
-            createVertexDot(dot, this->id,"", "string_type", "");
+            createVertexDot(dot, this->id,"string_type", "", "");
             break;
 
         case TypeNode::float_:
-            createVertexDot(dot, this->id,"", "float_type", "");
+            createVertexDot(dot, this->id,"float_type", "", "");
             break;
 
         case TypeNode:: id_:
-            createVertexDot(dot, this->id,"", "id_type", "");
+            createVertexDot(dot, this->id,"id_type", "", "");
             break;
 
         case TypeNode:: array_:
-            createVertexDot(dot, this->id,"", "array_type", "array_type");
+            createVertexDot(dot, this->id,"array_type", "", "");
             this->typeArr->toDot(dot);
             connectVerticesDots(dot, this->id, this->typeArr->id);
 
@@ -829,7 +829,7 @@ void ExprNode::toDot(string &dot, const string &pos){
             break;
     }
 
-    createVertexDot(dot, this->id, "", type, value, "", pos);
+    createVertexDot(dot, this->id, "expr", type, value, "", pos);
 
     if(this->expr_left != NULL){
         connectVerticesDots(dot, this->id, this->expr_left->id);
@@ -914,7 +914,7 @@ void StmtNode::toDot(string &dot){
             break;
     }
 
-    createVertexDot(dot, this->id, "", type);
+    createVertexDot(dot, this->id, "stmt", type);
 
     if(this->expr != NULL){
         connectVerticesDots(dot, this->id, this->expr->id);
@@ -941,7 +941,7 @@ void StmtListNode::toDot(string &dot, const string &type){
 
 void LetStmtNode::toDot(string &dot){
 
-    string type = "";
+    string type = "noMut";
 //    string type = "";
     string value = "";
 
@@ -952,10 +952,10 @@ void LetStmtNode::toDot(string &dot){
 
     if(this->let_type == mut)
     {
-        type = "mut_";
+        type = "mut";
     }
 
-    createVertexDot(dot, this->id, *name,type + "let_stmt" , value);
+    createVertexDot(dot, this->id,"let_stmt",type, value);
 
     if(this->expr != NULL){
         connectVerticesDots(dot, this->id, this->expr->id);
@@ -1005,7 +1005,7 @@ void ItemNode::toDot(string &dot){
 
     string visibility = getVisibility(this->visibility);
 
-    createVertexDot(dot, this->id, "", type, "", visibility);
+    createVertexDot(dot, this->id, "item", type, "", visibility);
 
     if(this->function_item != NULL){
         connectVerticesDots(dot, this->id, this->function_item->id);
@@ -1053,7 +1053,7 @@ void ItemNode::toDot(string &dot){
 
 void ItemListNode::toDot(string &dot){
 
-    createVertexDot(dot, this->id, "","item_list");
+    createVertexDot(dot, this->id,"item_list");
 
     for(auto elem : *this->items)
     {
@@ -1080,7 +1080,7 @@ void ModuleStmtNode::toDot(string &dot){
             break;
     }
 
-    createVertexDot(dot, this->id, *name, type);
+    createVertexDot(dot, this->id, "module_stmt", type);
 
     if(this->items != NULL)
     {
@@ -1091,7 +1091,7 @@ void ModuleStmtNode::toDot(string &dot){
 
 void StructStructNode::toDot(string &dot){
 
-    createVertexDot(dot, this->id, *name, "struct_dec");
+    createVertexDot(dot, this->id, "struct_struct", "", *name);
 
     if(this->items != NULL)
     {
@@ -1104,7 +1104,7 @@ void StructFieldNode::toDot(string &dot){
 
     string visibility = getVisibility(this->visibility);
 
-    createVertexDot(dot, this->id, *name, "struct_field", "", visibility);
+    createVertexDot(dot, this->id, "struct_field", "", *name, visibility);
 
     connectVerticesDots(dot, this->id, this->type->id);
     this->type->toDot(dot);
@@ -1112,7 +1112,7 @@ void StructFieldNode::toDot(string &dot){
 
 void StructFieldListNode::toDot(string &dot){
 
-    createVertexDot(dot, this->id, "","struct_field_list");
+    createVertexDot(dot, this->id, "struct_field_list");
 
     for(auto elem : *this->items)
     {
@@ -1124,7 +1124,7 @@ void StructFieldListNode::toDot(string &dot){
 
 void EnumStmtNode::toDot(string &dot){
 
-    createVertexDot(dot, this->id, *this->name,"enum_stmt");
+    createVertexDot(dot, this->id, "enum_stmt","", *name);
 
     if(this->items != NULL)
     {
@@ -1154,7 +1154,7 @@ void EnumItemNode::toDot(string &dot){
 
 void EnumItemListNode::toDot(string &dot){
 
-    createVertexDot(dot, this->id, "","enum_item_list");
+    createVertexDot(dot, this->id, "enum_item_list");
 
     for(auto elem : *this->items)
     {
@@ -1166,7 +1166,7 @@ void EnumItemListNode::toDot(string &dot){
 
 void FuncStmtNode::toDot(string &dot){
 
-    createVertexDot(dot, this->id, *this->name,"func_stmt");
+    createVertexDot(dot, this->id, "func_stmt","", *name);
 
     if(this->returnType != NULL)
     {
@@ -1209,7 +1209,7 @@ void FuncParamNode::toDot(string &dot){
             break;
     }
     
-    createVertexDot(dot, this->id, *this->name,type +"func_param");
+    createVertexDot(dot, this->id, "func_param",type, *name);
 
     if(this->type != NULL)
     {
@@ -1220,7 +1220,7 @@ void FuncParamNode::toDot(string &dot){
 
 void ConstStmtNode::toDot(string &dot){
 
-    createVertexDot(dot, this->id, *this->name,"const_stmt");
+    createVertexDot(dot, this->id, "const_stmt","", *name);
 
     if(this->type != NULL)
     {
