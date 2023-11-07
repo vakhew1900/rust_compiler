@@ -285,7 +285,7 @@ AssociatedItemList: AssociatedItem { $$ = new AssociatedItemListNode($1); }
                   ;
 
 /* Необходима еще проверка для Impl то что FuncStmt является именно реализацией */
-AssociatedItem: FuncStmt { $$ = new AssociatedItemNode(self, $1, 0); }
+AssociatedItem: FuncStmt { $$ = new AssociatedItemNode(self, $1, 0); } // ImplFuncStmt
               | ConstStmt { $$ = new AssociatedItemNode(self, 0, $1); }
               | Visibility FuncStmt { $$ = new AssociatedItemNode($1, $2, 0); }
               | Visibility ConstStmt { $$ = new AssociatedItemNode($1, 0, $2); }

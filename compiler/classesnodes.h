@@ -36,6 +36,7 @@ enum Visibility {
     emptyVisibility, pub, crate, self, super
 };
 
+
 class ProgramNode{
 public:
     int id;
@@ -321,8 +322,8 @@ public:
 
     EnumItemNode(string* name, Visibility visibility, StructFieldListNode* struct_list, ExprNode* expr);
     EnumItemNode();
-   void toDot(string &dot);
-   void toXml(string &xml);
+    void toDot(string &dot);
+    void toXml(string &xml);
 };
 
 class EnumItemListNode{
@@ -457,3 +458,4 @@ public:
 
 void connectVerticesDots(string &s, int parentId, int childId);
 void createVertexDot(string &s, int id, string name="", string type="", string value = "", string visibility = "", string pos = "");
+string getVisibility(Visibility visibility);

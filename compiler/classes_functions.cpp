@@ -1003,11 +1003,7 @@ void ItemNode::toDot(string &dot){
             break;
     }
 
-    string visibility = "";
-    if(this->visibility == pub)
-    {
-        visibility = "pub";
-    }
+    string visibility = getVisibility(this->visibility);
 
     createVertexDot(dot, this->id, "", type, "", visibility);
 
@@ -1057,7 +1053,7 @@ void ItemNode::toDot(string &dot){
 
 void ItemListNode::toDot(string &dot){
 
-    createVertexDot(dot, this->id, "item_list");
+    createVertexDot(dot, this->id, "","item_list");
 
     for(auto elem : *this->items)
     {
@@ -1106,11 +1102,7 @@ void StructStructNode::toDot(string &dot){
 
 void StructFieldNode::toDot(string &dot){
 
-    string visibility = "";
-    if(this->visibility == pub)
-    {
-        visibility = "pub";
-    }
+    string visibility = getVisibility(this->visibility);
 
     createVertexDot(dot, this->id, *name, "struct_field", "", visibility);
 
@@ -1118,52 +1110,207 @@ void StructFieldNode::toDot(string &dot){
     this->type->toDot(dot);
 }
 
+void StructFieldListNode::toDot(string &dot){
+
+    createVertexDot(dot, this->id, "","struct_field_list");
+
+    for(auto elem : *this->items)
+    {
+        int structFieldNum = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot);
+    }
+}
+
 void EnumStmtNode::toDot(string &dot){
+
+    createVertexDot(dot, this->id, *this->name,"enum_stmt");
+
+    if(this->items != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->items->id);
+        this->items->toDot(dot);
+    }
 
 }
 
 void EnumItemNode::toDot(string &dot){
 
-}
+    createVertexDot(dot, this->id, *this->name,"enum_item");
 
-void StructFieldListNode::toDot(string &dot){
+    if(this->expr != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->expr->id);
+        this->expr->toDot(dot);
+    }
+
+    if(this->struct_list != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->struct_list->id);
+        this->struct_list->toDot(dot);
+    }
 
 }
 
 void EnumItemListNode::toDot(string &dot){
 
+    createVertexDot(dot, this->id, "","enum_item_list");
+
+    for(auto elem : *this->items)
+    {
+        int enumItemCnt = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot);
+    }
 }
 
 void FuncStmtNode::toDot(string &dot){
 
+    createVertexDot(dot, this->id, *this->name,"func_stmt");
+
+    if(this->returnType != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->returnType->id);
+        this->returnType->toDot(dot);
+    }
+
+    if(this->body != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->body->id);
+        this->body->toDot(dot);
+    }
+
+    if(this->params != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->params->id);
+        this->body->toDot(dot);
+    }
 }
 
 void FuncParamNode::toDot(string &dot){
 
+    string type = "";
+    switch (this->param_type) {
+
+        case mut:
+            type = "mut_";
+            break;
+
+        case noMut:
+            type = "noMut_";
+            break;
+
+        case mut_ref:
+            type = "mut_ref_";
+            break;
+
+        case link:
+            type = "link_";
+            break;
+    }
+    
+    createVertexDot(dot, this->id, *this->name,type +"func_param");
+
+    if(this->type != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->type->id);
+        this->type->toDot(dot);
+    }
 }
 
 void ConstStmtNode::toDot(string &dot){
 
+    createVertexDot(dot, this->id, *this->name,"const_stmt");
+
+    if(this->type != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->type->id);
+        this->type->toDot(dot);
+    }
+
+    if(this->expr != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->expr->id);
+        this->expr->toDot(dot);
+    }
 }
 
 void AssociatedItemNode::toDot(string &dot){
 
+    createVertexDot(dot, this->id, "assotiated_item", "", "", getVisibility(this->visibility));
+
+    if(this->fn != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->fn->id);
+        this->fn->toDot(dot);
+    }
+
+    if(this->const_stmt != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->const_stmt->id);
+        this->const_stmt->toDot(dot);
+    }
 }
 
 void ImplStmtNode::toDot(string &dot){
 
+    string type = "";
+    switch (this->impl_type) {
+        case trait:
+            type = "trait_";
+            break;
+        case inherent:
+            type = "inherit_";
+            break;
+    }
+
+    createVertexDot(dot, this->id, "impl_stmt", type);
+
+    if(this->type != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->type->id);
+        this->type->toDot(dot);
+    }
+
+    if(this->items != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->items->id);
+        this->items->toDot(dot);
+    }
 }
 
 void FuncParamListNode::toDot(string &dot){
 
+    createVertexDot(dot, this->id, "func_param_list");
+    for(auto elem : *this->items)
+    {
+        int enumItemCnt = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot);
+    }
 }
 
 void AssociatedItemListNode::toDot(string &dot){
 
+    createVertexDot(dot, this->id, "assolation_item_list");
+
+    for(auto elem : *this->items)
+    {
+        int enumItemCnt = 1;
+        connectVerticesDots(dot, this->id, elem->id);
+        elem->toDot(dot);
+    }
 }
 
 void TraitNode::toDot(string &dot){
 
+    createVertexDot(dot, this->id, "train", "", *this->name);
+
+    if(this->items != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->items->id);
+        this->items->toDot(dot);
+    }
 }
 
 void ProgramNode::toXml(string &xml){
@@ -1291,3 +1438,26 @@ void createVertexDot(string &s, int id, string name, string type, string value, 
 
     s += tmp;
 }
+
+string getVisibility(Visibility visibility) {
+
+    string res = "";
+
+    switch (visibility) {
+        case pub:
+            res = "pub";
+            break;
+
+        case self:
+            res = "self";
+            break;
+
+        case super:
+            res = "super";
+            break;
+
+    }
+
+    return res;
+}
+
