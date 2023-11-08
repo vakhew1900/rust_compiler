@@ -507,5 +507,9 @@ int main(int argc, char** argv) {
     yyparse();
     fclose(file);
 
+    string dot;
+    global_program->toDot(dot);
+    std::cout << dot << "\n";
+
     return 0;
 }
