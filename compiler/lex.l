@@ -495,7 +495,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    const char *filename= argv[1];
+    const char *filename = argv[1];
 
     FILE *file = fopen(filename, "r");
     if (file == NULL) {

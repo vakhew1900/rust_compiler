@@ -2838,14 +2838,14 @@ int main(int argc, char** argv) {
 
 int main(int argc, char** argv) {
 
-  /*  if (argc != 2) {
+   if (argc != 2) {
         printf("Filename is not found");
         return 1;
-    }*/
+   }
 
- //   const char *filename= argv[1];
+    const char *filename= argv[1];
    // cout << filename << "\n";
-    const char *filename = "../tests/firstProgram.rs";
+   // const char *filename = "../tests/firstProgram.rs";
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         printf("File opening error");
