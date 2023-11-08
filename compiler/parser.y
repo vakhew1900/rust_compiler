@@ -166,7 +166,7 @@ Item: SimpleItem { $$ = new ItemNode(self, $1);}
      | Visibility SimpleItem { $$ = new ItemNode($1, $2);}
      ;
 
-SimpleItem:  FuncStmt  { $$ = ItemNode::DeclarationFunction(self, $1); }
+SimpleItem: FuncStmt  { $$ = ItemNode::DeclarationFunction(self, $1); }
           | StructStmt { $$ = ItemNode::DeclarationStruct(self, $1); }
           | EnumStmt { $$ = ItemNode::DeclarationEnum(self, $1); }
           | ImplStmt { $$ = ItemNode::DeclarationImpl(self, $1); }

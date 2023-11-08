@@ -7,7 +7,6 @@ int globId = 0;
 ProgramNode::ProgramNode(ItemListNode *item_list) {
     this->id = ++globId;
     this->item_list = item_list;
-    cout << "program_exists" << endl;
 }
 
 TypeNode::TypeNode(Type type) {
@@ -335,7 +334,6 @@ StructFieldListNode* StructFieldListNode::Append(StructFieldListNode *list, Stru
 FuncStmtNode::FuncStmtNode(string* name, TypeNode* returnType, FuncParamListNode* params, ExprNode* body){
     this->id = ++globId;
     this->name = name;
-
     if(returnType == NULL){
         TypeNode* new_type_node = new TypeNode(TypeNode::emptyType_);
         new_type_node->id = ++globId;
@@ -566,7 +564,6 @@ ItemListNode* ItemListNode::Append(ItemListNode *list, ItemNode* item) {
 LetStmtNode::LetStmtNode(string* name, TypeNode* type, Type let_type, ExprNode* expr){
     this->id = ++globId;
     this->name = name;
-
     if(type == NULL){
         TypeNode* new_type_node = new TypeNode(TypeNode::emptyType_);
         new_type_node->id = ++globId;
@@ -611,12 +608,12 @@ void ProgramNode::toDot(string &dot){
 
     dot = "digraph rustProgram {\n";
 
-    for(auto item : *this->item_list->items)
-    {
-        createVertexDot(dot, this->id, "", "program");
-        item->toDot(dot);
-        connectVerticesDots(dot, this->id, this->item_list->id);
-    }
+    createVertexDot(dot, this->id, "program");
+   if(this->item_list != NULL)
+   {
+       connectVerticesDots(dot, this->id, this->item_list->id);
+       this->item_list->toDot(dot);
+   }
 
     dot += "}\n";
 
@@ -664,7 +661,6 @@ void TypeNode::toDot(string &dot){
 }
 
 void ExprNode::toDot(string &dot, const string &pos){
-
 
     string type = "";
     string value = "";
@@ -873,6 +869,10 @@ void ExprNode::toDot(string &dot, const string &pos){
             break;
     }
 
+    if(this->id == 3)
+    {
+        int x;
+    }
     createVertexDot(dot, this->id, "expr", type, value, "", pos);
 
     if(this->expr_left != NULL){
@@ -905,7 +905,7 @@ void ExprNode::toDot(string &dot, const string &pos){
         this->stmt_list->toDot(dot);
     }
 
-    if(!(this->ifList->empty())){
+    if(this->ifList != NULL){
 
         int ifCount = 1;
 
@@ -1098,7 +1098,7 @@ void ItemNode::toDot(string &dot){
 void ItemListNode::toDot(string &dot){
 
     createVertexDot(dot, this->id,"item_list");
-
+    cout << this->id << "\n";
     for(auto elem : *this->items)
     {
         int exprNum = 1;
@@ -1227,7 +1227,7 @@ void FuncStmtNode::toDot(string &dot){
     if(this->params != NULL)
     {
         connectVerticesDots(dot, this->id, this->params->id);
-        this->body->toDot(dot);
+        this->params->toDot(dot);
     }
 }
 
@@ -1458,33 +1458,32 @@ void ImplStmtNode::toXml(string &xml){
 }
 
 void connectVerticesDots(string &s, int parentId, int childId) {
-
     string tmp = "id" + to_string(parentId) + " -> " + "id" + to_string(childId) + ";\n";
     s += tmp;
 }
 
 void createVertexDot(string &s, int id, string name, string type, string value, string visibility, string pos) {
-
     if(!type.empty()){
-        type = "type=" + type;
+        type = "type=" + type + " ";
     }
 
     if(!value.empty()){
-        value = "value=" + value;
+        value = "value=" + value + " ";
     }
 
     if(!visibility.empty()){
-        visibility = "visibility=" + visibility;
+        visibility = "visibility=" + visibility + " ";
     }
     if(!pos.empty())
     {
-        pos = "position=" + pos;
+        pos = "position=" + pos + " ";
     }
 
     string tmp = "id" + to_string(id) +
-                " [label=\"" + name + type + value + visibility + pos + "id="+ to_string(id) + "\"];\n";
+                " [label=\"" + name + " " + type + value + visibility + pos + "id="+ to_string(id) + "\"];\n";
 
     s += tmp;
+
 }
 
 string getVisibility(Visibility visibility) {

@@ -209,14 +209,14 @@ public:
     Type type;
     Visibility visibility;
 
-    FuncStmtNode* function_item;
-    StructStructNode* struct_item;
-    EnumStmtNode* enum_item;
-    ImplStmtNode* impl_item;
-    TraitNode* trait_item;
-    ConstStmtNode* const_stmt_item;
-    ModuleStmtNode* module_item;
-    ItemNode* item_node;
+    FuncStmtNode* function_item = NULL;
+    StructStructNode* struct_item = NULL;
+    EnumStmtNode* enum_item = NULL;
+    ImplStmtNode* impl_item = NULL;
+    TraitNode* trait_item = NULL;
+    ConstStmtNode* const_stmt_item = NULL;
+    ModuleStmtNode* module_item = NULL;
+    ItemNode* item_node = NULL;
 
     static ItemNode* DeclarationEnum(Visibility visibility, EnumStmtNode* node);
     static ItemNode* DeclarationFunction(Visibility visibility, FuncStmtNode* node);
@@ -256,7 +256,7 @@ public:
 
     int id;
     Type type;
-    string* name;
+    string* name = NULL;
     ItemListNode* items = NULL;
 
     ModuleStmtNode(Type type, string* name, ItemListNode* items);
