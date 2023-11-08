@@ -7,6 +7,7 @@ int globId = 0;
 ProgramNode::ProgramNode(ItemListNode *item_list) {
     this->id = ++globId;
     this->item_list = item_list;
+    cout << "program_exists" << endl;
 }
 
 TypeNode::TypeNode(Type type) {
@@ -775,6 +776,9 @@ void ExprNode::toDot(string &dot, const string &pos){
             type = "link";
             break;
 
+        case mut_link:
+            type = "mut_link";
+            break;
         case array_expr:
             type = "array_expr";
             break;

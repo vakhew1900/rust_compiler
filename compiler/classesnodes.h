@@ -70,7 +70,7 @@ public:
     enum Type{
         int_lit, float_lit, char_lit, string_lit, raw_string_lit,  bool_lit,
         plus, minus, mul_expr, div_expr, mod, or_, and_, asign, equal, not_equal, greater, less, greater_equal,
-        less_equal, uminus, negotation, question, ustar, link, array_expr, array_expr_auto_fill, index_expr,
+        less_equal, uminus, negotation, question, ustar, link,mut_link, array_expr, array_expr_auto_fill, index_expr,
         field_access_expr, call_expr, method_expr,
         continue_expr, break_expr, range_right, range_left, range_expr, return_expr,
 

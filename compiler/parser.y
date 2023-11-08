@@ -127,7 +127,7 @@
 %left '<' '>'  EQUAL NOT_EQUAL LESS_EQUAL GREATER_EQUAL  // == != <= >=
 %left '+' '-'
 %left '*' '/' '%'
-%left '!' '&' UMINUS USTAR /*  - * */
+%left '!' '&' MUT_REF UMINUS USTAR /*  - * */
 %nonassoc '?'
 %left '.' '['  DOUBLEDOTS
 %nonassoc  '(' ')'
@@ -415,6 +415,8 @@ ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode::ExprFromCharLiteral(ExprNode::ch
                 | '*' ExprWithBlock %prec USTAR { $$ = ExprNode::OperatorExpr(ExprNode::ustar, $2, 0); }
                 | '&' ExprWithoutBlock { $$ = ExprNode::OperatorExpr(ExprNode::link, $2, 0); }
                 | '&' ExprWithBlock { $$ = ExprNode::OperatorExpr(ExprNode::link, $2, 0); }
+                | MUT_REF ExprWithBlock { $$ = ExprNode::OperatorExpr(ExprNode::mut_link, $2, 0); }
+                | MUT_REF ExprWithoutBlock { $$ = ExprNode::OperatorExpr(ExprNode::mut_link, $2, 0); }
                 | '[' ExprListEmpty ']'  { $$ = ExprNode::ArrExprFromList(ExprNode::array_expr, $2); }
                 | '[' ExprWithoutBlock ';' ExprWithoutBlock ']' { $$ = ExprNode::ArrExprAutoFill(ExprNode::array_expr_auto_fill, $2, $4); }
                 | '[' ExprWithoutBlock ';' ExprWithBlock ']' { $$ = ExprNode::ArrExprAutoFill(ExprNode::array_expr_auto_fill, $2, $4); }
