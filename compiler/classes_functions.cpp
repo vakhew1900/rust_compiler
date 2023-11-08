@@ -1345,6 +1345,10 @@ void ItemNode::toXml(string &xml){
 
 }
 
+ItemNode::ItemNode() {
+
+}
+
 void ItemListNode::toXml(string &xml){
 
 }
@@ -1409,7 +1413,7 @@ void ImplStmtNode::toXml(string &xml){
 
 }
 
-void connectVerticesDots(int parentId, int childId, string &s) {
+void connectVerticesDots(string &s, int parentId, int childId) {
 
     string tmp = "id" + to_string(parentId) + " -> " + "id" + to_string(childId) + ";\n";
     s += tmp;

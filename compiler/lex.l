@@ -1,5 +1,6 @@
 %{
-#include "_tab.h"
+// #include "_tab.h"
+#include "parser_tab.cpp"
 extern int yyparse();
 %}
 
@@ -47,7 +48,6 @@ as { printf("Found KW_AS: %s\n", yytext); }
 break { printf("Found KW_BREAK: %s\n", yytext); return BREAK;}
 const { printf("Found KW_CONST: %s\n", yytext); return CONST;}
 continue { printf("Found KW_CONTINUE: %s\n", yytext); return CONTINUE;}
-crate { printf("Found KW_CRATE: %s\n", yytext); return CRATE;}
 else { printf("Found KW_ELSE: %s\n", yytext); return ELSE;}
 enum { printf("Found KW_ENUM: %s\n", yytext); return ENUM;}
 extern { printf("Found KW_EXTERN: %s\n", yytext); }
@@ -66,7 +66,7 @@ pub { printf("Found KW_PUB: %s\n", yytext); return PUB;}
 ref { printf("Found KW_REF: %s\n", yytext); }
 return { printf("Found KW_RETURN: %s\n", yytext); return RETURN;}
 self { printf("Found KW_SELFVALUE: %s\n", yytext); return SELF;}
-Self { printf("Found KW_SELFTYPE: %s\n", yytext); return BIG_SELF}
+Self { printf("Found KW_SELFTYPE: %s\n", yytext); return BIG_SELF;}
 static { printf("Found KW_STATIC: %s\n", yytext); }
 struct { printf("Found KW_STRUCT: %s\n", yytext); return STRUCT;}
 super { printf("Found KW_SUPER: %s\n", yytext); return SUPER;}
@@ -488,4 +488,24 @@ int main(int argc, char** argv) {
     return 0;
 } */
 
+int main(int argc, char** argv) {
 
+    if (argc != 2) {
+        printf("Filename is not found");
+        return 1;
+    }
+
+    const char *filename= argv[1];
+
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("File opening error");
+        return 1;
+    }
+
+    yyin = file;
+    yyparse();
+    fclose(file);
+
+    return 0;
+}

@@ -555,7 +555,7 @@ int main(int argc, char** argv) {
     }
 
     yyin = file;
-    yyparser();
+    yyparse();
     fclose(file);
 
     return 0;
