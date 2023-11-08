@@ -268,7 +268,15 @@ AssociatedItemListNode::AssociatedItemListNode(AssociatedItemNode* item){
 
 AssociatedItemListNode::AssociatedItemListNode(AssociatedItemListNode* list){
     this->id = ++globId;
-    this->items = list->items;
+
+    if(list != NULL)
+    {
+        this->items = list->items;
+    }
+    else
+    {
+        this->items = new std::list<AssociatedItemNode*>;
+    }
 }
 
 AssociatedItemListNode* AssociatedItemListNode::Append(AssociatedItemListNode* list, AssociatedItemNode* item) {
@@ -306,7 +314,15 @@ StructFieldListNode::StructFieldListNode(StructFieldNode *item){
 
 StructFieldListNode::StructFieldListNode(StructFieldListNode *list){
     this->id = ++globId;
-    this->items = list->items;
+
+    if(list != NULL)
+    {
+        this->items = list->items;
+    }
+    else
+    {
+        this->items = new std::list<StructFieldNode*>;
+    }
 }
 
 StructFieldListNode* StructFieldListNode::Append(StructFieldListNode *list, StructFieldNode* item) {
@@ -344,7 +360,14 @@ FuncParamListNode::FuncParamListNode(FuncParamNode *item){
 
 FuncParamListNode::FuncParamListNode(FuncParamListNode *list){
     this->id = ++globId;
-    this->items = list->items;
+    if(list != NULL)
+    {
+        this->items = list->items;
+    }
+    else
+    {
+        this->items = new std::list<FuncParamNode*>;
+    }
 }
 
 FuncParamListNode* FuncParamListNode::FunctionParamsFinal(Type func_type, FuncParamListNode *list){
@@ -386,7 +409,15 @@ EnumItemListNode::EnumItemListNode(EnumItemNode *item){
 
 EnumItemListNode::EnumItemListNode(EnumItemListNode *list){
     this->id = ++globId;
-    this->items = list->items;
+
+    if(list != NULL)
+    {
+        this->items = list->items;
+    }
+    else
+    {
+        this->items = new std::list<EnumItemNode*>;
+    }
 }
 
 EnumItemListNode* EnumItemListNode::Append(EnumItemListNode *list, EnumItemNode* item) {
@@ -513,7 +544,16 @@ ItemListNode::ItemListNode(ItemNode *item){
 
 ItemListNode::ItemListNode(ItemListNode *list){
     this->id = ++globId;
-    this->items = list->items;
+
+    if(list != NULL)
+    {
+        this->items = list->items;
+    }
+    else
+    {
+        this->items = new std::list<ItemNode*>;
+    }
+
 }
 
 ItemListNode* ItemListNode::Append(ItemListNode *list, ItemNode* item) {
