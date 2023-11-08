@@ -225,6 +225,7 @@ public:
     static ItemNode* DeclarationImpl(Visibility visibility, ImplStmtNode* node);
     static ItemNode* DeclarationModule(Visibility visibility, ModuleStmtNode* node);
     static ItemNode* DeclarationTrait(Visibility visibility, TraitNode* node);
+    static ItemNode* AddVisibility(Visibility visibility, ItemNode* itemNode);
     ItemNode(Visibility visibility, ItemNode* node);
     ItemNode();
 

@@ -1374,11 +1374,11 @@ case 10:
     break;}
 case 11:
 #line 165 "parser.y"
-{ yyval.item = new ItemNode(self, yyvsp[0].item);;
+{ yyval.item = yyvsp[0].item;;
     break;}
 case 12:
 #line 166 "parser.y"
-{ yyval.item = new ItemNode(yyvsp[-1].vis, yyvsp[0].item);;
+{ yyval.item = ItemNode::AddVisibility(yyvsp[-1].vis, yyvsp[0].item);;
     break;}
 case 13:
 #line 169 "parser.y"
@@ -2565,7 +2565,7 @@ void yyerror(char const *s)
 {
     printf("%s\n",s);
 }
-//
+
 //int main(int argc, char** argv) {
 //
 //    if (argc != 2) {

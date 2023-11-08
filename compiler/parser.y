@@ -162,8 +162,8 @@ ItemList: Item { $$ = new ItemListNode($1); }
          | ItemList Item { $$ = ItemListNode::Append($1, $2); }
          ;
 
-Item: SimpleItem { $$ = new ItemNode(self, $1);}
-     | Visibility SimpleItem { $$ = new ItemNode($1, $2);}
+Item: SimpleItem { $$ = $1;}
+     | Visibility SimpleItem { $$ = ItemNode::AddVisibility($1, $2);}
      ;
 
 SimpleItem: FuncStmt  { $$ = ItemNode::DeclarationFunction(self, $1); }

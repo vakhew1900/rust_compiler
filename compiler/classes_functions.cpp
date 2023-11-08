@@ -535,6 +535,12 @@ ItemNode::ItemNode(Visibility visibility, ItemNode* node){
     this->item_node->visibility = visibility;
 }
 
+ItemNode *ItemNode::AddVisibility(Visibility visibility, ItemNode *itemNode) {
+    itemNode->visibility = visibility;
+    return itemNode;
+}
+
+
 // ItemListNode
 ItemListNode::ItemListNode(ItemNode *item){
     this->id = ++globId;
@@ -969,6 +975,13 @@ void StmtNode::toDot(string &dot){
         connectVerticesDots(dot, this->id, this->let_stmt->id);
         this->let_stmt->toDot(dot);
     }
+
+    if(this->stmt != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->stmt->id);
+        this->stmt->toDot(dot);
+    }
+
 }
 
 void StmtListNode::toDot(string &dot, const string &type){
