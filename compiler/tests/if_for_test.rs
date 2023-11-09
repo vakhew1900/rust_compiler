@@ -9,7 +9,7 @@ fn main() {
     }
 
     println("Числа от 1 до {}: ", number);
-    for i in 1..=number {
+    for i in 1..number {
         println("{}", i);
     }
 }

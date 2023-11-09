@@ -658,6 +658,10 @@ void TypeNode::toDot(string &dot){
             createVertexDot(dot, this->id,"id_type", "", "");
             break;
 
+        case bool_:
+            createVertexDot(dot, this->id,"bool_type", "", "");
+            break;
+
         case TypeNode:: array_:
             createVertexDot(dot, this->id,"array_type", "", "");
             this->typeArr->toDot(dot);
@@ -878,6 +882,18 @@ void ExprNode::toDot(string &dot, const string &pos){
 
         case path_call_expr:
             type = "path_call_expr";
+            break;
+
+        case range_expr:
+            type = "range_expr";
+            break;
+
+        case loop_for:
+            type = "loop_for";
+            break;
+
+        case add_if_block:
+            type = "add_if_block";
             break;
     }
 
@@ -1545,6 +1561,11 @@ string getVisibility(Visibility visibility) {
             res = "super";
             break;
 
+        case emptyVisibility:
+            res = "empty";
+            break;
+        case crate:
+            break;
     }
 
     return res;
