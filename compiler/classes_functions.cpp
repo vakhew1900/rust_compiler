@@ -179,13 +179,18 @@ ExprNode* ExprNode::IfExpr(Type type, ExprNode* condition, ExprNode* body){
     ExprNode* new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
+    new_node->expr_left = condition;
+    new_node->body = body;
 
-    ExprNode* if_node = new ExprNode();
-    if_node->expr_left = condition;
-    if_node->body = body;
 
-    new_node->ifList = new list<ExprNode*> {if_node};
+    return new_node;
+}
 
+ExprNode* ExprNode::IfExprList(ExprNode* ifExpr){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = if_expr_list;
+    new_node->ifList = new list<ExprNode*>{ifExpr};
     return new_node;
 }
 
@@ -196,7 +201,7 @@ ExprNode* ExprNode::AddIfBlock(ExprNode* ifExpr, ExprNode* someIfExpr){
 
 ExprNode* ExprNode::AddElseBlock(ExprNode* ifExpr, ExprNode* else_body){
     ifExpr->else_body = else_body;
-    return else_body;
+    return ifExpr;
 }
 
 ExprNode* ExprNode::StructExpr(Type type, string* name, ExprListNode* expr_list){
@@ -845,7 +850,11 @@ void ExprNode::toDot(string &dot, const string &pos){
             break;
 
         case if_expr:
-            type = "self_expr";
+            type = "if_expr";
+            break;
+
+        case if_expr_list:
+            type = "if_expr_list";
             break;
 
         case loop_expr:
@@ -936,7 +945,7 @@ void ExprNode::toDot(string &dot, const string &pos){
     if(this->ifList != NULL){
 
         int ifCount = 1;
-
+    //    cout << "adfkshfadgdjaf\n";
         for(auto elem : *this->ifList)
         {
             connectVerticesDots(dot, this->id, elem->id);

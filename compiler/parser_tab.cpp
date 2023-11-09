@@ -2306,7 +2306,7 @@ case 242:
     break;}
 case 243:
 #line 508 "parser.y"
-{ yyval.expr = yyvsp[0].expr; ;
+{ yyval.expr = ExprNode::IfExprList(yyvsp[0].expr); ;
     break;}
 case 244:
 #line 509 "parser.y"

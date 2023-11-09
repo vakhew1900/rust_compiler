@@ -2922,7 +2922,6 @@ int main(int argc, char** argv) {
     }
 
     const char *filename = argv[1];
-
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         printf("File opening error");

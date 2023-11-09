@@ -74,7 +74,7 @@ public:
         field_access_expr, call_expr, method_expr,
         continue_expr, break_expr, range_right, range_left, range_expr, return_expr,
 
-        id_, self_expr, if_expr, loop_expr, loop_while, loop_for, block_expr,
+        id_, self_expr, if_expr_list, if_expr, loop_expr, loop_while, loop_for, block_expr,
         struct_expr, struct_field_expr, static_method, tuple_expr, super_expr,
         path_call_expr, add_if_block
     };
@@ -124,6 +124,7 @@ public:
     static ExprNode* FieldListAccess(Type type, ExprNode* expr, ExprListNode* field_list);
 
     static ExprNode* IfExpr(Type type, ExprNode* condition, ExprNode* body);
+    static ExprNode* IfExprList(ExprNode* ifExpr);
     static ExprNode* AddIfBlock(ExprNode* ifExpr, ExprNode* someIfExpr);
     static ExprNode* AddElseBlock(ExprNode* ifExpr, ExprNode* else_body);
 
