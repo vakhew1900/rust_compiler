@@ -294,6 +294,25 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     if(res != -1) { yylval.int_literal = res; return INT_LITERAL; }
 }
 
+\.\.[[:space:]]*(([0-9][_0-9]*)|(0b([_0-1])+)|(0o([_0-7])+)|(0x([_0-9a-fA-F])+)) {
+
+    strcpy(str, yytext);
+
+    int index = 0;
+
+    while(str[index] == '.' || isspace(str[index]))
+    {
+        index++;
+    }
+
+    int res = translateNumberByBase(str + index);
+    range_type_operation = 2;
+    right_range_int = res;
+
+    return RANGE;
+
+}
+
 
 (([0-9][_0-9]*)|(0b([_0-1])+)|(0o([_0-7])+)|(0x([_0-9a-fA-F])+))[[:space:]]*\.\.[[:space:]]*(([0-9][_0-9]*)|(0b([_0-1])+)|(0o([_0-7])+)|(0x([_0-9a-fA-F])+)) {
 
