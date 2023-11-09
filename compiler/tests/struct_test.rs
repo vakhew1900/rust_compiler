@@ -6,7 +6,7 @@ struct Rectangle {
 impl Rectangle {
     // Метод для создания нового прямоугольника
     fn new(width: f64, height: f64) -> Rectangle {
-        Rectangle { width, height }
+        Rectangle {width : width, height: height}
     }
 
     // Метод для вычисления площади прямоугольника

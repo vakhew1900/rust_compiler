@@ -76,7 +76,7 @@ public:
 
         id_, self_expr, if_expr_list, if_expr, loop_expr, loop_while, loop_for, block_expr,
         struct_expr, struct_field_expr, static_method, tuple_expr, super_expr,
-        path_call_expr, add_if_block
+        path_call_expr, add_if_block, struct_creation
     };
 
     int id;

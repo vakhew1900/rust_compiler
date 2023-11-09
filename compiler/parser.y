@@ -448,7 +448,7 @@ ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode::ExprFromCharLiteral(ExprNode::ch
                 | ExprWithBlock '.' ID '(' ExprListEmpty ')' { $$ =  ExprNode::CallAccessExpr(ExprNode::method_expr, $3, $1, $5); }
                 | PathCallExpr { $$ = $1 }
                 | PathCallExpr '(' ExprListEmpty ')' { $$ = ExprNode::StaticMethod(ExprNode::static_method, $1, $3); }
-                | PathCallExpr '{' StructExprFieldListEmpty '}' { $$ = ExprNode::FieldListAccess(ExprNode::static_method, $1, $3); }
+                | PathCallExpr '{' StructExprFieldListEmpty '}' { $$ = ExprNode::FieldListAccess(ExprNode::struct_creation, $1, $3); }
                 | '(' ExprWithBlock ')' { $$ = $2; }
                 |'(' ExprWithoutBlock ')' { $$ = $2; }
                 ;
@@ -464,11 +464,11 @@ StructExprFieldListEmpty: /*empty*/ { $$ = 0; }
                         | StructExprFieldList { $$ = new ExprListNode($1); }
                         ;
 
-StructExprFieldList: ',' StructExprField { $$ = new ExprListNode($2); }
+StructExprFieldList:  StructExprField { $$ = new ExprListNode($1); }
+                    | ',' StructExprField { $$ = new ExprListNode($2); }
                     | StructExprFieldList ',' StructExprField { $$ = ExprListNode::Append($1, $3); }
                     ;
-StructExprField: /*empty*/ { $$ = 0; }
-               | ID ':' ExprWithoutBlock  { $$ = ExprNode::ExprFromStructField(ExprNode::struct_field_expr, $1, $3); }
+StructExprField: ID ':' ExprWithoutBlock  { $$ = ExprNode::ExprFromStructField(ExprNode::struct_field_expr, $1, $3); }
                | ID ':' ExprWithBlock   { $$ = ExprNode::ExprFromStructField(ExprNode::struct_field_expr, $1, $3); }
                ;
 

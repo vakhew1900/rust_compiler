@@ -881,6 +881,10 @@ void ExprNode::toDot(string &dot, const string &pos){
             type = "static_method";
             break;
 
+        case struct_creation:
+            type = "struct_creation";
+            break;
+
         case tuple_expr:
             type = "tuple_expr";
             break;
