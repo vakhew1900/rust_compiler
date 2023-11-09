@@ -37,8 +37,32 @@ DIGIT [0-9]
 %{
     char str[1024];
     string stdstr = "";
-    int lineNumber = 1;
+    static int lineNumber = 1;
     int octothorpeCount = 0;
+
+    static int range_type_operation = 0; // 0 - нет 1 - левый, 2 - правый, 3 - двусторонний
+    static int right_range_int = 0;
+
+    if (range_type_operation == 1)
+    {
+        range_type_operation = 0;
+        return RANGE;
+    }
+
+
+    if(range_type_operation == 2)
+    {
+        range_type_operation = 0;
+        yylval.int_literal = right_range_int;
+        return INT_LITERAL;
+    }
+
+    if(range_type_operation == 3)
+    {
+        range_type_operation--;
+        return RANGE;
+    }
+
 %}
 
 \n { lineNumber++; }
@@ -270,10 +294,15 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     strncpy(right_number, str + right_number_index, length);
     right_number[length] = '\0';
 
+
     int res = translateNumberByBase(left_number);
-    if(res != -1) { yylval.int_literal = res; return INT_LITERAL; }
     int res2 = translateNumberByBase(right_number);
-    if(res2 != -1) { yylval.int_literal = res2; return INT_LITERAL; }
+
+    range_type_operation = 3;
+    right_range_int = res2;
+
+    if(res != -1) { yylval.int_literal = res; return INT_LITERAL; }
+
 }
 
 [0-9][_0-9]*(i32)? {
