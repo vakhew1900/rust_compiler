@@ -277,6 +277,24 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 <CHAR_EL><<EOF>> { printf("CHAR Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 <CHAR_EL>\\ { printf("CHAR Error in line %d: slash\n", lineNumber); }
 
+(([0-9][_0-9]*)|(0b([_0-1])+)|(0o([_0-7])+)|(0x([_0-9a-fA-F])+))[[:space:]]*\.\. {
+
+    strcpy(str, yytext);
+
+    int index =strlen(str) - 1;
+
+    while(str[index] == '.' || isspace(str[index]))
+    {
+        index--;
+    }
+    str[index + 1]  = '\0';
+
+    int res = translateNumberByBase(str);
+    range_type_operation = 1;
+    if(res != -1) { yylval.int_literal = res; return INT_LITERAL; }
+}
+
+
 (([0-9][_0-9]*)|(0b([_0-1])+)|(0o([_0-7])+)|(0x([_0-9a-fA-F])+))[[:space:]]*\.\.[[:space:]]*(([0-9][_0-9]*)|(0b([_0-1])+)|(0o([_0-7])+)|(0x([_0-9a-fA-F])+)) {
 
     strcpy(str, yytext);
@@ -494,28 +512,6 @@ int translateNumberByBase(char *input_string) {
     return result; // не удалось произвести операцию перевода с числом
 }
 
-/*
-int main(int argc, char** argv) {
-
-    if (argc != 2) {
-        printf("Filename is not found");
-        return 1;
-    }
-
-    const char *filename= argv[1];
-    
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
-        printf("File opening error");
-        return 1;
-    }
-
-    yyin = file;
-    yylex();
-    fclose(file);
-
-    return 0;
-} */
 
 int main(int argc, char** argv) {
 

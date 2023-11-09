@@ -284,47 +284,47 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 	*yy_cp = '\0'; \
 	yy_c_buf_p = yy_cp;
 
-#define YY_NUM_RULES 139
-#define YY_END_OF_BUFFER 140
+#define YY_NUM_RULES 140
+#define YY_END_OF_BUFFER 141
 static yyconst short int yy_accept[352] =
     {   0,
         0,    0,    0,    0,    0,    0,   92,   92,    0,    0,
-      140,  138,    2,    1,   61,   97,   51,   59,  114,   81,
-       82,   49,   47,   87,   48,   77,   50,  128,  128,   89,
-       88,   55,   52,   56,  135,  135,   83,   84,   62,  135,
-      135,  135,  135,  135,  135,  135,  135,  135,  135,  135,
-      135,  135,  135,   85,   60,   86,  115,  125,  126,   98,
+      141,  139,    2,    1,   61,   97,   51,   59,  114,   81,
+       82,   49,   47,   87,   48,   77,   50,  129,  129,   89,
+       88,   55,   52,   56,  136,  136,   83,   84,   62,  136,
+      136,  136,  136,  136,  136,  136,  136,  136,  136,  136,
+      136,  136,  136,   85,   60,   86,  115,  125,  126,   98,
        99,  108,  109,   92,   93,   94,  111,  112,  113,   54,
        71,   65,   72,    0,    0,   69,   67,   68,   80,   78,
-      132,   91,   96,   70,    0,  133,  128,  137,  137,  128,
-      137,  137,  137,  137,  137,   90,   63,   57,   53,   58,
+      133,   91,   96,   70,    0,  134,  129,  138,  138,  129,
+      138,  138,  138,  138,  138,   90,   63,   57,   53,   58,
 
-       64,  136,  135,  135,  135,   74,    3,  135,  135,  135,
-      135,  135,  135,  135,  135,  135,  135,   10,  135,  135,
-      135,   12,  135,   14,  135,  135,  135,  135,  135,  135,
-      110,    0,  135,  135,  135,  135,  135,  135,  135,  135,
-      135,   73,   66,  115,  122,  121,  119,  120,  116,  117,
+       64,  137,  136,  136,  136,   74,    3,  136,  136,  136,
+      136,  136,  136,  136,  136,  136,  136,   10,  136,  136,
+      136,   12,  136,   14,  136,  136,  136,  136,  136,  136,
+      110,    0,  136,  136,  136,  136,  136,  136,  136,  136,
+      136,   73,   66,  115,  122,  121,  119,  120,  116,  117,
       118,    0,    0,   98,  105,  103,  104,  100,  101,  102,
         0,    0,   92,   94,   94,   95,  111,  113,    0,    0,
-       79,  132,    0,    0,   96,    0,    0,  133,    0,  137,
-        0,  134,  128,  137,  137,  137,  129,  137,  137,  130,
-      131,   75,   76,  135,  135,  135,  135,  135,  135,  135,
+       79,  133,    0,    0,   96,    0,  127,  134,    0,  138,
+        0,  135,  129,  138,  138,  138,  130,  138,  138,  131,
+      132,   75,   76,  136,  136,  136,  136,  136,  136,  136,
 
-      135,  135,   43,   44,  135,   11,   41,   42,  135,   15,
-      135,  135,   18,  135,   20,   21,   22,  135,  135,  135,
-      135,  135,  135,  135,  135,  135,   32,  135,  135,    0,
-        0,    0,    0,   35,    0,    0,  132,    0,    0,  127,
-      127,  133,    0,    0,  134,  134,  137,  134,  128,  137,
-      137,   25,  135,   40,  135,   46,  135,  135,    7,    8,
-      135,  135,   13,   16,  135,   19,  135,   24,  135,  135,
-      135,  135,   38,   30,  135,  135,  135,    0,  124,    0,
-      107,    0,   36,  132,  132,  127,    0,    0,    0,    0,
-      133,  133,  134,    0,  137,  137,  137,  135,    4,    5,
+      136,  136,   43,   44,  136,   11,   41,   42,  136,   15,
+      136,  136,   18,  136,   20,   21,   22,  136,  136,  136,
+      136,  136,  136,  136,  136,  136,   32,  136,  136,    0,
+        0,    0,    0,   35,    0,    0,  133,    0,    0,  128,
+      128,  134,    0,    0,  135,  135,  138,  135,  129,  138,
+      138,   25,  136,   40,  136,   46,  136,  136,    7,    8,
+      136,  136,   13,   16,  136,   19,  136,   24,  136,  136,
+      136,  136,   38,   30,  136,  136,  136,    0,  124,    0,
+      107,    0,   36,  133,  133,  128,    0,    0,    0,    0,
+      134,  134,  135,    0,  138,  138,  138,  136,    4,    5,
 
-      135,  135,   39,   17,  135,  135,  135,   28,   29,  135,
-       33,   34,    0,    0,    0,    0,    0,  127,  127,  127,
-      133,    0,  129,  130,  131,   45,  135,    9,   23,   26,
-       27,   31,    0,    0,    0,    0,    0,  134,  135,    0,
+      136,  136,   39,   17,  136,  136,  136,   28,   29,  136,
+       33,   34,    0,    0,    0,    0,    0,  128,  128,  128,
+      134,    0,  130,  131,  132,   45,  136,    9,   23,   26,
+       27,   31,    0,    0,    0,    0,    0,  135,  136,    0,
         0,    0,    0,    0,    6,    0,  123,    0,  106,   37,
         0
     } ;
@@ -1725,6 +1725,26 @@ YY_RULE_SETUP
 {
 
     strcpy(str, yytext);
+
+    int index =strlen(str) - 1;
+
+    while(str[index] == '.' || isspace(str[index]))
+    {
+        index--;
+    }
+    str[index + 1]  = '\0';
+
+    int res = translateNumberByBase(str);
+    range_type_operation = 1;
+    if(res != -1) { yylval.int_literal = res; return INT_LITERAL; }
+}
+	YY_BREAK
+case 128:
+YY_RULE_SETUP
+#line 298 "lex.l"
+{
+
+    strcpy(str, yytext);
     int second_dot_index = findSecondDot(str);
     int first_dot_index = second_dot_index - 1;
     int right_number_index = findRightNumberPos(&str[second_dot_index]) + second_dot_index;
@@ -1750,9 +1770,9 @@ YY_RULE_SETUP
 
 }
 	YY_BREAK
-case 128:
+case 129:
 YY_RULE_SETUP
-#line 308 "lex.l"
+#line 326 "lex.l"
 {
 
     removeType(str, "i32");
@@ -1762,9 +1782,9 @@ YY_RULE_SETUP
     return INT_LITERAL;
 }
 	YY_BREAK
-case 129:
+case 130:
 YY_RULE_SETUP
-#line 317 "lex.l"
+#line 335 "lex.l"
 {
 
     removeType(str, "i32");
@@ -1781,9 +1801,9 @@ YY_RULE_SETUP
     }
 }
 	YY_BREAK
-case 130:
+case 131:
 YY_RULE_SETUP
-#line 333 "lex.l"
+#line 351 "lex.l"
 {
 
     removeType(str, "i32");
@@ -1800,9 +1820,9 @@ YY_RULE_SETUP
     }
 }
 	YY_BREAK
-case 131:
+case 132:
 YY_RULE_SETUP
-#line 349 "lex.l"
+#line 367 "lex.l"
 {
 
     removeType(str, "i32");
@@ -1819,16 +1839,16 @@ YY_RULE_SETUP
     }
 }
 	YY_BREAK
-case 132:
+case 133:
 YY_RULE_SETUP
-#line 365 "lex.l"
+#line 383 "lex.l"
 {
     printf("INCORRECT DOUBLE Error in line %d: float literals must have an integer part", lineNumber);
 }
 	YY_BREAK
-case 133:
+case 134:
 YY_RULE_SETUP
-#line 369 "lex.l"
+#line 387 "lex.l"
 {
     removeType(str, "f64");
     removeUnderline(str);
@@ -1837,9 +1857,9 @@ YY_RULE_SETUP
     return FLOAT_LITERAL;
 }
 	YY_BREAK
-case 134:
+case 135:
 YY_RULE_SETUP
-#line 377 "lex.l"
+#line 395 "lex.l"
 {
     removeType(str, "f64");
     removeUnderline(str);
@@ -1848,32 +1868,32 @@ YY_RULE_SETUP
     return FLOAT_LITERAL;
 }
 	YY_BREAK
-case 135:
-YY_RULE_SETUP
-#line 385 "lex.l"
-{ printf("Found IDENTIFIER: %s\n", yytext); yylval.identifier = new string(yytext); return ID;}
-	YY_BREAK
 case 136:
 YY_RULE_SETUP
-#line 386 "lex.l"
-{ printf("Found MACROS: %s\n", yytext);}
+#line 403 "lex.l"
+{ printf("Found IDENTIFIER: %s\n", yytext); yylval.identifier = new string(yytext); return ID;}
 	YY_BREAK
 case 137:
 YY_RULE_SETUP
-#line 387 "lex.l"
-{ printf("Error in line %d: incorrect IDENTIFIER\n", lineNumber); }
+#line 404 "lex.l"
+{ printf("Found MACROS: %s\n", yytext);}
 	YY_BREAK
 case 138:
 YY_RULE_SETUP
-#line 388 "lex.l"
-{ printf("Error in line %d: incorrect character in code\n", lineNumber); }
+#line 405 "lex.l"
+{ printf("Error in line %d: incorrect IDENTIFIER\n", lineNumber); }
 	YY_BREAK
 case 139:
 YY_RULE_SETUP
-#line 389 "lex.l"
+#line 406 "lex.l"
+{ printf("Error in line %d: incorrect character in code\n", lineNumber); }
+	YY_BREAK
+case 140:
+YY_RULE_SETUP
+#line 407 "lex.l"
 ECHO;
 	YY_BREAK
-#line 1877 "lex.yy.c"
+#line 1897 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2733,7 +2753,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 389 "lex.l"
+#line 407 "lex.l"
 
 
 void convertCharacterCodeToString(char characterCode[], int startPosition, char *string)
@@ -2842,28 +2862,6 @@ int translateNumberByBase(char *input_string) {
     return result; // не удалось произвести операцию перевода с числом
 }
 
-/*
-int main(int argc, char** argv) {
-
-    if (argc != 2) {
-        printf("Filename is not found");
-        return 1;
-    }
-
-    const char *filename= argv[1];
-    
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
-        printf("File opening error");
-        return 1;
-    }
-
-    yyin = file;
-    yylex();
-    fclose(file);
-
-    return 0;
-} */
 
 int main(int argc, char** argv) {
 
