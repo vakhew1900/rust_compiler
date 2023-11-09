@@ -357,6 +357,12 @@ FuncParamListNode::FuncParamListNode(FuncParamNode *item){
     this->items = new list <FuncParamNode*>{ item };
 }
 
+FuncParamListNode::FuncParamListNode(Type func_type, FuncParamNode* item){
+    this->id = ++globId;
+    this->items = new list <FuncParamNode*>{ item };
+    this->func_type = func_type;
+}
+
 FuncParamListNode::FuncParamListNode(FuncParamListNode *list){
     this->id = ++globId;
     if(list != NULL)
@@ -1338,7 +1344,30 @@ void ImplStmtNode::toDot(string &dot){
 
 void FuncParamListNode::toDot(string &dot){
 
-    createVertexDot(dot, this->id, "func_param_list");
+    string type = "";
+    switch (this->func_type) {
+        case self:
+            type = "self";
+            break;
+        case self_ref:
+            type = "self_ref";
+            break;
+
+        case associated:
+            type = "associated";
+            break;
+
+        case mut_self_ref:
+            type = "mut_self_ref";
+            break;
+
+        case static_:
+            type = "static_";
+            break;
+
+    }
+
+    createVertexDot(dot, this->id, "func_param_list", type);
     for(auto elem : *this->items)
     {
         int enumItemCnt = 1;

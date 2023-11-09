@@ -372,13 +372,14 @@ public:
 class FuncParamListNode{
 public:
     enum Type{
-        self, self_ref, mut_self_ref, associated
+        self, self_ref, mut_self_ref, associated, static_
     };
     int id;
     Type func_type;
     list<FuncParamNode*>* items = NULL;
 
     FuncParamListNode(FuncParamNode* item);
+    FuncParamListNode(Type func_type, FuncParamNode* item);
     FuncParamListNode(FuncParamListNode* list);
     static FuncParamListNode* FunctionParamsFinal(Type func_type, FuncParamListNode* list);
     static FuncParamListNode* Append(FuncParamListNode* list, FuncParamNode* item);

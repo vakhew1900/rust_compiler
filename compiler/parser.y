@@ -189,14 +189,14 @@ ImplFuncStmt: FN ID '(' FuncParamListEmpty ')' BlockExpr { $$ = new FuncStmtNode
             | FN ID '(' FuncParamListEmpty ')' RIGHT_ARROW  Type BlockExpr { $$ = new FuncStmtNode($2, $7, $4, $8); }
             ;
 
-FuncParamListEmpty: /* empty */ { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::associated, 0); }
-               | FuncParamList { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::associated, $1); }
+FuncParamListEmpty: /* empty */ { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::static_, 0); }
+               | FuncParamList { $$ = $1; }
                ;
 
 FuncParamList: SELF { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::self, 0); }
              | SELF_REF { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::self_ref, 0); }
              | MUT_SELF_REF { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::mut_self_ref, 0); }
-             | FuncParam  { $$ = new FuncParamListNode($1); }
+             | FuncParam  { $$ = new FuncParamListNode(FuncParamListNode::static_, $1); }
              | FuncParamList ',' FuncParam { $$ = FuncParamListNode::Append($1, $3); }
              ;
 
@@ -285,7 +285,7 @@ AssociatedItemList: AssociatedItem { $$ = new AssociatedItemListNode($1); }
                   ;
 
 /* Необходима еще проверка для Impl то что FuncStmt является именно реализацией */
-AssociatedItem: FuncStmt { $$ = new AssociatedItemNode(self, $1, 0); } // ImplFuncStmt
+AssociatedItem: ImplFuncStmt { $$ = new AssociatedItemNode(self, $1, 0); } // ImplFuncStmt
               | ConstStmt { $$ = new AssociatedItemNode(self, 0, $1); }
               | Visibility FuncStmt { $$ = new AssociatedItemNode($1, $2, 0); }
               | Visibility ConstStmt { $$ = new AssociatedItemNode($1, 0, $2); }
@@ -539,26 +539,4 @@ Visibility: PUB               { $$ = pub; }
 void yyerror(char const *s)
 {
     printf("%s\n",s);
-}
-
-int main(int argc, char** argv) {
-
-    if (argc != 2) {
-        printf("Filename is not found");
-        return 1;
-    }
-
-    const char *filename= argv[1];
-
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
-        printf("File opening error");
-        return 1;
-    }
-
-    yyin = file;
-    yyparse();
-    fclose(file);
-
-    return 0;
 }
