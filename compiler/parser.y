@@ -285,7 +285,7 @@ AssociatedItemList: AssociatedItem { $$ = new AssociatedItemListNode($1); }
                   ;
 
 /* Необходима еще проверка для Impl то что FuncStmt является именно реализацией */
-AssociatedItem: ImplFuncStmt { $$ = new AssociatedItemNode(self, $1, 0); } // ImplFuncStmt
+AssociatedItem: FuncStmt { $$ = new AssociatedItemNode(self, $1, 0); } // ImplFuncStmt
               | ConstStmt { $$ = new AssociatedItemNode(self, 0, $1); }
               | Visibility FuncStmt { $$ = new AssociatedItemNode($1, $2, 0); }
               | Visibility ConstStmt { $$ = new AssociatedItemNode($1, 0, $2); }
@@ -521,7 +521,7 @@ Type: BOOL { $$ = new TypeNode(TypeNode::bool_); }
     | FLOAT { $$ = new TypeNode(TypeNode::float_); }
     | INT { $$ = new TypeNode(TypeNode::int_); }
     | STRING { $$ = new TypeNode(TypeNode::string_); }
-    | ID { $$ = new TypeNode(TypeNode::id_); }
+    | ID { $$ = new TypeNode(TypeNode::id_, $1); }
     | '[' Type ';' ExprWithBlock ']' { $$ = new TypeNode(TypeNode::array_, $2, $4); }
     | '[' Type ';' ExprWithoutBlock ']' { $$ = new TypeNode(TypeNode::array_, $2, $4); }
     ;

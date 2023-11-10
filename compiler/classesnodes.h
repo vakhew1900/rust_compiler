@@ -55,12 +55,14 @@ public:
 
     int id;
     Type type;
+    string *name;
     TypeNode* typeArr = NULL;
     ExprNode* exprArr = NULL;
 
     //ф-ии
     TypeNode(Type type);
     TypeNode(Type type, TypeNode* type_node, ExprNode* expr);
+    TypeNode(Type type, string *name);
     void toDot(string &dot);
     void toXml(string &xml);
 };

@@ -23,6 +23,12 @@ TypeNode::TypeNode(Type type, TypeNode* type_node, ExprNode* expr) {
     this->exprArr = expr;
 }
 
+TypeNode::TypeNode(Type type, string *name){
+    this->id = ++globId;
+    this->type = type;
+    this->name = name;
+}
+
 // Expr from + - * / и тд
 ExprNode* ExprNode::OperatorExpr(Type type, ExprNode* left, ExprNode* right){
     ExprNode* new_node = new ExprNode();
@@ -660,7 +666,8 @@ void TypeNode::toDot(string &dot){
             break;
 
         case TypeNode:: id_:
-            createVertexDot(dot, this->id,"id_type", "", "");
+            cout << this->name << "\n";
+            createVertexDot(dot, this->id,"id_type", "", *this->name);
             break;
 
         case bool_:
