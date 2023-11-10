@@ -810,14 +810,17 @@ void ExprNode::toDot(string &dot, const string &pos){
 
         case field_access_expr:
             type = "field_access_expr";
+            if(this->Name != NULL)  value = *this->Name;
             break;
 
         case call_expr:
             type = "call_expr";
+            if(this->Name != NULL)  value = *this->Name;
             break;
 
         case method_expr:
             type = "method_expr";
+            if(this->Name != NULL)  value = *this->Name;
             break;
 
         case continue_expr:
@@ -879,10 +882,12 @@ void ExprNode::toDot(string &dot, const string &pos){
 
         case static_method:
             type = "static_method";
+            if(this->Name != NULL)  value = *this->Name;
             break;
 
         case struct_creation:
             type = "struct_creation";
+            if(this->Name != NULL)  value = *this->Name;
             break;
 
         case tuple_expr:
@@ -895,6 +900,7 @@ void ExprNode::toDot(string &dot, const string &pos){
 
         case path_call_expr:
             type = "path_call_expr";
+            if(this->Name != NULL)  value = *this->Name;
             break;
 
         case range_expr:
