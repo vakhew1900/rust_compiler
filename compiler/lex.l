@@ -21,6 +21,8 @@ DIGIT [0-9]
     #include <iostream>
     #include <string>
     #include <ctype.h>
+    #include <fstream>
+
     using namespace std;
 
     void removeUnderline(char str[]);
@@ -554,6 +556,9 @@ int main(int argc, char** argv) {
     string dot;
     global_program->toDot(dot);
     std::cout << dot << "\n";
+
+    std::ofstream out("dot-tree.txt");
+    out << dot << "\n";
 
     return 0;
 }
