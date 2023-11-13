@@ -1187,20 +1187,6 @@ void ItemListNode::toDot(string &dot){
 void ModuleStmtNode::toDot(string &dot){
 
     string type = "";
-    switch (this->type) {
-        case semicolon:
-            type = "semicolon";
-            break;
-
-        case empty:
-            type = "empty";
-            break;
-
-        case block:
-            type = "block";
-            break;
-    }
-
     createVertexDot(dot, this->id, "module_stmt", type);
 
     if(this->items != NULL)
