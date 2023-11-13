@@ -921,6 +921,9 @@ void ExprNode::toDot(string &dot, const string &pos){
         case add_if_block:
             type = "add_if_block";
             break;
+        case break_with_val_expr:
+            type = "break_with_val_expr";
+            break;
     }
 
     if(this->id == 3)

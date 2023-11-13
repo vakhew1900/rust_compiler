@@ -74,7 +74,7 @@ public:
         plus, minus, mul_expr, div_expr, mod, or_, and_, asign, equal, not_equal, greater, less, greater_equal,
         less_equal, uminus, negotation, question, ustar, link,mut_link, array_expr, array_expr_auto_fill, index_expr,
         field_access_expr, call_expr, method_expr,
-        continue_expr, break_expr, range_right, range_left, range_expr, return_expr,
+        continue_expr, break_expr, break_with_val_expr, range_right, range_left, range_expr, return_expr,
 
         id_, self_expr, if_expr_list, if_expr, loop_expr, loop_while, loop_for, block_expr,
         struct_expr, struct_field_expr, static_method, tuple_expr, super_expr,
