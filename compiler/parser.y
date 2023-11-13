@@ -58,7 +58,6 @@
 %type <expr_list>ExprList
 %type <expr_list>ExprListEmpty
 %type <expr_list>StructExprFieldList
-%type <expr_list>StructExprFieldListEmpty
 %type <stmt>Stmt
 %type <stmt>ExprStmt
 %type <stmt_list>StmtList
@@ -450,7 +449,7 @@ ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode::ExprFromCharLiteral(ExprNode::ch
                 | ExprWithBlock '.' ID '(' ExprListEmpty ')' { $$ =  ExprNode::CallAccessExpr(ExprNode::method_expr, $3, $1, $5); }
                 | PathCallExpr { $$ = $1 }
                 | PathCallExpr '(' ExprListEmpty ')' { $$ = ExprNode::StaticMethod(ExprNode::static_method, $1, $3); }
-                | PathCallExpr '{' StructExprFieldListEmpty '}' { $$ = ExprNode::FieldListAccess(ExprNode::struct_creation, $1, $3); }
+                | ExprWithoutBlock '{' StructExprFieldList '}' { $$ = ExprNode::FieldListAccess(ExprNode::struct_creation, $1, $3); }
                 | '(' ExprWithBlock ')' { $$ = $2; }
                 |'(' ExprWithoutBlock ')' { $$ = $2; }
                 ;
@@ -462,9 +461,7 @@ PathCallExpr: ID { $$ =  ExprNode::CallAccessExpr(ExprNode::id_, $1, 0, 0); }
             | PathCallExpr DOUBLEDOTS ID { $$ = ExprNode::PathCallExpr(ExprNode::path_call_expr, $3, $1); }
             ;
 
-StructExprFieldListEmpty: /*empty*/ { $$ = 0; }
-                        | StructExprFieldList { $$ = new ExprListNode($1); }
-                        ;
+
 
 StructExprFieldList:  StructExprField { $$ = new ExprListNode($1); }
                     | ',' StructExprField { $$ = new ExprListNode($2); }
@@ -494,12 +491,12 @@ LoopExpr: InfiniteLoopExpr { $$ = $1; }
 InfiniteLoopExpr: LOOP BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_expr, 0, $2, 0); }
                 ;
 
-PredicateLoopExpr: WHILE '(' ExprWithBlock ')' BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_while, $3, $5, 0); }
-                 | WHILE '(' ExprWithoutBlock ')' BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_while, $3, $5, 0); }
+PredicateLoopExpr: WHILE  ExprWithBlock  BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_while, $2, $3, 0); }
+                 | WHILE  ExprWithoutBlock  BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_while, $2, $3, 0); }
                  ;
 
-IteratorLoopExpr: FOR '(' ID IN ExprWithBlock ')' BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_for, $5, $7, $3); }
-                | FOR '(' ID IN ExprWithoutBlock ')' BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_for, $5, $7, $3); }
+IteratorLoopExpr: FOR  ID IN ExprWithBlock  BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_for, $4, $5, $2); }
+                | FOR  ID IN ExprWithoutBlock  BlockExpr { $$ = ExprNode::CycleExpr(ExprNode::loop_for, $4, $5, $2); }
                 ;
 
 IfExpr: SimpleIfElseExpr { $$ = $1; }
@@ -507,12 +504,12 @@ IfExpr: SimpleIfElseExpr { $$ = $1; }
       ;
 
 
-SimpleIfElseExpr: SimpleIfExpr  { $$ = ExprNode::IfExprList($1); }
+SimpleIfElseExpr: SimpleIfExpr  { $$ = $1; }
                 | SimpleIfElseExpr ELSE SimpleIfExpr { $$ = ExprNode::AddIfBlock($1, $3); }
                 ;
 
-SimpleIfExpr: IF '(' ExprWithoutBlock ')' BlockExpr { $$ = ExprNode::IfExpr(ExprNode::if_expr, $3, $5); }
-            | IF '(' ExprWithBlock ')' BlockExpr  { $$ = ExprNode::IfExpr(ExprNode::if_expr, $3, $5); }
+SimpleIfExpr: IF  ExprWithoutBlock  BlockExpr { $$ = ExprNode::IfExpr(ExprNode::if_expr, $2, $3); }
+            | IF  ExprWithBlock  BlockExpr  { $$ = ExprNode::IfExpr(ExprNode::if_expr, $2, $3); }
             ;
 
 
