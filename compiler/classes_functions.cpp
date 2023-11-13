@@ -442,9 +442,8 @@ EnumItemListNode* EnumItemListNode::Append(EnumItemListNode *list, EnumItemNode*
 }
 
 // ModuleStmt
-ModuleStmtNode::ModuleStmtNode(Type type, string* name, ItemListNode* items){
+ModuleStmtNode::ModuleStmtNode(string* name, ItemListNode* items){
     this->id = ++globId;
-    this->type = type;
     this->name = name;
     this->items = items;
 }

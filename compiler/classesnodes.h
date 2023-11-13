@@ -266,16 +266,13 @@ public:
 
 class ModuleStmtNode{
 public:
-    enum Type{
-        semicolon, block, empty
-    };
+
 
     int id;
-    Type type;
     string* name = NULL;
     ItemListNode* items = NULL;
 
-    ModuleStmtNode(Type type, string* name, ItemListNode* items);
+    ModuleStmtNode(string* name, ItemListNode* items);
 
     void toDot(string &dot);
     void toXml(string &xml);

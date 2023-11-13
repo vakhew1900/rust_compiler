@@ -305,8 +305,7 @@ ConstStmt: CONST ID ':' Type '=' ExprWithBlock ';' { $$ = ConstStmtNode::ConstSt
 
 /* =========== Module ================= */
 
-ModuleStmt: MOD ID ';' { $$ = new ModuleStmtNode(ModuleStmtNode::empty, $2, 0); }
-          | MOD ID '{' ItemListEmpty '}' { $$ = new ModuleStmtNode(ModuleStmtNode::empty, $2, $4); }
+ModuleStmt: MOD ID '{' ItemListEmpty '}' { $$ = new ModuleStmtNode(ModuleStmtNode::empty, $2, $4); }
           ;
 
 /* ========= LetStmt ============ */
