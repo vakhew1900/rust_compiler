@@ -617,7 +617,14 @@ StmtNode::StmtNode(Type type, ExprNode* expr_node, ItemNode* decl_node, LetStmtN
     this->type = type;
     this->expr = expr_node;
     this->decl_stmt = decl_node;
-    this->let_stmt = let_node;
+
+    if(let_node != NULL)
+    {
+        this->let_type = (let_node->let_type == LetStmtNode::mut)? mut : noMut;
+        this->expr = let_node->expr;
+        this->typeChild = let_node->type;
+        this->name = let_node->name;
+    }
 }
 
 StmtNode::StmtNode(Type type, StmtNode* stmt){
@@ -995,7 +1002,7 @@ void StmtNode::toDot(string &dot){
 
 
     string type = "";
-
+    string value = "";
     switch (this->type) {
 
         case semicolon:
@@ -1012,10 +1019,12 @@ void StmtNode::toDot(string &dot){
 
         case let:
             type = "let";
+            type += (this->let_type == mut)? "mut": "noMut";
+            value = *this->name;
             break;
     }
 
-    createVertexDot(dot, this->id, "stmt", type);
+    createVertexDot(dot, this->id, "stmt", type, value);
 
     if(this->expr != NULL){
         connectVerticesDots(dot, this->id, this->expr->id);
@@ -1033,6 +1042,11 @@ void StmtNode::toDot(string &dot){
         this->stmt->toDot(dot);
     }
 
+    if(this->typeChild != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->typeChild->id);
+        this->typeChild->toDot(dot);
+    }
 }
 
 void StmtListNode::toDot(string &dot, const string &type){

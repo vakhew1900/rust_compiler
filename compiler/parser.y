@@ -149,8 +149,8 @@ StmtList: Stmt { $$ = new StmtListNode($1); }
         ;
 
 Stmt: ';' { $$ = new StmtNode(StmtNode::semicolon, 0, 0, 0); }
-    | LetStmt { $$ = new StmtNode(StmtNode::let, 0, 0, $1); }
-    | ExprStmt { $$ =  new StmtNode(StmtNode::exprstmt, $1);}
+    | LetStmt { $$ = new StmtNode(StmtNode::let, NULL, NULL, $1); }
+    | ExprStmt { $$ = $1;}
     ;
 
 ItemListEmpty: /*empty*/ { $$ = 0; }
@@ -323,8 +323,8 @@ LetStmt: LET ID '=' ExprWithBlock ';' { $$ = new LetStmtNode($2, 0, LetStmtNode:
        ;
 
 /* === Expression Statement === */
-ExprStmt: ExprWithoutBlock ';' {$$ = new StmtNode(StmtNode::expression, $1, 0, 0);}
-        | ExprWithBlock ';' {$$ = new StmtNode(StmtNode::expression, $1, 0, 0);}
+ExprStmt: ExprWithoutBlock ';' {$$ = new StmtNode(StmtNode::exprstmt, $1, 0, 0);}
+        | ExprWithBlock ';' {$$ = new StmtNode(StmtNode::exprstmt, $1, 0, 0);}
         ;
 
 

@@ -1349,11 +1349,11 @@ case 4:
     break;}
 case 5:
 #line 152 "parser.y"
-{ yyval.stmt = new StmtNode(StmtNode::let, 0, 0, yyvsp[0].let_stmt); ;
+{ yyval.stmt = new StmtNode(StmtNode::let, NULL, NULL, yyvsp[0].let_stmt); ;
     break;}
 case 6:
 #line 153 "parser.y"
-{ yyval.stmt =  new StmtNode(StmtNode::exprstmt, yyvsp[0].stmt);;
+{ yyval.stmt = yyvsp[0].stmt;;
     break;}
 case 7:
 #line 156 "parser.y"
@@ -1717,11 +1717,11 @@ case 96:
     break;}
 case 97:
 #line 326 "parser.y"
-{yyval.stmt = new StmtNode(StmtNode::expression, yyvsp[-1].expr, 0, 0);;
+{yyval.stmt = new StmtNode(StmtNode::exprstmt, yyvsp[-1].expr, 0, 0);;
     break;}
 case 98:
 #line 327 "parser.y"
-{yyval.stmt = new StmtNode(StmtNode::expression, yyvsp[-1].expr, 0, 0);;
+{yyval.stmt = new StmtNode(StmtNode::exprstmt, yyvsp[-1].expr, 0, 0);;
     break;}
 case 99:
 #line 333 "parser.y"

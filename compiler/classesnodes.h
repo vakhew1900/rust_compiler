@@ -164,6 +164,18 @@ public:
     ItemNode* decl_stmt = NULL;
     LetStmtNode* let_stmt = NULL;
 
+    /** LetStmt */
+    enum LetType
+    {
+        noMut, mut
+    };
+
+    LetType let_type;
+    string* name = NULL;
+    TypeNode* typeChild = NULL;
+
+
+
     StmtNode(Type type, ExprNode* expr_node, ItemNode* decl_node, LetStmtNode* let_node);
     StmtNode(Type type, StmtNode* stmt);
 
