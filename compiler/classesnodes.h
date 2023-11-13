@@ -44,7 +44,6 @@ public:
 
     ProgramNode(ItemListNode* item_list);
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 class TypeNode{
@@ -64,7 +63,7 @@ public:
     TypeNode(Type type, TypeNode* type_node, ExprNode* expr);
     TypeNode(Type type, string *name);
     void toDot(string &dot);
-    void toXml(string &xml);
+
 };
 
 class ExprNode{
@@ -131,7 +130,7 @@ public:
     static ExprNode* AddElseBlock(ExprNode* ifExpr, ExprNode* else_body);
 
     void toDot(string &dot, const string &pos = "");
-    void toXml(string &xml);
+
 
 };
 
@@ -146,7 +145,6 @@ public:
     static ExprListNode* Append(ExprListNode* list, ExprNode* expr);
 
    void toDot(string &dot, const string &type="expr_list");
-   void toXml(string &xml);
 };
 
 class StmtNode
@@ -180,7 +178,6 @@ public:
     StmtNode(Type type, StmtNode* stmt);
 
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 class StmtListNode
@@ -193,7 +190,6 @@ public:
     static StmtListNode* Append(StmtListNode* list, StmtNode* stmt);
 
    void toDot(string &dot, const string &type = "stmt_list");
-   void toXml(string &xml);
 };
 
 class LetStmtNode{
@@ -211,7 +207,6 @@ public:
     LetStmtNode(string* name, TypeNode* type, Type let_type, ExprNode* expr);
 
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 class ItemNode{
@@ -245,7 +240,6 @@ public:
     ItemNode();
 
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 
@@ -261,7 +255,6 @@ public:
 
 
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 class ModuleStmtNode{
@@ -275,7 +268,7 @@ public:
     ModuleStmtNode(string* name, ItemListNode* items);
 
     void toDot(string &dot);
-    void toXml(string &xml);
+
 };
 
 class StructStructNode{
@@ -286,7 +279,7 @@ public:
 
     StructStructNode(string* name, StructFieldListNode* items);
     void toDot(string &dot);
-    void toXml(string &xml);
+
 };
 
 class StructFieldNode{
@@ -298,7 +291,7 @@ public:
 
     StructFieldNode(string* name, TypeNode* type, Visibility visibility);
     void toDot(string &dot);
-    void toXml(string &xml);
+
 };
 
 class StructFieldListNode{
@@ -311,7 +304,6 @@ public:
     static StructFieldListNode* Append(StructFieldListNode* list, StructFieldNode* item);
 
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 class EnumStmtNode{
@@ -322,7 +314,7 @@ public:
 
     EnumStmtNode(string* name, EnumItemListNode* items);
     void toDot(string &dot);
-    void toXml(string &xml);
+
 };
 
 class EnumItemNode{
@@ -336,7 +328,7 @@ public:
     EnumItemNode(string* name, Visibility visibility, StructFieldListNode* struct_list, ExprNode* expr);
     EnumItemNode();
     void toDot(string &dot);
-    void toXml(string &xml);
+
 };
 
 class EnumItemListNode{
@@ -349,7 +341,6 @@ public:
     static EnumItemListNode* Append(EnumItemListNode* list, EnumItemNode* item);
 
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 class FuncStmtNode{
@@ -362,7 +353,6 @@ public:
 
     FuncStmtNode(string* name, TypeNode* returnType, FuncParamListNode* params, ExprNode* body);
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 class FuncParamNode{
@@ -378,7 +368,6 @@ public:
     FuncParamNode(string* name, TypeNode* type, Type param_type);
 
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 class FuncParamListNode{
@@ -398,7 +387,6 @@ public:
 
 
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 class ConstStmtNode{
@@ -411,7 +399,6 @@ public:
     static ConstStmtNode* ConstStmt(string* name, TypeNode* type, ExprNode* expr);
 
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 class AssociatedItemNode{
@@ -424,7 +411,6 @@ public:
     AssociatedItemNode(Visibility vis, FuncStmtNode* fn, ConstStmtNode* const_stmt);
 
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 class TraitNode{
@@ -436,7 +422,6 @@ public:
     TraitNode(string* name, AssociatedItemListNode* items);
 
    void toDot(string &dot);
-  void toXml(string &xml);
 };
 
 class AssociatedItemListNode{
@@ -450,7 +435,6 @@ public:
 
 
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 class ImplStmtNode{
@@ -467,7 +451,6 @@ public:
     ImplStmtNode(Type impl_type, TypeNode* type, string* name, AssociatedItemListNode* list);
 
    void toDot(string &dot);
-   void toXml(string &xml);
 };
 
 void connectVerticesDots(string &s, int parentId, int childId);
