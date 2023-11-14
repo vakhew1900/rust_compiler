@@ -211,22 +211,35 @@ public:
 
 class ItemNode{
 public:
-    enum Type
+    enum ItemType
     {
         enum_, function_, constStmt_, struct_, trait_, impl_, module_
     };
+
+    enum ImplType{
+        inherent, trait
+    };
+
     int id;
-    Type type;
+    ItemType item_type;
     Visibility visibility;
 
-    FuncStmtNode* function_item = NULL;
-    StructStructNode* struct_item = NULL;
-    EnumStmtNode* enum_item = NULL;
-    ImplStmtNode* impl_item = NULL;
-    TraitNode* trait_item = NULL;
-    ConstStmtNode* const_stmt_item = NULL;
-    ModuleStmtNode* module_item = NULL;
-    ItemNode* item_node = NULL;
+
+    string* name = NULL;
+    TypeNode* returnType = NULL;
+    FuncParamListNode* params = NULL;
+    ExprNode* body = NULL;
+
+
+    ImplType impl_type;
+    TypeNode* type = NULL;
+
+
+    StructFieldListNode* structItems = NULL;
+    EnumItemListNode* enumItems = NULL;
+    ItemListNode* items = NULL;
+
+    ExprNode* expr = NULL;
 
     static ItemNode* DeclarationEnum(Visibility visibility, EnumStmtNode* node);
     static ItemNode* DeclarationFunction(Visibility visibility, FuncStmtNode* node);
@@ -417,9 +430,9 @@ class TraitNode{
 public:
     int id;
     string* name = NULL;
-    AssociatedItemListNode* items = NULL;
+    ItemListNode* items = NULL;
 
-    TraitNode(string* name, AssociatedItemListNode* items);
+    TraitNode(string* name, ItemListNode* items);
 
    void toDot(string &dot);
 };
@@ -446,9 +459,9 @@ public:
     Type impl_type;
     string* name;
     TypeNode* type = NULL;
-    AssociatedItemListNode* items = NULL;
+    ItemListNode* items = NULL;
 
-    ImplStmtNode(Type impl_type, TypeNode* type, string* name, AssociatedItemListNode* list);
+    ImplStmtNode(Type impl_type, TypeNode* type, string* name, ItemListNode* list);
 
    void toDot(string &dot);
 };

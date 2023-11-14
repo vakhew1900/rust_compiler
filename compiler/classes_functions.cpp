@@ -256,7 +256,7 @@ ConstStmtNode* ConstStmtNode::ConstStmt(string* name, TypeNode* type, ExprNode* 
 }
 
 // Trait
-TraitNode::TraitNode(string* name, AssociatedItemListNode* items){
+TraitNode::TraitNode(string* name, ItemListNode* items){
     this->id = ++globId;
     this->name=name;
     this->items=items;
@@ -296,7 +296,7 @@ AssociatedItemListNode* AssociatedItemListNode::Append(AssociatedItemListNode* l
 }
 
 //ImplNode
-ImplStmtNode::ImplStmtNode(Type impl_type, TypeNode* type, string* name, AssociatedItemListNode* list){
+ImplStmtNode::ImplStmtNode(Type impl_type, TypeNode* type, string* name, ItemListNode* list){
     this->id = ++globId;
     this->impl_type = impl_type;
     this->type = type;
@@ -452,17 +452,18 @@ ModuleStmtNode::ModuleStmtNode(string* name, ItemListNode* items){
 ItemNode* ItemNode::DeclarationEnum(Visibility visibility, EnumStmtNode* node){
     ItemNode* new_node = new ItemNode();
     new_node->id = ++globId;
-    new_node->type = enum_;
+    new_node->item_type = enum_;
     new_node->visibility=visibility;
-    new_node->enum_item=node;
+    new_node->name = node->name;
+    new_node->enumItems = node->items;
 
     Visibility current_vis = visibility;
     if(visibility != pub){
         current_vis = self;
     }
 
-    if(node->items!=NULL){
-        for(auto iter = node->items->items->begin(); iter != node->items->items->end(); ++iter){
+    if(new_node->items!=NULL){
+        for(auto iter = new_node->items->items->begin(); iter != new_node->items->items->end(); ++iter){
             if((*iter)->visibility == emptyVisibility){
                 (*iter)->visibility = current_vis;
             }
@@ -476,9 +477,14 @@ ItemNode* ItemNode::DeclarationFunction(Visibility visibility, FuncStmtNode* nod
     ItemNode* new_node = new ItemNode();
     new_node->id = ++globId;
 
-    new_node->type=function_;
+    new_node->item_type=function_;
     new_node->visibility = visibility;
-    new_node->function_item = node;
+
+    new_node->name = node->name;
+    new_node->params = node->params;
+    new_node->returnType = node->returnType;
+    new_node->body = node->body;
+
     return new_node;
 }
 
@@ -486,9 +492,14 @@ ItemNode* ItemNode::DeclarationConst(Visibility visibility, ConstStmtNode* node)
     ItemNode* new_node = new ItemNode();
     new_node->id = ++globId;
 
-    new_node->type=constStmt_;
+    new_node->item_type=constStmt_;
     new_node->visibility = visibility;
-    new_node->const_stmt_item = node;
+
+    new_node->name = node->name;
+    new_node->expr = node->expr;
+    new_node->type = node->type;
+
+
     return new_node;
 }
 
@@ -496,26 +507,31 @@ ItemNode* ItemNode::DeclarationStruct(Visibility visibility, StructStructNode* n
     ItemNode* new_node = new ItemNode();
     new_node->id = ++globId;
 
-    new_node->type=struct_;
+    new_node->item_type=struct_;
     new_node->visibility = visibility;
-    new_node->struct_item = node;
+
+    new_node->name =  node->name;
+    new_node->structItems = node->items;
+
     return new_node;
 }
 
 ItemNode* ItemNode::DeclarationTrait(Visibility visibility, TraitNode* node){
     ItemNode* new_node = new ItemNode();
     new_node->id = ++globId;
-    new_node->type=trait_;
+    new_node->item_type=trait_;
     new_node->visibility = visibility;
-    new_node->trait_item = node;
+
+    new_node->name = node->name;
+    new_node->items = node->items;
 
     Visibility currentVisibility = visibility;
     if (visibility != pub){
         currentVisibility = self;
     }
 
-    if(node->items!=NULL){
-        for(auto iter = node->items->items->begin(); iter != node->items->items->end(); ++iter){
+    if(new_node->items!=NULL){
+        for(auto iter = new_node->items->items->begin(); iter != new_node->items->items->end(); ++iter){
             if((*iter)->visibility == emptyVisibility){
                 (*iter)->visibility = currentVisibility;
             }
@@ -529,9 +545,9 @@ ItemNode* ItemNode::DeclarationImpl(Visibility visibility, ImplStmtNode* node){
     ItemNode* new_node = new ItemNode();
     new_node->id = ++globId;
 
-    new_node->type=impl_;
+    new_node->item_type=impl_;
     new_node->visibility = visibility;
-    new_node->impl_item = node;
+    new_node->items = node->items;
     return new_node;
 }
 
@@ -539,16 +555,17 @@ ItemNode* ItemNode::DeclarationModule(Visibility visibility, ModuleStmtNode* nod
     ItemNode* new_node = new ItemNode();
     new_node->id = ++globId;
 
-    new_node->type=module_;
+    new_node->item_type=module_;
     new_node->visibility = visibility;
-    new_node->module_item = node;
+
+    new_node->name = node->name;
+    new_node->items = node->items;
+
     return new_node;
 }
 
 ItemNode::ItemNode(Visibility visibility, ItemNode* node){
     this->id = ++globId;
-    this->item_node = node;
-    this->item_node->visibility = visibility;
 }
 
 ItemNode *ItemNode::AddVisibility(Visibility visibility, ItemNode *itemNode) {
@@ -1017,7 +1034,7 @@ void StmtNode::toDot(string &dot){
             break;
 
         case let:
-            type = "let";
+            type = "let ";
             type += (this->let_type == mut)? "mut": "noMut";
             value = *this->name;
             break;
@@ -1092,7 +1109,8 @@ void LetStmtNode::toDot(string &dot){
 void ItemNode::toDot(string &dot){
 
     string type = "";
-    switch (this->type) {
+    switch (this->item_type) {
+
         case enum_:
             type = "enum_";
             break;
@@ -1116,7 +1134,8 @@ void ItemNode::toDot(string &dot){
             break;
 
         case impl_:
-            type = "impl_";
+            type = "impl_ ";
+            type += (impl_type == inherent)? "inherit": "trait";
             break;
 
         case module_:
@@ -1125,50 +1144,51 @@ void ItemNode::toDot(string &dot){
     }
 
     string visibility = getVisibility(this->visibility);
+    string value = "";
+    if(this->name != NULL) value = *this->name;
+    createVertexDot(dot, this->id, "item", type, value, visibility);
 
-    createVertexDot(dot, this->id, "item", type, "", visibility);
-
-    if(this->function_item != NULL){
-        connectVerticesDots(dot, this->id, this->function_item->id);
-        this->function_item->toDot(dot);
+    if(this->type != NULL){
+        connectVerticesDots(dot, this->id, this->type->id);
+        this->type->toDot(dot);
     }
 
-    if(this->struct_item != NULL){
-        connectVerticesDots(dot, this->id, this->struct_item->id);
-        this->struct_item->toDot(dot);
+    if(this->structItems != NULL){
+        connectVerticesDots(dot, this->id, this->structItems->id);
+        this->structItems->toDot(dot);
     }
 
-    if(this->enum_item != NULL){
-        connectVerticesDots(dot, this->id, this->enum_item->id);
-        this->enum_item->toDot(dot);
+    if(this->enumItems != NULL){
+        connectVerticesDots(dot, this->id, this->enumItems->id);
+        this->enumItems->toDot(dot);
     }
 
-    if(this->impl_item != NULL){
-        connectVerticesDots(dot, this->id, this->impl_item->id);
-        this->impl_item->toDot(dot);
+    if(this->items != NULL){
+        connectVerticesDots(dot, this->id, this->items->id);
+        this->items->toDot(dot);
     }
 
-    if(this->trait_item != NULL){
-        connectVerticesDots(dot, this->id, this->trait_item->id);
-        this->trait_item->toDot(dot);
-    }
-
-
-    if(this->const_stmt_item != NULL){
-        connectVerticesDots(dot, this->id, this->const_stmt_item->id);
-        this->const_stmt_item->toDot(dot);
+    if(this->expr != NULL){
+        connectVerticesDots(dot, this->id, this->expr->id);
+        this->expr->toDot(dot);
     }
 
 
-    if(this->module_item != NULL){
-        connectVerticesDots(dot, this->id, this->module_item->id);
-        this->module_item->toDot(dot);
+    if(this->returnType != NULL){
+        connectVerticesDots(dot, this->id, this->returnType->id);
+        this->returnType->toDot(dot);
     }
 
 
-    if(this->item_node != NULL){
-        connectVerticesDots(dot, this->id, this->item_node->id);
-        this->item_node->toDot(dot);
+    if(this->params != NULL){
+        connectVerticesDots(dot, this->id, this->params->id);
+        this->params->toDot(dot);
+    }
+
+
+    if(this->body != NULL){
+        connectVerticesDots(dot, this->id, this->body->id);
+        this->body->toDot(dot);
     }
 }
 

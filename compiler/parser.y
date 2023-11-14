@@ -35,8 +35,6 @@
     FuncParamNode* function_param;
     FuncParamListNode* function_params;
     ConstStmtNode* const_stmt;
-    AssociatedItemNode* associated_item;
-    AssociatedItemListNode* associated_items;
     TraitNode* trait;
     ImplStmtNode* impl_stmt;
     TypeNode* type;
@@ -86,9 +84,9 @@
 %type <function_params>FuncParamList
 %type <function_params>FuncParamListEmpty
 %type <const_stmt>ConstStmt
-%type <associated_item>AssociatedItem
-%type <associated_items>AssociatedItemList
-%type <associated_items>AssociatedItemListEmpty
+%type <item>AssociatedItem
+%type <item_list>AssociatedItemList
+%type <item_list>AssociatedItemListEmpty
 %type <impl_stmt>ImplStmt
 %type <trait>TraitStmt
 %type <type>Type
@@ -275,19 +273,19 @@ ImplStmt: IMPL Type '{'AssociatedItemListEmpty '}' { $$ = new ImplStmtNode(ImplS
         | IMPL ID FOR Type '{'AssociatedItemListEmpty '}' { $$ = new ImplStmtNode(ImplStmtNode::trait, $4, $2, $6); }
         ;
 
-AssociatedItemListEmpty: /* empty */ { $$ = 0; }
-                       | AssociatedItemList { $$ = new AssociatedItemListNode($1); }
+AssociatedItemListEmpty: /* empty */ { $$ = NULL; }
+                       | AssociatedItemList { $$ = $1; }
                        ;
 
-AssociatedItemList: AssociatedItem { $$ = new AssociatedItemListNode($1); }
-                  | AssociatedItemList AssociatedItem { $$ = AssociatedItemListNode::Append($1, $2); }
+AssociatedItemList: AssociatedItem { $$ = $$ = new ItemListNode($1); }
+                  | AssociatedItemList AssociatedItem { $$ = $$ = ItemListNode::Append($1, $2); }
                   ;
 
 /* Необходима еще проверка для Impl то что FuncStmt является именно реализацией */
-AssociatedItem: FuncStmt { $$ = new AssociatedItemNode(self, $1, 0); } // ImplFuncStmt
-              | ConstStmt { $$ = new AssociatedItemNode(self, 0, $1); }
-              | Visibility FuncStmt { $$ = new AssociatedItemNode($1, $2, 0); }
-              | Visibility ConstStmt { $$ = new AssociatedItemNode($1, 0, $2); }
+AssociatedItem: FuncStmt { $$ = ItemNode::DeclarationFunction(self, $1); } // ImplFuncStmt
+              | ConstStmt { $$ = ItemNode::DeclarationConst(self, $1); }
+              | Visibility FuncStmt { $$ = ItemNode::DeclarationFunction($1, $2); }
+              | Visibility ConstStmt { $$ = ItemNode::DeclarationConst($1, $2); }
               ;
 
 
@@ -305,7 +303,7 @@ ConstStmt: CONST ID ':' Type '=' ExprWithBlock ';' { $$ = ConstStmtNode::ConstSt
 
 /* =========== Module ================= */
 
-ModuleStmt: MOD ID '{' ItemListEmpty '}' { $$ = new ModuleStmtNode(ModuleStmtNode::empty, $2, $4); }
+ModuleStmt: MOD ID '{' ItemListEmpty '}' { $$ = new ModuleStmtNode($2, $4); }
           ;
 
 /* ========= LetStmt ============ */
