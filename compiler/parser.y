@@ -321,7 +321,7 @@ LetStmt: LET ID '=' ExprWithBlock ';' { $$ = new LetStmtNode($2, 0, LetStmtNode:
 
 /* === Expression Statement === */
 ExprStmt: ExprWithoutBlock ';' {$$ = new StmtNode(StmtNode::exprstmt, $1, 0, 0);}
-        | ExprWithBlock ';' {$$ = new StmtNode(StmtNode::exprstmt, $1, 0, 0);}
+        | ExprWithBlock {$$ = new StmtNode(StmtNode::exprstmt, $1, 0, 0);}
         ;
 
 

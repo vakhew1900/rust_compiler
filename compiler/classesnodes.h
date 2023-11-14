@@ -25,8 +25,6 @@ class FuncStmtNode; // function_node
 class FuncParamNode; // function_param_node
 class FuncParamListNode; // function_params_node
 class ConstStmtNode; // const_stmt_node
-class AssociatedItemNode; // associated_item_node
-class AssociatedItemListNode; // associated_items_node
 class TraitNode; //trait_node
 class ImplStmtNode; // impl_node
 class TypeNode; // type_node
@@ -414,18 +412,6 @@ public:
    void toDot(string &dot);
 };
 
-class AssociatedItemNode{
-public:
-    int id;
-    Visibility visibility;
-    FuncStmtNode* fn = NULL;
-    ConstStmtNode* const_stmt = NULL;
-
-    AssociatedItemNode(Visibility vis, FuncStmtNode* fn, ConstStmtNode* const_stmt);
-
-   void toDot(string &dot);
-};
-
 class TraitNode{
 public:
     int id;
@@ -433,19 +419,6 @@ public:
     ItemListNode* items = NULL;
 
     TraitNode(string* name, ItemListNode* items);
-
-   void toDot(string &dot);
-};
-
-class AssociatedItemListNode{
-public:
-    int id;
-    list<AssociatedItemNode*>* items = NULL;
-
-    AssociatedItemListNode(AssociatedItemNode* item);
-    AssociatedItemListNode(AssociatedItemListNode* list);
-    static AssociatedItemListNode* Append(AssociatedItemListNode* list, AssociatedItemNode* item);
-
 
    void toDot(string &dot);
 };

@@ -262,39 +262,6 @@ TraitNode::TraitNode(string* name, ItemListNode* items){
     this->items=items;
 }
 
-// AssociatedItemNode
-AssociatedItemNode::AssociatedItemNode(Visibility vis, FuncStmtNode* fn, ConstStmtNode* const_stmt){
-    this->id = ++globId;
-    this->visibility = vis;
-    this->fn = fn;
-    this->const_stmt = const_stmt;
-}
-
-//AssociatedItemList
-AssociatedItemListNode::AssociatedItemListNode(AssociatedItemNode* item){
-    this->id = ++globId;
-    this->items = new list <AssociatedItemNode*>{ item };
-
-}
-
-AssociatedItemListNode::AssociatedItemListNode(AssociatedItemListNode* list){
-    this->id = ++globId;
-
-    if(list != NULL)
-    {
-        this->items = list->items;
-    }
-    else
-    {
-        this->items = new std::list<AssociatedItemNode*>;
-    }
-}
-
-AssociatedItemListNode* AssociatedItemListNode::Append(AssociatedItemListNode* list, AssociatedItemNode* item) {
-    list->items->push_back(item);
-    return list;
-}
-
 //ImplNode
 ImplStmtNode::ImplStmtNode(Type impl_type, TypeNode* type, string* name, ItemListNode* list){
     this->id = ++globId;
@@ -1362,23 +1329,6 @@ void ConstStmtNode::toDot(string &dot){
     }
 }
 
-void AssociatedItemNode::toDot(string &dot){
-
-    createVertexDot(dot, this->id, "assotiated_item", "", "", getVisibility(this->visibility));
-
-    if(this->fn != NULL)
-    {
-        connectVerticesDots(dot, this->id, this->fn->id);
-        this->fn->toDot(dot);
-    }
-
-    if(this->const_stmt != NULL)
-    {
-        connectVerticesDots(dot, this->id, this->const_stmt->id);
-        this->const_stmt->toDot(dot);
-    }
-}
-
 void ImplStmtNode::toDot(string &dot){
 
     string type = "";
@@ -1432,18 +1382,6 @@ void FuncParamListNode::toDot(string &dot){
     }
 
     createVertexDot(dot, this->id, "func_param_list", type);
-    for(auto elem : *this->items)
-    {
-        int enumItemCnt = 1;
-        connectVerticesDots(dot, this->id, elem->id);
-        elem->toDot(dot);
-    }
-}
-
-void AssociatedItemListNode::toDot(string &dot){
-
-    createVertexDot(dot, this->id, "assolation_item_list");
-
     for(auto elem : *this->items)
     {
         int enumItemCnt = 1;
