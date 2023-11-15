@@ -501,7 +501,7 @@ IfExpr: SimpleIfElseExpr { $$ = $1; }
       ;
 
 
-SimpleIfElseExpr: SimpleIfExpr  { $$ = $1; }
+SimpleIfElseExpr: SimpleIfExpr  { $$ = ExprNode::IfExprList($1); }
                 | SimpleIfElseExpr ELSE SimpleIfExpr { $$ = ExprNode::AddIfBlock($1, $3); }
                 ;
 

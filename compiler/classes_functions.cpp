@@ -1007,6 +1007,11 @@ void StmtNode::toDot(string &dot){
             break;
     }
 
+    if(this->type == semicolon)
+    {
+        return;
+    }
+
     createVertexDot(dot, this->id, "stmt", type, value);
 
     if(this->expr != NULL){

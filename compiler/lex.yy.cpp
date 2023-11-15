@@ -2918,12 +2918,13 @@ int translateNumberByBase(char *input_string) {
 
 int main(int argc, char** argv) {
 
-    if (argc != 2) {
-        printf("Filename is not found");
-        return 1;
-    }
+//    if (argc != 2) {
+//        printf("Filename is not found");
+//        return 1;
+//    }
 
-    const char *filename = argv[1];
+  //  const char *filename = argv[1];
+    const char *filename = "tests/simple_else_if.rs";
 
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
