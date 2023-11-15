@@ -16,10 +16,10 @@ TypeNode::TypeNode(Type type) {
 
 TypeNode::TypeNode(Type type, TypeNode* type_node, ExprNode* expr) {
     this->id = ++globId;
-    if(type_node->typeArr != NULL){
-        this->type = type;
-        this->typeArr = type_node;
-    }
+
+    this->type = type;
+    this->typeArr = type_node;
+
     this->exprArr = expr;
 }
 
