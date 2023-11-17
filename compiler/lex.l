@@ -70,7 +70,7 @@ DIGIT [0-9]
 \n { lineNumber++; }
 [[:space:]] { }
 
-as { printf("Found KW_AS: %s\n", yytext); }
+as { printf("Found KW_AS: %s\n", yytext); return AS}
 break { printf("Found KW_BREAK: %s\n", yytext); return BREAK;}
 const { printf("Found KW_CONST: %s\n", yytext); return CONST;}
 continue { printf("Found KW_CONTINUE: %s\n", yytext); return CONTINUE;}

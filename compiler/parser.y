@@ -124,6 +124,7 @@
 %left '<' '>'  EQUAL NOT_EQUAL LESS_EQUAL GREATER_EQUAL  // == != <= >=
 %left '+' '-'
 %left '*' '/' '%'
+%left AS
 %left '!' '&' MUT_REF UMINUS USTAR /*  - * */
 %nonassoc '?'
 %left '.' '['  DOUBLEDOTS
@@ -449,6 +450,8 @@ ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode::ExprFromCharLiteral(ExprNode::ch
                 | ExprWithoutBlock '{' StructExprFieldList '}' { $$ = ExprNode::FieldListAccess(ExprNode::struct_creation, $1, $3); }
                 | '(' ExprWithBlock ')' { $$ = $2; }
                 |'(' ExprWithoutBlock ')' { $$ = $2; }
+                | ExprWithBlock AS Type //ToDo  добавить в enum и создать новый элемент
+                | ExprWithoutBlock AS Type //ToDo добавить в enum и создать новый элемент Expr
                 ;
 
 
@@ -517,7 +520,7 @@ Type: BOOL { $$ = new TypeNode(TypeNode::bool_); }
     | FLOAT { $$ = new TypeNode(TypeNode::float_); }
     | INT { $$ = new TypeNode(TypeNode::int_); }
     | STRING { $$ = new TypeNode(TypeNode::string_); }
-    | ID { $$ = new TypeNode(TypeNode::id_, $1); }
+    | PathCallExpr { $$ = new TypeNode(TypeNode::id_, $1); } //ToDO поменять тип на pathCallExp в enum и хранить элемент в Expr
     | '[' Type ';' ExprWithBlock ']' { $$ = new TypeNode(TypeNode::array_, $2, $4); }
     | '[' Type ';' ExprWithoutBlock ']' { $$ = new TypeNode(TypeNode::array_, $2, $4); }
     ;
