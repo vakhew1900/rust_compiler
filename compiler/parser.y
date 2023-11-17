@@ -147,7 +147,7 @@ StmtList: Stmt { $$ = new StmtListNode($1); }
         | StmtList Stmt { $$ = StmtListNode::Append($1, $2); }
         ;
 
-Stmt: ';' { $$ = new StmtNode(StmtNode::semicolon, 0, 0, 0); }
+Stmt: ';' { $$ = NULL; }
     | LetStmt { $$ = new StmtNode(StmtNode::let, NULL, NULL, $1); }
     | ExprStmt { $$ = $1;}
     ;
@@ -450,8 +450,8 @@ ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode::ExprFromCharLiteral(ExprNode::ch
                 | ExprWithoutBlock '{' StructExprFieldList '}' { $$ = ExprNode::FieldListAccess(ExprNode::struct_creation, $1, $3); }
                 | '(' ExprWithBlock ')' { $$ = $2; }
                 |'(' ExprWithoutBlock ')' { $$ = $2; }
-                | ExprWithBlock AS Type //ToDo  добавить в enum и создать новый элемент
-                | ExprWithoutBlock AS Type //ToDo добавить в enum и создать новый элемент Expr
+                | ExprWithBlock AS Type  { $$ = ExprNode::AsExpr($1, $3);} //ToDo  добавить в enum и создать новый элемент
+                | ExprWithoutBlock AS Type {$$ = ExprNode::AsExpr($1, $3);} //ToDo добавить в enum и создать новый элемент Expr
                 ;
 
 
@@ -520,7 +520,7 @@ Type: BOOL { $$ = new TypeNode(TypeNode::bool_); }
     | FLOAT { $$ = new TypeNode(TypeNode::float_); }
     | INT { $$ = new TypeNode(TypeNode::int_); }
     | STRING { $$ = new TypeNode(TypeNode::string_); }
-    | PathCallExpr { $$ = new TypeNode(TypeNode::id_, $1); } //ToDO поменять тип на pathCallExp в enum и хранить элемент в Expr
+    | PathCallExpr { $$ = new TypeNode(TypeNode::path_call_expr_, $1); } //ToDO поменять тип на pathCallExp в enum и хранить элемент в Expr
     | '[' Type ';' ExprWithBlock ']' { $$ = new TypeNode(TypeNode::array_, $2, $4); }
     | '[' Type ';' ExprWithoutBlock ']' { $$ = new TypeNode(TypeNode::array_, $2, $4); }
     ;

@@ -47,7 +47,7 @@ public:
 class TypeNode{
 public:
     enum Type{
-        emptyType_, int_, char_, string_, float_, bool_, id_, array_
+        emptyType_, int_, char_, string_, float_, bool_, id_, array_, path_call_expr_
     };
 
     int id;
@@ -56,10 +56,13 @@ public:
     TypeNode* typeArr = NULL;
     ExprNode* exprArr = NULL;
 
+    ExprNode* pathCallExpr = NULL;
+
     //ф-ии
     TypeNode(Type type);
     TypeNode(Type type, TypeNode* type_node, ExprNode* expr);
     TypeNode(Type type, string *name);
+    TypeNode(Type type, ExprNode *pathCallExpr);
     void toDot(string &dot);
 
 };
@@ -75,7 +78,7 @@ public:
 
         id_, self_expr, if_expr_list, if_expr, loop_expr, loop_while, loop_for, block_expr,
         struct_expr, struct_field_expr, static_method, tuple_expr, super_expr,
-        path_call_expr, add_if_block, struct_creation
+        path_call_expr, add_if_block, struct_creation, as
     };
 
     int id;
@@ -98,6 +101,8 @@ public:
 
     list<ExprNode*>* ifList = NULL;
     ExprNode* else_body = NULL;
+
+    TypeNode* typeNode = NULL;
 
     //ф-ии
     static ExprNode* OperatorExpr(Type type, ExprNode* left, ExprNode* right);
@@ -126,6 +131,8 @@ public:
     static ExprNode* IfExprList(ExprNode* ifExpr);
     static ExprNode* AddIfBlock(ExprNode* ifExpr, ExprNode* someIfExpr);
     static ExprNode* AddElseBlock(ExprNode* ifExpr, ExprNode* else_body);
+
+    static ExprNode* AsExpr(ExprNode* expr, TypeNode* typeNode);
 
     void toDot(string &dot, const string &pos = "");
 

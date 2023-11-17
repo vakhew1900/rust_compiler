@@ -29,6 +29,12 @@ TypeNode::TypeNode(Type type, string *name){
     this->name = name;
 }
 
+TypeNode::TypeNode(Type type, ExprNode *pathCallExpr){
+    this->id = ++globId;
+    this->type = type;
+    this->pathCallExpr = pathCallExpr;
+}
+
 // Expr from + - * / и тд
 ExprNode* ExprNode::OperatorExpr(Type type, ExprNode* left, ExprNode* right){
     ExprNode* new_node = new ExprNode();
@@ -208,6 +214,15 @@ ExprNode* ExprNode::AddIfBlock(ExprNode* ifExpr, ExprNode* someIfExpr){
 ExprNode* ExprNode::AddElseBlock(ExprNode* ifExpr, ExprNode* else_body){
     ifExpr->else_body = else_body;
     return ifExpr;
+}
+
+ExprNode* ExprNode::AsExpr(ExprNode* expr, TypeNode*  typeNode){
+    ExprNode* new_node = new ExprNode();
+    new_node->id = ++globId;
+    new_node->type = as;
+    new_node->expr_left = expr;
+    new_node->typeNode = typeNode;
+    return new_node;
 }
 
 ExprNode* ExprNode::StructExpr(Type type, string* name, ExprListNode* expr_list){
@@ -585,12 +600,22 @@ LetStmtNode::LetStmtNode(string* name, TypeNode* type, Type let_type, ExprNode* 
 //StmtListNode
 StmtListNode::StmtListNode(StmtNode *item){
     this->id = ++globId;
-    this->stmts = new list <StmtNode*>{ item };
+    this->stmts = new list <StmtNode*>;
+
+    if(item != NULL)
+    {
+        this->stmts->push_back(item);
+    }
 }
 
 
 StmtListNode* StmtListNode::Append(StmtListNode *list, StmtNode* item) {
-    list->stmts->push_back(item);
+
+    if(item != NULL)
+    {
+        list->stmts->push_back(item);
+    }
+
     return list;
 }
 
@@ -914,6 +939,9 @@ void ExprNode::toDot(string &dot, const string &pos){
         case break_with_val_expr:
             type = "break_with_val_expr";
             break;
+        case as:
+            type = "as";
+            break;
     }
 
     if(this->id == 3)
@@ -966,6 +994,12 @@ void ExprNode::toDot(string &dot, const string &pos){
     if(this->else_body != NULL){
         connectVerticesDots(dot, this->id, this->else_body->id);
         this->else_body->toDot(dot, "else_body");
+    }
+
+    if(this->typeNode != NULL)
+    {
+        connectVerticesDots(dot, this->id, this->typeNode->id);
+        this->typeNode->toDot(dot);
     }
 }
 
