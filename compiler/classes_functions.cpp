@@ -700,6 +700,11 @@ void TypeNode::toDot(string &dot){
             }
 
             break;
+        case path_call_expr_:
+            createVertexDot(dot, this->id,"path_call_expr_", "", "");
+            this->pathCallExpr->toDot(dot);
+            connectVerticesDots(dot, this->id, this->pathCallExpr->id);
+            break;
     }
 }
 
