@@ -74,9 +74,10 @@ string ConstTableItem::toString(int index) {
         case INTERFACE_METHOD_REF:
             break;
 
-        row += "\n";
-        return row;
     }
+
+    row += "\n";
+    return row;
 }
 
 string ConstTable::toCSV() {
