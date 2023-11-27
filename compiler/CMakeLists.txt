@@ -21,4 +21,6 @@ add_executable(compiler "lex.yy.cpp"
         semantics/tables/methodtable.h
         semantics/tables/classtable.cpp
         semantics/tables/classtable.h
+        semantics/tables/constable.cpp
+        semantics/tables/constable.h
 )
