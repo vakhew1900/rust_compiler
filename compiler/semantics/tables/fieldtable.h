@@ -6,7 +6,7 @@
 #define COMPILER_FIELDTABLE_H
 
 #pragma once
-#include "semantics/datatype.h"
+#include "semantics/tools/datatype.h"
 #include <map>
 #include <iostream>
 
@@ -27,7 +27,7 @@ public:
 
 class FieldTable {
 public:
-    map<string, FieldTableItem> items;
+    map<string, FieldTableItem> items; // ключ - имя, значение понятно
 };
 
 

@@ -6,8 +6,9 @@
 #include <iostream>
 #include <string>
 #include <list>
-#include "semantics/datatype.h"
+#include "semantics/tools/datatype.h"
 #include "semantics/tables/fieldtable.h"
+#include "semantics/tools/tools.h"
 
 using namespace std;
 
