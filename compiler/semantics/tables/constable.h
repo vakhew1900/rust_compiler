@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <map>
+#include <vector>
 
 using namespace std;
 
@@ -44,7 +45,7 @@ public:
 
 class ConstTable {
 public:
-    map<string, ConstTableItem> items;
+    std::vector<ConstTableItem> items;
 };
 
 
