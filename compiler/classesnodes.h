@@ -7,6 +7,7 @@
 #include <string>
 #include <list>
 #include "semantics/datatype.h"
+#include "semantics/tables/fieldtable.h"
 
 using namespace std;
 

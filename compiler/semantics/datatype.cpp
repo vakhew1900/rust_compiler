@@ -25,7 +25,7 @@ DataType DataType::ArrayDataType(DataType::Type arrType, int arrDeep, int arrLen
     return dataType;
 }
 
-DataType DataType::StructDataType(vector<string> &structPath) {
+DataType DataType::StructDataType(vector<string> structPath) {
     DataType dataType = DataType(struct_);
     dataType.structPath = structPath;
     return dataType;

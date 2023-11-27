@@ -11,4 +11,6 @@ add_executable(compiler "lex.yy.cpp"
         classesnodes.h
         semantics/datatype.cpp
         semantics/datatype.h
+        semantics/tables/fieldtable.cpp
+        semantics/tables/fieldtable.h
 )

@@ -26,7 +26,7 @@ public:
     DataType(Type type);
     static DataType ArrayDataType(Type arrType, int arrDeep);
     static DataType ArrayDataType(Type arrType, int arrDeep, int arrLength);
-    static DataType StructDataType(vector<string> &structPath);
+    static DataType StructDataType(vector<string> structPath);
 };
 
 
