@@ -40,12 +40,15 @@ public:
     ConstTableItem(ConstTableType constTableType, int val1);
     ConstTableItem(ConstTableType constTableType, int val1, int val2);
     ConstTableItem(ConstTableType constTableType, double  floatVal);
+    string toString(int index);
 };
 
 
 class ConstTable {
 public:
     std::vector<ConstTableItem> items;
+
+    string toCSV();
 };
 
 
