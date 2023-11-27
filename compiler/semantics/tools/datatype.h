@@ -13,7 +13,7 @@ using  namespace  std;
 class DataType {
 public:
     enum Type {
-        int_, float_, char_, bool_, string_, struct_, array_
+        void_, int_, float_, char_, bool_, string_, struct_, array_
     };
 
     Type type;
