@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include "semantics/datatype.h"
 
 using namespace std;
 
@@ -42,6 +43,7 @@ enum Visibility {
 class Node {
 public:
     int id;
+    DataType dataType;
 };
 
 

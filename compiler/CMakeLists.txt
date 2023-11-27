@@ -9,4 +9,6 @@ add_executable(compiler "lex.yy.cpp"
         unistd.h
         classes_functions.cpp
         classesnodes.h
+        semantics/datatype.cpp
+        semantics/datatype.h
 )
