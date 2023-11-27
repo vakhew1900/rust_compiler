@@ -29,7 +29,7 @@ public:
 
 class MethodTable{
 public:
-    map<string, MethodTableItem> items;
+    map<string, MethodTableItem> items; // название класса
 };
 
 

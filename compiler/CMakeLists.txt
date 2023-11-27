@@ -19,4 +19,6 @@ add_executable(compiler "lex.yy.cpp"
         semantics/tools/tools.cpp
         semantics/tables/methodtable.cpp
         semantics/tables/methodtable.h
+        semantics/tables/classtable.cpp
+        semantics/tables/classtable.h
 )
