@@ -21,6 +21,7 @@ public:
     int arrDeep = 0; // 1 - одномерный массив, 2 - двумерный массив и т.д.
     int arrLength = -1; // -1 - undefined
     vector<string> structPath; // полный путь до структуры т. е.  последнее слово в массиве название структуры - остальное путь
+    string id; // мб лучше это использовать
 
     DataType();
     DataType(Type type);
@@ -28,6 +29,8 @@ public:
     static DataType ArrayDataType(Type arrType, int arrDeep, int arrLength);
     static DataType StructDataType(vector<string> structPath);
 };
+
+
 
 
 #endif //COMPILER_DATATYPE_H

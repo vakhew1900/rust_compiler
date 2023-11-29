@@ -8,6 +8,7 @@
 
 #include "methodtable.h"
 #include "fieldtable.h"
+#include "constable.h"
 #include <map>
 
 using namespace std;
@@ -31,6 +32,7 @@ public:
 class ClassTable {
 public:
     map<string, ClassTableItem> items;
+    ConstTable constTable;
 };
 
 
