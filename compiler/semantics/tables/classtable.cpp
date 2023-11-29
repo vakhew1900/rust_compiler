@@ -55,3 +55,14 @@ string ClassTable::toString() {
 
     return res;
 }
+
+ClassTable* ClassTable::_instanse = NULL;
+
+ClassTable *ClassTable::Instance() {
+    if(_instanse == NULL)
+    {
+        _instanse = new ClassTable();
+    }
+
+    return _instanse;
+}

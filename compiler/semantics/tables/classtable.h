@@ -33,9 +33,12 @@ public:
 };
 
 class ClassTable {
+private:
+    static ClassTable* _instanse;
 public:
     map<string, ClassTableItem> items;
     string toString();
+    static ClassTable* Instance();
 };
 
 
