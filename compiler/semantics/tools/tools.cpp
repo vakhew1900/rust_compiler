@@ -22,3 +22,12 @@ vector<string> split(string &str, char separator) {
     }
     return strings;
 }
+
+string Exception::getMessage() {
+    return message;
+}
+
+Exception::Exception(ExceptionType exceptionType, string message) {
+    this->exceptionType = exceptionType;
+    this->message = message;
+}

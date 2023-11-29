@@ -12,6 +12,18 @@ using namespace std;
 
 vector<string> split(string &str, char separator);
 
-#endif //COMPILER_TOOLS_H
+class Exception{
+private:
+    string message;
+public:
+    enum ExceptionType {
+        STRUCT_WITH_TWO_TRAIT,
+    };
 
+    ExceptionType exceptionType;
+    string getMessage();
+    Exception(ExceptionType exceptionType, string message);
+};
+
+#endif //COMPILER_TOOLS_H
 
