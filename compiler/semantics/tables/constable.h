@@ -48,6 +48,7 @@ class ConstTable {
 public:
     std::vector<ConstTableItem> items;
 
+    string toString();
     string toCSV();
 };
 

@@ -22,12 +22,14 @@ public:
     FieldTableItem();
     FieldTableItem(DataType dataType, bool  isConst);
     FieldTableItem(DataType dataType, bool  isConst, ExprNode *value);
+    string toString();
 };
 
 
 class FieldTable {
 public:
     map<string, FieldTableItem> items; // ключ - имя, значение понятно
+    string toString();
 };
 
 

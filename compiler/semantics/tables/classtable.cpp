@@ -13,3 +13,45 @@ ClassTableItem::ClassTableItem(FieldTable fieldTable, MethodTable methodTable, s
     this->methodTable = methodTable;
     this->parentName = parentName;
 }
+
+string ClassTableItem::toString() {
+    string res = "";
+
+    switch (classType) {
+
+        case struct_:
+            res += varName(struct_);
+            break;
+        case enum_:
+            res += varName(enum_);
+            break;
+        case trait_:
+            res += varName(trait_);
+            break;
+        case mod_:
+            res += varName(mod_);
+            break;
+    }
+
+    if(parentName.size())
+    {
+        res += "parent: " + parentName;
+    }
+
+    res += "\nfieldTable:" + fieldTable.toString();
+    res += "methodTable" + fieldTable.toString();
+
+    return res;
+}
+
+
+string ClassTable::toString() {
+    string res;
+
+    for(auto  elem : items)
+    {
+        string tmp = elem.first + " " + elem.second.toString();
+    }
+
+    return res;
+}

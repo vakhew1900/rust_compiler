@@ -17,3 +17,28 @@ FieldTableItem::FieldTableItem(DataType dataType, bool isConst, ExprNode *value)
     this->isConst = isConst;
     this->value = value;
 }
+
+string FieldTableItem::toString() {
+    string res = "";
+
+    if(isConst)
+    {
+        res += "const ";
+    }
+
+    res += dataType.toString();
+
+    return res;
+}
+
+string FieldTable::toString() {
+    string res = "";
+
+    for(auto elem: items)
+    {
+        string tmp = elem.first + ":" + elem.second.toString() + "\n";
+        res += tmp;
+    }
+
+    return res;
+}

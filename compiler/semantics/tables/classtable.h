@@ -16,7 +16,7 @@ using namespace std;
 class ClassTableItem{
 public:
     enum Type{
-        struct_, enum_, trait_ // не факт что правильно
+        struct_, enum_, trait_, mod_ // не факт что правильно
     };
 
     Type classType;
@@ -25,14 +25,17 @@ public:
     FieldTable fieldTable;
     string parentName; // имя родителя
 
+    ConstTable constTable;
+
     ClassTableItem();
     ClassTableItem(FieldTable fieldTable, MethodTable methodTable, string parentName = "");
+    string toString();
 };
 
 class ClassTable {
 public:
     map<string, ClassTableItem> items;
-    ConstTable constTable;
+    string toString();
 };
 
 

@@ -90,3 +90,7 @@ string ConstTable::toCSV() {
 
     return csv;
 }
+
+string ConstTable::toString() {
+    return toCSV();
+}

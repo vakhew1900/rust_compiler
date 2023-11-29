@@ -14,22 +14,26 @@ public:
 
     VarTableItem(DataType dataType, bool isMut, bool isRef, bool isInit, ExprNode *blockExpr);
 
+    string id = "";
     DataType dataType;
     bool isMut = false;
     bool isRef = false; // является передачей по ссылке или нет
     bool isConst = false;
     bool isInit = false;
     ExprNode* blockExpr; // блок, с которым связан файл
+    ExprNode* value; // для const;
 
     VarTableItem();
-    VarTableItem(DataType dataType, bool isMut,bool isRef,bool isInit, bool isConst);
-    VarTableItem(DataType dataType, bool isMut,bool isRef,bool isInit, bool isConst, ExprNode* blockExpr);
+    VarTableItem(string name, DataType dataType, bool isMut,bool isRef,bool isInit, bool isConst);
+    VarTableItem(string name, DataType dataType, bool isMut,bool isRef,bool isInit, bool isConst, ExprNode* blockExpr);
+    VarTableItem(string name, DataType dataType, bool isMut,bool isRef,bool isInit, bool isConst, ExprNode* blockExpr, ExprNode* value);
+    string toString();
 };
 
 class VarTable {
-
+public:
     vector<VarTableItem> items;
-
+    string toString();
 };
 
 

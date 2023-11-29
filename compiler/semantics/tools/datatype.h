@@ -7,13 +7,15 @@
 
 #include <iostream>
 #include <vector>
+#include "tools.h"
+
 
 using  namespace  std;
 
 class DataType {
 public:
     enum Type {
-        void_, int_, float_, char_, bool_, string_, struct_, array_
+        void_, int_, float_, char_, bool_, string_, class_, array_
     };
 
     Type type;
@@ -28,6 +30,8 @@ public:
     static DataType ArrayDataType(Type arrType, int arrDeep);
     static DataType ArrayDataType(Type arrType, int arrDeep, int arrLength);
     static DataType StructDataType(vector<string> structPath);
+    static DataType StructDataType(string id);
+    string toString();
 };
 
 
