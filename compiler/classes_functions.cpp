@@ -635,10 +635,25 @@ StmtNode::StmtNode(Type type, ExprNode* expr_node, ItemNode* decl_node, LetStmtN
     }
 }
 
+StmtNode::StmtNode() {
+
+}
+
+
 StmtNode::StmtNode(Type type, StmtNode* stmt){
     this->id = ++globId;
     this->type = type;
     this->stmt= stmt;
+}
+
+StmtNode *StmtNode::ConstStmtToStmt(ConstStmtNode *node) {
+    StmtNode *new_node = new StmtNode();
+    new_node->id = ++globId;
+    new_node->type = const_;
+    new_node->typeChild = node->type;
+    new_node->expr = node->expr;
+    new_node->name = node->name;
+    return new_node;
 }
 
 // --- toDot, toXml функции ---
@@ -1042,6 +1057,11 @@ void StmtNode::toDot(string &dot){
         case let:
             type = "let ";
             type += (this->let_type == mut)? "mut": "noMut";
+            value = *this->name;
+            break;
+
+        case const_:
+            type = "const_ ";
             value = *this->name;
             break;
     }

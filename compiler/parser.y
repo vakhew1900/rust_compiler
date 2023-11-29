@@ -150,6 +150,7 @@ StmtList: Stmt { $$ = new StmtListNode($1); }
 Stmt: ';' { $$ = NULL; }
     | LetStmt { $$ = new StmtNode(StmtNode::let, NULL, NULL, $1); }
     | ExprStmt { $$ = $1;}
+    | ConstStmt { $$ = StmtNode::ConstStmtToStmt($1)}
     ;
 
 ItemListEmpty: /*empty*/ { $$ = 0; }

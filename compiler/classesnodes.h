@@ -189,7 +189,7 @@ public:
 class StmtNode : public Node {
 public:
     enum Type {
-        semicolon, expression, exprstmt, let
+        semicolon, expression, exprstmt, let, const_
     };
     Type type;
     ExprNode *expr = NULL;
@@ -207,9 +207,10 @@ public:
     TypeNode *typeChild = NULL;
 
 
+    StmtNode();
     StmtNode(Type type, ExprNode *expr_node, ItemNode *decl_node, LetStmtNode *let_node);
-
     StmtNode(Type type, StmtNode *stmt);
+    static StmtNode* ConstStmtToStmt(ConstStmtNode *node);
 
     void toDot(string &dot);
 };
