@@ -9,6 +9,8 @@
 #include "semantics/tools/datatype.h"
 #include "semantics/tables/fieldtable.h"
 #include "semantics/tools/tools.h"
+#include "semantics/tables/methodtable.h"
+#include "semantics/tables/classtable.h"
 
 using namespace std;
 
@@ -46,6 +48,11 @@ class Node {
 public:
     int id;
     DataType dataType;
+    MethodTableItem methodTableItem;
+    FieldTableItem fieldTableItem;
+    ClassTableItem classTableItem;
+    virtual void getAllItems(string className);
+
 };
 
 
@@ -56,6 +63,8 @@ public:
     ProgramNode(ItemListNode *item_list);
 
     void toDot(string &dot);
+
+    void getAllItems(std::string className) override;
 };
 
 class TypeNode : public Node {

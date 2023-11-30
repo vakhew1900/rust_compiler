@@ -44,6 +44,10 @@ string ClassTableItem::toString() {
     return res;
 }
 
+bool ClassTableItem::isHaveParent() {
+    return !this->parentName.empty();
+}
+
 
 string ClassTable::toString() {
     string res;
@@ -66,3 +70,16 @@ ClassTable *ClassTable::Instance() {
 
     return _instanse;
 }
+
+ClassTable::ClassTable() {
+
+}
+
+void ClassTable::addMethod(string className, string methodName, MethodTableItem methodTableItem) {
+    this->items[className].methodTable.items[methodName] = methodTableItem;
+}
+
+void ClassTable::addField(string className, string fieldName, FieldTableItem fieldTableItem) {
+    this->items[className].fieldTable.items[fieldName] = fieldTableItem;
+}
+

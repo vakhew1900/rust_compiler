@@ -30,15 +30,19 @@ public:
     ClassTableItem();
     ClassTableItem(FieldTable fieldTable, MethodTable methodTable, string parentName = "");
     string toString();
+    bool isHaveParent();
 };
 
 class ClassTable {
 private:
     static ClassTable* _instanse;
+    ClassTable();
 public:
     map<string, ClassTableItem> items;
     string toString();
     static ClassTable* Instance();
+    void addMethod(string className, string methodName, MethodTableItem methodTableItem);
+    void addField(string className, string fieldName, FieldTableItem fieldTableItem);
 };
 
 

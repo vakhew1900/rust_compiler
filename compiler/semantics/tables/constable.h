@@ -14,20 +14,20 @@ using namespace std;
 class ConstTableItem {
 public:
     enum ConstTableType {
-        CLASS = 7,
-        FIELD_REF = 9,
-        METHOD_REF = 10,
-        INTERFACE_METHOD_REF = 11,
-        STRING = 8,
-        INTEGER = 3,
-        FLOAT = 4,
-        LONG = 5,
-        DOUBLE = 6,
-        NAME_AND_TYPE = 12,
-        UTF8 = 1,
-        METHOD_HANDLE = 15,
-        METHOD_TYPE = 16,
-        INVOKE_DYNAMIC = 18,
+        CONSTANT_CLASS = 7,
+        CONSTANT_FIELD_REF = 9,
+        CONSTANT_METHOD_REF = 10,
+        CONSTANT_INTERFACE_METHOD_REF = 11,
+        CONSTANT_STRING = 8,
+        CONSTANT_INTEGER = 3,
+        CONSTANT_FLOAT = 4,
+        CONSTANT_LONG = 5,
+        CONSTANT_DOUBLE = 6,
+        CONSTANT_NAME_AND_TYPE = 12,
+        CONSTANT_UTF8 = 1,
+        CONSTANT_METHOD_HANDLE = 15,
+        CONSTANT_METHOD_TYPE = 16,
+        CONSTANT_INVOKE_DYNAMIC = 18,
     };
 
     ConstTableType constTableType;

@@ -672,6 +672,30 @@ void ProgramNode::toDot(string &dot){
 
 }
 
+void ProgramNode::getAllItems(std::string className) {
+
+    for(auto elem : *item_list->items)
+    {
+        elem->getAllItems(className);
+
+        switch (elem->item_type) {
+
+
+            case ItemNode::function_:
+            ClassTable:: Instance()->addMethod(className, *elem->name, elem->methodTableItem);
+            case ItemNode::constStmt_:
+            ClassTable:: Instance()->addField(className, *elem->name, elem->fieldTableItem);
+                break;
+            case ItemNode::struct_:
+            case ItemNode::trait_:
+            case ItemNode::impl_:
+            case ItemNode::module_:
+            case ItemNode::enum_:
+                break;
+        }
+    }
+}
+
 void TypeNode::toDot(string &dot){
 
     switch (this->type) {
@@ -1525,3 +1549,8 @@ string getVisibility(Visibility visibility) {
     return res;
 }
 
+
+// ------------------------  GetAllItems ------------------------------------
+void Node::getAllItems(string className) {
+
+}

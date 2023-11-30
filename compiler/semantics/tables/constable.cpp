@@ -33,45 +33,45 @@ string ConstTableItem::toString(int index) {
 
     switch(constTableType)
     {
-        case UTF8:
-            row += varName(UTF8);
+        case CONSTANT_UTF8:
+            row += varName(CONSTANT_UTF8);
             row += ", " + utf8;
             break;
-        case CLASS:
-            row += varName(CLASS);
+        case CONSTANT_CLASS:
+            row += varName(CONSTANT_CLASS);
             row += ", " + to_string(val1);
             break;
-        case STRING:
-            row += varName(STRING);
+        case CONSTANT_STRING:
+            row += varName(CONSTANT_STRING);
             row += ", " + to_string(val1);
             break;
-        case FIELD_REF:
-            row += varName(FIELD_REF);
+        case CONSTANT_FIELD_REF:
+            row += varName(CONSTANT_FIELD_REF);
             row += ", " + to_string(val1) + " " + to_string(val2);
             break;
-        case INTEGER:
-            row += varName(INTEGER);
+        case CONSTANT_INTEGER:
+            row += varName(CONSTANT_INTEGER);
             row += ", " + to_string(val1);
             break;
-        case METHOD_REF:
-            row += varName(METHOD_REF);
+        case CONSTANT_METHOD_REF:
+            row += varName(CONSTANT_METHOD_REF);
             row += ", " + to_string(val1) + " " + to_string(val2);
             break;
-        case DOUBLE:
-            row += varName(DOUBLE);
+        case CONSTANT_DOUBLE:
+            row += varName(CONSTANT_DOUBLE);
             row += ", " + to_string(floatVal);
             break;
-        case NAME_AND_TYPE:
-            row += varName(NAME_AND_TYPE);
+        case CONSTANT_NAME_AND_TYPE:
+            row += varName(CONSTANT_NAME_AND_TYPE);
             row += ", " + to_string(val1) + to_string(val2);
             break;
 
-        case FLOAT:
-        case LONG:
-        case METHOD_HANDLE:
-        case METHOD_TYPE:
-        case INVOKE_DYNAMIC:
-        case INTERFACE_METHOD_REF:
+        case CONSTANT_FLOAT:
+        case CONSTANT_LONG:
+        case CONSTANT_METHOD_HANDLE:
+        case CONSTANT_METHOD_TYPE:
+        case CONSTANT_INVOKE_DYNAMIC:
+        case CONSTANT_INTERFACE_METHOD_REF:
             break;
 
     }
