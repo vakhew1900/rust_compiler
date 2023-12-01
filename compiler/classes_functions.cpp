@@ -1496,24 +1496,10 @@ void ProgramNode::getAllItems(std::string className) {
     this->classTableItem = ClassTableItem();
     ClassTable::Instance()->addClass(className, classTableItem);
     try {
-        for (auto elem: *item_list->items) {
-            elem->getAllItems(className);
-
-//        switch (elem->item_type) {
-//
-//
-//            case ItemNode::function_:
-//                ClassTable:: Instance()->addMethod(className, *elem->name, elem->methodTableItem);
-//            case ItemNode::constStmt_:
-//                ClassTable:: Instance()->addField(className, *elem->name, elem->fieldTableItem);
-//                break;
-//            case ItemNode::struct_:
-//            case ItemNode::trait_:
-//            case ItemNode::impl_:
-//            case ItemNode::module_:
-//            case ItemNode::enum_:
-//                break;
-//        }
+        if (item_list != NULL) {
+            for (auto elem: *item_list->items) {
+                elem->getAllItems(className);
+            }
         }
 
     }
@@ -1532,8 +1518,9 @@ void ItemNode::getAllItems(std::string className) {
         switch (item_type) {
             case function_:
                 this->methodTableItem = MethodTableItem();
-                if(this->body != NULL) this->methodTableItem.isHasBody = true;
-                if( ClassTable::Instance()->getClass(className).classType != trait_ && this->methodTableItem.isHasBody == false);
+                if (this->body != NULL) this->methodTableItem.isHasBody = true;
+                if (ClassTable::Instance()->getClass(className).classType != trait_ &&
+                    this->methodTableItem.isHasBody == false);
                 {
                     throw Exception(Exception::NOT_IMPLEMICATION, *this->name + "NOT_IMPLEMICATION");
                 }
@@ -1541,9 +1528,9 @@ void ItemNode::getAllItems(std::string className) {
                 break;
             case constStmt_:
                 this->fieldTableItem = FieldTableItem();
-                if(this->expr != NULL) this->fieldTableItem.isInit = true;
-                if(this->fieldTableItem.isInit == false && ClassTable::Instance()->getClass(className).classType != trait)
-                {
+                if (this->expr != NULL) this->fieldTableItem.isInit = true;
+                if (this->fieldTableItem.isInit == false &&
+                    ClassTable::Instance()->getClass(className).classType != trait) {
                     throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_DEFINED");
                 }
 
@@ -1555,15 +1542,25 @@ void ItemNode::getAllItems(std::string className) {
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
                 break;
             case module_:
+                this->classTableItem = ClassTableItem();
+                classTableItem.classType = ClassTableItem::mod_;
+                ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
+
+                if (this->items != NULL) {
+                    for (auto elem: *this->items->items) {
+                        elem->getAllItems(className + "/" + *this->name);
+                    }
+                }
                 break;
             case enum_:
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::enum_;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
 
-                for(auto elem: *this->enumItems->items)
-                {
-                    elem->getAllItems(className + "/" + *this->name);
+                if (this->enumItems != NULL) {
+                    for (auto elem: *this->enumItems->items) {
+                        elem->getAllItems(className + "/" + *this->name);
+                    }
                 }
 
                 break;
@@ -1574,14 +1571,6 @@ void ItemNode::getAllItems(std::string className) {
                 break;
 
             case impl_:
-                this->classTableItem = ClassTableItem();
-                classTableItem.classType = ClassTableItem::struct_;
-                ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
-
-                for(auto elem: *this->items->items)
-                {
-                    elem->getAllItems(className + "/" + *this->name);
-                }
                 break;
         }
     }
@@ -1597,8 +1586,7 @@ void EnumItemNode::getAllItems(std::string className) {
     try {
         ClassTable::Instance()->addField(className, *this->name, fieldTableItem);
     }
-    catch(Exception e)
-    {
+    catch (Exception e) {
         throw e;
     }
 }
