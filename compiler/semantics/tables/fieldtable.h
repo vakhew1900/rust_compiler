@@ -16,7 +16,8 @@ class  ExprNode;
 class FieldTableItem {
 public:
     DataType dataType;
-    bool isConst;
+    bool isConst = false;
+    bool isInit = false;
     ExprNode *value; // хз  надо ли
 
     FieldTableItem();

@@ -2,6 +2,7 @@
 // Created by arsen on 27.10.2023.
 //
 #include "classesnodes.h"
+
 int globId = 0;
 
 ProgramNode::ProgramNode(ItemListNode *item_list) {
@@ -14,7 +15,7 @@ TypeNode::TypeNode(Type type) {
     this->type = type;
 }
 
-TypeNode::TypeNode(Type type, TypeNode* type_node, ExprNode* expr) {
+TypeNode::TypeNode(Type type, TypeNode *type_node, ExprNode *expr) {
     this->id = ++globId;
 
     this->type = type;
@@ -23,21 +24,21 @@ TypeNode::TypeNode(Type type, TypeNode* type_node, ExprNode* expr) {
     this->exprArr = expr;
 }
 
-TypeNode::TypeNode(Type type, string *name){
+TypeNode::TypeNode(Type type, string *name) {
     this->id = ++globId;
     this->type = type;
     this->name = name;
 }
 
-TypeNode::TypeNode(Type type, ExprNode *pathCallExpr){
+TypeNode::TypeNode(Type type, ExprNode *pathCallExpr) {
     this->id = ++globId;
     this->type = type;
     this->pathCallExpr = pathCallExpr;
 }
 
 // Expr from + - * / и тд
-ExprNode* ExprNode::OperatorExpr(Type type, ExprNode* left, ExprNode* right){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::OperatorExpr(Type type, ExprNode *left, ExprNode *right) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = left;
@@ -45,8 +46,8 @@ ExprNode* ExprNode::OperatorExpr(Type type, ExprNode* left, ExprNode* right){
     return new_node;
 }
 
-ExprNode* ExprNode::PathCallExpr(Type type, string* name, ExprNode* expr){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::PathCallExpr(Type type, string *name, ExprNode *expr) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->Name = name;
@@ -54,48 +55,48 @@ ExprNode* ExprNode::PathCallExpr(Type type, string* name, ExprNode* expr){
     return new_node;
 }
 
-ExprNode* ExprNode::ExprFromBoolLiteral(Type type, bool value){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::ExprFromBoolLiteral(Type type, bool value) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->Bool = value;
     return new_node;
 }
 
-ExprNode* ExprNode::ExprFromIntLiteral(Type type, int value){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::ExprFromIntLiteral(Type type, int value) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->Int = value;
     return new_node;
 }
 
-ExprNode* ExprNode::ExprFromFloatLiteral(Type type, float value){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::ExprFromFloatLiteral(Type type, float value) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->Float = value;
     return new_node;
 }
 
-ExprNode* ExprNode::ExprFromCharLiteral(Type type, char value){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::ExprFromCharLiteral(Type type, char value) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->Char = value;
     return new_node;
 }
 
-ExprNode* ExprNode::ExprFromStringLiteral(Type type, string* value){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::ExprFromStringLiteral(Type type, string *value) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->String = value;
     return new_node;
 }
 
-ExprNode* ExprNode::StaticMethod(Type type, ExprNode* expr, ExprListNode* expr_list){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::StaticMethod(Type type, ExprNode *expr, ExprListNode *expr_list) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = expr;
@@ -103,8 +104,8 @@ ExprNode* ExprNode::StaticMethod(Type type, ExprNode* expr, ExprListNode* expr_l
     return new_node;
 }
 
-ExprNode* ExprNode::FieldListAccess(Type type, ExprNode* expr, ExprListNode* field_list){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::FieldListAccess(Type type, ExprNode *expr, ExprListNode *field_list) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = expr;
@@ -112,8 +113,8 @@ ExprNode* ExprNode::FieldListAccess(Type type, ExprNode* expr, ExprListNode* fie
     return new_node;
 }
 
-ExprNode* ExprNode::CallAccessExpr(Type type, string* name, ExprNode* expr, ExprListNode* expr_list){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::CallAccessExpr(Type type, string *name, ExprNode *expr, ExprListNode *expr_list) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->Name = name;
@@ -123,8 +124,8 @@ ExprNode* ExprNode::CallAccessExpr(Type type, string* name, ExprNode* expr, Expr
 }
 
 // StaticMethodExpr
-ExprNode* ExprNode::StaticMethodExpr(Type type, string* name, string* parent_id, ExprListNode* expr_list){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::StaticMethodExpr(Type type, string *name, string *parent_id, ExprListNode *expr_list) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->Name = name;
@@ -133,8 +134,8 @@ ExprNode* ExprNode::StaticMethodExpr(Type type, string* name, string* parent_id,
     return new_node;
 }
 
-ExprNode* ExprNode::BlockExpr(Type type, ExprNode* body, StmtListNode* stmt_list){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::BlockExpr(Type type, ExprNode *body, StmtListNode *stmt_list) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->body = body;
@@ -142,16 +143,16 @@ ExprNode* ExprNode::BlockExpr(Type type, ExprNode* body, StmtListNode* stmt_list
     return new_node;
 }
 
-ExprNode* ExprNode::ArrExprFromList(Type type, ExprListNode* expr_list){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::ArrExprFromList(Type type, ExprListNode *expr_list) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_list = expr_list;
     return new_node;
 }
 
-ExprNode* ExprNode::ArrExprAutoFill(Type type, ExprNode* first, ExprNode* second){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::ArrExprAutoFill(Type type, ExprNode *first, ExprNode *second) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = first;
@@ -159,8 +160,8 @@ ExprNode* ExprNode::ArrExprAutoFill(Type type, ExprNode* first, ExprNode* second
     return new_node;
 }
 
-ExprNode* ExprNode::TupleExpr(Type type, ExprNode* expr, int value){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::TupleExpr(Type type, ExprNode *expr, int value) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = expr;
@@ -168,8 +169,8 @@ ExprNode* ExprNode::TupleExpr(Type type, ExprNode* expr, int value){
     return new_node;
 }
 
-ExprNode* ExprNode::CycleExpr(Type type, ExprNode* condition, ExprNode* body, string* id){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::CycleExpr(Type type, ExprNode *condition, ExprNode *body, string *id) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->body = body;
@@ -178,8 +179,8 @@ ExprNode* ExprNode::CycleExpr(Type type, ExprNode* condition, ExprNode* body, st
     return new_node;
 }
 
-ExprNode* ExprNode::RangeExpr(Type type, ExprNode* left, ExprNode* right){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::RangeExpr(Type type, ExprNode *left, ExprNode *right) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = left;
@@ -187,8 +188,8 @@ ExprNode* ExprNode::RangeExpr(Type type, ExprNode* left, ExprNode* right){
     return new_node;
 }
 
-ExprNode* ExprNode::IfExpr(Type type, ExprNode* condition, ExprNode* body){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::IfExpr(Type type, ExprNode *condition, ExprNode *body) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = condition;
@@ -198,26 +199,26 @@ ExprNode* ExprNode::IfExpr(Type type, ExprNode* condition, ExprNode* body){
     return new_node;
 }
 
-ExprNode* ExprNode::IfExprList(ExprNode* ifExpr){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::IfExprList(ExprNode *ifExpr) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = if_expr_list;
-    new_node->ifList = new list<ExprNode*>{ifExpr};
+    new_node->ifList = new list<ExprNode *>{ifExpr};
     return new_node;
 }
 
-ExprNode* ExprNode::AddIfBlock(ExprNode* ifExpr, ExprNode* someIfExpr){
+ExprNode *ExprNode::AddIfBlock(ExprNode *ifExpr, ExprNode *someIfExpr) {
     ifExpr->ifList->push_back(someIfExpr);
     return ifExpr;
 }
 
-ExprNode* ExprNode::AddElseBlock(ExprNode* ifExpr, ExprNode* else_body){
+ExprNode *ExprNode::AddElseBlock(ExprNode *ifExpr, ExprNode *else_body) {
     ifExpr->else_body = else_body;
     return ifExpr;
 }
 
-ExprNode* ExprNode::AsExpr(ExprNode* expr, TypeNode*  typeNode){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::AsExpr(ExprNode *expr, TypeNode *typeNode) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = as;
     new_node->expr_left = expr;
@@ -225,8 +226,8 @@ ExprNode* ExprNode::AsExpr(ExprNode* expr, TypeNode*  typeNode){
     return new_node;
 }
 
-ExprNode* ExprNode::StructExpr(Type type, string* name, ExprListNode* expr_list){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::StructExpr(Type type, string *name, ExprListNode *expr_list) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_list = expr_list;
@@ -234,8 +235,8 @@ ExprNode* ExprNode::StructExpr(Type type, string* name, ExprListNode* expr_list)
     return new_node;
 }
 
-ExprNode* ExprNode::ExprFromStructField(Type type, string* name, ExprNode* expr){
-    ExprNode* new_node = new ExprNode();
+ExprNode *ExprNode::ExprFromStructField(Type type, string *name, ExprNode *expr) {
+    ExprNode *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = expr;
@@ -244,25 +245,25 @@ ExprNode* ExprNode::ExprFromStructField(Type type, string* name, ExprNode* expr)
 }
 
 // expr list
-ExprListNode::ExprListNode(ExprNode* expr){
+ExprListNode::ExprListNode(ExprNode *expr) {
     this->id = ++globId;
-    this->exprs = new list <ExprNode*>{ expr };
+    this->exprs = new list<ExprNode *>{expr};
 }
 
-ExprListNode::ExprListNode(ExprListNode* exprs_list){
+ExprListNode::ExprListNode(ExprListNode *exprs_list) {
     this->id = ++globId;
     this->exprs = exprs_list->exprs;
 }
 
-ExprListNode* ExprListNode::Append(ExprListNode *list, ExprNode *expr) {
+ExprListNode *ExprListNode::Append(ExprListNode *list, ExprNode *expr) {
     list->exprs->push_back(expr);
     return list;
 }
 
 // STATEMENT FUNCTIONS
 // ConstStmt
-ConstStmtNode* ConstStmtNode::ConstStmt(string* name, TypeNode* type, ExprNode* expr){
-    ConstStmtNode* new_node = new ConstStmtNode();
+ConstStmtNode *ConstStmtNode::ConstStmt(string *name, TypeNode *type, ExprNode *expr) {
+    ConstStmtNode *new_node = new ConstStmtNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->name = name;
@@ -271,182 +272,173 @@ ConstStmtNode* ConstStmtNode::ConstStmt(string* name, TypeNode* type, ExprNode* 
 }
 
 // Trait
-TraitNode::TraitNode(string* name, ItemListNode* items){
-    this->id = ++globId;
-    this->name=name;
-    this->items=items;
-}
-
-//ImplNode
-ImplStmtNode::ImplStmtNode(Type impl_type, TypeNode* type, string* name, ItemListNode* list){
-    this->id = ++globId;
-    this->impl_type = impl_type;
-    this->type = type;
-    this->name = name;
-    this->items = list;
-}
-
-//Struct
-StructStructNode::StructStructNode(string* name, StructFieldListNode* items){
+TraitNode::TraitNode(string *name, ItemListNode *items) {
     this->id = ++globId;
     this->name = name;
     this->items = items;
 }
 
-StructFieldNode::StructFieldNode(string* name, TypeNode* type, Visibility visibility){
+//ImplNode
+ImplStmtNode::ImplStmtNode(Type impl_type, TypeNode *type, ExprNode *exprNode, ItemListNode *list) {
+    this->id = ++globId;
+    this->impl_type = impl_type;
+    this->type = type;
+    this->pathCallExpr = exprNode;
+    this->items = list;
+}
+
+//Struct
+StructStructNode::StructStructNode(string *name, StructFieldListNode *items) {
+    this->id = ++globId;
+    this->name = name;
+    this->items = items;
+}
+
+StructFieldNode::StructFieldNode(string *name, TypeNode *type, Visibility visibility) {
     this->id = ++globId;
     this->name = name;
     this->type = type;
     this->visibility = visibility;
 }
 
-StructFieldListNode::StructFieldListNode(StructFieldNode *item){
+StructFieldListNode::StructFieldListNode(StructFieldNode *item) {
     this->id = ++globId;
-    this->items = new list <StructFieldNode*>{ item };
+    this->items = new list<StructFieldNode *>{item};
 }
 
-StructFieldListNode::StructFieldListNode(StructFieldListNode *list){
+StructFieldListNode::StructFieldListNode(StructFieldListNode *list) {
     this->id = ++globId;
 
-    if(list != NULL)
-    {
+    if (list != NULL) {
         this->items = list->items;
-    }
-    else
-    {
-        this->items = new std::list<StructFieldNode*>;
+    } else {
+        this->items = new std::list<StructFieldNode *>;
     }
 }
 
-StructFieldListNode* StructFieldListNode::Append(StructFieldListNode *list, StructFieldNode* item) {
+StructFieldListNode *StructFieldListNode::Append(StructFieldListNode *list, StructFieldNode *item) {
     list->items->push_back(item);
     return list;
 }
 
 //Function
-FuncStmtNode::FuncStmtNode(string* name, TypeNode* returnType, FuncParamListNode* params, ExprNode* body){
+FuncStmtNode::FuncStmtNode(string *name, TypeNode *returnType, FuncParamListNode *params, ExprNode *body) {
     this->id = ++globId;
     this->name = name;
-    if(returnType == NULL){
-        TypeNode* new_type_node = new TypeNode(TypeNode::emptyType_);
+    if (returnType == NULL) {
+        TypeNode *new_type_node = new TypeNode(TypeNode::emptyType_);
         new_type_node->id = ++globId;
-        this->returnType=new_type_node;
-    } else{
-        this->returnType=returnType;
+        this->returnType = new_type_node;
+    } else {
+        this->returnType = returnType;
     }
-    this->params=params;
-    this->body=body;
+    this->params = params;
+    this->body = body;
 }
 
-FuncParamNode::FuncParamNode(string* name, TypeNode* type, Type param_type){
+FuncParamNode::FuncParamNode(string *name, TypeNode *type, Type param_type) {
     this->id = ++globId;
     this->name = name;
     this->type = type;
     this->param_type = param_type;
 }
 
-FuncParamListNode::FuncParamListNode(FuncParamNode *item){
+FuncParamListNode::FuncParamListNode(FuncParamNode *item) {
     this->id = ++globId;
-    this->items = new list <FuncParamNode*>{ item };
+    this->items = new list<FuncParamNode *>{item};
 }
 
-FuncParamListNode::FuncParamListNode(Type func_type, FuncParamNode* item){
+FuncParamListNode::FuncParamListNode(Type func_type, FuncParamNode *item) {
     this->id = ++globId;
-    this->items = new list <FuncParamNode*>{ item };
+    this->items = new list<FuncParamNode *>{item};
     this->func_type = func_type;
 }
 
-FuncParamListNode::FuncParamListNode(FuncParamListNode *list){
+FuncParamListNode::FuncParamListNode(FuncParamListNode *list) {
     this->id = ++globId;
-    if(list != NULL)
-    {
+    if (list != NULL) {
         this->items = list->items;
-    }
-    else
-    {
-        this->items = new std::list<FuncParamNode*>;
+    } else {
+        this->items = new std::list<FuncParamNode *>;
     }
 }
 
-FuncParamListNode* FuncParamListNode::FunctionParamsFinal(Type func_type, FuncParamListNode *list){
-    if(list == NULL){
-        FuncParamListNode* new_node = new FuncParamListNode(list);
+FuncParamListNode *FuncParamListNode::FunctionParamsFinal(Type func_type, FuncParamListNode *list) {
+    if (list == NULL) {
+        FuncParamListNode *new_node = new FuncParamListNode(list);
         new_node->id = ++globId;
         new_node->func_type = func_type;
         return new_node;
-    }else{
+    } else {
         list->func_type = func_type;
         return list;
     }
 }
 
-FuncParamListNode* FuncParamListNode::Append(FuncParamListNode *list, FuncParamNode* item) {
+FuncParamListNode *FuncParamListNode::Append(FuncParamListNode *list, FuncParamNode *item) {
     list->items->push_back(item);
     return list;
 }
 
 // Enum
-EnumStmtNode::EnumStmtNode(string* name, EnumItemListNode* items){
+EnumStmtNode::EnumStmtNode(string *name, EnumItemListNode *items) {
     this->id = ++globId;
     this->name = name;
-    this->items=items;
+    this->items = items;
 }
 
-EnumItemNode::EnumItemNode(string* name, Visibility visibility, StructFieldListNode* struct_list, ExprNode* expr){
+EnumItemNode::EnumItemNode(string *name, Visibility visibility, StructFieldListNode *struct_list, ExprNode *expr) {
     this->id = ++globId;
     this->name = name;
-    this-> expr = expr;
-    this-> struct_list = struct_list;
-    this->visibility=visibility;
+    this->expr = expr;
+    this->struct_list = struct_list;
+    this->visibility = visibility;
 }
 
-EnumItemListNode::EnumItemListNode(EnumItemNode *item){
+EnumItemListNode::EnumItemListNode(EnumItemNode *item) {
     this->id = ++globId;
-    this->items = new list <EnumItemNode*>{ item };
+    this->items = new list<EnumItemNode *>{item};
 }
 
-EnumItemListNode::EnumItemListNode(EnumItemListNode *list){
+EnumItemListNode::EnumItemListNode(EnumItemListNode *list) {
     this->id = ++globId;
 
-    if(list != NULL)
-    {
+    if (list != NULL) {
         this->items = list->items;
-    }
-    else
-    {
-        this->items = new std::list<EnumItemNode*>;
+    } else {
+        this->items = new std::list<EnumItemNode *>;
     }
 }
 
-EnumItemListNode* EnumItemListNode::Append(EnumItemListNode *list, EnumItemNode* item) {
+EnumItemListNode *EnumItemListNode::Append(EnumItemListNode *list, EnumItemNode *item) {
     list->items->push_back(item);
     return list;
 }
 
 // ModuleStmt
-ModuleStmtNode::ModuleStmtNode(string* name, ItemListNode* items){
+ModuleStmtNode::ModuleStmtNode(string *name, ItemListNode *items) {
     this->id = ++globId;
     this->name = name;
     this->items = items;
 }
 
 // Items (declarations)
-ItemNode* ItemNode::DeclarationEnum(Visibility visibility, EnumStmtNode* node){
-    ItemNode* new_node = new ItemNode();
+ItemNode *ItemNode::DeclarationEnum(Visibility visibility, EnumStmtNode *node) {
+    ItemNode *new_node = new ItemNode();
     new_node->id = ++globId;
     new_node->item_type = enum_;
-    new_node->visibility=visibility;
+    new_node->visibility = visibility;
     new_node->name = node->name;
     new_node->enumItems = node->items;
 
     Visibility current_vis = visibility;
-    if(visibility != pub){
+    if (visibility != pub) {
         current_vis = self;
     }
 
-    if(new_node->items!=NULL){
-        for(auto iter = new_node->items->items->begin(); iter != new_node->items->items->end(); ++iter){
-            if((*iter)->visibility == emptyVisibility){
+    if (new_node->items != NULL) {
+        for (auto iter = new_node->items->items->begin(); iter != new_node->items->items->end(); ++iter) {
+            if ((*iter)->visibility == emptyVisibility) {
                 (*iter)->visibility = current_vis;
             }
         }
@@ -455,11 +447,11 @@ ItemNode* ItemNode::DeclarationEnum(Visibility visibility, EnumStmtNode* node){
     return new_node;
 }
 
-ItemNode* ItemNode::DeclarationFunction(Visibility visibility, FuncStmtNode* node){
-    ItemNode* new_node = new ItemNode();
+ItemNode *ItemNode::DeclarationFunction(Visibility visibility, FuncStmtNode *node) {
+    ItemNode *new_node = new ItemNode();
     new_node->id = ++globId;
 
-    new_node->item_type=function_;
+    new_node->item_type = function_;
     new_node->visibility = visibility;
 
     new_node->name = node->name;
@@ -470,11 +462,11 @@ ItemNode* ItemNode::DeclarationFunction(Visibility visibility, FuncStmtNode* nod
     return new_node;
 }
 
-ItemNode* ItemNode::DeclarationConst(Visibility visibility, ConstStmtNode* node){
-    ItemNode* new_node = new ItemNode();
+ItemNode *ItemNode::DeclarationConst(Visibility visibility, ConstStmtNode *node) {
+    ItemNode *new_node = new ItemNode();
     new_node->id = ++globId;
 
-    new_node->item_type=constStmt_;
+    new_node->item_type = constStmt_;
     new_node->visibility = visibility;
 
     new_node->name = node->name;
@@ -485,36 +477,36 @@ ItemNode* ItemNode::DeclarationConst(Visibility visibility, ConstStmtNode* node)
     return new_node;
 }
 
-ItemNode* ItemNode::DeclarationStruct(Visibility visibility, StructStructNode* node){
-    ItemNode* new_node = new ItemNode();
+ItemNode *ItemNode::DeclarationStruct(Visibility visibility, StructStructNode *node) {
+    ItemNode *new_node = new ItemNode();
     new_node->id = ++globId;
 
-    new_node->item_type=struct_;
+    new_node->item_type = struct_;
     new_node->visibility = visibility;
 
-    new_node->name =  node->name;
+    new_node->name = node->name;
     new_node->structItems = node->items;
 
     return new_node;
 }
 
-ItemNode* ItemNode::DeclarationTrait(Visibility visibility, TraitNode* node){
-    ItemNode* new_node = new ItemNode();
+ItemNode *ItemNode::DeclarationTrait(Visibility visibility, TraitNode *node) {
+    ItemNode *new_node = new ItemNode();
     new_node->id = ++globId;
-    new_node->item_type=trait_;
+    new_node->item_type = trait_;
     new_node->visibility = visibility;
 
     new_node->name = node->name;
     new_node->items = node->items;
 
     Visibility currentVisibility = visibility;
-    if (visibility != pub){
+    if (visibility != pub) {
         currentVisibility = self;
     }
 
-    if(new_node->items!=NULL){
-        for(auto iter = new_node->items->items->begin(); iter != new_node->items->items->end(); ++iter){
-            if((*iter)->visibility == emptyVisibility){
+    if (new_node->items != NULL) {
+        for (auto iter = new_node->items->items->begin(); iter != new_node->items->items->end(); ++iter) {
+            if ((*iter)->visibility == emptyVisibility) {
                 (*iter)->visibility = currentVisibility;
             }
         }
@@ -523,21 +515,24 @@ ItemNode* ItemNode::DeclarationTrait(Visibility visibility, TraitNode* node){
     return new_node;
 }
 
-ItemNode* ItemNode::DeclarationImpl(Visibility visibility, ImplStmtNode* node){
-    ItemNode* new_node = new ItemNode();
+ItemNode *ItemNode::DeclarationImpl(Visibility visibility, ImplStmtNode *node) {
+    ItemNode *new_node = new ItemNode();
     new_node->id = ++globId;
 
-    new_node->item_type=impl_;
+    new_node->impl_type = (node->impl_type == ImplStmtNode::inherent) ? inherent : trait;
+    new_node->item_type = impl_;
     new_node->visibility = visibility;
     new_node->items = node->items;
+    new_node->expr = node->pathCallExpr;
+    new_node->type = node->type;
     return new_node;
 }
 
-ItemNode* ItemNode::DeclarationModule(Visibility visibility, ModuleStmtNode* node){
-    ItemNode* new_node = new ItemNode();
+ItemNode *ItemNode::DeclarationModule(Visibility visibility, ModuleStmtNode *node) {
+    ItemNode *new_node = new ItemNode();
     new_node->id = ++globId;
 
-    new_node->item_type=module_;
+    new_node->item_type = module_;
     new_node->visibility = visibility;
 
     new_node->name = node->name;
@@ -546,7 +541,7 @@ ItemNode* ItemNode::DeclarationModule(Visibility visibility, ModuleStmtNode* nod
     return new_node;
 }
 
-ItemNode::ItemNode(Visibility visibility, ItemNode* node){
+ItemNode::ItemNode(Visibility visibility, ItemNode *node) {
     this->id = ++globId;
 }
 
@@ -557,36 +552,33 @@ ItemNode *ItemNode::AddVisibility(Visibility visibility, ItemNode *itemNode) {
 
 
 // ItemListNode
-ItemListNode::ItemListNode(ItemNode *item){
+ItemListNode::ItemListNode(ItemNode *item) {
     this->id = ++globId;
-    this->items = new list <ItemNode*>{ item };
+    this->items = new list<ItemNode *>{item};
 }
 
-ItemListNode::ItemListNode(ItemListNode *list){
+ItemListNode::ItemListNode(ItemListNode *list) {
     this->id = ++globId;
 
-    if(list != NULL)
-    {
+    if (list != NULL) {
         this->items = list->items;
-    }
-    else
-    {
-        this->items = new std::list<ItemNode*>;
+    } else {
+        this->items = new std::list<ItemNode *>;
     }
 
 }
 
-ItemListNode* ItemListNode::Append(ItemListNode *list, ItemNode* item) {
+ItemListNode *ItemListNode::Append(ItemListNode *list, ItemNode *item) {
     list->items->push_back(item);
     return list;
 }
 
 // LetStmt
-LetStmtNode::LetStmtNode(string* name, TypeNode* type, Type let_type, ExprNode* expr){
+LetStmtNode::LetStmtNode(string *name, TypeNode *type, Type let_type, ExprNode *expr) {
     this->id = ++globId;
     this->name = name;
-    if(type == NULL){
-        TypeNode* new_type_node = new TypeNode(TypeNode::emptyType_);
+    if (type == NULL) {
+        TypeNode *new_type_node = new TypeNode(TypeNode::emptyType_);
         new_type_node->id = ++globId;
         this->type = new_type_node;
     } else {
@@ -598,21 +590,19 @@ LetStmtNode::LetStmtNode(string* name, TypeNode* type, Type let_type, ExprNode* 
 }
 
 //StmtListNode
-StmtListNode::StmtListNode(StmtNode *item){
+StmtListNode::StmtListNode(StmtNode *item) {
     this->id = ++globId;
-    this->stmts = new list <StmtNode*>;
+    this->stmts = new list<StmtNode *>;
 
-    if(item != NULL)
-    {
+    if (item != NULL) {
         this->stmts->push_back(item);
     }
 }
 
 
-StmtListNode* StmtListNode::Append(StmtListNode *list, StmtNode* item) {
+StmtListNode *StmtListNode::Append(StmtListNode *list, StmtNode *item) {
 
-    if(item != NULL)
-    {
+    if (item != NULL) {
         list->stmts->push_back(item);
     }
 
@@ -620,15 +610,14 @@ StmtListNode* StmtListNode::Append(StmtListNode *list, StmtNode* item) {
 }
 
 // StmtNode
-StmtNode::StmtNode(Type type, ExprNode* expr_node, ItemNode* decl_node, LetStmtNode* let_node){
+StmtNode::StmtNode(Type type, ExprNode *expr_node, ItemNode *decl_node, LetStmtNode *let_node) {
     this->id = ++globId;
     this->type = type;
     this->expr = expr_node;
     this->decl_stmt = decl_node;
 
-    if(let_node != NULL)
-    {
-        this->let_type = (let_node->let_type == LetStmtNode::mut)? mut : noMut;
+    if (let_node != NULL) {
+        this->let_type = (let_node->let_type == LetStmtNode::mut) ? mut : noMut;
         this->expr = let_node->expr;
         this->typeChild = let_node->type;
         this->name = let_node->name;
@@ -640,10 +629,10 @@ StmtNode::StmtNode() {
 }
 
 
-StmtNode::StmtNode(Type type, StmtNode* stmt){
+StmtNode::StmtNode(Type type, StmtNode *stmt) {
     this->id = ++globId;
     this->type = type;
-    this->stmt= stmt;
+    this->stmt = stmt;
 }
 
 StmtNode *StmtNode::ConstStmtToStmt(ConstStmtNode *node) {
@@ -657,97 +646,73 @@ StmtNode *StmtNode::ConstStmtToStmt(ConstStmtNode *node) {
 }
 
 // --- toDot, toXml функции ---
-void ProgramNode::toDot(string &dot){
+void ProgramNode::toDot(string &dot) {
 
     dot = "digraph rustProgram {\n";
 
     createVertexDot(dot, this->id, "program");
-   if(this->item_list != NULL)
-   {
-       connectVerticesDots(dot, this->id, this->item_list->id);
-       this->item_list->toDot(dot);
-   }
+    if (this->item_list != NULL) {
+        connectVerticesDots(dot, this->id, this->item_list->id);
+        this->item_list->toDot(dot);
+    }
 
     dot += "}\n";
 
 }
 
-void ProgramNode::getAllItems(std::string className) {
 
-    for(auto elem : *item_list->items)
-    {
-        elem->getAllItems(className);
-
-        switch (elem->item_type) {
-
-
-            case ItemNode::function_:
-            ClassTable:: Instance()->addMethod(className, *elem->name, elem->methodTableItem);
-            case ItemNode::constStmt_:
-            ClassTable:: Instance()->addField(className, *elem->name, elem->fieldTableItem);
-                break;
-            case ItemNode::struct_:
-            case ItemNode::trait_:
-            case ItemNode::impl_:
-            case ItemNode::module_:
-            case ItemNode::enum_:
-                break;
-        }
-    }
-}
-
-void TypeNode::toDot(string &dot){
+void TypeNode::toDot(string &dot) {
 
     switch (this->type) {
         case TypeNode::emptyType_:
-            createVertexDot(dot, this->id,"empty_type", "", "");
+            createVertexDot(dot, this->id, "empty_type", "", "");
             break;
 
-        case TypeNode:: int_:
-            createVertexDot(dot, this->id,"int_type", "", "");
+        case TypeNode::int_:
+            createVertexDot(dot, this->id, "int_type", "", "");
             break;
 
-        case TypeNode:: char_:
-            createVertexDot(dot, this->id,"char_type", "", "");
+        case TypeNode::char_:
+            createVertexDot(dot, this->id, "char_type", "", "");
             break;
 
         case TypeNode::string_:
-            createVertexDot(dot, this->id,"string_type", "", "");
+            createVertexDot(dot, this->id, "string_type", "", "");
             break;
 
         case TypeNode::float_:
-            createVertexDot(dot, this->id,"float_type", "", "");
+            createVertexDot(dot, this->id, "float_type", "", "");
             break;
 
-        case TypeNode:: id_:
+        case TypeNode::id_:
             cout << this->name << "\n";
-            createVertexDot(dot, this->id,"id_type", "", *this->name);
+            createVertexDot(dot, this->id, "id_type", "", *this->name);
             break;
 
         case bool_:
-            createVertexDot(dot, this->id,"bool_type", "", "");
+            createVertexDot(dot, this->id, "bool_type", "", "");
             break;
 
-        case TypeNode:: array_:
-            createVertexDot(dot, this->id,"array_type", "", "");
+        case TypeNode::array_:
+            createVertexDot(dot, this->id, "array_type", "", "");
             this->typeArr->toDot(dot);
             connectVerticesDots(dot, this->id, this->typeArr->id);
 
-            if(this->exprArr != NULL) {
+            if (this->exprArr != NULL) {
                 this->exprArr->toDot(dot);
                 connectVerticesDots(dot, this->id, this->exprArr->id);
             }
 
             break;
         case path_call_expr_:
-            createVertexDot(dot, this->id,"path_call_expr_", "", "");
+            createVertexDot(dot, this->id, "path_call_expr_", "", "");
             this->pathCallExpr->toDot(dot);
             connectVerticesDots(dot, this->id, this->pathCallExpr->id);
             break;
     }
 }
 
-void ExprNode::toDot(string &dot, const string &pos){
+void ExprNode::toDot(string &dot, const string &pos) {
 
     string type = "";
     string value = "";
@@ -876,17 +841,17 @@ void ExprNode::toDot(string &dot, const string &pos){
 
         case field_access_expr:
             type = "field_access_expr";
-            if(this->Name != NULL)  value = *this->Name;
+            if (this->Name != NULL) value = *this->Name;
             break;
 
         case call_expr:
             type = "call_expr";
-            if(this->Name != NULL)  value = *this->Name;
+            if (this->Name != NULL) value = *this->Name;
             break;
 
         case method_expr:
             type = "method_expr";
-            if(this->Name != NULL)  value = *this->Name;
+            if (this->Name != NULL) value = *this->Name;
             break;
 
         case continue_expr:
@@ -948,12 +913,12 @@ void ExprNode::toDot(string &dot, const string &pos){
 
         case static_method:
             type = "static_method";
-            if(this->Name != NULL)  value = *this->Name;
+            if (this->Name != NULL) value = *this->Name;
             break;
 
         case struct_creation:
             type = "struct_creation";
-            if(this->Name != NULL)  value = *this->Name;
+            if (this->Name != NULL) value = *this->Name;
             break;
 
         case tuple_expr:
@@ -966,7 +931,7 @@ void ExprNode::toDot(string &dot, const string &pos){
 
         case path_call_expr:
             type = "path_call_expr";
-            if(this->Name != NULL)  value = *this->Name;
+            if (this->Name != NULL) value = *this->Name;
             break;
 
         case range_expr:
@@ -988,78 +953,74 @@ void ExprNode::toDot(string &dot, const string &pos){
             break;
     }
 
-    if(this->id == 3)
-    {
+    if (this->id == 3) {
         int x;
     }
     createVertexDot(dot, this->id, "expr", type, value, "", pos);
 
-    if(this->expr_left != NULL){
+    if (this->expr_left != NULL) {
         connectVerticesDots(dot, this->id, this->expr_left->id);
         this->expr_left->toDot(dot, "expr_left");
     }
 
-    if(this->expr_right != NULL){
+    if (this->expr_right != NULL) {
         connectVerticesDots(dot, this->id, this->expr_right->id);
         this->expr_right->toDot(dot, "expr_right");
     }
 
-    if(this->expr_list != NULL){
+    if (this->expr_list != NULL) {
         connectVerticesDots(dot, this->id, this->expr_list->id);
         this->expr_list->toDot(dot);
     }
 
-    if(this->body != NULL){
+    if (this->body != NULL) {
         connectVerticesDots(dot, this->id, this->body->id);
         this->body->toDot(dot, "body");
     }
 
-    if(this->field_list != NULL){
+    if (this->field_list != NULL) {
         connectVerticesDots(dot, this->id, this->field_list->id);
         this->field_list->toDot(dot, "field_list");
     }
 
-    if(this->stmt_list != NULL){
+    if (this->stmt_list != NULL) {
         connectVerticesDots(dot, this->id, this->stmt_list->id);
         this->stmt_list->toDot(dot);
     }
 
-    if(this->ifList != NULL){
+    if (this->ifList != NULL) {
 
         int ifCount = 1;
-    //    cout << "adfkshfadgdjaf\n";
-        for(auto elem : *this->ifList)
-        {
+        //    cout << "adfkshfadgdjaf\n";
+        for (auto elem: *this->ifList) {
             connectVerticesDots(dot, this->id, elem->id);
             elem->toDot(dot, "condition" + to_string(ifCount++));
         }
     }
 
-    if(this->else_body != NULL){
+    if (this->else_body != NULL) {
         connectVerticesDots(dot, this->id, this->else_body->id);
         this->else_body->toDot(dot, "else_body");
     }
 
-    if(this->typeNode != NULL)
-    {
+    if (this->typeNode != NULL) {
         connectVerticesDots(dot, this->id, this->typeNode->id);
         this->typeNode->toDot(dot);
     }
 }
 
-void ExprListNode::toDot(string &dot, const string &type){
+void ExprListNode::toDot(string &dot, const string &type) {
 
     createVertexDot(dot, this->id, "expr_list", type);
 
-    for(auto elem : *this->exprs)
-    {
+    for (auto elem: *this->exprs) {
         int exprNum = 1;
         connectVerticesDots(dot, this->id, elem->id);
         elem->toDot(dot, "condition" + to_string(exprNum++));
     }
 }
 
-void StmtNode::toDot(string &dot){
+void StmtNode::toDot(string &dot) {
 
 
     string type = "";
@@ -1080,7 +1041,7 @@ void StmtNode::toDot(string &dot){
 
         case let:
             type = "let ";
-            type += (this->let_type == mut)? "mut": "noMut";
+            type += (this->let_type == mut) ? "mut" : "noMut";
             value = *this->name;
             break;
 
@@ -1090,78 +1051,72 @@ void StmtNode::toDot(string &dot){
             break;
     }
 
-    if(this->type == semicolon)
-    {
+    if (this->type == semicolon) {
         return;
     }
 
     createVertexDot(dot, this->id, "stmt", type, value);
 
-    if(this->expr != NULL){
+    if (this->expr != NULL) {
         connectVerticesDots(dot, this->id, this->expr->id);
         this->expr->toDot(dot, "expr");
     }
 
-    if(this->let_stmt != NULL){
+    if (this->let_stmt != NULL) {
         connectVerticesDots(dot, this->id, this->let_stmt->id);
         this->let_stmt->toDot(dot);
     }
 
-    if(this->stmt != NULL)
-    {
+    if (this->stmt != NULL) {
         connectVerticesDots(dot, this->id, this->stmt->id);
         this->stmt->toDot(dot);
     }
 
-    if(this->typeChild != NULL)
-    {
+    if (this->typeChild != NULL) {
         connectVerticesDots(dot, this->id, this->typeChild->id);
         this->typeChild->toDot(dot);
     }
 }
 
-void StmtListNode::toDot(string &dot, const string &type){
+void StmtListNode::toDot(string &dot, const string &type) {
 
     createVertexDot(dot, this->id, "stmt_list", type);
 
-    for(auto elem : *this->stmts)
-    {
+    for (auto elem: *this->stmts) {
         int exprNum = 1;
         connectVerticesDots(dot, this->id, elem->id);
         elem->toDot(dot);
     }
 }
 
-void LetStmtNode::toDot(string &dot){
+void LetStmtNode::toDot(string &dot) {
 
     string type = "noMut";
 //    string type = "";
     string value = "";
 
-    if(this->name != NULL)
-    {
+    if (this->name != NULL) {
         value = *this->name;
     }
 
-    if(this->let_type == mut)
-    {
+    if (this->let_type == mut) {
         type = "mut";
     }
 
-    createVertexDot(dot, this->id,"let_stmt",type, value);
+    createVertexDot(dot, this->id, "let_stmt", type, value);
 
-    if(this->expr != NULL){
+    if (this->expr != NULL) {
         connectVerticesDots(dot, this->id, this->expr->id);
         this->expr->toDot(dot);
     }
 
-    if(this->type != NULL){
+    if (this->type != NULL) {
         connectVerticesDots(dot, this->id, this->type->id);
         this->type->toDot(dot);
     }
 }
 
-void ItemNode::toDot(string &dot){
+void ItemNode::toDot(string &dot) {
 
     string type = "";
     switch (this->item_type) {
@@ -1190,7 +1145,7 @@ void ItemNode::toDot(string &dot){
 
         case impl_:
             type = "impl_ ";
-            type += (impl_type == inherent)? "inherit": "trait";
+            type += (impl_type == inherent) ? "inherit" : "trait";
             break;
 
         case module_:
@@ -1200,89 +1155,86 @@ void ItemNode::toDot(string &dot){
 
     string visibility = getVisibility(this->visibility);
     string value = "";
-    if(this->name != NULL) value = *this->name;
+    if (this->name != NULL) value = *this->name;
     createVertexDot(dot, this->id, "item", type, value, visibility);
 
-    if(this->type != NULL){
+    if (this->type != NULL) {
         connectVerticesDots(dot, this->id, this->type->id);
         this->type->toDot(dot);
     }
 
-    if(this->structItems != NULL){
+    if (this->structItems != NULL) {
         connectVerticesDots(dot, this->id, this->structItems->id);
         this->structItems->toDot(dot);
     }
 
-    if(this->enumItems != NULL){
+    if (this->enumItems != NULL) {
         connectVerticesDots(dot, this->id, this->enumItems->id);
         this->enumItems->toDot(dot);
     }
 
-    if(this->items != NULL){
+    if (this->items != NULL) {
         connectVerticesDots(dot, this->id, this->items->id);
         this->items->toDot(dot);
     }
 
-    if(this->expr != NULL){
+    if (this->expr != NULL) {
         connectVerticesDots(dot, this->id, this->expr->id);
         this->expr->toDot(dot);
     }
 
 
-    if(this->returnType != NULL){
+    if (this->returnType != NULL) {
         connectVerticesDots(dot, this->id, this->returnType->id);
         this->returnType->toDot(dot);
     }
 
 
-    if(this->params != NULL){
+    if (this->params != NULL) {
         connectVerticesDots(dot, this->id, this->params->id);
         this->params->toDot(dot);
     }
 
 
-    if(this->body != NULL){
+    if (this->body != NULL) {
         connectVerticesDots(dot, this->id, this->body->id);
         this->body->toDot(dot);
     }
 }
 
-void ItemListNode::toDot(string &dot){
+void ItemListNode::toDot(string &dot) {
 
-    createVertexDot(dot, this->id,"item_list");
+    createVertexDot(dot, this->id, "item_list");
     cout << this->id << "\n";
-    for(auto elem : *this->items)
-    {
+    for (auto elem: *this->items) {
         int exprNum = 1;
         connectVerticesDots(dot, this->id, elem->id);
         elem->toDot(dot);
     }
 }
 
-void ModuleStmtNode::toDot(string &dot){
+void ModuleStmtNode::toDot(string &dot) {
 
     string type = "";
     createVertexDot(dot, this->id, "module_stmt", type);
 
-    if(this->items != NULL)
-    {
+    if (this->items != NULL) {
         connectVerticesDots(dot, this->id, this->items->id);
         this->items->toDot(dot);
     }
 }
 
-void StructStructNode::toDot(string &dot){
+void StructStructNode::toDot(string &dot) {
 
     createVertexDot(dot, this->id, "struct_struct", "", *name);
 
-    if(this->items != NULL)
-    {
+    if (this->items != NULL) {
         connectVerticesDots(dot, this->id, this->items->id);
         this->items->toDot(dot);
     }
 }
 
-void StructFieldNode::toDot(string &dot){
+void StructFieldNode::toDot(string &dot) {
 
     string visibility = getVisibility(this->visibility);
 
@@ -1292,84 +1244,76 @@ void StructFieldNode::toDot(string &dot){
     this->type->toDot(dot);
 }
 
-void StructFieldListNode::toDot(string &dot){
+void StructFieldListNode::toDot(string &dot) {
 
     createVertexDot(dot, this->id, "struct_field_list");
 
-    for(auto elem : *this->items)
-    {
+    for (auto elem: *this->items) {
         int structFieldNum = 1;
         connectVerticesDots(dot, this->id, elem->id);
         elem->toDot(dot);
     }
 }
 
-void EnumStmtNode::toDot(string &dot){
+void EnumStmtNode::toDot(string &dot) {
 
-    createVertexDot(dot, this->id, "enum_stmt","", *name);
+    createVertexDot(dot, this->id, "enum_stmt", "", *name);
 
-    if(this->items != NULL)
-    {
+    if (this->items != NULL) {
         connectVerticesDots(dot, this->id, this->items->id);
         this->items->toDot(dot);
     }
 
 }
 
-void EnumItemNode::toDot(string &dot){
+void EnumItemNode::toDot(string &dot) {
 
-    createVertexDot(dot, this->id, *this->name,"enum_item");
+    createVertexDot(dot, this->id, *this->name, "enum_item");
 
-    if(this->expr != NULL)
-    {
+    if (this->expr != NULL) {
         connectVerticesDots(dot, this->id, this->expr->id);
         this->expr->toDot(dot);
     }
 
-    if(this->struct_list != NULL)
-    {
+    if (this->struct_list != NULL) {
         connectVerticesDots(dot, this->id, this->struct_list->id);
         this->struct_list->toDot(dot);
     }
 
 }
 
-void EnumItemListNode::toDot(string &dot){
+void EnumItemListNode::toDot(string &dot) {
 
     createVertexDot(dot, this->id, "enum_item_list");
 
-    for(auto elem : *this->items)
-    {
+    for (auto elem: *this->items) {
         int enumItemCnt = 1;
         connectVerticesDots(dot, this->id, elem->id);
         elem->toDot(dot);
     }
 }
 
-void FuncStmtNode::toDot(string &dot){
+void FuncStmtNode::toDot(string &dot) {
 
-    createVertexDot(dot, this->id, "func_stmt","", *name);
+    createVertexDot(dot, this->id, "func_stmt", "", *name);
 
-    if(this->returnType != NULL)
-    {
+    if (this->returnType != NULL) {
         connectVerticesDots(dot, this->id, this->returnType->id);
         this->returnType->toDot(dot);
     }
 
-    if(this->body != NULL)
-    {
+    if (this->body != NULL) {
         connectVerticesDots(dot, this->id, this->body->id);
         this->body->toDot(dot);
     }
 
-    if(this->params != NULL)
-    {
+    if (this->params != NULL) {
         connectVerticesDots(dot, this->id, this->params->id);
         this->params->toDot(dot);
     }
 }
 
-void FuncParamNode::toDot(string &dot){
+void FuncParamNode::toDot(string &dot) {
 
     string type = "";
     switch (this->param_type) {
@@ -1390,34 +1334,31 @@ void FuncParamNode::toDot(string &dot){
             type = "link_";
             break;
     }
-    
-    createVertexDot(dot, this->id, "func_param",type, *name);
 
-    if(this->type != NULL)
-    {
+    createVertexDot(dot, this->id, "func_param", type, *name);
+
+    if (this->type != NULL) {
         connectVerticesDots(dot, this->id, this->type->id);
         this->type->toDot(dot);
     }
 }
 
-void ConstStmtNode::toDot(string &dot){
+void ConstStmtNode::toDot(string &dot) {
 
-    createVertexDot(dot, this->id, "const_stmt","", *name);
+    createVertexDot(dot, this->id, "const_stmt", "", *name);
 
-    if(this->type != NULL)
-    {
+    if (this->type != NULL) {
         connectVerticesDots(dot, this->id, this->type->id);
         this->type->toDot(dot);
     }
 
-    if(this->expr != NULL)
-    {
+    if (this->expr != NULL) {
         connectVerticesDots(dot, this->id, this->expr->id);
         this->expr->toDot(dot);
     }
 }
 
-void ImplStmtNode::toDot(string &dot){
+void ImplStmtNode::toDot(string &dot) {
 
     string type = "";
     switch (this->impl_type) {
@@ -1431,20 +1372,18 @@ void ImplStmtNode::toDot(string &dot){
 
     createVertexDot(dot, this->id, "impl_stmt", type);
 
-    if(this->type != NULL)
-    {
+    if (this->type != NULL) {
         connectVerticesDots(dot, this->id, this->type->id);
         this->type->toDot(dot);
     }
 
-    if(this->items != NULL)
-    {
+    if (this->items != NULL) {
         connectVerticesDots(dot, this->id, this->items->id);
         this->items->toDot(dot);
     }
 }
 
-void FuncParamListNode::toDot(string &dot){
+void FuncParamListNode::toDot(string &dot) {
 
     string type = "";
     switch (this->func_type) {
@@ -1470,20 +1409,18 @@ void FuncParamListNode::toDot(string &dot){
     }
 
     createVertexDot(dot, this->id, "func_param_list", type);
-    for(auto elem : *this->items)
-    {
+    for (auto elem: *this->items) {
         int enumItemCnt = 1;
         connectVerticesDots(dot, this->id, elem->id);
         elem->toDot(dot);
     }
 }
 
-void TraitNode::toDot(string &dot){
+void TraitNode::toDot(string &dot) {
 
     createVertexDot(dot, this->id, "train", "", *this->name);
 
-    if(this->items != NULL)
-    {
+    if (this->items != NULL) {
         connectVerticesDots(dot, this->id, this->items->id);
         this->items->toDot(dot);
     }
@@ -1499,24 +1436,23 @@ void connectVerticesDots(string &s, int parentId, int childId) {
 }
 
 void createVertexDot(string &s, int id, string name, string type, string value, string visibility, string pos) {
-    if(!type.empty()){
+    if (!type.empty()) {
         type = "type=" + type + " ";
     }
 
-    if(!value.empty()){
+    if (!value.empty()) {
         value = "value=" + value + " ";
     }
 
-    if(!visibility.empty()){
+    if (!visibility.empty()) {
         visibility = "visibility=" + visibility + " ";
     }
-    if(!pos.empty())
-    {
+    if (!pos.empty()) {
         pos = "position=" + pos + " ";
     }
 
     string tmp = "id" + to_string(id) +
-                " [label=\"" + name + " " + type + value + visibility + pos + "id="+ to_string(id) + "\"];\n";
+                 " [label=\"" + name + " " + type + value + visibility + pos + "id=" + to_string(id) + "\"];\n";
 
     s += tmp;
 
@@ -1553,4 +1489,113 @@ string getVisibility(Visibility visibility) {
 // ------------------------  GetAllItems ------------------------------------
 void Node::getAllItems(string className) {
 
+}
+
+void ProgramNode::getAllItems(std::string className) {
+
+    this->classTableItem = ClassTableItem();
+    ClassTable::Instance()->addClass(className, classTableItem);
+    try {
+        for (auto elem: *item_list->items) {
+            elem->getAllItems(className);
+
+//        switch (elem->item_type) {
+//
+//
+//            case ItemNode::function_:
+//                ClassTable:: Instance()->addMethod(className, *elem->name, elem->methodTableItem);
+//            case ItemNode::constStmt_:
+//                ClassTable:: Instance()->addField(className, *elem->name, elem->fieldTableItem);
+//                break;
+//            case ItemNode::struct_:
+//            case ItemNode::trait_:
+//            case ItemNode::impl_:
+//            case ItemNode::module_:
+//            case ItemNode::enum_:
+//                break;
+//        }
+        }
+
+    }
+    catch (Exception e) {
+        cout << e.getMessage() << "\n";
+    }
+}
+
+void ItemNode::getAllItems(std::string className) {
+
+    if (this->item_type == impl_) {
+        return;
+    }
+
+    try {
+        switch (item_type) {
+            case enum_:
+
+                if (ClassTable::Instance()->isClassExist(className + "/" + *this->name)) {
+                    throw Exception(Exception::DEFINED_MULTIPLE, *this->name + "DEFINED_MULTIPLE in namespace");
+                }
+
+                this->classTableItem = ClassTableItem();
+                classTableItem.classType = ClassTableItem::enum_;
+                ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
+                break;
+            case function_:
+
+                if (ClassTable::Instance()->isMethodExist(className, *this->name)) {
+                    throw Exception(Exception::DEFINED_MULTIPLE, *this->name + "DEFINED_MULTIPLE in namespace");
+                }
+
+                this->methodTableItem = MethodTableItem();
+                if(this->body != NULL) this->methodTableItem.isHasBody = true;
+                if( ClassTable::Instance()->getClass(className).classType != trait_ && this->methodTableItem.isHasBody == false);
+                {
+                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + "NOT_IMPLEMICATION");
+                }
+
+                ClassTable::Instance()->addMethod(className, *this->name, this->methodTableItem);
+                break;
+            case constStmt_:
+
+
+                if (ClassTable::Instance()->isFieldExist(className, *this->name)) {
+                    throw Exception(Exception::DEFINED_MULTIPLE, *this->name + " DEFINED_MULTIPLE in namespace");
+                }
+                this->fieldTableItem = FieldTableItem();
+                if(this->expr != NULL) this->fieldTableItem.isInit = true;
+                if(this->fieldTableItem.isInit == false && ClassTable::Instance()->getClass(className).classType != trait)
+                {
+                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_DEFINED");
+                }
+
+                ClassTable::Instance()->addField(className, *this->name, this->fieldTableItem);
+                break;
+            case trait_:
+
+                if (ClassTable::Instance()->isClassExist(className + "/" + *this->name)) {
+                    throw Exception(Exception::DEFINED_MULTIPLE, *this->name + "DEFINED_MULTIPLE in namespace");
+                }
+                this->classTableItem = ClassTableItem();
+                classTableItem.classType = ClassTableItem::struct_;
+                ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
+                break;
+            case module_:
+                break;
+            case struct_:
+
+                if (ClassTable::Instance()->isClassExist(className + "/" + *this->name)) {
+                    throw Exception(Exception::DEFINED_MULTIPLE, *this->name + "DEFINED_MULTIPLE in namespace");
+                }
+                this->classTableItem = ClassTableItem();
+                classTableItem.classType = ClassTableItem::struct_;
+                ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
+                break;
+
+            case impl_:
+                break;
+        }
+    }
+    catch (Exception e) {
+        throw e;
+    }
 }

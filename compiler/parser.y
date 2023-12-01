@@ -272,7 +272,7 @@ EnumItem: ID { $$ = new EnumItemNode($1, self, 0, 0); }
 /* =========== IMPL ================ */
 
 ImplStmt: IMPL Type '{'AssociatedItemListEmpty '}' { $$ = new ImplStmtNode(ImplStmtNode::inherent, $2, 0, $4); }
-        | IMPL ID FOR Type '{'AssociatedItemListEmpty '}' { $$ = new ImplStmtNode(ImplStmtNode::trait, $4, $2, $6); }
+        | IMPL PathCallExpr FOR Type '{'AssociatedItemListEmpty '}' { $$ = new ImplStmtNode(ImplStmtNode::trait, $4, $2, $6); }
         ;
 
 AssociatedItemListEmpty: /* empty */ { $$ = NULL; }

@@ -18,6 +18,8 @@ private:
 public:
     enum ExceptionType {
         STRUCT_WITH_TWO_TRAIT,
+        DEFINED_MULTIPLE,
+        NOT_IMPLEMICATION,
     };
 
     ExceptionType exceptionType;

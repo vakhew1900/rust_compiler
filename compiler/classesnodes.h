@@ -300,6 +300,7 @@ public:
     ItemNode();
 
     void toDot(string &dot);
+    void getAllItems(std::string className) override;
 };
 
 
@@ -478,11 +479,11 @@ public:
         inherent, trait
     };
     Type impl_type;
-    string *name;
+    ExprNode *pathCallExpr;
     TypeNode *type = NULL;
     ItemListNode *items = NULL;
 
-    ImplStmtNode(Type impl_type, TypeNode *type, string *name, ItemListNode *list);
+    ImplStmtNode(Type impl_type, TypeNode *type,ExprNode *pathCallExpr, ItemListNode *list);
 
     void toDot(string &dot);
 };

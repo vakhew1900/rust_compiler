@@ -36,13 +36,19 @@ public:
 class ClassTable {
 private:
     static ClassTable* _instanse;
+    map<string, ClassTableItem> items;
     ClassTable();
 public:
-    map<string, ClassTableItem> items;
+
     string toString();
     static ClassTable* Instance();
     void addMethod(string className, string methodName, MethodTableItem methodTableItem);
     void addField(string className, string fieldName, FieldTableItem fieldTableItem);
+    void addClass(string  className, ClassTableItem classTableItem);
+    bool isClassExist(const string& className);
+    bool isMethodExist(const string& className, const string& methodName);
+    bool isFieldExist(const string& className, const string& methodName);
+    ClassTableItem getClass(const string& className);
 };
 
 
