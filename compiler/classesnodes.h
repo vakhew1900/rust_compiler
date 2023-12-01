@@ -52,7 +52,12 @@ public:
     FieldTableItem fieldTableItem;
     ClassTableItem classTableItem;
     virtual void getAllItems(string className);
+    virtual void simpleTreeTransform();
+    void simpleTreeTransform(Node *node);
+    void connectVerticesDots(string &s, int parentId, int childId);
 
+    void createVertexDot(string &s, int id, string name = "", string type = "", string value = "", string visibility = "",
+                         string pos = "");
 };
 
 
@@ -65,6 +70,7 @@ public:
     void toDot(string &dot);
 
     void getAllItems(std::string className) override;
+    void simpleTreeTransform() override;
 };
 
 class TypeNode : public Node {
@@ -301,6 +307,7 @@ public:
 
     void toDot(string &dot);
     void getAllItems(std::string className) override;
+    void simpleTreeTransform() override;
 };
 
 
@@ -316,6 +323,7 @@ public:
 
 
     void toDot(string &dot);
+    void simpleTreeTransform() override;
 };
 
 class ModuleStmtNode : public Node {
@@ -489,9 +497,6 @@ public:
     void toDot(string &dot);
 };
 
-void connectVerticesDots(string &s, int parentId, int childId);
 
-void createVertexDot(string &s, int id, string name = "", string type = "", string value = "", string visibility = "",
-                     string pos = "");
 
 string getVisibility(Visibility visibility);

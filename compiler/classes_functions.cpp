@@ -1430,12 +1430,12 @@ ItemNode::ItemNode() {
 
 }
 
-void connectVerticesDots(string &s, int parentId, int childId) {
+void Node::connectVerticesDots(string &s, int parentId, int childId) {
     string tmp = "id" + to_string(parentId) + " -> " + "id" + to_string(childId) + ";\n";
     s += tmp;
 }
 
-void createVertexDot(string &s, int id, string name, string type, string value, string visibility, string pos) {
+void Node::createVertexDot(string &s, int id, string name, string type, string value, string visibility, string pos) {
     if (!type.empty()) {
         type = "type=" + type + " ";
     }
@@ -1491,9 +1491,11 @@ void Node::getAllItems(string className) {
 
 }
 
+
 void ProgramNode::getAllItems(std::string className) {
 
     this->classTableItem = ClassTableItem();
+    classTableItem.classType = ClassTableItem::mod_;
     ClassTable::Instance()->addClass(className, classTableItem);
     try {
         if (item_list != NULL) {
@@ -1524,6 +1526,14 @@ void ItemNode::getAllItems(std::string className) {
                 {
                     throw Exception(Exception::NOT_IMPLEMICATION, *this->name + "NOT_IMPLEMICATION");
                 }
+
+                if((this->params->func_type == FuncParamListNode::self_ref
+                || this->params->func_type == FuncParamListNode::self) &&
+                ClassTable::Instance()->getClass(className).classType == ClassTableItem::mod_)
+                {
+                    throw Exception(Exception::NOT_A_METHOD, "function " + *this->name + "NOT_A_METHOD");
+                }
+
                 ClassTable::Instance()->addMethod(className, *this->name, this->methodTableItem);
                 break;
             case constStmt_:
@@ -1579,6 +1589,10 @@ void ItemNode::getAllItems(std::string className) {
     }
 }
 
+void ItemNode::simpleTreeTransform() {
+
+}
+
 void EnumItemNode::getAllItems(std::string className) {
     this->fieldTableItem = FieldTableItem();
     this->fieldTableItem.isConst = true;
@@ -1588,5 +1602,29 @@ void EnumItemNode::getAllItems(std::string className) {
     }
     catch (Exception e) {
         throw e;
+    }
+}
+
+/* ------ simpleTransform ------------------------------------*/
+
+void Node::simpleTreeTransform() {
+
+}
+
+void Node::simpleTreeTransform(Node *node) {
+    if(node != NULL)
+    {
+        node->simpleTreeTransform();
+    }
+}
+
+void ProgramNode::simpleTreeTransform() {
+    Node::simpleTreeTransform(this->item_list);
+}
+
+void ItemListNode::simpleTreeTransform() {
+    for(auto elem : *items)
+    {
+        Node::simpleTreeTransform(elem);
     }
 }
