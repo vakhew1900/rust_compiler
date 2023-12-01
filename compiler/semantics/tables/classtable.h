@@ -18,7 +18,6 @@ public:
     enum Type{
         struct_, enum_, trait_, mod_ // не факт что правильно
     };
-
     Type classType;
     string name;
     MethodTable methodTable;
@@ -41,6 +40,8 @@ private:
 public:
 
     string toString();
+    static const string moduleClassName;
+
     static ClassTable* Instance();
     void addMethod(string className, string methodName, MethodTableItem methodTableItem);
     void addField(string className, string fieldName, FieldTableItem fieldTableItem);

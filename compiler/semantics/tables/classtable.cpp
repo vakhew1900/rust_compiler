@@ -115,4 +115,5 @@ ClassTableItem ClassTable::getClass(const string &className) {
     return this->items[className];
 }
 
+const string ClassTable:: moduleClassName = "moduleClass";
 

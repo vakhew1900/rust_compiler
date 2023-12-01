@@ -1441,18 +1441,18 @@ void Node::createVertexDot(string &s, int id, string name, string type, string v
     }
 
     if (!value.empty()) {
-        value = "value=" + value + " ";
+        value = "val=[" + value + "]";
     }
 
     if (!visibility.empty()) {
-        visibility = "visibility=" + visibility + " ";
+        visibility = "visib=" + visibility + " ";
     }
     if (!pos.empty()) {
-        pos = "position=" + pos + " ";
+        pos = "pos=" + pos + " ";
     }
 
     string tmp = "id" + to_string(id) +
-                 " [label=\"" + name + " " + type + value + visibility + pos + "id=" + to_string(id) + "\"];\n";
+                 " [label=\"name=" + name + " " + type + value + visibility + pos + "id=" + to_string(id) + "\"];\n";
 
     s += tmp;
 
@@ -1512,10 +1512,6 @@ void ProgramNode::getAllItems(std::string className) {
 
 void ItemNode::getAllItems(std::string className) {
 
-    if (this->item_type == impl_) {
-        return;
-    }
-
     try {
         switch (item_type) {
             case function_:
@@ -1527,10 +1523,9 @@ void ItemNode::getAllItems(std::string className) {
                     throw Exception(Exception::NOT_IMPLEMICATION, *this->name + "NOT_IMPLEMICATION");
                 }
 
-                if((this->params->func_type == FuncParamListNode::self_ref
-                || this->params->func_type == FuncParamListNode::self) &&
-                ClassTable::Instance()->getClass(className).classType == ClassTableItem::mod_)
-                {
+                if ((this->params->func_type == FuncParamListNode::self_ref
+                     || this->params->func_type == FuncParamListNode::self) &&
+                    ClassTable::Instance()->getClass(className).classType == ClassTableItem::mod_) {
                     throw Exception(Exception::NOT_A_METHOD, "function " + *this->name + "NOT_A_METHOD");
                 }
 
@@ -1558,6 +1553,8 @@ void ItemNode::getAllItems(std::string className) {
 
                 if (this->items != NULL) {
                     for (auto elem: *this->items->items) {
+                        string str = (elem->item_type == function_ || elem->item_type == constStmt_)
+                                     ? ClassTable::moduleClassName : "";
                         elem->getAllItems(className + "/" + *this->name);
                     }
                 }
@@ -1612,8 +1609,7 @@ void Node::simpleTreeTransform() {
 }
 
 void Node::simpleTreeTransform(Node *node) {
-    if(node != NULL)
-    {
+    if (node != NULL) {
         node->simpleTreeTransform();
     }
 }
@@ -1623,8 +1619,8 @@ void ProgramNode::simpleTreeTransform() {
 }
 
 void ItemListNode::simpleTreeTransform() {
-    for(auto elem : *items)
-    {
+    for (auto elem: *items) {
         Node::simpleTreeTransform(elem);
     }
 }
+
