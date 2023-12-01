@@ -76,14 +76,26 @@ ClassTable::ClassTable() {
 }
 
 void ClassTable::addMethod(string className, string methodName, MethodTableItem methodTableItem) {
+    if (ClassTable::Instance()->isMethodExist(className, methodName)) {
+        throw Exception(Exception::DEFINED_MULTIPLE, methodName + "DEFINED_MULTIPLE in namespace");
+    }
+
     this->items[className].methodTable.items[methodName] = methodTableItem;
 }
 
 void ClassTable::addField(string className, string fieldName, FieldTableItem fieldTableItem) {
+    if (ClassTable::Instance()->isFieldExist(className, fieldName)) {
+        throw Exception(Exception::DEFINED_MULTIPLE, fieldName + " DEFINED_MULTIPLE in namespace");
+    }
     this->items[className].fieldTable.items[fieldName] = fieldTableItem;
 }
 
 void ClassTable::addClass(string className, ClassTableItem classTableItem) {
+
+    if (ClassTable::Instance()->isClassExist(className)) {
+        throw Exception(Exception::DEFINED_MULTIPLE, className + "DEFINED_MULTIPLE in namespace");
+    }
+
     this->items[className] = classTableItem;
 }
 

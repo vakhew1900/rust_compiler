@@ -388,6 +388,7 @@ public:
     EnumItemNode();
 
     void toDot(string &dot);
+    void getAllItems (std::string className) override;
 
 };
 

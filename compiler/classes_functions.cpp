@@ -1530,37 +1530,16 @@ void ItemNode::getAllItems(std::string className) {
 
     try {
         switch (item_type) {
-            case enum_:
-
-                if (ClassTable::Instance()->isClassExist(className + "/" + *this->name)) {
-                    throw Exception(Exception::DEFINED_MULTIPLE, *this->name + "DEFINED_MULTIPLE in namespace");
-                }
-
-                this->classTableItem = ClassTableItem();
-                classTableItem.classType = ClassTableItem::enum_;
-                ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
-                break;
             case function_:
-
-                if (ClassTable::Instance()->isMethodExist(className, *this->name)) {
-                    throw Exception(Exception::DEFINED_MULTIPLE, *this->name + "DEFINED_MULTIPLE in namespace");
-                }
-
                 this->methodTableItem = MethodTableItem();
                 if(this->body != NULL) this->methodTableItem.isHasBody = true;
                 if( ClassTable::Instance()->getClass(className).classType != trait_ && this->methodTableItem.isHasBody == false);
                 {
                     throw Exception(Exception::NOT_IMPLEMICATION, *this->name + "NOT_IMPLEMICATION");
                 }
-
                 ClassTable::Instance()->addMethod(className, *this->name, this->methodTableItem);
                 break;
             case constStmt_:
-
-
-                if (ClassTable::Instance()->isFieldExist(className, *this->name)) {
-                    throw Exception(Exception::DEFINED_MULTIPLE, *this->name + " DEFINED_MULTIPLE in namespace");
-                }
                 this->fieldTableItem = FieldTableItem();
                 if(this->expr != NULL) this->fieldTableItem.isInit = true;
                 if(this->fieldTableItem.isInit == false && ClassTable::Instance()->getClass(className).classType != trait)
@@ -1571,31 +1550,55 @@ void ItemNode::getAllItems(std::string className) {
                 ClassTable::Instance()->addField(className, *this->name, this->fieldTableItem);
                 break;
             case trait_:
-
-                if (ClassTable::Instance()->isClassExist(className + "/" + *this->name)) {
-                    throw Exception(Exception::DEFINED_MULTIPLE, *this->name + "DEFINED_MULTIPLE in namespace");
-                }
                 this->classTableItem = ClassTableItem();
-                classTableItem.classType = ClassTableItem::struct_;
+                classTableItem.classType = ClassTableItem::trait_;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
                 break;
             case module_:
                 break;
-            case struct_:
+            case enum_:
+                this->classTableItem = ClassTableItem();
+                classTableItem.classType = ClassTableItem::enum_;
+                ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
 
-                if (ClassTable::Instance()->isClassExist(className + "/" + *this->name)) {
-                    throw Exception(Exception::DEFINED_MULTIPLE, *this->name + "DEFINED_MULTIPLE in namespace");
+                for(auto elem: *this->enumItems->items)
+                {
+                    elem->getAllItems(className + "/" + *this->name);
                 }
+
+                break;
+            case struct_:
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::struct_;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
                 break;
 
             case impl_:
+                this->classTableItem = ClassTableItem();
+                classTableItem.classType = ClassTableItem::struct_;
+                ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
+
+                for(auto elem: *this->items->items)
+                {
+                    elem->getAllItems(className + "/" + *this->name);
+                }
                 break;
         }
     }
     catch (Exception e) {
+        throw e;
+    }
+}
+
+void EnumItemNode::getAllItems(std::string className) {
+    this->fieldTableItem = FieldTableItem();
+    this->fieldTableItem.isConst = true;
+
+    try {
+        ClassTable::Instance()->addField(className, *this->name, fieldTableItem);
+    }
+    catch(Exception e)
+    {
         throw e;
     }
 }
