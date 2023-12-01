@@ -33,8 +33,7 @@ string ClassTableItem::toString() {
             break;
     }
 
-    if(parentName.size())
-    {
+    if (parentName.size()) {
         res += "parent: " + parentName;
     }
 
@@ -52,19 +51,17 @@ bool ClassTableItem::isHaveParent() {
 string ClassTable::toString() {
     string res;
 
-    for(auto  elem : items)
-    {
+    for (auto elem: items) {
         string tmp = elem.first + " " + elem.second.toString();
     }
 
     return res;
 }
 
-ClassTable* ClassTable::_instanse = NULL;
+ClassTable *ClassTable::_instanse = NULL;
 
 ClassTable *ClassTable::Instance() {
-    if(_instanse == NULL)
-    {
+    if (_instanse == NULL) {
         _instanse = new ClassTable();
     }
 
@@ -99,21 +96,21 @@ void ClassTable::addClass(string className, ClassTableItem classTableItem) {
     this->items[className] = classTableItem;
 }
 
-bool ClassTable::isClassExist(const string& className) {
+bool ClassTable::isClassExist(const string &className) {
     return this->items.find(className) == this->items.end();
 }
 
-bool ClassTable::isMethodExist(const std::string& className, const std::string& methodName) {
-    return this->items[className].methodTable.items.find(methodName) ==this->items[className].methodTable.items.end();
+bool ClassTable::isMethodExist(const std::string &className, const std::string &methodName) {
+    return this->items[className].methodTable.items.find(methodName) == this->items[className].methodTable.items.end();
 }
 
-bool ClassTable::isFieldExist(const string& className, const string& fieldName) {
-    return this->items[className].fieldTable.items.find(fieldName) ==this->items[className].fieldTable.items.end();
+bool ClassTable::isFieldExist(const string &className, const string &fieldName) {
+    return this->items[className].fieldTable.items.find(fieldName) == this->items[className].fieldTable.items.end();
 }
 
 ClassTableItem ClassTable::getClass(const string &className) {
     return this->items[className];
 }
 
-const string ClassTable:: moduleClassName = "moduleClass";
+const string ClassTable::moduleClassName = "moduleClass";
 
