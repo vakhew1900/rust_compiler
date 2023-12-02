@@ -18,6 +18,7 @@ public:
     DataType dataType;
     bool isConst = false;
     bool isInit = false;
+    bool isPub = false;
     ExprNode *value; // хз  надо ли
 
     FieldTableItem();

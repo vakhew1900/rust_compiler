@@ -357,6 +357,7 @@ public:
     StructFieldNode(string *name, TypeNode *type, Visibility visibility);
 
     void toDot(string &dot);
+    void getAllItems(std::string className) override;
 
 };
 

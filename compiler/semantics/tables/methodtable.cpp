@@ -21,11 +21,20 @@ string MethodTableItem::toString() {
     string res = "";
     if(isStatic)
     {
-        res += "- static";
+        res += " - static ";
     }
 
-    res += "returnType:" + returnDataType.toString();
-    res += "paramTable:\n" + paramTable.toString() + "localVarTable\n" + localVarTable.toString();
+    if (isPub)
+    {
+        res += "public ";
+    }
+    else
+    {
+        res += "package ";
+    }
+
+    res += "returnType: " + returnDataType.toString();
+    res += "paramTable: \n" + paramTable.toString() + "localVarTable\n" + localVarTable.toString();
 
     return res;
 }

@@ -2915,16 +2915,21 @@ int translateNumberByBase(char *input_string) {
     return result; // не удалось произвести операцию перевода с числом
 }
 
+#define release
 
 int main(int argc, char** argv) {
 
+
+#ifdef release
     if (argc != 2) {
         printf("Filename is not found");
         return 1;
     }
 
     const char *filename = argv[1];
-
+#else
+    const char *filename = "../tests/struct_test.rs";
+#endif
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         printf("File opening error");
@@ -2941,6 +2946,8 @@ int main(int argc, char** argv) {
 
     std::ofstream out("dot-tree.txt");
     out << dot << "\n";
-
+    global_program->getAllItems("GLOBAL_CLASS");
+    string res = ClassTable::Instance()->toString();
+    cout << ClassTable::Instance()->toString() << "\n";
     return 0;
 }

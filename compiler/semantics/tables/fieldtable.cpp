@@ -26,6 +26,16 @@ string FieldTableItem::toString() {
         res += "const ";
     }
 
+    if (isPub)
+    {
+        res += "public ";
+    }
+    else
+    {
+        res += "package ";
+    }
+
+
     res += dataType.toString();
 
     return res;

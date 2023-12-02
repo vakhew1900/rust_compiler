@@ -20,6 +20,8 @@ impl Rectangle {
     }
 }
 
+const myTestConst : i32 = 1000 as i32;
+
 fn main() {
     let rectangle1 = Rectangle::new(5.0, 3.0);
 

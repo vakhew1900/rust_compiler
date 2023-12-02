@@ -17,6 +17,15 @@ ClassTableItem::ClassTableItem(FieldTable fieldTable, MethodTable methodTable, s
 string ClassTableItem::toString() {
     string res = "";
 
+    if (isPub)
+    {
+        res += "public ";
+    }
+    else
+    {
+        res += "package ";
+    }
+
     switch (classType) {
 
         case struct_:
@@ -33,12 +42,14 @@ string ClassTableItem::toString() {
             break;
     }
 
+
+
     if (parentName.size()) {
         res += "parent: " + parentName;
     }
 
     res += "\nfieldTable:" + fieldTable.toString();
-    res += "methodTable" + fieldTable.toString();
+    res += "\nmethodTable:" + methodTable.toString() + "\n";
 
     return res;
 }
@@ -53,6 +64,7 @@ string ClassTable::toString() {
 
     for (auto elem: items) {
         string tmp = elem.first + " " + elem.second.toString();
+        res += tmp;
     }
 
     return res;
@@ -97,15 +109,15 @@ void ClassTable::addClass(string className, ClassTableItem classTableItem) {
 }
 
 bool ClassTable::isClassExist(const string &className) {
-    return this->items.find(className) == this->items.end();
+    return this->items.find(className) != this->items.end();
 }
 
 bool ClassTable::isMethodExist(const std::string &className, const std::string &methodName) {
-    return this->items[className].methodTable.items.find(methodName) == this->items[className].methodTable.items.end();
+    return this->items[className].methodTable.items.find(methodName) != this->items[className].methodTable.items.end();
 }
 
 bool ClassTable::isFieldExist(const string &className, const string &fieldName) {
-    return this->items[className].fieldTable.items.find(fieldName) == this->items[className].fieldTable.items.end();
+    return this->items[className].fieldTable.items.find(fieldName) != this->items[className].fieldTable.items.end();
 }
 
 ClassTableItem ClassTable::getClass(const string &className) {

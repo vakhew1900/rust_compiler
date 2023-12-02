@@ -18,11 +18,13 @@ public:
     enum Type{
         struct_, enum_, trait_, mod_ // не факт что правильно
     };
+
     Type classType;
     string name;
     MethodTable methodTable;
     FieldTable fieldTable;
     string parentName; // имя родителя
+    bool isPub = false;
 
     ConstTable constTable;
 

@@ -15,12 +15,13 @@ public:
     VarTableItem(DataType dataType, bool isMut, bool isRef, bool isInit, ExprNode *blockExpr);
 
     string id = "";
+    //добавить номер
     DataType dataType;
     bool isMut = false;
     bool isRef = false; // является передачей по ссылке или нет
     bool isConst = false;
     bool isInit = false;
-    ExprNode* blockExpr; // блок, с которым связан файл
+    ExprNode* blockExpr; // блок, с которым связан переменная
     ExprNode* value; // для const;
 
     VarTableItem();

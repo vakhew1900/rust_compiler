@@ -1517,16 +1517,16 @@ void ItemNode::getAllItems(std::string className) {
             case function_:
                 this->methodTableItem = MethodTableItem();
                 if (this->body != NULL) this->methodTableItem.isHasBody = true;
-                if (ClassTable::Instance()->getClass(className).classType != trait_ &&
-                    this->methodTableItem.isHasBody == false);
-                {
-                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + "NOT_IMPLEMICATION");
+                if( this->visibility == pub) this->methodTableItem.isPub = true;
+                if (ClassTable::Instance()->getClass(className).classType != ClassTableItem::trait_ &&
+                    this->methodTableItem.isHasBody == false) {
+                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_IMPLEMICATION");
                 }
 
                 if ((this->params->func_type == FuncParamListNode::self_ref
                      || this->params->func_type == FuncParamListNode::self) &&
                     ClassTable::Instance()->getClass(className).classType == ClassTableItem::mod_) {
-                    throw Exception(Exception::NOT_A_METHOD, "function " + *this->name + "NOT_A_METHOD");
+                    throw Exception(Exception::NOT_A_METHOD, "function " + *this->name + " NOT_A_METHOD");
                 }
 
                 ClassTable::Instance()->addMethod(className, *this->name, this->methodTableItem);
@@ -1534,21 +1534,32 @@ void ItemNode::getAllItems(std::string className) {
             case constStmt_:
                 this->fieldTableItem = FieldTableItem();
                 if (this->expr != NULL) this->fieldTableItem.isInit = true;
+                if( this->visibility == pub) this->fieldTableItem.isPub = true;
                 if (this->fieldTableItem.isInit == false &&
-                    ClassTable::Instance()->getClass(className).classType != trait) {
+                    ClassTable::Instance()->getClass(className).classType != ClassTableItem::trait_) {
                     throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_DEFINED");
                 }
 
+                fieldTableItem.isConst = true;
                 ClassTable::Instance()->addField(className, *this->name, this->fieldTableItem);
                 break;
             case trait_:
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::trait_;
+                if( this->visibility == pub) this->classTableItem.isPub = true;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
+
+                if (this->items != NULL) {
+                    for (auto elem: *this->items->items) {
+                        elem->getAllItems(className + "/" + *this->name);
+                    }
+                }
+
                 break;
             case module_:
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::mod_;
+                if( this->visibility == pub) this->classTableItem.isPub = true;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
 
                 if (this->items != NULL) {
@@ -1562,6 +1573,7 @@ void ItemNode::getAllItems(std::string className) {
             case enum_:
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::enum_;
+                if( this->visibility == pub) this->classTableItem.isPub = true;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
 
                 if (this->enumItems != NULL) {
@@ -1574,7 +1586,16 @@ void ItemNode::getAllItems(std::string className) {
             case struct_:
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::struct_;
+                if( this->visibility == pub) this->classTableItem.isPub = true;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
+
+                if (this->structItems->items != NULL)
+                {
+                    for (auto elem: *this->structItems->items)
+                    {
+                        elem->getAllItems(className + "/" + *this->name);
+                    }
+                }
                 break;
 
             case impl_:
@@ -1593,6 +1614,20 @@ void ItemNode::simpleTreeTransform() {
 void EnumItemNode::getAllItems(std::string className) {
     this->fieldTableItem = FieldTableItem();
     this->fieldTableItem.isConst = true;
+    if( this->visibility == pub) this->fieldTableItem.isPub = true;
+
+    try {
+        ClassTable::Instance()->addField(className, *this->name, fieldTableItem);
+    }
+    catch (Exception e) {
+        throw e;
+    }
+}
+
+void StructFieldNode::getAllItems(std::string className) {
+    this->fieldTableItem = FieldTableItem();
+    this->fieldTableItem.isConst = true;
+    if( this->visibility == pub) this->fieldTableItem.isPub = true;
 
     try {
         ClassTable::Instance()->addField(className, *this->name, fieldTableItem);
