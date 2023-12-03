@@ -95,6 +95,7 @@ public:
     TypeNode(Type type, ExprNode *pathCallExpr);
 
     void toDot(string &dot);
+    DataType convertToDataType(const string &className);
 
 };
 
@@ -186,6 +187,7 @@ public:
     void toDot(string &dot, const string &pos = "");
 
 
+    void transform();
 };
 
 class ExprListNode : public Node {

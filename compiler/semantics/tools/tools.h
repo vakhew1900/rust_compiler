@@ -21,6 +21,8 @@ public:
         DEFINED_MULTIPLE,
         NOT_IMPLEMICATION,
         NOT_A_METHOD,
+        INCORRECT_CONST,
+        INCORRECT_ARR_LENGTH,
     };
 
     ExceptionType exceptionType;

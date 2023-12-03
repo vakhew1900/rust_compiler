@@ -1659,3 +1659,185 @@ void ItemListNode::simpleTreeTransform() {
     }
 }
 
+
+DataType TypeNode::convertToDataType(const string &className) {
+    DataType dataType = DataType();
+
+    switch (this->type) {
+
+        case emptyType_:
+            break;
+        case int_:
+            dataType.type = DataType::int_;
+            break;
+        case char_:
+            dataType.type = DataType::char_;
+            break;
+        case string_:
+            dataType.type = DataType::string_;
+            break;
+        case float_:
+            dataType.type = DataType::float_;
+            break;
+        case bool_:
+            dataType.type = DataType::bool_;
+            break;
+        case id_:
+            dataType.type = DataType:: class_;
+            break;
+        case array_:
+            dataType.type = DataType::array_;
+
+            if(this->typeArr->type == array_)
+            {
+                DataType innerDataType = this->typeArr->convertToDataType(className);
+                this->exprArr->transform();
+                dataType.arrType = innerDataType.arrType;
+
+                if(exprArr->type != ExprNode::int_lit)
+                {
+                  throw Exception(Exception::INCORRECT_CONST, "not INT_LIT");
+                }
+
+                if (this->exprArr->Int <= 0)
+                {
+                    throw Exception(Exception::INCORRECT_ARR_LENGTH, "array length less than one");
+                }
+
+                if(innerDataType.type == DataType::array_) {
+                    dataType.arrLength = innerDataType.arrLength;
+                    dataType.arrLength.push_back(this->exprArr->Int);
+                    dataType.arrDeep = innerDataType.arrDeep + 1;
+                    dataType.arrType = innerDataType.arrType;
+                }
+                else {
+                    dataType.arrLength.push_back(this->exprArr->Int);
+                    dataType.arrDeep = 1;
+                    dataType.arrType = innerDataType.type;
+                }
+            }
+
+            break;
+        case path_call_expr_:
+            break;
+    }
+}
+
+void ExprNode::transform() {
+
+    switch (this->type) {
+
+        case int_lit:
+            break;
+        case float_lit:
+            break;
+        case char_lit:
+            break;
+        case string_lit:
+            break;
+        case raw_string_lit:
+            break;
+        case bool_lit:
+            break;
+        case plus:
+            break;
+        case minus:
+            break;
+        case mul_expr:
+            break;
+        case div_expr:
+            break;
+        case mod:
+            break;
+        case or_:
+            break;
+        case and_:
+            break;
+        case asign:
+            break;
+        case equal:
+            break;
+        case not_equal:
+            break;
+        case greater:
+            break;
+        case less:
+            break;
+        case greater_equal:
+            break;
+        case less_equal:
+            break;
+        case uminus:
+            break;
+        case negotation:
+            break;
+        case question:
+            break;
+        case ustar:
+            break;
+        case link:
+            break;
+        case mut_link:
+            break;
+        case array_expr:
+            break;
+        case array_expr_auto_fill:
+            break;
+        case index_expr:
+            break;
+        case field_access_expr:
+            break;
+        case call_expr:
+            break;
+        case method_expr:
+            break;
+        case continue_expr:
+            break;
+        case break_expr:
+            break;
+        case break_with_val_expr:
+            break;
+        case range_right:
+            break;
+        case range_left:
+            break;
+        case range_expr:
+            break;
+        case return_expr:
+            break;
+        case id_:
+            break;
+        case self_expr:
+            break;
+        case if_expr_list:
+            break;
+        case if_expr:
+            break;
+        case loop_expr:
+            break;
+        case loop_while:
+            break;
+        case loop_for:
+            break;
+        case block_expr:
+            break;
+        case struct_expr:
+            break;
+        case struct_field_expr:
+            break;
+        case static_method:
+            break;
+        case tuple_expr:
+            break;
+        case super_expr:
+            break;
+        case path_call_expr:
+            break;
+        case add_if_block:
+            break;
+        case struct_creation:
+            break;
+        case as:
+            break;
+    }
+}
