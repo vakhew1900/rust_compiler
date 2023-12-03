@@ -2,6 +2,7 @@
 // Created by T0mmy on 27.11.2023.
 //
 
+#include <string>
 #include "datatype.h"
 #include "tools.h"
 
@@ -19,7 +20,7 @@ DataType DataType::ArrayDataType(DataType::Type arrType, int arrDeep) {
     return dataType;
 }
 
-DataType DataType::ArrayDataType(DataType::Type arrType, int arrDeep, int arrLength) {
+DataType DataType::ArrayDataType(DataType::Type arrType, int arrDeep, vector<int> arrLength) {
 
     DataType dataType = ArrayDataType(arrType, arrDeep);
     dataType.arrLength = arrLength;
@@ -66,7 +67,8 @@ string DataType::toString() {
         case array_:
             res += "array_" + array_;
             res += "deep: " + this->arrDeep;
-            res += " len: " +  this->arrLength;
+            res += " len: ";
+            for (auto elem : arrLength) res += to_string(elem) + " ";
             break;
     }
 
