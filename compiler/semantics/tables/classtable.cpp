@@ -17,12 +17,9 @@ ClassTableItem::ClassTableItem(FieldTable fieldTable, MethodTable methodTable, s
 string ClassTableItem::toString() {
     string res = "";
 
-    if (isPub)
-    {
+    if (isPub) {
         res += "public ";
-    }
-    else
-    {
+    } else {
         res += "package ";
     }
 
@@ -41,7 +38,6 @@ string ClassTableItem::toString() {
             res += varName(mod_);
             break;
     }
-
 
 
     if (parentName.size()) {
@@ -125,4 +121,18 @@ ClassTableItem ClassTable::getClass(const string &className) {
 }
 
 const string ClassTable::moduleClassName = "moduleClass";
+const string ClassTable::globalClassName = "GLOBAL_CLASS";
 
+string ClassTable::getDirectory(string className) {
+    vector<string> classPath = split(className, '/');
+
+    string res = "";
+
+    res += classPath[0];
+    for(int i = 1; i < classPath.size() - 1;)
+    {
+        res += "/" + classPath[i];
+    }
+
+    return res;
+}

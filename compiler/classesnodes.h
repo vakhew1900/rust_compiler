@@ -51,6 +51,11 @@ public:
     MethodTableItem methodTableItem;
     FieldTableItem fieldTableItem;
     ClassTableItem classTableItem;
+
+    string className;
+    string methodName;
+    string fieldName;
+
     virtual void getAllItems(string className);
     virtual void simpleTreeTransform();
     void simpleTreeTransform(Node *node);
@@ -186,8 +191,9 @@ public:
 
     void toDot(string &dot, const string &pos = "");
 
-
+    void transformPathCallExpr(string className, ExprNode::Type type, bool isType);
     void transform();
+    bool isLiteral();
 };
 
 class ExprListNode : public Node {

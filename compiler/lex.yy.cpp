@@ -2946,7 +2946,7 @@ int main(int argc, char** argv) {
 
     std::ofstream out("dot-tree.txt");
     out << dot << "\n";
-    global_program->getAllItems("GLOBAL_CLASS");
+    global_program->getAllItems(ClassTable::globalClassName);
     string res = ClassTable::Instance()->toString();
     cout << ClassTable::Instance()->toString() << "\n";
     return 0;

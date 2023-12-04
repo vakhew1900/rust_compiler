@@ -43,6 +43,7 @@ public:
 
     string toString();
     static const string moduleClassName;
+    static const string globalClassName;
 
     static ClassTable* Instance();
     void addMethod(string className, string methodName, MethodTableItem methodTableItem);
@@ -52,6 +53,7 @@ public:
     bool isMethodExist(const string& className, const string& methodName);
     bool isFieldExist(const string& className, const string& methodName);
     ClassTableItem getClass(const string& className);
+    static string getDirectory(string className);
 };
 
 

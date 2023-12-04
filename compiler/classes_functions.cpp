@@ -1841,3 +1841,94 @@ void ExprNode::transform() {
             break;
     }
 }
+
+void ExprNode :: transformPathCallExpr(string className, ExprNode::Type type, bool isType)
+{
+    ExprNode* cur = this;
+    vector<string> namePath;
+
+    while(cur->type == ExprNode::path_call_expr)
+    {
+        namePath.push_back(*cur->Name);
+        cur = cur->expr_left;
+    }
+
+    reverse(all(namePath));
+    ///TODO доделать
+
+    if (type == ExprNode::static_method)
+    {
+        this->methodName = namePath.back();
+        namePath.pop_back();
+    }
+    else if (isType == false)
+    {
+        this->fieldName = namePath.back();
+        namePath.pop_back();
+    }
+
+    string res = "";
+    switch (cur->type) {
+        case ExprNode::id_:
+            res += ClassTable::globalClassName + "/";
+            res += *cur->Name;
+            break;
+        case ExprNode::self_expr:
+           ///TODO доделать
+
+           /// пока реализовать случай вызова статика
+           if (cur != this)
+           {
+                res = className;
+
+                if(ClassTable::Instance()->isClassExist(className)
+                && ClassTable::Instance()->getClass(className).classType != ClassTableItem::mod_)
+                {
+                    res = ClassTable::getDirectory(className);
+                }
+           }
+
+            break;
+        case ExprNode::super_expr:
+            /// TODO доделать
+
+            /// пока реализовать случай вызова статика
+            if (cur != this)
+            {
+                if(ClassTable::Instance()->isClassExist(className)
+                   && ClassTable::Instance()->getClass(className).classType != ClassTableItem::mod_)
+                {
+                    res = ClassTable::getDirectory(className);
+                    res = ClassTable::getDirectory(res);
+                }
+            }
+            break;
+        default:
+            break;
+    }
+
+    for(auto elem : namePath)
+    {
+        res += "/" + elem;
+    }
+
+    if(!ClassTable::Instance()->isClassExist(res))
+    {
+        res += "/" + ClassTable::moduleClassName;
+    }
+
+    if(!ClassTable::Instance()->isClassExist(res))
+    {
+        throw Exception(Exception::NOT_EXIST, res + "NOT_EXIST");
+    }
+
+    className = res;
+
+}
+
+bool ExprNode::isLiteral() {
+    return this->type == ExprNode::int_lit || this->type == ExprNode::bool_lit ||
+    this->type == ExprNode::char_lit || this->type == ExprNode::float_lit ||
+    this->type == ExprNode::string_lit;
+}
+

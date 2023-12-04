@@ -5,6 +5,7 @@
 #ifndef COMPILER_TOOLS_H
 #define COMPILER_TOOLS_H
 #define varName(x) #x
+#define all(x) x.begin(), x.end()
 #include <iostream>
 #include <vector>
 
@@ -23,6 +24,7 @@ public:
         NOT_A_METHOD,
         INCORRECT_CONST,
         INCORRECT_ARR_LENGTH,
+        NOT_EXIST,
     };
 
     ExceptionType exceptionType;
