@@ -1130,7 +1130,7 @@ YY_RULE_SETUP
 case 18:
 YY_RULE_SETUP
 #line 88 "lex.l"
-{ printf("Found KW_MOD: %s\n", yytext); }
+{ printf("Found KW_MOD: %s\n", yytext); return MOD; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
@@ -2915,7 +2915,8 @@ int translateNumberByBase(char *input_string) {
     return result; // не удалось произвести операцию перевода с числом
 }
 
-#define release
+
+//#define release
 
 int main(int argc, char** argv) {
 
@@ -2951,3 +2952,4 @@ int main(int argc, char** argv) {
     cout << ClassTable::Instance()->toString() << "\n";
     return 0;
 }
+

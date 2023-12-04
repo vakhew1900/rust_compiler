@@ -144,4 +144,5 @@ void ClassTable::addParent(string childName, string parentName) {
     }
 
     this->items[childName].parentName = parentName;
+    cout << childName << " " << parentName << "\n";
 }

@@ -85,7 +85,7 @@ in { printf("Found KW_IN: %s\n", yytext); return IN;}
 let { printf("Found KW_LET: %s\n", yytext); return LET;}
 loop { printf("Found KW_LOOP: %s\n", yytext); return LOOP;}
 match { printf("Found KW_MATCH: %s\n", yytext); }
-mod { printf("Found KW_MOD: %s\n", yytext); }
+mod { printf("Found KW_MOD: %s\n", yytext); return MOD; }
 move { printf("Found KW_MOVE: %s\n", yytext); }
 mut { printf("Found KW_MUT: %s\n", yytext); return MUT;}
 pub { printf("Found KW_PUB: %s\n", yytext); return PUB;}
@@ -534,15 +534,21 @@ int translateNumberByBase(char *input_string) {
 }
 
 
+//#define release
+
 int main(int argc, char** argv) {
 
+
+#ifdef release
     if (argc != 2) {
         printf("Filename is not found");
         return 1;
     }
 
     const char *filename = argv[1];
-
+#else
+    const char *filename = "../tests/trait_error.rs";
+#endif
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         printf("File opening error");
@@ -559,6 +565,9 @@ int main(int argc, char** argv) {
 
     std::ofstream out("dot-tree.txt");
     out << dot << "\n";
-
+    global_program->getAllItems(ClassTable::globalClassName);
+    string res = ClassTable::Instance()->toString();
+    cout << ClassTable::Instance()->toString() << "\n";
     return 0;
 }
+
