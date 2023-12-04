@@ -49,6 +49,7 @@ public:
     void addMethod(string className, string methodName, MethodTableItem methodTableItem);
     void addField(string className, string fieldName, FieldTableItem fieldTableItem);
     void addClass(string  className, ClassTableItem classTableItem);
+    void addParent(string childName, string parentName);
     bool isClassExist(const string& className);
     bool isMethodExist(const string& className, const string& methodName);
     bool isFieldExist(const string& className, const string& methodName);

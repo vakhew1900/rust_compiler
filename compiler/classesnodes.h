@@ -57,12 +57,14 @@ public:
     string fieldName;
 
     virtual void getAllItems(string className);
-    virtual void simpleTreeTransform();
+    virtual void addImpl(string className, bool isTrait);
     void simpleTreeTransform(Node *node);
     void connectVerticesDots(string &s, int parentId, int childId);
 
     void createVertexDot(string &s, int id, string name = "", string type = "", string value = "", string visibility = "",
                          string pos = "");
+
+
 };
 
 
@@ -75,7 +77,7 @@ public:
     void toDot(string &dot);
 
     void getAllItems(std::string className) override;
-    void simpleTreeTransform() override;
+    void addImpl(string className, bool isTrait) override;
 };
 
 class TypeNode : public Node {
@@ -115,7 +117,7 @@ public:
 
         id_, self_expr, if_expr_list, if_expr, loop_expr, loop_while, loop_for, block_expr,
         struct_expr, struct_field_expr, static_method, tuple_expr, super_expr,
-        path_call_expr, add_if_block, struct_creation, as
+        path_call_expr, add_if_block, struct_creation, as, undefined
     };
     Type type;
     char Char = 0;
@@ -315,7 +317,7 @@ public:
 
     void toDot(string &dot);
     void getAllItems(std::string className) override;
-    void simpleTreeTransform() override;
+    void addImpl(string className, bool isTrait) override;
 };
 
 
@@ -331,7 +333,6 @@ public:
 
 
     void toDot(string &dot);
-    void simpleTreeTransform() override;
 };
 
 class ModuleStmtNode : public Node {

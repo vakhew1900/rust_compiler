@@ -25,6 +25,7 @@ public:
         INCORRECT_CONST,
         INCORRECT_ARR_LENGTH,
         NOT_EXIST,
+        NOT_SUPPORT,
     };
 
     ExceptionType exceptionType;

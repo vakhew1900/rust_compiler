@@ -1500,6 +1500,7 @@ void ProgramNode::getAllItems(std::string className) {
     try {
         if (item_list != NULL) {
             for (auto elem: *item_list->items) {
+                //  if(elem->item_type == ItemNode::function_ || )
                 elem->getAllItems(className);
             }
         }
@@ -1517,7 +1518,7 @@ void ItemNode::getAllItems(std::string className) {
             case function_:
                 this->methodTableItem = MethodTableItem();
                 if (this->body != NULL) this->methodTableItem.isHasBody = true;
-                if( this->visibility == pub) this->methodTableItem.isPub = true;
+                if (this->visibility == pub) this->methodTableItem.isPub = true;
                 if (ClassTable::Instance()->getClass(className).classType != ClassTableItem::trait_ &&
                     this->methodTableItem.isHasBody == false) {
                     throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_IMPLEMICATION");
@@ -1534,7 +1535,7 @@ void ItemNode::getAllItems(std::string className) {
             case constStmt_:
                 this->fieldTableItem = FieldTableItem();
                 if (this->expr != NULL) this->fieldTableItem.isInit = true;
-                if( this->visibility == pub) this->fieldTableItem.isPub = true;
+                if (this->visibility == pub) this->fieldTableItem.isPub = true;
                 if (this->fieldTableItem.isInit == false &&
                     ClassTable::Instance()->getClass(className).classType != ClassTableItem::trait_) {
                     throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_DEFINED");
@@ -1546,7 +1547,7 @@ void ItemNode::getAllItems(std::string className) {
             case trait_:
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::trait_;
-                if( this->visibility == pub) this->classTableItem.isPub = true;
+                if (this->visibility == pub) this->classTableItem.isPub = true;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
 
                 if (this->items != NULL) {
@@ -1559,7 +1560,7 @@ void ItemNode::getAllItems(std::string className) {
             case module_:
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::mod_;
-                if( this->visibility == pub) this->classTableItem.isPub = true;
+                if (this->visibility == pub) this->classTableItem.isPub = true;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
 
                 if (this->items != NULL) {
@@ -1573,7 +1574,7 @@ void ItemNode::getAllItems(std::string className) {
             case enum_:
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::enum_;
-                if( this->visibility == pub) this->classTableItem.isPub = true;
+                if (this->visibility == pub) this->classTableItem.isPub = true;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
 
                 if (this->enumItems != NULL) {
@@ -1586,13 +1587,11 @@ void ItemNode::getAllItems(std::string className) {
             case struct_:
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::struct_;
-                if( this->visibility == pub) this->classTableItem.isPub = true;
+                if (this->visibility == pub) this->classTableItem.isPub = true;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
 
-                if (this->structItems->items != NULL)
-                {
-                    for (auto elem: *this->structItems->items)
-                    {
+                if (this->structItems->items != NULL) {
+                    for (auto elem: *this->structItems->items) {
                         elem->getAllItems(className + "/" + *this->name);
                     }
                 }
@@ -1607,14 +1606,11 @@ void ItemNode::getAllItems(std::string className) {
     }
 }
 
-void ItemNode::simpleTreeTransform() {
-
-}
 
 void EnumItemNode::getAllItems(std::string className) {
     this->fieldTableItem = FieldTableItem();
     this->fieldTableItem.isConst = true;
-    if( this->visibility == pub) this->fieldTableItem.isPub = true;
+    if (this->visibility == pub) this->fieldTableItem.isPub = true;
 
     try {
         ClassTable::Instance()->addField(className, *this->name, fieldTableItem);
@@ -1627,7 +1623,7 @@ void EnumItemNode::getAllItems(std::string className) {
 void StructFieldNode::getAllItems(std::string className) {
     this->fieldTableItem = FieldTableItem();
     this->fieldTableItem.isConst = true;
-    if( this->visibility == pub) this->fieldTableItem.isPub = true;
+    if (this->visibility == pub) this->fieldTableItem.isPub = true;
 
     try {
         ClassTable::Instance()->addField(className, *this->name, fieldTableItem);
@@ -1637,25 +1633,116 @@ void StructFieldNode::getAllItems(std::string className) {
     }
 }
 
-/* ------ simpleTransform ------------------------------------*/
+/* ------ addImpl ------------------------------------*/
 
-void Node::simpleTreeTransform() {
+void Node::addImpl(string className, bool isTrait) {
 
 }
 
-void Node::simpleTreeTransform(Node *node) {
-    if (node != NULL) {
-        node->simpleTreeTransform();
+void ProgramNode::addImpl(string className, bool isTrait) {
+
+    try {
+        if (this->item_list != NULL) {
+            for (auto elem: *item_list->items) {
+                elem->addImpl(className, false);
+            }
+        }
+    }
+    catch (Exception e) {
+        cout << e.getMessage() << "\n";
     }
 }
 
-void ProgramNode::simpleTreeTransform() {
-    Node::simpleTreeTransform(this->item_list);
-}
+void ItemNode::addImpl(string className, bool isTrait) {
 
-void ItemListNode::simpleTreeTransform() {
-    for (auto elem: *items) {
-        Node::simpleTreeTransform(elem);
+    string implClassName = "";
+    string traitClassName = "";
+    try {
+        switch (this->item_type) {
+            case module_:
+                if (this->items != NULL) {
+                    for (auto elem: *items->items) {
+                        if (elem->item_type == impl_ || elem->item_type == module_) {
+                            elem->addImpl(className + "/" + *this->name, false);
+                        }
+                    }
+                }
+                break;
+
+            case impl_:
+
+                if (this->type->type != TypeNode::path_call_expr_) {
+                    throw Exception(Exception::NOT_SUPPORT, "Impl not struct type NOT SUPPORT");
+                }
+
+                this->type->pathCallExpr->transformPathCallExpr(className, ExprNode::undefined, true);
+
+                if (!ClassTable::Instance()->isClassExist(implClassName)) {
+                    throw Exception(Exception::NOT_EXIST, "Impl struct" + implClassName + "Not Exist");
+                }
+
+                if (this->impl_type == trait_) {
+
+                    this->expr->transformPathCallExpr(className, ExprNode::undefined, true);
+                    traitClassName = this->expr->className;
+                    if (!ClassTable::Instance()->isClassExist(traitClassName)) {
+                        throw Exception(Exception::NOT_EXIST, "Trait struct in impl" + traitClassName + "Not Exist");
+                    }
+
+                    ClassTable::Instance()->addParent(implClassName, traitClassName);
+
+                }
+
+                if (this->items != NULL) {
+                    for (auto elem: *items->items) {
+                        elem->addImpl(className + "/" + *this->name, this->impl_type == trait_);
+                    }
+                }
+                break;
+            case function_:
+                this->methodTableItem = MethodTableItem();
+                if (this->body != NULL) this->methodTableItem.isHasBody = true;
+                if (this->visibility == pub) this->methodTableItem.isPub = true;
+
+                if (ClassTable::Instance()->getClass(className).classType != ClassTableItem::trait_ &&
+                    this->methodTableItem.isHasBody == false) {
+                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_IMPLEMICATION");
+                }
+
+                if (isTrait && ClassTable::Instance()->
+                        isMethodExist(ClassTable::Instance()->getClass(className).parentName, *this->name) == false) {
+                    throw Exception(Exception::NOT_EXIST, "Impl Error: method" + *this->name + "in parent trait");
+                }
+
+                ClassTable::Instance()->addMethod(className, *this->name, this->methodTableItem);
+                break;
+            case constStmt_:
+                this->fieldTableItem = FieldTableItem();
+                if (this->expr != NULL) this->fieldTableItem.isInit = true;
+                if (this->visibility == pub) this->fieldTableItem.isPub = true;
+                if (this->fieldTableItem.isInit == false &&
+                    ClassTable::Instance()->getClass(className).classType != ClassTableItem::trait_) {
+                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_DEFINED");
+                }
+
+                if (isTrait && !ClassTable::Instance()->
+                        isFieldExist(ClassTable::Instance()->getClass(className).parentName, *this->name)) {
+                    throw Exception(Exception::NOT_EXIST, "Impl Error: method" + *this->name + "in parent trait");
+                }
+
+                fieldTableItem.isConst = true;
+                ClassTable::Instance()->addField(className, *this->name, this->fieldTableItem);
+                break;
+
+            case struct_:
+            case enum_:
+            case trait_:
+                break;
+        }
+    }
+
+    catch (Exception e) {
+        throw e;
     }
 }
 
@@ -1683,34 +1770,30 @@ DataType TypeNode::convertToDataType(const string &className) {
             dataType.type = DataType::bool_;
             break;
         case id_:
-            dataType.type = DataType:: class_;
+            dataType.type = DataType::class_;
             break;
         case array_:
             dataType.type = DataType::array_;
 
-            if(this->typeArr->type == array_)
-            {
+            if (this->typeArr->type == array_) {
                 DataType innerDataType = this->typeArr->convertToDataType(className);
                 this->exprArr->transform();
                 dataType.arrType = innerDataType.arrType;
 
-                if(exprArr->type != ExprNode::int_lit)
-                {
-                  throw Exception(Exception::INCORRECT_CONST, "not INT_LIT");
+                if (exprArr->type != ExprNode::int_lit) {
+                    throw Exception(Exception::INCORRECT_CONST, "not INT_LIT");
                 }
 
-                if (this->exprArr->Int <= 0)
-                {
+                if (this->exprArr->Int <= 0) {
                     throw Exception(Exception::INCORRECT_ARR_LENGTH, "array length less than one");
                 }
 
-                if(innerDataType.type == DataType::array_) {
+                if (innerDataType.type == DataType::array_) {
                     dataType.arrLength = innerDataType.arrLength;
                     dataType.arrLength.push_back(this->exprArr->Int);
                     dataType.arrDeep = innerDataType.arrDeep + 1;
                     dataType.arrType = innerDataType.arrType;
-                }
-                else {
+                } else {
                     dataType.arrLength.push_back(this->exprArr->Int);
                     dataType.arrDeep = 1;
                     dataType.arrType = innerDataType.type;
@@ -1722,6 +1805,7 @@ DataType TypeNode::convertToDataType(const string &className) {
             break;
     }
 }
+
 
 void ExprNode::transform() {
 
@@ -1842,13 +1926,11 @@ void ExprNode::transform() {
     }
 }
 
-void ExprNode :: transformPathCallExpr(string className, ExprNode::Type type, bool isType)
-{
-    ExprNode* cur = this;
+void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool isType) {
+    ExprNode *cur = this;
     vector<string> namePath;
 
-    while(cur->type == ExprNode::path_call_expr)
-    {
+    while (cur->type == ExprNode::path_call_expr) {
         namePath.push_back(*cur->Name);
         cur = cur->expr_left;
     }
@@ -1856,13 +1938,10 @@ void ExprNode :: transformPathCallExpr(string className, ExprNode::Type type, bo
     reverse(all(namePath));
     ///TODO доделать
 
-    if (type == ExprNode::static_method)
-    {
+    if (type == ExprNode::static_method) {
         this->methodName = namePath.back();
         namePath.pop_back();
-    }
-    else if (isType == false)
-    {
+    } else if (isType == false) {
         this->fieldName = namePath.back();
         namePath.pop_back();
     }
@@ -1870,34 +1949,30 @@ void ExprNode :: transformPathCallExpr(string className, ExprNode::Type type, bo
     string res = "";
     switch (cur->type) {
         case ExprNode::id_:
-            res += ClassTable::globalClassName + "/";
-            res += *cur->Name;
+            res += ClassTable::getDirectory(className);
+            res += +"/" + *cur->Name;
             break;
         case ExprNode::self_expr:
-           ///TODO доделать
+            ///TODO доделать
 
-           /// пока реализовать случай вызова статика
-           if (cur != this)
-           {
+            /// пока реализовать случай вызова статика
+            if (cur != this) {
                 res = className;
 
-                if(ClassTable::Instance()->isClassExist(className)
-                && ClassTable::Instance()->getClass(className).classType != ClassTableItem::mod_)
-                {
+                if (ClassTable::Instance()->isClassExist(className)
+                    && ClassTable::Instance()->getClass(className).classType != ClassTableItem::mod_) {
                     res = ClassTable::getDirectory(className);
                 }
-           }
+            }
 
             break;
         case ExprNode::super_expr:
             /// TODO доделать
 
             /// пока реализовать случай вызова статика
-            if (cur != this)
-            {
-                if(ClassTable::Instance()->isClassExist(className)
-                   && ClassTable::Instance()->getClass(className).classType != ClassTableItem::mod_)
-                {
+            if (cur != this) {
+                if (ClassTable::Instance()->isClassExist(className)
+                    && ClassTable::Instance()->getClass(className).classType != ClassTableItem::mod_) {
                     res = ClassTable::getDirectory(className);
                     res = ClassTable::getDirectory(res);
                 }
@@ -1907,18 +1982,15 @@ void ExprNode :: transformPathCallExpr(string className, ExprNode::Type type, bo
             break;
     }
 
-    for(auto elem : namePath)
-    {
+    for (auto elem: namePath) {
         res += "/" + elem;
     }
 
-    if(!ClassTable::Instance()->isClassExist(res))
-    {
+    if (!ClassTable::Instance()->isClassExist(res)) {
         res += "/" + ClassTable::moduleClassName;
     }
 
-    if(!ClassTable::Instance()->isClassExist(res))
-    {
+    if (!ClassTable::Instance()->isClassExist(res)) {
         throw Exception(Exception::NOT_EXIST, res + "NOT_EXIST");
     }
 
@@ -1928,7 +2000,7 @@ void ExprNode :: transformPathCallExpr(string className, ExprNode::Type type, bo
 
 bool ExprNode::isLiteral() {
     return this->type == ExprNode::int_lit || this->type == ExprNode::bool_lit ||
-    this->type == ExprNode::char_lit || this->type == ExprNode::float_lit ||
-    this->type == ExprNode::string_lit;
+           this->type == ExprNode::char_lit || this->type == ExprNode::float_lit ||
+           this->type == ExprNode::string_lit;
 }
 
