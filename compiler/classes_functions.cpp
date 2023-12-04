@@ -1802,8 +1802,12 @@ DataType TypeNode::convertToDataType(const string &className) {
 
             break;
         case path_call_expr_:
+            this->pathCallExpr->transformPathCallExpr(className, ExprNode::undefined, true);
+            dataType.id = this->pathCallExpr->className;
             break;
     }
+
+    return dataType;
 }
 
 
