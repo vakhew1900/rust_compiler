@@ -1837,8 +1837,7 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
     string res = "";
     switch (cur->type) {
         case ExprNode::id_:
-            if (ClassTable::Instance()->isClassExist(className)
-                && ClassTable::Instance()->getClass(className).classType != ClassTableItem::mod_) {
+            if (ClassTable::Instance()->isClassExist(className)) {
                 res += ClassTable::getDirectory(className);
             }
             else
@@ -1854,8 +1853,7 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
             if (cur != this) {
                 res = className;
 
-                if (ClassTable::Instance()->isClassExist(className)
-                    && ClassTable::Instance()->getClass(className).classType != ClassTableItem::mod_) {
+                if (ClassTable::Instance()->isClassExist(className)) {
                     res = ClassTable::getDirectory(className);
                 }
             }
@@ -1866,8 +1864,7 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
 
             /// пока реализовать случай вызова статика
             if (cur != this) {
-                if (ClassTable::Instance()->isClassExist(className)
-                    && ClassTable::Instance()->getClass(className).classType != ClassTableItem::mod_) {
+                if (ClassTable::Instance()->isClassExist(className)) {
                     res = ClassTable::getDirectory(className);
                 }
                 res = ClassTable::getDirectory(res);
