@@ -2318,6 +2318,26 @@ void ExprNode::transformConst() {
                     case DataType::float_:
                         break;
                 }
+            } else if (this->expr_left->dataType.type == DataType::char_) {
+                switch (this->typeNode->dataType.type) {
+
+                    case DataType::int_:
+                        this->Int = this->expr_left->Char;
+                        this->dataType.type = DataType::int_;
+                        this->type = int_lit;
+                        break;
+
+                    case DataType::char_:
+                    case DataType::bool_:
+                    case DataType::string_: // пусть явно будет а то дефолт еще фиг вспомнишь что так
+                    case DataType::class_:
+                    case DataType::array_:
+                    case DataType::void_:
+                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other");
+                        break;
+                    case DataType::float_:
+                        break;
+                }
             } else {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
             }
