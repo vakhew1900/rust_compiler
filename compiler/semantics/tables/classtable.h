@@ -54,7 +54,10 @@ public:
     bool isMethodExist(const string& className, const string& methodName);
     bool isFieldExist(const string& className, const string& methodName);
     ClassTableItem getClass(const string& className);
+    FieldTableItem getField(const string& className, const string& fieldName);
+    MethodTableItem getMethod(const string& className, const string& methodName);
     static string getDirectory(string className);
+    static void isCorrectChild(string childName, string parentName);
 };
 
 

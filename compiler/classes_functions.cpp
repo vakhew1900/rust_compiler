@@ -1510,7 +1510,7 @@ void ProgramNode::getAllItems(std::string className) {
         this->addImpl(className, false);
     }
     catch (Exception e) {
-        cout << e.getMessage() << "\n";
+       cout << e.getMessage() << "\n";
     }
 }
 
@@ -1702,6 +1702,12 @@ void ItemNode::addImpl(string className, bool isTrait) {
                         elem->addImpl(implClassName, this->impl_type == trait);
                     }
                 }
+
+               if (this->impl_type == trait)
+                {
+                    ClassTable::isCorrectChild(implClassName, traitClassName);
+                }
+
                 break;
             case function_:
                 this->methodTableItem = MethodTableItem();
@@ -1718,7 +1724,10 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     throw Exception(Exception::NOT_EXIST, "Impl Error: method" + *this->name + "in parent trait");
                 }
 
+
                 ClassTable::Instance()->addMethod(className, *this->name, this->methodTableItem);
+
+
                 break;
             case constStmt_:
                 this->fieldTableItem = FieldTableItem();

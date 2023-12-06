@@ -146,3 +146,56 @@ void ClassTable::addParent(string childName, string parentName) {
     this->items[childName].parentName = parentName;
     cout << childName << " " << parentName << "\n";
 }
+
+void ClassTable::isCorrectChild(string childName, string parentName) {
+
+    if (!ClassTable::Instance()->isClassExist(childName)) {
+        throw Exception(Exception::NOT_EXIST, childName + " DEFINED_MULTIPLE in namespace");
+    }
+
+    if (!ClassTable::Instance()->isClassExist(parentName)) {
+        throw Exception(Exception::NOT_EXIST, parentName + " NOT_EXIST in namespace");
+    }
+
+    bool res = true;
+
+    for(auto elem : Instance()->getClass(parentName).fieldTable.items)
+    {
+            string fieldName = elem.first;
+
+            if (!Instance()->isFieldExist(childName, fieldName)
+            && Instance()->getField(parentName, fieldName).isInit == false)
+            {
+                throw Exception(Exception::NOT_EXIST, fieldName + "not declaration in struct");
+            }
+    }
+
+    for(auto elem : Instance()->getClass(parentName).methodTable.items)
+    {
+        string methodName = elem.first;
+
+        if (!Instance()->isMethodExist(childName, methodName)
+        && Instance()->getMethod(parentName, methodName).isHasBody == false)
+        {
+            throw Exception(Exception::NOT_EXIST, methodName + "not declaration in struct");
+        }
+    }
+}
+
+FieldTableItem ClassTable::getField(const string &className, const string &fieldName) {
+
+    if (!ClassTable::Instance()->isFieldExist(className, fieldName)) {
+        throw Exception(Exception::NOT_EXIST, fieldName + " NOT_EXIST in namespace");
+    }
+
+    return Instance()->getClass(className).fieldTable.items[fieldName];
+}
+
+MethodTableItem ClassTable::getMethod(const string &className, const string &methodName) {
+
+    if (!ClassTable::Instance()->isMethodExist(className, methodName)) {
+        throw Exception(Exception::NOT_EXIST, methodName + " NOT_EXIST in namespace");
+    }
+
+    return Instance()->getClass(className).methodTable.items[methodName];
+}
