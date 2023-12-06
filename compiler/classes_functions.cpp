@@ -685,7 +685,7 @@ void TypeNode::toDot(string &dot) {
             break;
 
         case TypeNode::id_:
-            cout << this->name << "\n";
+            //  cout << this->name << "\n";
             createVertexDot(dot, this->id, "id_type", "", *this->name);
             break;
 
@@ -1205,7 +1205,7 @@ void ItemNode::toDot(string &dot) {
 void ItemListNode::toDot(string &dot) {
 
     createVertexDot(dot, this->id, "item_list");
-    cout << this->id << "\n";
+    //  cout << this->id << "\n";
     for (auto elem: *this->items) {
         int exprNum = 1;
         connectVerticesDots(dot, this->id, elem->id);
@@ -1510,7 +1510,7 @@ void ProgramNode::getAllItems(std::string className) {
         this->addImpl(className, false);
     }
     catch (Exception e) {
-       cout << e.getMessage() << "\n";
+        cout << e.getMessage() << "\n";
     }
 }
 
@@ -1703,8 +1703,7 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     }
                 }
 
-               if (this->impl_type == trait)
-                {
+                if (this->impl_type == trait) {
                     ClassTable::isCorrectChild(implClassName, traitClassName);
                 }
 
@@ -1848,9 +1847,7 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
         case ExprNode::id_:
             if (ClassTable::Instance()->isClassExist(className)) {
                 res += ClassTable::getDirectory(className);
-            }
-            else
-            {
+            } else {
                 res += className;
             }
             res += +"/" + *cur->Name;
@@ -1895,7 +1892,7 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
         throw Exception(Exception::NOT_EXIST, res + "NOT_EXIST");
     }
 
-    cout << res << "\n";
+    // cout << res << "\n";
     this->className = res;
 
 }
@@ -1903,7 +1900,7 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
 bool ExprNode::isLiteral() {
     return this->type == ExprNode::int_lit || this->type == ExprNode::bool_lit ||
            this->type == ExprNode::char_lit || this->type == ExprNode::float_lit ||
-           this->type == ExprNode::string_lit;
+           this->type == ExprNode::string_lit || this->type == ExprNode::raw_string_lit;
 }
 
 
@@ -2024,4 +2021,370 @@ void ExprNode::transform() {
         case as:
             break;
     }
+}
+
+void ExprNode::transformConst() {
+
+
+    switch (this->type) {
+        case plus:
+        case minus:
+        case mul_expr:
+        case div_expr:
+        case mod:
+        case or_:
+        case and_:
+        case asign:
+        case equal:
+        case not_equal:
+        case greater:
+        case less:
+        case greater_equal:
+        case less_equal:
+
+            if (this->expr_left->isEqualDataType(expr_list)) {
+                throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATATYPE");
+            }
+
+            if (!this->expr_left->isLiteral() || !this->expr_right->isLiteral()) {
+                throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
+            }
+            break;
+        case uminus:
+        case negotation:
+        case as:
+            if (!this->expr_left->isLiteral()) {
+                throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
+            }
+            break;
+    }
+
+    switch (this->type) {
+
+        case plus:
+            if (this->expr_left->dataType.type == DataType::int_) {
+                this->Int = this->expr_left->Int + this->expr_right->Int;
+                this->type = int_lit;
+            } else if (this->expr_left->dataType.type == DataType::float_) {
+                this->Float = this->expr_left->Float + this->expr_right->Float;
+                this->type = float_lit;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+
+            this->dataType.type = this->expr_left->dataType.type;
+            break;
+        case minus:
+            if (this->expr_left->dataType.type == DataType::int_) {
+                this->Int = this->expr_left->Int - this->expr_right->Int;
+                this->type = int_lit;
+            } else if (this->expr_left->dataType.type == DataType::float_) {
+                this->Float = this->expr_left->Float - this->expr_right->Float;
+                this->type = float_lit;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+
+            this->dataType.type = this->expr_left->dataType.type;
+            break;
+        case mul_expr:
+            if (this->expr_left->dataType.type == DataType::int_) {
+                this->Int = this->expr_left->Int * this->expr_right->Int;
+                this->type = int_lit;
+            } else if (this->expr_left->dataType.type == DataType::float_) {
+                this->Float = this->expr_left->Float * this->expr_right->Float;
+                this->type = float_lit;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+
+            this->dataType.type = this->expr_left->dataType.type;
+            break;
+        case div_expr:
+            if (this->expr_left->dataType.type == DataType::int_) {
+                if (this->expr_right->Int == 0) {
+                    throw Exception(Exception::NULL_DIVIDE, "NULL DIVIDE");
+                }
+                this->Int = this->expr_left->Int / this->expr_right->Int;
+                this->type = int_lit;
+            } else if (this->expr_left->dataType.type == DataType::float_) {
+                if (this->expr_right->Float == 0) {
+                    throw Exception(Exception::NULL_DIVIDE, "NULL DIVIDE");
+                }
+                this->Float = this->expr_left->Float / this->expr_right->Float;
+                this->type = float_lit;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+
+            this->dataType.type = this->expr_left->dataType.type;
+            break;
+        case mod:
+            if (this->expr_left->dataType.type == DataType::int_) {
+                if (this->expr_right->Int == 0) {
+                    throw Exception(Exception::NULL_DIVIDE, "NULL DIVIDE");
+                }
+                this->Int = this->expr_left->Int % this->expr_right->Int;
+                this->type = int_lit;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+
+            this->dataType.type = this->expr_left->dataType.type;
+            break;
+        case or_:
+            if (this->expr_left->dataType.type == DataType::bool_) {
+                this->Bool = this->expr_left->Bool || this->expr_right->Bool;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+
+            this->type = bool_lit;
+            this->dataType.type = this->expr_left->dataType.type;
+            break;
+        case and_:
+            if (this->expr_left->dataType.type == DataType::bool_) {
+                this->Bool = this->expr_left->Bool && this->expr_right->Bool;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+
+            this->type = bool_lit;
+            this->dataType.type = this->expr_left->dataType.type;
+            break;
+        case equal:
+            if (this->expr_left->dataType.type == DataType::bool_) {
+                this->Bool = this->expr_left->Bool == this->expr_right->Bool;
+            } else if (this->expr_left->dataType.type == DataType::int_) {
+                this->Bool = this->expr_left->Int == this->expr_right->Int;
+            } else if (this->expr_left->dataType.type == DataType::float_) {
+                this->Bool = this->expr_left->Float == this->expr_right->Float;
+            } else if (this->expr_left->dataType.type == DataType::char_) {
+                this->Bool = this->expr_left->Char == this->expr_right->Char;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+
+            this->type = bool_lit;
+            this->dataType.type = this->expr_left->dataType.type;
+
+            break;
+        case not_equal:
+            if (this->expr_left->dataType.type == DataType::bool_) {
+                this->Bool = this->expr_left->Bool != this->expr_right->Bool;
+            } else if (this->expr_left->dataType.type == DataType::int_) {
+                this->Bool = this->expr_left->Int != this->expr_right->Int;
+            } else if (this->expr_left->dataType.type == DataType::float_) {
+                this->Bool = this->expr_left->Float != this->expr_right->Float;
+            } else if (this->expr_left->dataType.type == DataType::char_) {
+                this->Bool = this->expr_left->Char != this->expr_right->Char;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+            this->type = bool_lit;
+            this->dataType.type = this->expr_left->dataType.type;
+            break;
+        case greater:
+            if (this->expr_left->dataType.type == DataType::bool_) {
+                this->Bool = this->expr_left->Bool > this->expr_right->Bool;
+            } else if (this->expr_left->dataType.type == DataType::int_) {
+                this->Bool = this->expr_left->Int > this->expr_right->Int;
+            } else if (this->expr_left->dataType.type == DataType::float_) {
+                this->Bool = this->expr_left->Float > this->expr_right->Float;
+            } else if (this->expr_left->dataType.type == DataType::char_) {
+                this->Bool = this->expr_left->Char > this->expr_right->Char;
+                this->type = bool_lit;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+
+            this->type = bool_lit;
+            this->dataType.type = this->expr_left->dataType.type;
+            break;
+        case less:
+            if (this->expr_left->dataType.type == DataType::bool_) {
+                this->Bool = this->expr_left->Bool < this->expr_right->Bool;
+            } else if (this->expr_left->dataType.type == DataType::int_) {
+                this->Bool = this->expr_left->Int < this->expr_right->Int;
+            } else if (this->expr_left->dataType.type == DataType::float_) {
+                this->Bool = this->expr_left->Float < this->expr_right->Float;
+            } else if (this->expr_left->dataType.type == DataType::char_) {
+                this->Bool = this->expr_left->Char < this->expr_right->Char;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+            this->type = bool_lit;
+            this->dataType.type = this->expr_left->dataType.type;
+            break;
+        case greater_equal:
+            if (this->expr_left->dataType.type == DataType::bool_) {
+                this->Bool = this->expr_left->Bool >= this->expr_right->Bool;
+            } else if (this->expr_left->dataType.type == DataType::int_) {
+                this->Bool = this->expr_left->Int >= this->expr_right->Int;
+            } else if (this->expr_left->dataType.type == DataType::float_) {
+                this->Bool = this->expr_left->Float >= this->expr_right->Float;
+            } else if (this->expr_left->dataType.type == DataType::char_) {
+                this->Bool = this->expr_left->Char >= this->expr_right->Char;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+            this->type = bool_lit;
+            this->dataType.type = this->expr_left->dataType.type;
+
+            break;
+        case less_equal:
+            if (this->expr_left->dataType.type == DataType::bool_) {
+                this->Bool = this->expr_left->Bool <= this->expr_right->Bool;
+            } else if (this->expr_left->dataType.type == DataType::int_) {
+                this->Bool = this->expr_left->Int <= this->expr_right->Int;
+            } else if (this->expr_left->dataType.type == DataType::float_) {
+                this->Bool = this->expr_left->Float <= this->expr_right->Float;
+            } else if (this->expr_left->dataType.type == DataType::char_) {
+                this->Bool = this->expr_left->Char <= this->expr_right->Char;
+
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+
+            this->type = bool_lit;
+            this->dataType.type = this->expr_left->dataType.type;
+            break;
+        case uminus:
+            if (this->expr_left->dataType.type == DataType::int_) {
+                this->Int = -this->expr_left->Int;
+                this->type = int_lit;
+            } else if (this->expr_left->dataType.type == DataType::float_) {
+                this->Float = this->expr_left->Float <= this->expr_right->Float;
+                this->type = float_lit;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+            this->dataType.type = this->expr_left->dataType.type;
+            break;
+        case negotation:
+            if (this->expr_left->dataType.type == DataType::bool_) {
+                this->Bool = !this->expr_left->Bool;
+                this->type = bool_lit;
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+
+            this->dataType.type = this->expr_left->dataType.type;
+            break;
+        case as:
+            if (this->expr_left->dataType.type == DataType::int_) {
+                switch (this->typeNode->dataType.type) {
+
+                    case DataType::float_:
+                        this->Float = this->expr_left->Int;
+                        this->dataType.type = DataType::float_;
+                        this->type = float_lit;
+                        break;
+                    case DataType::char_:
+                        if (this->expr_left->Int > 255 || this->expr_left->Int < 0) {
+                            throw Exception(Exception::CANNOT_CONVERTED, "Too long for char");
+                        }
+                        this->Char = this->expr_left->Int;
+                        this->dataType.type = DataType::char_;
+                        this->type = char_lit;
+                        break;
+
+                    case DataType::bool_:
+                    case DataType::string_: // пусть явно будет а то дефолт еще фиг вспомнишь что так
+                    case DataType::class_:
+                    case DataType::array_:
+                    case DataType::void_:
+                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other");
+                        break;
+                    case DataType::int_:
+                        break;
+                }
+            } else if (this->expr_left->dataType.type == DataType::float_) {
+                switch (this->typeNode->dataType.type) {
+
+                    case DataType::int_:
+                        this->Int = this->expr_left->Float;
+                        this->dataType.type = DataType::int_;
+                        this->type = int_lit;
+                        break;
+                    case DataType::char_:
+                    case DataType::bool_:
+                    case DataType::string_: // пусть явно будет а то дефолт еще фиг вспомнишь что так
+                    case DataType::class_:
+                    case DataType::array_:
+                    case DataType::void_:
+                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other");
+                        break;
+                    case DataType::float_:
+                        break;
+                }
+            } else {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+            }
+
+            break;
+
+        case question:
+        case ustar:
+        case link:
+        case mut_link:
+        case array_expr:
+        case array_expr_auto_fill:
+        case index_expr:
+        case field_access_expr:
+        case call_expr:
+        case method_expr:
+        case continue_expr:
+        case break_expr:
+        case break_with_val_expr:
+        case return_expr:
+        case id_:
+        case self_expr:
+        case if_expr_list:
+        case if_expr:
+        case loop_expr:
+        case loop_while:
+        case loop_for:
+        case block_expr:
+        case struct_expr:
+        case struct_field_expr:
+        case static_method:
+        case tuple_expr:
+        case super_expr:
+        case path_call_expr:
+        case add_if_block:
+        case struct_creation:
+        case undefined:
+        case range_right: // надеюсь это говно тестить не будут а то лень реализовывать
+        case range_left:
+        case range_expr:
+        case asign:
+            throw new Exception(Exception::NOT_LITERAL_OPERATION, "USED NOT LITERAL OPERATION");
+            break;
+
+        case int_lit:
+            this->dataType.type = DataType::int_;
+            break;
+        case float_lit:
+            this->dataType.type = DataType::float_;
+            break;
+        case char_lit:
+            this->dataType.type = DataType::char_;
+            break;
+        case string_lit:
+            this->dataType.type = DataType::string_;
+            break;
+        case raw_string_lit:
+            this->dataType.type = DataType::string_;
+            break;
+        case bool_lit:
+            this->dataType.type = DataType::bool_;
+            break;
+
+    }
+}
+
+
+bool Node::isEqualDataType(Node *node) {
+    return this->dataType.type == node->dataType.type;
 }

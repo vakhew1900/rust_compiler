@@ -27,6 +27,12 @@ public:
         INCORRECT_ARR_LENGTH,
         NOT_EXIST,
         NOT_SUPPORT,
+        NOT_LITERAL_OPERATION,
+        NOT_EQUAL_DATA_TYPE,
+        NOT_CONST,
+        OPERATION_NOT_SUPPORTED,
+        NULL_DIVIDE,
+        CANNOT_CONVERTED,
     };
 
     ExceptionType exceptionType;

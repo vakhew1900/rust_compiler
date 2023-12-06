@@ -60,7 +60,7 @@ public:
     virtual void addImpl(string className, bool isTrait);
     void simpleTreeTransform(Node *node);
     void connectVerticesDots(string &s, int parentId, int childId);
-
+    bool isEqualDataType(Node * node);
     void createVertexDot(string &s, int id, string name = "", string type = "", string value = "", string visibility = "",
                          string pos = "");
 
@@ -195,6 +195,7 @@ public:
 
     void transformPathCallExpr(string className, ExprNode::Type type, bool isType);
     void transform();
+    void transformConst();
     bool isLiteral();
 };
 
