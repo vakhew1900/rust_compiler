@@ -64,7 +64,7 @@ public:
     void createVertexDot(string &s, int id, string name = "", string type = "", string value = "", string visibility = "",
                          string pos = "");
 
-
+    virtual void addDataTypeToDeclaration(const string &className);
 };
 
 
@@ -103,6 +103,7 @@ public:
 
     void toDot(string &dot);
     DataType convertToDataType(const string &className);
+
 
 };
 
@@ -319,6 +320,7 @@ public:
     void toDot(string &dot);
     void getAllItems(std::string className) override;
     void addImpl(string className, bool isTrait) override;
+    void addDataTypeToDeclaration(const std::string &className) override;
 };
 
 

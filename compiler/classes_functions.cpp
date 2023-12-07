@@ -1564,13 +1564,13 @@ void ItemNode::getAllItems(std::string className) {
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::mod_;
                 if (this->visibility == pub) this->classTableItem.isPub = true;
-                ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
+                ClassTable::Instance()->addClass(className + "/" + *this->name + "/" + ClassTable::moduleClassName, classTableItem);
 
                 if (this->items != NULL) {
                     for (auto elem: *this->items->items) {
                         string str = (elem->item_type == function_ || elem->item_type == constStmt_)
-                                     ? ClassTable::moduleClassName : "";
-                        elem->getAllItems(className + "/" + *this->name);
+                                     ? "/" + ClassTable::moduleClassName : "";
+                        elem->getAllItems(className + "/" + *this->name + str );
                     }
                 }
                 break;
@@ -1714,12 +1714,13 @@ void ItemNode::addImpl(string className, bool isTrait) {
                 if (this->visibility == pub) this->methodTableItem.isPub = true;
 
                 if (ClassTable::Instance()->getClass(className).classType != ClassTableItem::trait_ &&
-                    this->methodTableItem.isHasBody == false) {
+                    !this->methodTableItem.isHasBody) {
                     throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_IMPLEMICATION");
                 }
 
-                if (isTrait && ClassTable::Instance()->
-                        isMethodExist(ClassTable::Instance()->getClass(className).parentName, *this->name) == false) {
+                if (isTrait &&
+                    !ClassTable::Instance()->isMethodExist(ClassTable::Instance()->getClass(className).parentName,
+                                                           *this->name)) {
                     throw Exception(Exception::NOT_EXIST, "Impl Error: method" + *this->name + "in parent trait");
                 }
 
@@ -1732,7 +1733,7 @@ void ItemNode::addImpl(string className, bool isTrait) {
                 this->fieldTableItem = FieldTableItem();
                 if (this->expr != NULL) this->fieldTableItem.isInit = true;
                 if (this->visibility == pub) this->fieldTableItem.isPub = true;
-                if (this->fieldTableItem.isInit == false &&
+                if (!this->fieldTableItem.isInit &&
                     ClassTable::Instance()->getClass(className).classType != ClassTableItem::trait_) {
                     throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_DEFINED");
                 }
@@ -1757,6 +1758,8 @@ void ItemNode::addImpl(string className, bool isTrait) {
         throw e;
     }
 }
+
+
 
 
 DataType TypeNode::convertToDataType(const string &className) {
@@ -1821,6 +1824,47 @@ DataType TypeNode::convertToDataType(const string &className) {
 
     return dataType;
 }
+
+void Node::addDataTypeToDeclaration(const string &className) {
+
+}
+
+void ItemNode::addDataTypeToDeclaration(const string &className) {
+
+    switch (this->item_type) {
+
+        case enum_:
+            break;
+        case function_:
+            break;
+        case constStmt_:
+            break;
+        case struct_:
+            break;
+        case impl_:
+            break;
+        case module_:
+            if(this->items != NULL)
+            {
+                for(auto elem : *this->items->items)
+                {
+                    string str = (elem->item_type == function_ || elem->item_type == constStmt_)
+                                 ? ClassTable::moduleClassName : "";
+                    elem->getAllItems(className + "/" + *this->name);
+                }
+            }
+        case trait_:
+            if(this->items != NULL)
+            {
+                for(auto elem : *this->items->items)
+                {
+                    elem->addDataTypeToDeclaration(className + "/" + *this->name);
+                }
+            }
+            break;
+    }
+}
+
 
 void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool isType) {
     ExprNode *cur = this;
@@ -2408,3 +2452,5 @@ void ExprNode::transformConst() {
 bool Node::isEqualDataType(Node *node) {
     return this->dataType.type == node->dataType.type;
 }
+
+

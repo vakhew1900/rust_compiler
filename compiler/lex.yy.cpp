@@ -2929,7 +2929,7 @@ int main(int argc, char** argv) {
 
     const char *filename = argv[1];
 #else
-    const char *filename = "../tests/enum.rs";
+    const char *filename = "../tests/trait_error.rs";
 #endif
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
