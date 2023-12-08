@@ -1805,8 +1805,7 @@ DataType TypeNode::convertToDataType(const string &className) {
             break;
         case array_:
             dataType.type = DataType::array_;
-
-            if (this->typeArr->type == array_) {
+            {
                 DataType innerDataType = this->typeArr->convertToDataType(className);
                 this->exprArr->transform();
                 dataType.arrType = innerDataType.arrType;
@@ -2172,8 +2171,8 @@ void ExprNode::transformConst() {
         case less_equal:
             this->expr_left->transformConst();
             this->expr_right->transformConst();
-            if (this->expr_left->isEqualDataType(this->expr_right)) {
-                throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATATYPE");
+            if (!this->expr_left->isEqualDataType(this->expr_right)) {
+                throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATATYPE " + this->expr_left->dataType.toString() + " and" +   this->expr_right->dataType.toString());
             }
             if (!this->expr_left->isLiteral() || !this->expr_right->isLiteral()) {
                 throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");

@@ -65,8 +65,8 @@ string DataType::toString() {
             res += " name " + id;
             break;
         case array_:
-            res += "array_" + array_;
-            res += "deep: " + this->arrDeep;
+            res += "array_ ";
+            res += "deep: " + to_string(this->arrDeep);
             res += " len: ";
             for (auto elem : arrLength) res += to_string(elem) + " ";
             break;
