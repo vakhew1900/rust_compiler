@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include <set>
 #include "semantics/tools/datatype.h"
 #include "semantics/tables/fieldtable.h"
 #include "semantics/tools/tools.h"
@@ -51,6 +52,7 @@ public:
     MethodTableItem methodTableItem;
     FieldTableItem fieldTableItem;
     ClassTableItem classTableItem;
+    VarTableItem varTableItem;
 
     string className;
     string methodName;
@@ -370,6 +372,7 @@ public:
 
     void toDot(string &dot);
     void getAllItems(std::string className) override;
+    void addDataTypeToDeclaration(const std::string &className) override;
 
 };
 
@@ -410,7 +413,7 @@ public:
 
     void toDot(string &dot);
     void getAllItems (std::string className) override;
-
+    void addDataTypeToDeclaration(const std::string &className, set<int>& st);
 };
 
 class EnumItemListNode : public Node {
@@ -450,6 +453,7 @@ public:
     FuncParamNode(string *name, TypeNode *type, Type param_type);
 
     void toDot(string &dot);
+    void addDataTypeToDeclaration(const std::string &className) override;
 };
 
 class FuncParamListNode : public Node {

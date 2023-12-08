@@ -88,12 +88,30 @@ void ClassTable::addMethod(string className, string methodName, MethodTableItem 
     this->items[className].methodTable.items[methodName] = methodTableItem;
 }
 
+void ClassTable::updateMethod(string className, string methodName, MethodTableItem methodTableItem) {
+    if (!ClassTable::Instance()->isMethodExist(className, methodName)) {
+        throw Exception(Exception::DEFINED_MULTIPLE, methodName + "DEFINED_MULTIPLE in namespace");
+    }
+
+    this->items[className].methodTable.items[methodName] = methodTableItem;
+}
+
 void ClassTable::addField(string className, string fieldName, FieldTableItem fieldTableItem) {
     if (ClassTable::Instance()->isFieldExist(className, fieldName)) {
         throw Exception(Exception::DEFINED_MULTIPLE, fieldName + " DEFINED_MULTIPLE in namespace");
     }
+
     this->items[className].fieldTable.items[fieldName] = fieldTableItem;
 }
+
+void ClassTable::updateField(string className, string fieldName, FieldTableItem fieldTableItem) {
+    if (!ClassTable::Instance()->isFieldExist(className, fieldName)) {
+        throw Exception(Exception::DEFINED_MULTIPLE, fieldName + " DEFINED_MULTIPLE in namespace");
+    }
+    this->items[className].fieldTable.items[fieldName] = fieldTableItem;
+}
+
+
 
 void ClassTable::addClass(string className, ClassTableItem classTableItem) {
 
@@ -198,4 +216,8 @@ MethodTableItem ClassTable::getMethod(const string &className, const string &met
     }
 
     return Instance()->getClass(className).methodTable.items[methodName];
+}
+
+void ClassTable::addFuncParam(string className, string methodName, VarTableItem varTableItem) {
+    this->items[className].methodTable.items[methodName].paramTable.items.push_back(varTableItem);
 }

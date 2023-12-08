@@ -33,6 +33,7 @@ public:
         OPERATION_NOT_SUPPORTED,
         NULL_DIVIDE,
         CANNOT_CONVERTED,
+        INCORRECT_ENUM_VALUE,
     };
 
     ExceptionType exceptionType;

@@ -1343,6 +1343,7 @@ void FuncParamNode::toDot(string &dot) {
     }
 }
 
+
 void ConstStmtNode::toDot(string &dot) {
 
     createVertexDot(dot, this->id, "const_stmt", "", *name);
@@ -1533,6 +1534,11 @@ void ItemNode::getAllItems(std::string className) {
                     throw Exception(Exception::NOT_A_METHOD, "function " + *this->name + " NOT_A_METHOD");
                 }
 
+                if ((this->params->func_type == FuncParamListNode::self_ref
+                     || this->params->func_type == FuncParamListNode::self)) {
+                    this->methodTableItem.isStatic = false;
+                }
+
                 ClassTable::Instance()->addMethod(className, *this->name, this->methodTableItem);
                 break;
             case constStmt_:
@@ -1564,13 +1570,14 @@ void ItemNode::getAllItems(std::string className) {
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::mod_;
                 if (this->visibility == pub) this->classTableItem.isPub = true;
-                ClassTable::Instance()->addClass(className + "/" + *this->name + "/" + ClassTable::moduleClassName, classTableItem);
+                ClassTable::Instance()->addClass(className + "/" + *this->name + "/" + ClassTable::moduleClassName,
+                                                 classTableItem);
 
                 if (this->items != NULL) {
                     for (auto elem: *this->items->items) {
                         string str = (elem->item_type == function_ || elem->item_type == constStmt_)
                                      ? "/" + ClassTable::moduleClassName : "";
-                        elem->getAllItems(className + "/" + *this->name + str );
+                        elem->getAllItems(className + "/" + *this->name + str);
                     }
                 }
                 break;
@@ -1724,9 +1731,8 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     throw Exception(Exception::NOT_EXIST, "Impl Error: method" + *this->name + "in parent trait");
                 }
 
-
+                this->className = implClassName;
                 ClassTable::Instance()->addMethod(className, *this->name, this->methodTableItem);
-
 
                 break;
             case constStmt_:
@@ -1760,14 +1766,13 @@ void ItemNode::addImpl(string className, bool isTrait) {
 }
 
 
-
-
 DataType TypeNode::convertToDataType(const string &className) {
     DataType dataType = DataType();
 
     switch (this->type) {
 
         case emptyType_:
+            dataType.type = DataType::undefined_;
             break;
         case int_:
             dataType.type = DataType::int_;
@@ -1831,33 +1836,60 @@ void Node::addDataTypeToDeclaration(const string &className) {
 
 void ItemNode::addDataTypeToDeclaration(const string &className) {
 
+    set<int> enumSt;
     switch (this->item_type) {
 
         case enum_:
+
+            for (auto elem: *this->enumItems->items) {
+                elem->addDataTypeToDeclaration(this->className + *this->name, enumSt);
+            }
             break;
         case function_:
+            this->methodTableItem.returnDataType = this->type->convertToDataType(className);
+            if (this->methodTableItem.returnDataType.type == DataType::undefined_) {
+                this->methodTableItem.returnDataType.type = DataType::void_;
+            }
+
+            if (this->params != NULL) {
+                for (auto elem: *this->params->items) {
+                    elem->methodName = *this->name;
+                    elem->addDataTypeToDeclaration(className);
+//                    ClassTable::Instance()->addFuncParam(className, *this->name, elem->varTableItem);
+                    varTableItem.blockExpr = this->body;
+                    this->methodTableItem.paramTable.items.push_back(elem->varTableItem);
+                }
+            }
+
+            ClassTable::Instance()->updateMethod(className, *this->name, this->methodTableItem);
             break;
         case constStmt_:
+            this->fieldTableItem.dataType = this->type->convertToDataType(className);
+            this->expr->transformConst();
+            this->fieldTableItem.value = this->expr;
+            ClassTable::Instance()->updateField(className, *this->name, this->fieldTableItem);
             break;
         case struct_:
+            for (auto elem: *this->structItems->items) {
+                elem->addDataTypeToDeclaration(this->className + *this->name);
+            }
             break;
         case impl_:
-            break;
+            for (auto elem: *this->items->items) {
+                elem->addDataTypeToDeclaration(this->className);
+            }
+
         case module_:
-            if(this->items != NULL)
-            {
-                for(auto elem : *this->items->items)
-                {
+            if (this->items != NULL) {
+                for (auto elem: *this->items->items) {
                     string str = (elem->item_type == function_ || elem->item_type == constStmt_)
-                                 ? ClassTable::moduleClassName : "";
-                    elem->getAllItems(className + "/" + *this->name);
+                                 ? "/" + ClassTable::moduleClassName : "";
+                    elem->addDataTypeToDeclaration(className + "/" + *this->name + str);
                 }
             }
         case trait_:
-            if(this->items != NULL)
-            {
-                for(auto elem : *this->items->items)
-                {
+            if (this->items != NULL) {
+                for (auto elem: *this->items->items) {
                     elem->addDataTypeToDeclaration(className + "/" + *this->name);
                 }
             }
@@ -1865,6 +1897,52 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
     }
 }
 
+void EnumItemNode::addDataTypeToDeclaration(const string &className, set<int> &st) {
+    if(this->expr == NULL && st.empty())
+    {
+        this->expr = ExprNode::ExprFromIntLiteral(ExprNode::int_lit, 0);
+    }
+
+    if(this->expr == NULL)
+    {
+        this->expr = ExprNode::ExprFromIntLiteral(ExprNode::int_lit, *st.rbegin() + 1);
+    }
+
+    if (this->expr != NULL)
+    {
+        this->expr->transformConst();
+
+        if (this->expr->type != ExprNode::int_lit)
+        {
+            throw Exception(Exception::NOT_CONST, "ENUM VALUE SHOULD BE INT LITERAL");
+        }
+    }
+
+    if (this->expr->Int > 255 || this->expr->Int < 0)
+    {
+        throw Exception(Exception::INCORRECT_ENUM_VALUE, "ENUM VALUE SHOULD BE u8");
+    }
+
+    if(st.count(this->expr->Int))
+    {
+        throw Exception(Exception::INCORRECT_ENUM_VALUE, "INCORRECT_ENUM_VALUE: ENUM VALUE occurs twice ");
+    }
+
+    this->fieldTableItem.dataType = DataType::int_;
+    this->fieldTableItem.value = this->expr;
+}
+
+
+void StructFieldNode::addDataTypeToDeclaration(const string &className) {
+    this->fieldTableItem.dataType = this->type->convertToDataType(className);
+    ClassTable::Instance()->updateField(className, *this->name, fieldTableItem);
+}
+
+void FuncParamNode::addDataTypeToDeclaration(const string &className) {
+    this->varTableItem = VarTableItem();
+    this->varTableItem.id = *this->name;
+    this->varTableItem.dataType = this->type->convertToDataType(className);
+}
 
 void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool isType) {
     ExprNode *cur = this;
@@ -2076,8 +2154,8 @@ void ExprNode::transformConst() {
         case mul_expr:
         case div_expr:
         case mod:
-        case or_:
-        case and_:
+//        case or_:
+//        case and_:
         case asign:
         case equal:
         case not_equal:
@@ -2085,11 +2163,11 @@ void ExprNode::transformConst() {
         case less:
         case greater_equal:
         case less_equal:
-
-            if (this->expr_left->isEqualDataType(expr_list)) {
+            this->expr_left->transformConst();
+            this->expr_right->transformConst();
+            if (this->expr_left->isEqualDataType(this->expr_right)) {
                 throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATATYPE");
             }
-
             if (!this->expr_left->isLiteral() || !this->expr_right->isLiteral()) {
                 throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
             }
@@ -2097,6 +2175,7 @@ void ExprNode::transformConst() {
         case uminus:
         case negotation:
         case as:
+            this->expr_left->transformConst();
             if (!this->expr_left->isLiteral()) {
                 throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
             }
@@ -2177,8 +2256,31 @@ void ExprNode::transformConst() {
             this->dataType.type = this->expr_left->dataType.type;
             break;
         case or_:
+            this->expr_left->transformConst();
             if (this->expr_left->dataType.type == DataType::bool_) {
-                this->Bool = this->expr_left->Bool || this->expr_right->Bool;
+
+                if (!this->expr_left->isLiteral()) {
+                    throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
+                }
+
+                if (this->expr_left->Bool == 1) {
+                    this->Bool = 1;
+                } else {
+                    this->expr_right->transformConst();
+
+                    if (!this->expr_right->isLiteral()) {
+                        throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
+                    }
+
+                    if (this->expr_right->dataType.type == DataType::bool_) {
+                        this->Bool = this->expr_right->Bool;
+                    } else {
+                        throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                        "THIS LITERAL NOT SUPPORTED THIS OPERATION. RIGHT OPERAND ARE NOT BOOL");
+                    }
+
+                }
+                //this->Bool = this->expr_left->Bool || this->expr_right->Bool;
             } else {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
             }
@@ -2187,8 +2289,27 @@ void ExprNode::transformConst() {
             this->dataType.type = this->expr_left->dataType.type;
             break;
         case and_:
+            this->expr_left->transformConst();
+            if (!this->expr_left->isLiteral()) {
+                throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
+            }
             if (this->expr_left->dataType.type == DataType::bool_) {
-                this->Bool = this->expr_left->Bool && this->expr_right->Bool;
+                if (this->expr_left->Bool == 0) {
+                    this->Bool = 0;
+                } else {
+                    this->expr_right->transformConst();
+
+                    if (!this->expr_right->isLiteral()) {
+                        throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
+                    }
+
+                    if (this->expr_right->dataType.type == DataType::bool_) {
+                        this->Bool = this->expr_right->Bool;
+                    } else {
+                        throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                        "THIS LITERAL NOT SUPPORTED THIS OPERATION. RIGHT OPERAND ARE NOT BOOL");
+                    }
+                }
             } else {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
             }
@@ -2402,7 +2523,6 @@ void ExprNode::transformConst() {
         case break_expr:
         case break_with_val_expr:
         case return_expr:
-        case id_:
         case self_expr:
         case if_expr_list:
         case if_expr:
@@ -2421,6 +2541,7 @@ void ExprNode::transformConst() {
         case undefined:
         case range_right: // надеюсь это говно тестить не будут а то лень реализовывать
         case range_left:
+        case id_:
         case range_expr:
         case asign:
             throw new Exception(Exception::NOT_LITERAL_OPERATION, "USED NOT LITERAL OPERATION");

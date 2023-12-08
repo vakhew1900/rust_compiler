@@ -15,7 +15,7 @@ using  namespace  std;
 class DataType {
 public:
     enum Type {
-        void_, int_, float_, char_, bool_, string_, class_, array_
+        void_, int_, float_, char_, bool_, string_, class_, array_, undefined_
     };
 
     Type type;
