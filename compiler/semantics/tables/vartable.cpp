@@ -68,7 +68,7 @@ string VarTable::toString() {
 
     string res = "";
 
-    for(int i = 0; i < res.size(); i++)
+    for(int i = 0; i < items.size(); i++)
     {
         res += to_string(i) + ": " + items[i].toString() + "\n";
     }

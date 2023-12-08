@@ -44,7 +44,7 @@ string ClassTableItem::toString() {
         res += "parent: " + parentName;
     }
 
-    res += "\nfieldTable:" + fieldTable.toString();
+    res += "\nfieldTable:" + fieldTable.toString() + "\n";
     res += "\nmethodTable:" + methodTable.toString() + "\n";
 
     return res;
@@ -90,7 +90,7 @@ void ClassTable::addMethod(string className, string methodName, MethodTableItem 
 
 void ClassTable::updateMethod(string className, string methodName, MethodTableItem methodTableItem) {
     if (!ClassTable::Instance()->isMethodExist(className, methodName)) {
-        throw Exception(Exception::DEFINED_MULTIPLE, methodName + "DEFINED_MULTIPLE in namespace");
+        throw Exception(Exception::NOT_EXIST, methodName + " method not exist in class" + className);
     }
 
     this->items[className].methodTable.items[methodName] = methodTableItem;
@@ -106,7 +106,7 @@ void ClassTable::addField(string className, string fieldName, FieldTableItem fie
 
 void ClassTable::updateField(string className, string fieldName, FieldTableItem fieldTableItem) {
     if (!ClassTable::Instance()->isFieldExist(className, fieldName)) {
-        throw Exception(Exception::DEFINED_MULTIPLE, fieldName + " DEFINED_MULTIPLE in namespace");
+       throw Exception(Exception::NOT_EXIST, fieldName + " field not exist in class" + className);
     }
     this->items[className].fieldTable.items[fieldName] = fieldTableItem;
 }
@@ -147,7 +147,7 @@ string ClassTable::getDirectory(string className) {
     string res = "";
 
     res += classPath[0];
-    for(int i = 1; i < classPath.size() - 1;)
+    for(int i = 1; i < classPath.size() - 1; i++)
     {
         res += "/" + classPath[i];
     }

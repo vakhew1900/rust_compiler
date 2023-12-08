@@ -1509,6 +1509,16 @@ void ProgramNode::getAllItems(std::string className) {
         }
 
         this->addImpl(className, false);
+
+        if (item_list != NULL) {
+
+            for (auto elem: *item_list->items) {
+                if (elem->item_type == ItemNode::function_ || elem->item_type == ItemNode::constStmt_)
+                    elem->addDataTypeToDeclaration(className + "/" + ClassTable::moduleClassName);
+                else
+                    elem->addDataTypeToDeclaration(className);
+            }
+        }
     }
     catch (Exception e) {
         cout << e.getMessage() << "\n";
@@ -1714,6 +1724,7 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     ClassTable::isCorrectChild(implClassName, traitClassName);
                 }
 
+                this->className = implClassName;
                 break;
             case function_:
                 this->methodTableItem = MethodTableItem();
@@ -1731,7 +1742,7 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     throw Exception(Exception::NOT_EXIST, "Impl Error: method" + *this->name + "in parent trait");
                 }
 
-                this->className = implClassName;
+                this->className = className;
                 ClassTable::Instance()->addMethod(className, *this->name, this->methodTableItem);
 
                 break;
@@ -1822,6 +1833,7 @@ DataType TypeNode::convertToDataType(const string &className) {
 
             break;
         case path_call_expr_:
+            dataType.type = DataType::class_;
             this->pathCallExpr->transformPathCallExpr(className, ExprNode::undefined, true);
             dataType.id = this->pathCallExpr->className;
             break;
@@ -1846,7 +1858,7 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
             }
             break;
         case function_:
-            this->methodTableItem.returnDataType = this->type->convertToDataType(className);
+            this->methodTableItem.returnDataType = this->returnType->convertToDataType(className);
             if (this->methodTableItem.returnDataType.type == DataType::undefined_) {
                 this->methodTableItem.returnDataType.type = DataType::void_;
             }
@@ -1856,7 +1868,7 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
                     elem->methodName = *this->name;
                     elem->addDataTypeToDeclaration(className);
 //                    ClassTable::Instance()->addFuncParam(className, *this->name, elem->varTableItem);
-                    varTableItem.blockExpr = this->body;
+                    elem->varTableItem.blockExpr = this->body;
                     this->methodTableItem.paramTable.items.push_back(elem->varTableItem);
                 }
             }
@@ -1871,14 +1883,14 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
             break;
         case struct_:
             for (auto elem: *this->structItems->items) {
-                elem->addDataTypeToDeclaration(this->className + *this->name);
+                elem->addDataTypeToDeclaration(className + "/" +  *this->name);
             }
             break;
         case impl_:
             for (auto elem: *this->items->items) {
                 elem->addDataTypeToDeclaration(this->className);
             }
-
+        break;
         case module_:
             if (this->items != NULL) {
                 for (auto elem: *this->items->items) {
@@ -1887,6 +1899,7 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
                     elem->addDataTypeToDeclaration(className + "/" + *this->name + str);
                 }
             }
+            break;
         case trait_:
             if (this->items != NULL) {
                 for (auto elem: *this->items->items) {
@@ -1898,33 +1911,27 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
 }
 
 void EnumItemNode::addDataTypeToDeclaration(const string &className, set<int> &st) {
-    if(this->expr == NULL && st.empty())
-    {
+    if (this->expr == NULL && st.empty()) {
         this->expr = ExprNode::ExprFromIntLiteral(ExprNode::int_lit, 0);
     }
 
-    if(this->expr == NULL)
-    {
+    if (this->expr == NULL) {
         this->expr = ExprNode::ExprFromIntLiteral(ExprNode::int_lit, *st.rbegin() + 1);
     }
 
-    if (this->expr != NULL)
-    {
+    if (this->expr != NULL) {
         this->expr->transformConst();
 
-        if (this->expr->type != ExprNode::int_lit)
-        {
+        if (this->expr->type != ExprNode::int_lit) {
             throw Exception(Exception::NOT_CONST, "ENUM VALUE SHOULD BE INT LITERAL");
         }
     }
 
-    if (this->expr->Int > 255 || this->expr->Int < 0)
-    {
+    if (this->expr->Int > 255 || this->expr->Int < 0) {
         throw Exception(Exception::INCORRECT_ENUM_VALUE, "ENUM VALUE SHOULD BE u8");
     }
 
-    if(st.count(this->expr->Int))
-    {
+    if (st.count(this->expr->Int)) {
         throw Exception(Exception::INCORRECT_ENUM_VALUE, "INCORRECT_ENUM_VALUE: ENUM VALUE occurs twice ");
     }
 

@@ -33,8 +33,8 @@ string MethodTableItem::toString() {
         res += "package ";
     }
 
-    res += "returnType: " + returnDataType.toString();
-    res += "paramTable: \n" + paramTable.toString() + "localVarTable\n" + localVarTable.toString();
+    res += "returnType: " + returnDataType.toString() + "\n";
+    res += "paramTable: \n" + paramTable.toString() + "localVarTable\n" + localVarTable.toString() + "\n";
 
     return res;
 }
