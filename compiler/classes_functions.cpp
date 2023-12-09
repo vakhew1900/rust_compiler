@@ -1742,6 +1742,10 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     throw Exception(Exception::NOT_EXIST, "Impl Error: method" + *this->name + "in parent trait");
                 }
 
+                if (isTrait){
+                    this->methodTableItem.isPub = ClassTable::Instance()->getMethod(ClassTable::Instance()->getClass(className).parentName, *this->name).isPub;
+                }
+
                 this->className = className;
                 ClassTable::Instance()->addMethod(className, *this->name, this->methodTableItem);
 
@@ -1760,6 +1764,9 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     throw Exception(Exception::NOT_EXIST, "Impl Error: method" + *this->name + "in parent trait");
                 }
 
+                if (isTrait){
+                    this->fieldTableItem.isPub = ClassTable::Instance()->getField(ClassTable::Instance()->getClass(className).parentName, *this->name).isPub;
+                }
                 fieldTableItem.isConst = true;
                 ClassTable::Instance()->addField(className, *this->name, this->fieldTableItem);
                 break;
@@ -1868,7 +1875,13 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
                     elem->addDataTypeToDeclaration(className);
 //                    ClassTable::Instance()->addFuncParam(className, *this->name, elem->varTableItem);
                     elem->varTableItem.blockExpr = this->body;
+
+                    if(this->methodTableItem.paramTable.isExist(*elem->name))
+                    {
+                        throw  Exception(Exception:: DEFINED_MULTIPLE, "Function Param " + *elem->name + " in function " + *this->name + " DEFINED_MULTIPLE");
+                    }
                     this->methodTableItem.paramTable.items.push_back(elem->varTableItem);
+
                 }
             }
 
@@ -1901,6 +1914,7 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
                 for (auto elem: *this->items->items) {
                     string str = (elem->item_type == function_ || elem->item_type == constStmt_)
                                  ? "/" + ClassTable::moduleClassName : "";
+
                     elem->addDataTypeToDeclaration(className + "/" + *this->name + str);
                 }
             }
@@ -1954,6 +1968,22 @@ void FuncParamNode::addDataTypeToDeclaration(const string &className) {
     this->varTableItem = VarTableItem();
     this->varTableItem.id = *this->name;
     this->varTableItem.dataType = this->type->convertToDataType(className);
+
+    switch (this->param_type) {
+
+        case noMut:
+            break;
+        case mut:
+            this->varTableItem.isMut = true;
+            break;
+        case mut_ref:
+            this->varTableItem.isMut = true;
+            this->varTableItem.isRef = true;
+            break;
+        case link:
+            this->varTableItem.isRef = true;
+            break;
+    }
 }
 
 void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool isType) {

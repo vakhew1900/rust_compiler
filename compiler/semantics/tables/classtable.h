@@ -56,6 +56,7 @@ public:
     bool isClassExist(const string& className);
     bool isMethodExist(const string& className, const string& methodName);
     bool isFieldExist(const string& className, const string& methodName);
+    bool isParamExist(const string& className, const string& methodName, const string& varName);
     ClassTableItem getClass(const string& className);
     FieldTableItem getField(const string& className, const string& fieldName);
     MethodTableItem getMethod(const string& className, const string& methodName);

@@ -221,3 +221,7 @@ MethodTableItem ClassTable::getMethod(const string &className, const string &met
 void ClassTable::addFuncParam(string className, string methodName, VarTableItem varTableItem) {
     this->items[className].methodTable.items[methodName].paramTable.items.push_back(varTableItem);
 }
+
+bool ClassTable::isParamExist(const string &className, const string &methodName, const string &varName) {
+    return this->getMethod(className, methodName).paramTable.isExist(varName);
+}

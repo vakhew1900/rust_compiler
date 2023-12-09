@@ -65,7 +65,7 @@ string DataType::toString() {
             res += " name " + id;
             break;
         case array_:
-            res += "array_ ";
+            res += "array_ " + TypeToString(this->arrType) + " ";
             res += "deep: " + to_string(this->arrDeep);
             res += " len: ";
             for (auto elem : arrLength) res += to_string(elem) + " ";
@@ -79,4 +79,66 @@ DataType DataType::StructDataType(string id) {
     DataType dataType = DataType(class_);
     dataType.id = id;
     return dataType;
+}
+
+string DataType::TypeToString(DataType::Type type) {
+    string res = "";
+    switch (type) {
+
+        case void_:
+            res = varName(void_);
+            break;
+        case int_:
+            res = varName(int_);
+            break;
+        case float_:
+            res = varName(float_);
+            break;
+        case char_:
+            res = varName(char_);
+            break;
+        case bool_:
+            res = varName(bool_);
+            break;
+        case string_:
+            res = varName(string_);
+            break;
+        case class_:
+            res = varName(class_);
+            break;
+        case array_:
+            res = varName(array_);
+            break;
+        case undefined_:
+            res = varName(undefined_);
+            break;
+    }
+
+    return res;
+}
+
+bool DataType::isEquals(const DataType &other) {
+    bool res = true;
+    res = res && this->type == other.type;
+
+    switch (this->type) {
+
+        case void_:
+        case int_:
+        case float_:
+        case char_:
+        case bool_:
+        case string_:
+        case undefined_:
+            break;
+        case class_:
+            res = res && this->id == other.id;
+            break;
+        case array_:
+            res = res && this->arrType == other.arrType;
+            res = res && this->arrDeep == other.arrDeep;
+            res = res && this->arrLength == other.arrLength;
+            break;
+    }
+    return res;
 }

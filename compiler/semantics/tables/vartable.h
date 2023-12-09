@@ -29,12 +29,16 @@ public:
     VarTableItem(string name, DataType dataType, bool isMut,bool isRef,bool isInit, bool isConst, ExprNode* blockExpr);
     VarTableItem(string name, DataType dataType, bool isMut,bool isRef,bool isInit, bool isConst, ExprNode* blockExpr, ExprNode* value);
     string toString();
+
+    bool isEquals(const VarTableItem &varTableItem);
 };
 
 class VarTable {
 public:
     vector<VarTableItem> items;
     string toString();
+    bool isExist(const string& varName);
+    bool isEquals(const VarTable & varTable);
 };
 
 

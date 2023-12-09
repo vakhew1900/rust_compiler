@@ -27,6 +27,7 @@ public:
     MethodTableItem();
     MethodTableItem(DataType returnDataType, VarTable paramTable,VarTable localVarTable, bool isStatic = true);
     string toString();
+    bool isEqualsDeclaration(const MethodTableItem& other);
 };
 
 
