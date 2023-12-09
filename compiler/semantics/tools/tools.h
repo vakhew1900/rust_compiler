@@ -35,6 +35,8 @@ public:
         CANNOT_CONVERTED,
         INCORRECT_ENUM_VALUE,
         INCORRECT_TYPE,
+        NO_HAVE_PARENT,
+        PUB_NOT_PERMITTED,
     };
 
     ExceptionType exceptionType;

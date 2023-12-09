@@ -41,6 +41,14 @@ string FieldTableItem::toString() {
     return res;
 }
 
+bool FieldTableItem::isEquals(const FieldTableItem &fieldTableItem) {
+    bool res = this->isConst == fieldTableItem.isConst;
+    res = res && this->isPub == fieldTableItem.isPub;
+    res = res && this->isInit == fieldTableItem.isInit;
+    res = res && this->dataType.isEquals(fieldTableItem.dataType);
+    return res;
+}
+
 string FieldTable::toString() {
     string res = "";
 

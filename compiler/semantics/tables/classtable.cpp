@@ -106,11 +106,10 @@ void ClassTable::addField(string className, string fieldName, FieldTableItem fie
 
 void ClassTable::updateField(string className, string fieldName, FieldTableItem fieldTableItem) {
     if (!ClassTable::Instance()->isFieldExist(className, fieldName)) {
-       throw Exception(Exception::NOT_EXIST, fieldName + " field not exist in class" + className);
+        throw Exception(Exception::NOT_EXIST, fieldName + " field not exist in class" + className);
     }
     this->items[className].fieldTable.items[fieldName] = fieldTableItem;
 }
-
 
 
 void ClassTable::addClass(string className, ClassTableItem classTableItem) {
@@ -147,8 +146,7 @@ string ClassTable::getDirectory(string className) {
     string res = "";
 
     res += classPath[0];
-    for(int i = 1; i < classPath.size() - 1; i++)
-    {
+    for (int i = 1; i < classPath.size() - 1; i++) {
         res += "/" + classPath[i];
     }
 
@@ -156,9 +154,8 @@ string ClassTable::getDirectory(string className) {
 }
 
 void ClassTable::addParent(string childName, string parentName) {
-    if(ClassTable::Instance()->getClass(childName).isHaveParent())
-    {
-        throw Exception(Exception:: STRUCT_WITH_TWO_TRAIT, "struct" + childName + "should not has two traits");
+    if (ClassTable::Instance()->getClass(childName).isHaveParent()) {
+        throw Exception(Exception::STRUCT_WITH_TWO_TRAIT, "struct" + childName + "should not has two traits");
     }
 
     this->items[childName].parentName = parentName;
@@ -177,24 +174,20 @@ void ClassTable::isCorrectChild(string childName, string parentName) {
 
     bool res = true;
 
-    for(auto elem : Instance()->getClass(parentName).fieldTable.items)
-    {
-            string fieldName = elem.first;
+    for (auto elem: Instance()->getClass(parentName).fieldTable.items) {
+        string fieldName = elem.first;
 
-            if (!Instance()->isFieldExist(childName, fieldName)
-            && Instance()->getField(parentName, fieldName).isInit == false)
-            {
-                throw Exception(Exception::NOT_EXIST, fieldName + "not declaration in struct");
-            }
+        if (!Instance()->isFieldExist(childName, fieldName)
+            && Instance()->getField(parentName, fieldName).isInit == false) {
+            throw Exception(Exception::NOT_EXIST, fieldName + "not declaration in struct");
+        }
     }
 
-    for(auto elem : Instance()->getClass(parentName).methodTable.items)
-    {
+    for (auto elem: Instance()->getClass(parentName).methodTable.items) {
         string methodName = elem.first;
 
         if (!Instance()->isMethodExist(childName, methodName)
-        && Instance()->getMethod(parentName, methodName).isHasBody == false)
-        {
+            && Instance()->getMethod(parentName, methodName).isHasBody == false) {
             throw Exception(Exception::NOT_EXIST, methodName + "not declaration in struct");
         }
     }
@@ -224,4 +217,22 @@ void ClassTable::addFuncParam(string className, string methodName, VarTableItem 
 
 bool ClassTable::isParamExist(const string &className, const string &methodName, const string &varName) {
     return this->getMethod(className, methodName).paramTable.isExist(varName);
+}
+
+bool ClassTable::isCorrectTraitsImpl() {
+
+    for (auto elem: _instanse->items) {
+        if (elem.second.isHaveParent()) {
+
+        }
+    }
+    return false;
+}
+
+ClassTableItem ClassTable::getParentClass(const string &className) {
+    if (!ClassTable::Instance()->getClass(className).isHaveParent()) {
+        throw Exception(Exception::NO_HAVE_PARENT, className + " NO HAVE PARENT");
+    }
+    string  parentName = ClassTable::Instance()->getClass(className).parentName;
+    return ClassTable::Instance()->getClass(parentName);
 }

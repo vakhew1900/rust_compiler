@@ -25,6 +25,7 @@ public:
     FieldTableItem(DataType dataType, bool  isConst);
     FieldTableItem(DataType dataType, bool  isConst, ExprNode *value);
     string toString();
+    bool isEquals(const FieldTableItem& fieldTableItem);
 };
 
 

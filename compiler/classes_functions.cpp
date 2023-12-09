@@ -1571,6 +1571,11 @@ void ItemNode::getAllItems(std::string className) {
 
                 if (this->items != NULL) {
                     for (auto elem: *this->items->items) {
+                        if(elem->visibility == pub)
+                        {
+                            throw Exception(Exception::PUB_NOT_PERMITTED, "pub` not permitted here because it's implied :" + *this->name + " " + *elem->name);
+                        }
+                        elem->visibility = pub;
                         elem->getAllItems(className + "/" + *this->name);
                     }
                 }
@@ -1716,6 +1721,9 @@ void ItemNode::addImpl(string className, bool isTrait) {
 
                 if (this->items != NULL) {
                     for (auto elem: *items->items) {
+                        if(this->impl_type == trait && elem->visibility == pub) {
+                            throw Exception(Exception::PUB_NOT_PERMITTED, "pub` not permitted here because it's implied :" + *this->name + " " + *elem->name);
+                        }
                         elem->addImpl(implClassName, this->impl_type == trait);
                     }
                 }
@@ -1742,8 +1750,9 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     throw Exception(Exception::NOT_EXIST, "Impl Error: method" + *this->name + "in parent trait");
                 }
 
-                if (isTrait){
-                    this->methodTableItem.isPub = ClassTable::Instance()->getMethod(ClassTable::Instance()->getClass(className).parentName, *this->name).isPub;
+                if (isTrait) {
+                    this->methodTableItem.isPub = ClassTable::Instance()->getMethod(
+                            ClassTable::Instance()->getClass(className).parentName, *this->name).isPub;
                 }
 
                 this->className = className;
@@ -1764,8 +1773,9 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     throw Exception(Exception::NOT_EXIST, "Impl Error: method" + *this->name + "in parent trait");
                 }
 
-                if (isTrait){
-                    this->fieldTableItem.isPub = ClassTable::Instance()->getField(ClassTable::Instance()->getClass(className).parentName, *this->name).isPub;
+                if (isTrait) {
+                    this->fieldTableItem.isPub = ClassTable::Instance()->getField(
+                            ClassTable::Instance()->getClass(className).parentName, *this->name).isPub;
                 }
                 fieldTableItem.isConst = true;
                 ClassTable::Instance()->addField(className, *this->name, this->fieldTableItem);
@@ -1876,9 +1886,10 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
 //                    ClassTable::Instance()->addFuncParam(className, *this->name, elem->varTableItem);
                     elem->varTableItem.blockExpr = this->body;
 
-                    if(this->methodTableItem.paramTable.isExist(*elem->name))
-                    {
-                        throw  Exception(Exception:: DEFINED_MULTIPLE, "Function Param " + *elem->name + " in function " + *this->name + " DEFINED_MULTIPLE");
+                    if (this->methodTableItem.paramTable.isExist(*elem->name)) {
+                        throw Exception(Exception::DEFINED_MULTIPLE,
+                                        "Function Param " + *elem->name + " in function " + *this->name +
+                                        " DEFINED_MULTIPLE");
                     }
                     this->methodTableItem.paramTable.items.push_back(elem->varTableItem);
 
@@ -1892,23 +1903,24 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
             this->expr->transformConst();
             this->fieldTableItem.value = this->expr;
 
-            if (fieldTableItem.dataType.type != this->expr->dataType.type)
-            {
-                throw Exception(Exception:: INCORRECT_TYPE, "Expected type for " + *this->name + " in " + className + ":" + fieldTableItem.dataType.toString() + " Result: " + this->expr->dataType.toString());
+            if (!fieldTableItem.dataType.isEquals(this->expr->dataType)) {
+                throw Exception(Exception::INCORRECT_TYPE,
+                                "Expected type for " + *this->name + " in " + className + ":" +
+                                fieldTableItem.dataType.toString() + " Result: " + this->expr->dataType.toString());
             }
 
             ClassTable::Instance()->updateField(className, *this->name, this->fieldTableItem);
             break;
         case struct_:
             for (auto elem: *this->structItems->items) {
-                elem->addDataTypeToDeclaration(className + "/" +  *this->name);
+                elem->addDataTypeToDeclaration(className + "/" + *this->name);
             }
             break;
         case impl_:
             for (auto elem: *this->items->items) {
                 elem->addDataTypeToDeclaration(this->className);
             }
-        break;
+            break;
         case module_:
             if (this->items != NULL) {
                 for (auto elem: *this->items->items) {
@@ -2208,7 +2220,9 @@ void ExprNode::transformConst() {
             this->expr_left->transformConst();
             this->expr_right->transformConst();
             if (!this->expr_left->isEqualDataType(this->expr_right)) {
-                throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATATYPE " + this->expr_left->dataType.toString() + " and" +   this->expr_right->dataType.toString());
+                throw Exception(Exception::NOT_EQUAL_DATA_TYPE,
+                                "NOT EQUAL DATATYPE " + this->expr_left->dataType.toString() + " and" +
+                                this->expr_right->dataType.toString());
             }
             if (!this->expr_left->isLiteral() || !this->expr_right->isLiteral()) {
                 throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
