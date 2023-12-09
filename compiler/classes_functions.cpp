@@ -2640,6 +2640,9 @@ void ExprNode::transformConst() {
             break;
 
     }
+
+    this->expr_left = NULL;
+    this->expr_right = NULL;
 }
 
 

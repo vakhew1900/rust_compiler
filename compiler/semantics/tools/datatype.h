@@ -24,7 +24,7 @@ public:
     vector<int> arrLength; // -1 - undefined
     vector<string> structPath; // полный путь до структуры т. е.  последнее слово в массиве название структуры - остальное путь
     string id; // мб лучше это использовать
-
+    vector<DataType> arrTypes;
     DataType();
     DataType(Type type);
     static DataType ArrayDataType(Type arrType, int arrDeep);
