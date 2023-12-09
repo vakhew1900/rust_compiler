@@ -1722,7 +1722,7 @@ void ItemNode::addImpl(string className, bool isTrait) {
                 if (this->items != NULL) {
                     for (auto elem: *items->items) {
                         if(this->impl_type == trait && elem->visibility == pub) {
-                            throw Exception(Exception::PUB_NOT_PERMITTED, "pub` not permitted here because it's implied :" + *this->name + " " + *elem->name);
+                            throw Exception(Exception::PUB_NOT_PERMITTED, "pub` not permitted here because it's implied :" + implClassName + " " + *elem->name);
                         }
                         elem->addImpl(implClassName, this->impl_type == trait);
                     }

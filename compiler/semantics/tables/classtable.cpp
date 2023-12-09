@@ -223,7 +223,7 @@ bool ClassTable::isCorrectTraitsImpl() {
 
     for (auto elem: _instanse->items) {
         if (elem.second.isHaveParent()) {
-
+            ClassTableItem parentItem = ClassTable::Instance()->getParentClass(elem.first);
         }
     }
     return false;
