@@ -264,6 +264,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     if(stdstr.size() == 1) {
         cout << "Found CHAR:  " << stdstr << endl;
         yylval.char_literal = stdstr[0];
+        BEGIN(INITIAL);
         return CHAR_LITERAL;
     }
     else if(stdstr.size() == 0)
@@ -570,4 +571,6 @@ int main(int argc, char** argv) {
     cout << ClassTable::Instance()->toString() << "\n";
     return 0;
 }
+
+
 

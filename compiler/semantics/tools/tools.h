@@ -34,6 +34,7 @@ public:
         NULL_DIVIDE,
         CANNOT_CONVERTED,
         INCORRECT_ENUM_VALUE,
+        INCORRECT_TYPE,
     };
 
     ExceptionType exceptionType;

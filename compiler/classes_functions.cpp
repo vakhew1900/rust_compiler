@@ -1878,6 +1878,12 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
             this->fieldTableItem.dataType = this->type->convertToDataType(className);
             this->expr->transformConst();
             this->fieldTableItem.value = this->expr;
+
+            if (fieldTableItem.dataType.type != this->expr->dataType.type)
+            {
+                throw Exception(Exception:: INCORRECT_TYPE, "Expected type for " + *this->name + " in " + className + ":" + fieldTableItem.dataType.toString() + " Result: " + this->expr->dataType.toString());
+            }
+
             ClassTable::Instance()->updateField(className, *this->name, this->fieldTableItem);
             break;
         case struct_:
@@ -2288,7 +2294,7 @@ void ExprNode::transformConst() {
                 }
                 //this->Bool = this->expr_left->Bool || this->expr_right->Bool;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION - OR");
             }
 
             this->type = bool_lit;
@@ -2317,7 +2323,7 @@ void ExprNode::transformConst() {
                     }
                 }
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION - AND");
             }
 
             this->type = bool_lit;
@@ -2337,7 +2343,7 @@ void ExprNode::transformConst() {
             }
 
             this->type = bool_lit;
-            this->dataType.type = this->expr_left->dataType.type;
+            this->dataType.type = DataType::bool_;
 
             break;
         case not_equal:
@@ -2353,7 +2359,7 @@ void ExprNode::transformConst() {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
             }
             this->type = bool_lit;
-            this->dataType.type = this->expr_left->dataType.type;
+            this->dataType.type = DataType::bool_;
             break;
         case greater:
             if (this->expr_left->dataType.type == DataType::bool_) {
@@ -2370,7 +2376,7 @@ void ExprNode::transformConst() {
             }
 
             this->type = bool_lit;
-            this->dataType.type = this->expr_left->dataType.type;
+            this->dataType.type = DataType::bool_;
             break;
         case less:
             if (this->expr_left->dataType.type == DataType::bool_) {
@@ -2385,7 +2391,7 @@ void ExprNode::transformConst() {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
             }
             this->type = bool_lit;
-            this->dataType.type = this->expr_left->dataType.type;
+            this->dataType.type = DataType::bool_;
             break;
         case greater_equal:
             if (this->expr_left->dataType.type == DataType::bool_) {
@@ -2400,7 +2406,7 @@ void ExprNode::transformConst() {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
             }
             this->type = bool_lit;
-            this->dataType.type = this->expr_left->dataType.type;
+            this->dataType.type = DataType::bool_;
 
             break;
         case less_equal:
@@ -2418,7 +2424,7 @@ void ExprNode::transformConst() {
             }
 
             this->type = bool_lit;
-            this->dataType.type = this->expr_left->dataType.type;
+            this->dataType.type = DataType::bool_;
             break;
         case uminus:
             if (this->expr_left->dataType.type == DataType::int_) {
@@ -2440,7 +2446,7 @@ void ExprNode::transformConst() {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
             }
 
-            this->dataType.type = this->expr_left->dataType.type;
+            this->dataType.type = DataType::bool_;
             break;
         case as:
             if (this->expr_left->dataType.type == DataType::int_) {

@@ -1728,6 +1728,7 @@ YY_RULE_SETUP
     if(stdstr.size() == 1) {
         cout << "Found CHAR:  " << stdstr << endl;
         yylval.char_literal = stdstr[0];
+        BEGIN(INITIAL);
         return CHAR_LITERAL;
     }
     else if(stdstr.size() == 0)
@@ -1742,17 +1743,17 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case YY_STATE_EOF(CHAR_EL):
-#line 279 "lex.l"
+#line 280 "lex.l"
 { printf("CHAR Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 	YY_BREAK
 case 126:
 YY_RULE_SETUP
-#line 280 "lex.l"
+#line 281 "lex.l"
 { printf("CHAR Error in line %d: slash\n", lineNumber); }
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
-#line 282 "lex.l"
+#line 283 "lex.l"
 {
 
     strcpy(str, yytext);
@@ -1772,7 +1773,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 128:
 YY_RULE_SETUP
-#line 299 "lex.l"
+#line 300 "lex.l"
 {
 
     strcpy(str, yytext);
@@ -1794,7 +1795,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
-#line 319 "lex.l"
+#line 320 "lex.l"
 {
 
     strcpy(str, yytext);
@@ -1825,7 +1826,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
-#line 347 "lex.l"
+#line 348 "lex.l"
 {
 
     removeType(str, "i32");
@@ -1837,7 +1838,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 131:
 YY_RULE_SETUP
-#line 356 "lex.l"
+#line 357 "lex.l"
 {
 
     removeType(str, "i32");
@@ -1856,7 +1857,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 132:
 YY_RULE_SETUP
-#line 372 "lex.l"
+#line 373 "lex.l"
 {
 
     removeType(str, "i32");
@@ -1875,7 +1876,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 133:
 YY_RULE_SETUP
-#line 388 "lex.l"
+#line 389 "lex.l"
 {
 
     removeType(str, "i32");
@@ -1894,14 +1895,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 134:
 YY_RULE_SETUP
-#line 404 "lex.l"
+#line 405 "lex.l"
 {
     printf("INCORRECT DOUBLE Error in line %d: float literals must have an integer part", lineNumber);
 }
 	YY_BREAK
 case 135:
 YY_RULE_SETUP
-#line 408 "lex.l"
+#line 409 "lex.l"
 {
     removeType(str, "f64");
     removeUnderline(str);
@@ -1912,7 +1913,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 136:
 YY_RULE_SETUP
-#line 416 "lex.l"
+#line 417 "lex.l"
 {
     removeType(str, "f64");
     removeUnderline(str);
@@ -1923,30 +1924,30 @@ YY_RULE_SETUP
 	YY_BREAK
 case 137:
 YY_RULE_SETUP
-#line 424 "lex.l"
+#line 425 "lex.l"
 { printf("Found IDENTIFIER: %s\n", yytext); yylval.identifier = new string(yytext); return ID;}
 	YY_BREAK
 case 138:
 YY_RULE_SETUP
-#line 425 "lex.l"
+#line 426 "lex.l"
 { printf("Found MACROS: %s\n", yytext);}
 	YY_BREAK
 case 139:
 YY_RULE_SETUP
-#line 426 "lex.l"
+#line 427 "lex.l"
 { printf("Error in line %d: incorrect IDENTIFIER\n", lineNumber); }
 	YY_BREAK
 case 140:
 YY_RULE_SETUP
-#line 427 "lex.l"
+#line 428 "lex.l"
 { printf("Error in line %d: incorrect character in code\n", lineNumber); }
 	YY_BREAK
 case 141:
 YY_RULE_SETUP
-#line 428 "lex.l"
+#line 429 "lex.l"
 ECHO;
 	YY_BREAK
-#line 1950 "lex.yy.c"
+#line 1951 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2806,7 +2807,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 428 "lex.l"
+#line 429 "lex.l"
 
 
 void convertCharacterCodeToString(char characterCode[], int startPosition, char *string)
@@ -2944,12 +2945,15 @@ int main(int argc, char** argv) {
     string dot;
     global_program->toDot(dot);
     std::cout << dot << "\n";
-
     std::ofstream out("dot-tree.txt");
-    out << dot << "\n";
     global_program->getAllItems(ClassTable::globalClassName);
+    string updatedDot;
+    global_program->toDot(updatedDot);
     string res = ClassTable::Instance()->toString();
+    out << updatedDot << "\n";
     cout << ClassTable::Instance()->toString() << "\n";
     return 0;
 }
+
+
 
