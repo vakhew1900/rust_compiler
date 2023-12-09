@@ -23,6 +23,7 @@ public:
     bool isStatic = true; // статический или не статический метод
     bool isHasBody = false;
     bool isPub = false;
+    bool isRefSelf = false;
 
     MethodTableItem();
     MethodTableItem(DataType returnDataType, VarTable paramTable,VarTable localVarTable, bool isStatic = true);

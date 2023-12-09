@@ -37,6 +37,7 @@ public:
         INCORRECT_TYPE,
         NO_HAVE_PARENT,
         PUB_NOT_PERMITTED,
+        IMPL_AND_TRAIT_DECLARATION
     };
 
     ExceptionType exceptionType;

@@ -1519,6 +1519,8 @@ void ProgramNode::getAllItems(std::string className) {
                     elem->addDataTypeToDeclaration(className);
             }
         }
+
+        ClassTable::isCorrectTraitsImpl();
     }
     catch (Exception e) {
         cout << e.getMessage() << "\n";
@@ -1547,6 +1549,11 @@ void ItemNode::getAllItems(std::string className) {
                 if ((this->params->func_type == FuncParamListNode::self_ref
                      || this->params->func_type == FuncParamListNode::self)) {
                     this->methodTableItem.isStatic = false;
+
+                    if (this->params->func_type == FuncParamListNode::self_ref)
+                    {
+                        this->methodTableItem.isRefSelf = true;
+                    }
                 }
 
                 ClassTable::Instance()->addMethod(className, *this->name, this->methodTableItem);
@@ -1753,6 +1760,16 @@ void ItemNode::addImpl(string className, bool isTrait) {
                 if (isTrait) {
                     this->methodTableItem.isPub = ClassTable::Instance()->getMethod(
                             ClassTable::Instance()->getClass(className).parentName, *this->name).isPub;
+                }
+
+                if ((this->params->func_type == FuncParamListNode::self_ref
+                     || this->params->func_type == FuncParamListNode::self)) {
+                    this->methodTableItem.isStatic = false;
+
+                    if (this->params->func_type == FuncParamListNode::self_ref)
+                    {
+                        this->methodTableItem.isRefSelf = true;
+                    }
                 }
 
                 this->className = className;

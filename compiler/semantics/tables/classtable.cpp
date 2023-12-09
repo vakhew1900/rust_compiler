@@ -219,20 +219,43 @@ bool ClassTable::isParamExist(const string &className, const string &methodName,
     return this->getMethod(className, methodName).paramTable.isExist(varName);
 }
 
-bool ClassTable::isCorrectTraitsImpl() {
+void ClassTable::isCorrectTraitsImpl() {
+
 
     for (auto elem: _instanse->items) {
         if (elem.second.isHaveParent()) {
             ClassTableItem parentItem = ClassTable::Instance()->getParentClass(elem.first);
+            ClassTableItem curItem = elem.second;
+
+            for (auto method: parentItem.methodTable.items) {
+                if (!method.second.isEqualsDeclaration(curItem.methodTable.items[method.first])) {
+                    throw Exception(Exception::IMPL_AND_TRAIT_DECLARATION,
+                                    "method " + method.first + "in trait " + curItem.parentName + " and in " + elem.first +
+                                    "have different declaration");
+                }
+            }
+
+            for (auto field: parentItem.fieldTable.items) {
+
+                if (!ClassTable::Instance()->isFieldExist(elem.first, field.first))
+                {
+                    continue;
+                }
+                if (!field.second.isEquals(curItem.fieldTable.items[field.first])) {
+                    throw Exception(Exception::IMPL_AND_TRAIT_DECLARATION,
+                                    "field " + field.first + " in trait " + curItem.parentName + " and in " + elem.first +
+                                    "have different declaration");
+                }
+            }
         }
     }
-    return false;
+
 }
 
 ClassTableItem ClassTable::getParentClass(const string &className) {
     if (!ClassTable::Instance()->getClass(className).isHaveParent()) {
         throw Exception(Exception::NO_HAVE_PARENT, className + " NO HAVE PARENT");
     }
-    string  parentName = ClassTable::Instance()->getClass(className).parentName;
+    string parentName = ClassTable::Instance()->getClass(className).parentName;
     return ClassTable::Instance()->getClass(parentName);
 }
