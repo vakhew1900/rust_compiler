@@ -5,6 +5,7 @@
 
 int globId = 0;
 
+
 ProgramNode::ProgramNode(ItemListNode *item_list) {
     this->id = ++globId;
     this->item_list = item_list;
@@ -1501,10 +1502,13 @@ void ProgramNode::getAllItems(std::string className) {
     try {
         if (item_list != NULL) {
             for (auto elem: *item_list->items) {
-                if (elem->item_type == ItemNode::function_ || elem->item_type == ItemNode::constStmt_)
+                if (elem->item_type == ItemNode::function_ || elem->item_type == ItemNode::constStmt_) {
+                    elem->curClassName = className + "/" + ClassTable::moduleClassName;
                     elem->getAllItems(className + "/" + ClassTable::moduleClassName);
-                else
+                }
+                else {
                     elem->getAllItems(className);
+                }
             }
         }
 
@@ -1550,8 +1554,7 @@ void ItemNode::getAllItems(std::string className) {
                      || this->params->func_type == FuncParamListNode::self)) {
                     this->methodTableItem.isStatic = false;
 
-                    if (this->params->func_type == FuncParamListNode::self_ref)
-                    {
+                    if (this->params->func_type == FuncParamListNode::self_ref) {
                         this->methodTableItem.isRefSelf = true;
                     }
                 }
@@ -1578,11 +1581,13 @@ void ItemNode::getAllItems(std::string className) {
 
                 if (this->items != NULL) {
                     for (auto elem: *this->items->items) {
-                        if(elem->visibility == pub)
-                        {
-                            throw Exception(Exception::PUB_NOT_PERMITTED, "pub` not permitted here because it's implied :" + *this->name + " " + *elem->name);
+                        if (elem->visibility == pub) {
+                            throw Exception(Exception::PUB_NOT_PERMITTED,
+                                            "pub` not permitted here because it's implied :" + *this->name + " " +
+                                            *elem->name);
                         }
                         elem->visibility = pub;
+                        elem->curClassName = className + "/" + *this->name;
                         elem->getAllItems(className + "/" + *this->name);
                     }
                 }
@@ -1599,6 +1604,11 @@ void ItemNode::getAllItems(std::string className) {
                     for (auto elem: *this->items->items) {
                         string str = (elem->item_type == function_ || elem->item_type == constStmt_)
                                      ? "/" + ClassTable::moduleClassName : "";
+
+                        if(!str.empty())
+                        {
+                            elem->curClassName = this->className + "/" + *this->name + str;
+                        }
                         elem->getAllItems(className + "/" + *this->name + str);
                     }
                 }
@@ -1624,6 +1634,7 @@ void ItemNode::getAllItems(std::string className) {
 
                 if (this->structItems->items != NULL) {
                     for (auto elem: *this->structItems->items) {
+                        elem->curClassName = className + "/" + *this->name;
                         elem->getAllItems(className + "/" + *this->name);
                     }
                 }
@@ -1686,6 +1697,7 @@ void ProgramNode::addImpl(string className, bool isTrait) {
     }
 }
 
+
 void ItemNode::addImpl(string className, bool isTrait) {
 
     string implClassName = "";
@@ -1728,9 +1740,12 @@ void ItemNode::addImpl(string className, bool isTrait) {
 
                 if (this->items != NULL) {
                     for (auto elem: *items->items) {
-                        if(this->impl_type == trait && elem->visibility == pub) {
-                            throw Exception(Exception::PUB_NOT_PERMITTED, "pub` not permitted here because it's implied :" + implClassName + " " + *elem->name);
+                        if (this->impl_type == trait && elem->visibility == pub) {
+                            throw Exception(Exception::PUB_NOT_PERMITTED,
+                                            "pub` not permitted here because it's implied :" + implClassName + " " +
+                                            *elem->name);
                         }
+                        elem->curClassName = implClassName;
                         elem->addImpl(implClassName, this->impl_type == trait);
                     }
                 }
@@ -1766,8 +1781,7 @@ void ItemNode::addImpl(string className, bool isTrait) {
                      || this->params->func_type == FuncParamListNode::self)) {
                     this->methodTableItem.isStatic = false;
 
-                    if (this->params->func_type == FuncParamListNode::self_ref)
-                    {
+                    if (this->params->func_type == FuncParamListNode::self_ref) {
                         this->methodTableItem.isRefSelf = true;
                     }
                 }
@@ -1958,6 +1972,8 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
     }
 }
 
+
+
 void EnumItemNode::addDataTypeToDeclaration(const string &className, set<int> &st) {
     if (this->expr == NULL && st.empty()) {
         this->expr = ExprNode::ExprFromIntLiteral(ExprNode::int_lit, 0);
@@ -2019,7 +2035,7 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
     ExprNode *cur = this;
     vector<string> namePath;
 
-    while (cur->type == ExprNode::path_call_expr) {
+    while (cur != NULL && cur->type == ExprNode::path_call_expr) {
         namePath.push_back(*cur->Name);
         cur = cur->expr_left;
     }
@@ -2055,6 +2071,8 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
                 if (ClassTable::Instance()->isClassExist(className)) {
                     res = ClassTable::getDirectory(className);
                 }
+            } else {
+                res = className;
             }
 
             break;
@@ -2067,6 +2085,8 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
                     res = ClassTable::getDirectory(className);
                 }
                 res = ClassTable::getDirectory(res);
+            } else {
+                res = ClassTable::Instance()->getClass(className).parentName;
             }
             break;
         default:
@@ -2085,8 +2105,8 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
         throw Exception(Exception::NOT_EXIST, res + "NOT_EXIST");
     }
 
-    // cout << res << "\n";
-    this->className = res;
+//    cout << res << "\n";
+//    this->className = res;
 
 }
 
@@ -2097,93 +2117,150 @@ bool ExprNode::isLiteral() {
 }
 
 
-void ExprNode::transform() {
+void ProgramNode::transform(bool isConvertedToConst) {
+
+
+    if (this->item_list != NULL) {
+        for (auto item: *this->item_list->items) {
+            try {
+                item->transform(isConvertedToConst);
+            }
+            catch(Exception e){
+                cout << e.getMessage() << endl;
+            }
+        }
+    }
+
+}
+
+void ItemNode::transform(bool isConvertedToConst) {
+
+    switch (this->item_type) {
+
+
+        case function_:
+            body->curClassName = curClassName;
+            body->curMethodName = *this->name;
+            this->body->transform(isConvertedToConst);
+            break;
+        case constStmt_:
+            body->curClassName = curClassName;
+            this->expr->transform(isConvertedToConst);
+            break;
+        case trait_:
+        case impl_:
+        case module_:
+            if(items != NULL)
+            {
+                for(auto elem: *this->items->items)
+                {
+                    elem->transform(isConvertedToConst);
+                }
+            }
+            break;
+        case struct_:
+        case enum_:
+            break;
+    }
+}
+
+void ExprNode::transform(bool isConvertedToConst) {
 
     switch (this->type) {
 
-        case int_lit:
-            break;
-        case float_lit:
-            break;
-        case char_lit:
-            break;
-        case string_lit:
-            break;
-        case raw_string_lit:
-            break;
-        case bool_lit:
-            break;
         case plus:
-            break;
         case minus:
-            break;
         case mul_expr:
-            break;
         case div_expr:
-            break;
         case mod:
+        case equal:
+        case not_equal:
+        case greater:
+        case less:
+        case greater_equal:
+        case less_equal:
+            this->expr_left->transform(isConvertedToConst);
+            this->expr_right->transform(isConvertedToConst);
+
+            if (this->expr_left->isLiteral() && this->expr_right->isLiteral()) {
+                this->transformConst();
+            }
+
             break;
+
+        case uminus:
+        case negotation:
+
+            if (this->expr_left->isLiteral()) {
+                this->expr_left->transformConst();
+            }
+
+            break;
+
         case or_:
-            break;
         case and_:
+            this->expr_left->transform(isConvertedToConst);
+            this->expr_right->transform(isConvertedToConst && false);
+
             break;
         case asign:
-            break;
-        case equal:
-            break;
-        case not_equal:
-            break;
-        case greater:
-            break;
-        case less:
-            break;
-        case greater_equal:
-            break;
-        case less_equal:
-            break;
-        case uminus:
-            break;
-        case negotation:
-            break;
-        case question:
-            break;
-        case ustar:
-            break;
-        case link:
-            break;
-        case mut_link:
+            this->expr_left->transform(isConvertedToConst);
+            this->expr_right->transform(isConvertedToConst);
+
+            if (this->expr_left->type == array_expr) {
+                this->type = array_expr;
+                this->expr_middle = this->expr_left->expr_right;
+                this->expr_left->expr_right = NULL;
+                this->expr_left = this->expr_left->expr_left;
+            } else if (this->expr_left->type == field_access_expr) {
+                this->type = point_assign;
+                this->expr_middle = this->expr_left->expr_right;
+                this->expr_left->expr_right = NULL;
+                this->expr_left = this->expr_left->expr_left;
+            }
             break;
         case array_expr:
-            break;
+
+            if (this->expr_list != NULL)
+                for (auto elem: *expr_list->exprs) {
+                    elem->transform(isConvertedToConst);
+                }
+
         case array_expr_auto_fill:
-            break;
         case index_expr:
-            break;
+        case range_expr:
+            this->expr_left->transform(isConvertedToConst);
+            this->expr_right->transform(isConvertedToConst);
         case field_access_expr:
-            break;
-        case call_expr:
+            this->expr_left->transform(isConvertedToConst);
             break;
         case method_expr:
-            break;
-        case continue_expr:
-            break;
-        case break_expr:
+            this->expr_left->transform(isConvertedToConst);
             break;
         case break_with_val_expr:
+            this->expr_left->transform(isConvertedToConst);
             break;
         case range_right:
+            this->expr_left->transform(isConvertedToConst);
+            this->expr_right = this->expr_left;
+            this->expr_left = NULL;
             break;
         case range_left:
-            break;
-        case range_expr:
+            this->expr_left->transform(isConvertedToConst);
             break;
         case return_expr:
-            break;
-        case id_:
-            break;
-        case self_expr:
+            this->expr_left->transform(isConvertedToConst);
             break;
         case if_expr_list:
+            if (this->ifList != NULL) {
+                for (auto elem: *this->ifList) {
+                    elem->transform(isConvertedToConst);
+                }
+            }
+
+            if (this->else_body != NULL) {
+                this->else_body->transform(isConvertedToConst);
+            }
             break;
         case if_expr:
             break;
@@ -2201,18 +2278,43 @@ void ExprNode::transform() {
             break;
         case static_method:
             break;
-        case tuple_expr:
-            break;
-        case super_expr:
-            break;
         case path_call_expr:
             break;
-        case add_if_block:
-            break;
+
         case struct_creation:
             break;
         case as:
             break;
+
+        case call_expr:
+            //   this->transformPathCallExpr(curClassName, false);
+            break;
+
+        case int_lit:
+        case float_lit:
+        case char_lit:
+        case string_lit:
+        case raw_string_lit:
+        case bool_lit:
+            break;
+
+        case question:
+        case ustar:
+        case tuple_expr:
+            throw Exception(Exception::NOT_SUPPORT, "this operation not supported");
+            break;
+
+        case link:
+        case mut_link:
+        case id_:
+        case self_expr:
+        case super_expr:
+        case continue_expr:
+        case break_expr:
+            break;
+            break;
+            break;
+
     }
 }
 
@@ -2648,6 +2750,10 @@ void ExprNode::transformConst() {
 
 bool Node::isEqualDataType(Node *node) {
     return this->dataType.type == node->dataType.type;
+}
+
+void Node::transform(bool isConvertedToConst) {
+
 }
 
 

@@ -44,6 +44,8 @@ enum Visibility {
     emptyVisibility, pub, crate, self, super
 };
 
+//vector<ExprNode*> blockExprVector; // вектор BlockExpr;
+
 
 class Node {
 public:
@@ -58,6 +60,9 @@ public:
     string methodName;
     string fieldName;
 
+    string curClassName;
+    string curMethodName;
+
     virtual void getAllItems(string className);
     virtual void addImpl(string className, bool isTrait);
     void simpleTreeTransform(Node *node);
@@ -66,7 +71,10 @@ public:
     void createVertexDot(string &s, int id, string name = "", string type = "", string value = "", string visibility = "",
                          string pos = "");
 
+
     virtual void addDataTypeToDeclaration(const string &className);
+    virtual void transform(bool isConvertedToConst = true);
+    //virtual void addDataType(const string &className);
 };
 
 
@@ -80,6 +88,7 @@ public:
 
     void getAllItems(std::string className) override;
     void addImpl(string className, bool isTrait) override;
+    void transform(bool isConvertedToConst = true) override;
 };
 
 class TypeNode : public Node {
@@ -120,7 +129,9 @@ public:
 
         id_, self_expr, if_expr_list, if_expr, loop_expr, loop_while, loop_for, block_expr,
         struct_expr, struct_field_expr, static_method, tuple_expr, super_expr,
-        path_call_expr, add_if_block, struct_creation, as, undefined
+        path_call_expr, add_if_block, struct_creation, as, undefined,
+
+        field_call, method_call, arr_asign, point_assign
     };
     Type type;
     char Char = 0;
@@ -134,6 +145,7 @@ public:
 
     ExprNode *expr_left = NULL;
     ExprNode *expr_right = NULL;
+    ExprNode *expr_middle = NULL;
     ExprListNode *expr_list = NULL;
     ExprNode *body = NULL;
     ExprListNode *field_list = NULL;
@@ -197,7 +209,7 @@ public:
     void toDot(string &dot, const string &pos = "");
 
     void transformPathCallExpr(string className, ExprNode::Type type, bool isType);
-    void transform();
+    void transform(bool isConvertedToConst = true) override;
     void transformConst();
     bool isLiteral();
 };
@@ -323,6 +335,7 @@ public:
     void getAllItems(std::string className) override;
     void addImpl(string className, bool isTrait) override;
     void addDataTypeToDeclaration(const std::string &className) override;
+    void transform(bool isConvertedToConst = true) override;
 };
 
 
