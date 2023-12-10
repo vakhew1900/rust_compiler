@@ -52,11 +52,14 @@ public:
     void updateField(string className, string fieldName, FieldTableItem fieldTableItem);
     void addClass(string  className, ClassTableItem classTableItem);
     void addParent(string childName, string parentName);
+    void addLocalParam(string className,string methodName, VarTableItem varTableItem);
     void addFuncParam(string className,string methodName, VarTableItem varTableItem);
     bool isClassExist(const string& className);
     bool isMethodExist(const string& className, const string& methodName);
     bool isFieldExist(const string& className, const string& methodName);
     bool isParamExist(const string& className, const string& methodName, const string& varName);
+    bool isLocalVarExist(const string& className, const string& methodName, const string& varName);
+    bool isLocalVarExist(const string& className, const string& methodName, const string& varName, const ExprNode* blockExpr);
     ClassTableItem getClass(const string& className);
     ClassTableItem getParentClass(const string &className);
     FieldTableItem getField(const string& className, const string& fieldName);

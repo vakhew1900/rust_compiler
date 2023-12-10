@@ -98,6 +98,15 @@ bool VarTable::isExist(const string &varName) {
     return res;
 }
 
+bool VarTable::isExist(const string &varName, const ExprNode* blockExpr) {
+    bool res = false;
+
+    for (auto elem: this->items) {
+        res = res || (elem.id == varName &&  elem.blockExpr == blockExpr);
+    }
+    return res;
+}
+
 bool VarTable::isEquals(const VarTable &varTable) {
 
     bool res = true;

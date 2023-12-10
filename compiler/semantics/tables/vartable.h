@@ -39,6 +39,7 @@ public:
     string toString();
     bool isExist(const string& varName);
     bool isEquals(const VarTable & varTable);
+    bool isExist(const string& varName, const ExprNode* blockExpr);
 };
 
 

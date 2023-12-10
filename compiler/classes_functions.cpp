@@ -5,6 +5,42 @@
 
 int globId = 0;
 
+BlockExprStack *BlockExprStack::_instanse = NULL;
+
+BlockExprStack:: BlockExprStack(){
+
+}
+
+void BlockExprStack::Instance() {
+    if (_instanse == NULL) {
+        _instanse = new BlockExprStack();
+    }
+}
+
+
+void BlockExprStack::pop() {
+    Instance();
+    _instanse->_stack.pop_back();
+}
+
+void BlockExprStack::push(ExprNode *exprNode) {
+    if (exprNode->type != ExprNode::block_expr) {
+        throw Exception(Exception::OPERATION_NOT_SUPPORTED, "NOT BLOCK EXPR");
+    }
+    BlockExprStack::Instance();
+
+    _instanse->_stack.push_back(exprNode);
+}
+
+ExprNode *BlockExprStack::back() {
+    Instance();
+    if (_instanse->_stack.empty()) {
+        throw Exception(Exception::EMPTY_STACK, "EMPTY STACK");
+    }
+
+    return _instanse->_stack.back();
+}
+
 
 ProgramNode::ProgramNode(ItemListNode *item_list) {
     this->id = ++globId;
@@ -1079,6 +1115,7 @@ void StmtNode::toDot(string &dot) {
     }
 }
 
+
 void StmtListNode::toDot(string &dot, const string &type) {
 
     createVertexDot(dot, this->id, "stmt_list", type);
@@ -1505,8 +1542,7 @@ void ProgramNode::getAllItems(std::string className) {
                 if (elem->item_type == ItemNode::function_ || elem->item_type == ItemNode::constStmt_) {
                     elem->curClassName = className + "/" + ClassTable::moduleClassName;
                     elem->getAllItems(className + "/" + ClassTable::moduleClassName);
-                }
-                else {
+                } else {
                     elem->getAllItems(className);
                 }
             }
@@ -1605,8 +1641,7 @@ void ItemNode::getAllItems(std::string className) {
                         string str = (elem->item_type == function_ || elem->item_type == constStmt_)
                                      ? "/" + ClassTable::moduleClassName : "";
 
-                        if(!str.empty())
-                        {
+                        if (!str.empty()) {
                             elem->curClassName = this->className + "/" + *this->name + str;
                         }
                         elem->getAllItems(className + "/" + *this->name + str);
@@ -1973,7 +2008,6 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
 }
 
 
-
 void EnumItemNode::addDataTypeToDeclaration(const string &className, set<int> &st) {
     if (this->expr == NULL && st.empty()) {
         this->expr = ExprNode::ExprFromIntLiteral(ExprNode::int_lit, 0);
@@ -2125,7 +2159,7 @@ void ProgramNode::transform(bool isConvertedToConst) {
             try {
                 item->transform(isConvertedToConst);
             }
-            catch(Exception e){
+            catch (Exception e) {
                 cout << e.getMessage() << endl;
             }
         }
@@ -2141,7 +2175,9 @@ void ItemNode::transform(bool isConvertedToConst) {
         case function_:
             body->curClassName = curClassName;
             body->curMethodName = *this->name;
+            BlockExprStack::push(body);
             this->body->transform(isConvertedToConst);
+            BlockExprStack::pop();
             break;
         case constStmt_:
             body->curClassName = curClassName;
@@ -2150,10 +2186,8 @@ void ItemNode::transform(bool isConvertedToConst) {
         case trait_:
         case impl_:
         case module_:
-            if(items != NULL)
-            {
-                for(auto elem: *this->items->items)
-                {
+            if (items != NULL) {
+                for (auto elem: *this->items->items) {
                     elem->transform(isConvertedToConst);
                 }
             }
@@ -2161,6 +2195,69 @@ void ItemNode::transform(bool isConvertedToConst) {
         case struct_:
         case enum_:
             break;
+    }
+}
+
+void StmtListNode::transform(bool isConvertedToConst) {
+
+    if (this->stmts != NULL) {
+        for (auto elem: *this->stmts) {
+            elem->curClassName = curClassName;
+            elem->curMethodName = curMethodName;
+            elem->transform(isConvertedToConst);
+        }
+    }
+}
+
+void StmtNode::transform(bool isConvertedToConst) {
+
+    try {
+        switch (this->type) {
+            case exprstmt:
+                this->expr->transform(isConvertedToConst);
+                break;
+            case let:
+                this->varTableItem = VarTableItem();
+                if (this->let_type == mut) {
+                    this->varTableItem.isMut = mut;
+                }
+                varTableItem.id = *this->name;
+                varTableItem.blockExpr = BlockExprStack::back();
+                this->expr->transform(isConvertedToConst);
+
+                if (this->typeChild == NULL || this->typeChild->type == TypeNode::emptyType_) {
+                    varTableItem.dataType = expr->dataType;
+                }
+                else {
+                    varTableItem.dataType = this->typeChild->convertToDataType(curClassName);
+                    if (!this->expr->dataType.isEquals(varTableItem.dataType)) {
+                        throw Exception(Exception::INCORRECT_TYPE, "incorrect datatype");
+                    }
+                }
+
+                ClassTable::Instance()->addLocalParam(curClassName, methodName, this->varTableItem);
+                break;
+            case const_:
+                this->varTableItem = VarTableItem();
+                varTableItem.isConst = true;
+                varTableItem.id = *this->name;
+                this->expr->transformConst();
+                varTableItem.dataType = this->typeChild->convertToDataType(curClassName);
+
+                if (!this->expr->dataType.isEquals(varTableItem.dataType)) {
+                    throw Exception(Exception::INCORRECT_TYPE, "incorrect datatype");
+                }
+
+                varTableItem.blockExpr = BlockExprStack::back();
+                ClassTable::Instance()->addLocalParam(curClassName, methodName, this->varTableItem);
+                break;
+            case semicolon:
+            case expression:
+                break;
+        }
+    }
+    catch (Exception e) {
+        cout << e.getMessage() << "\n";
     }
 }
 

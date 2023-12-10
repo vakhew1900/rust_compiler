@@ -37,13 +37,17 @@ public:
         INCORRECT_TYPE,
         NO_HAVE_PARENT,
         PUB_NOT_PERMITTED,
-        IMPL_AND_TRAIT_DECLARATION
+        IMPL_AND_TRAIT_DECLARATION,
+        EMPTY_STACK,
+        VAR_ALREADY_EXISTS,
     };
 
     ExceptionType exceptionType;
     string getMessage();
     Exception(ExceptionType exceptionType, string message);
+
 };
+
 
 #endif //COMPILER_TOOLS_H
 

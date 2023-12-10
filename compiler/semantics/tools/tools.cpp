@@ -31,3 +31,5 @@ Exception::Exception(ExceptionType exceptionType, string message) {
     this->exceptionType = exceptionType;
     this->message = message;
 }
+
+

@@ -15,6 +15,21 @@
 
 using namespace std;
 
+
+class  BlockExprStack
+{
+private:
+    static BlockExprStack* _instanse;
+    vector<ExprNode*> _stack;
+    BlockExprStack();
+    static void Instance();
+public:
+    static void pop();
+    static void push(ExprNode* exprNode);
+    static ExprNode* back();
+};
+
+
 class Node;
 
 class ProgramNode; // ProgramNode
@@ -62,6 +77,7 @@ public:
 
     string curClassName;
     string curMethodName;
+    int localVarNum = 0;
 
     virtual void getAllItems(string className);
     virtual void addImpl(string className, bool isTrait);
@@ -252,6 +268,7 @@ public:
     StmtNode(Type type, ExprNode *expr_node, ItemNode *decl_node, LetStmtNode *let_node);
     StmtNode(Type type, StmtNode *stmt);
     static StmtNode* ConstStmtToStmt(ConstStmtNode *node);
+    void transform(bool isConvertedToConst = true) override;
 
     void toDot(string &dot);
 };
@@ -265,6 +282,7 @@ public:
     static StmtListNode *Append(StmtListNode *list, StmtNode *stmt);
 
     void toDot(string &dot, const string &type = "stmt_list");
+    void transform(bool isConvertedToConst = true) override;
 };
 
 class LetStmtNode : public Node {

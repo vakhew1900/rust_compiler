@@ -259,3 +259,22 @@ ClassTableItem ClassTable::getParentClass(const string &className) {
     string parentName = ClassTable::Instance()->getClass(className).parentName;
     return ClassTable::Instance()->getClass(parentName);
 }
+
+bool ClassTable::isLocalVarExist(const string &className, const string &methodName, const string &varName,
+                                 const ExprNode *blockExpr) {
+    return this->getMethod(className, methodName).localVarTable.isExist(varName, blockExpr);
+}
+
+bool ClassTable::isLocalVarExist(const string &className, const string &methodName, const string &varName) {
+    return this->getMethod(className, methodName).localVarTable.isExist(varName);
+}
+
+void ClassTable::addLocalParam(string className, string methodName, VarTableItem varTableItem) {
+
+    if(ClassTable::Instance()->isLocalVarExist(className, methodName, varTableItem.id, varTableItem.blockExpr))
+    {
+        throw Exception(Exception:: VAR_ALREADY_EXISTS, "var with this name "+ varTableItem.id + "in method " + methodName + " " + className  + " is already exists");
+    }
+
+    ClassTable::Instance()->items[className].methodTable.items[methodName].localVarTable.items.push_back(varTableItem);
+}
