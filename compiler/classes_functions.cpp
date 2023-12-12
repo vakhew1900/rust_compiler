@@ -7,7 +7,7 @@ int globId = 0;
 
 BlockExprStack *BlockExprStack::_instanse = NULL;
 
-BlockExprStack:: BlockExprStack(){
+BlockExprStack::BlockExprStack() {
 
 }
 
@@ -2214,6 +2214,8 @@ void StmtNode::transform(bool isConvertedToConst) {
     try {
         switch (this->type) {
             case exprstmt:
+                this->expr->curClassName = curClassName;
+                this->expr->curMethodName = methodName;
                 this->expr->transform(isConvertedToConst);
                 break;
             case let:
@@ -2227,8 +2229,7 @@ void StmtNode::transform(bool isConvertedToConst) {
 
                 if (this->typeChild == NULL || this->typeChild->type == TypeNode::emptyType_) {
                     varTableItem.dataType = expr->dataType;
-                }
-                else {
+                } else {
                     varTableItem.dataType = this->typeChild->convertToDataType(curClassName);
                     if (!this->expr->dataType.isEquals(varTableItem.dataType)) {
                         throw Exception(Exception::INCORRECT_TYPE, "incorrect datatype");
@@ -2269,35 +2270,126 @@ void ExprNode::transform(bool isConvertedToConst) {
         case minus:
         case mul_expr:
         case div_expr:
+            this->expr_left->transform(isConvertedToConst);
+            this->expr_right->transform(isConvertedToConst);
+
+            if (this->expr_left->isLiteral() && this->expr_right->isLiteral() && isConvertedToConst) {
+                this->transformConst();
+            } else {
+                if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
+                    throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE");
+                }
+
+                if (this->expr_left->dataType.type != DataType::int_
+                    && this->expr_left->dataType.type != DataType::float_) {
+                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                    "datatype " + this->expr_left->dataType.toString() +
+                                    " not supported maths operation");
+                }
+
+                this->dataType = this->expr_left->dataType;
+            }
+            break;
         case mod:
+            this->expr_left->transform(isConvertedToConst);
+            this->expr_right->transform(isConvertedToConst);
+
+            if (this->expr_left->isLiteral() && this->expr_right->isLiteral() && isConvertedToConst) {
+                this->transformConst();
+            } else {
+                if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
+                    throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE");
+                }
+
+                if (this->expr_left->dataType.type != DataType::int_) {
+                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                    "datatype " + this->expr_left->dataType.toString() +
+                                    " not supported operation mod");
+                }
+
+                this->dataType = this->expr_left->dataType;
+            }
+            break;
         case equal:
         case not_equal:
         case greater:
         case less:
         case greater_equal:
         case less_equal:
+
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
-            if (this->expr_left->isLiteral() && this->expr_right->isLiteral()) {
+            if (this->expr_left->isLiteral() && this->expr_right->isLiteral() && isConvertedToConst) {
                 this->transformConst();
+            } else {
+                if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
+                    throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE");
+                }
+
+                if (this->expr_left->dataType.type == DataType::array_
+                    || this->expr_left->dataType.type == DataType::class_) {
+                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                    "datatype " + this->expr_left->dataType.toString() +
+                                    " not supported comparison operation");
+                }
+
+                this->dataType = this->expr_left->dataType;
             }
 
             break;
 
         case uminus:
+
+            if (this->expr_left->isLiteral()) {
+                this->expr_left->transformConst();
+            } else {
+                if (this->expr_left->dataType.type != DataType::float_
+                    && this->expr_left->dataType.type != DataType::int_) {
+                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                    "datatype " + this->expr_left->dataType.toString() +
+                                    " not supported uminus operation");
+                }
+                this->dataType = this->expr_left->dataType;
+            }
+            break;
+
         case negotation:
 
             if (this->expr_left->isLiteral()) {
                 this->expr_left->transformConst();
+            } else {
+                if (this->expr_left->dataType.type != DataType::bool_) {
+                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                    "datatype " + this->expr_left->dataType.toString() +
+                                    " not supported uminus operation");
+                }
+                this->dataType = this->expr_left->dataType;
             }
 
             break;
 
         case or_:
         case and_:
+
             this->expr_left->transform(isConvertedToConst);
-            this->expr_right->transform(isConvertedToConst && false);
+            this->expr_right->transform(isConvertedToConst);
+
+            if (this->expr_left->isLiteral() && this->expr_right->isLiteral() && isConvertedToConst) {
+                this->transformConst();
+            } else {
+                if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
+                    throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE");
+                }
+
+                if (this->expr_left->dataType.type != DataType::bool_) {
+                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                    "datatype " + this->expr_left->dataType.toString() +
+                                    " not supported and/or operation");
+                }
+
+                this->dataType = this->expr_left->dataType;
+            }
 
             break;
         case asign:
@@ -2314,7 +2406,19 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->expr_middle = this->expr_left->expr_right;
                 this->expr_left->expr_right = NULL;
                 this->expr_left = this->expr_left->expr_left;
+            } else if (this->expr_left->type != field_call && // TODO тут придется наверное поправить
+                       this->expr_left->type != id_) {
+                throw Exception(Exception::NOT_A_VAR, "left operand not a var");
             }
+
+            if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
+                throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE in asign");
+            }
+
+            //TODO добавить обработку констант
+
+
+
             break;
         case array_expr:
 

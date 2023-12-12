@@ -77,7 +77,7 @@ public:
 
     string curClassName;
     string curMethodName;
-    int localVarNum = 0;
+    int localVarNum = -1;
 
     virtual void getAllItems(string className);
     virtual void addImpl(string className, bool isTrait);
