@@ -1758,7 +1758,7 @@ void ItemNode::addImpl(string className, bool isTrait) {
                 this->type->pathCallExpr->transformPathCallExpr(className, ExprNode::undefined, true);
                 implClassName = this->type->pathCallExpr->className;
                 if (!ClassTable::Instance()->isClassExist(implClassName)) {
-                    throw Exception(Exception::NOT_EXIST, "Impl struct" + implClassName + "Not Exist");
+                    throw Exception(Exception::NOT_EXIST, "Impl struct " + implClassName + " Not Exist");
                 }
 
                 if (this->impl_type == trait) {
@@ -2140,7 +2140,7 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
     }
 
 //    cout << res << "\n";
-//    this->className = res;
+    this->className = res;
 
 }
 
