@@ -300,3 +300,7 @@ VarTableItem ClassTable::getLocalVar(const string &className, const string &meth
     }
 }
 
+bool ClassTable::isParent(const string &child, const string &parentName) {
+    return ClassTable::Instance()->getClass(child).parentName == parentName;
+}
+

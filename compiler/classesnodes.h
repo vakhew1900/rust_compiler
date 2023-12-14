@@ -79,6 +79,9 @@ public:
     string curMethodName;
     int localVarNum = -1;
     bool isConst = false;
+    bool isMut = false;
+
+    DataType arrDataType;
 
     virtual void getAllItems(string className);
     virtual void addImpl(string className, bool isTrait);

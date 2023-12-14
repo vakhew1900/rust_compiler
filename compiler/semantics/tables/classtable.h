@@ -60,6 +60,7 @@ public:
     bool isParamExist(const string& className, const string& methodName, const string& varName);
     bool isLocalVarExist(const string& className, const string& methodName, const string& varName);
     bool isLocalVarExist(const string& className, const string& methodName, const string& varName, const ExprNode* blockExpr);
+    bool isParent(const string& child, const string& parentName);
     ClassTableItem getClass(const string& className);
     ClassTableItem getParentClass(const string &className);
     FieldTableItem getField(const string& className, const string& fieldName);

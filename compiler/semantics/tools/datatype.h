@@ -34,6 +34,8 @@ public:
     string toString();
     static string TypeToString(Type type);
     bool isEquals(const DataType &other);
+    bool isUndefined();
+    void addArrType(DataType arrType);
 };
 
 

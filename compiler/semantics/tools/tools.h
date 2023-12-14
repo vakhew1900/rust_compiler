@@ -41,7 +41,9 @@ public:
         EMPTY_STACK,
         VAR_ALREADY_EXISTS,
         NOT_A_VAR,
-        UNEXPECTED
+        UNEXPECTED,
+        TYPE_ERROR,
+        ARRAY_SIZE
     };
 
     ExceptionType exceptionType;

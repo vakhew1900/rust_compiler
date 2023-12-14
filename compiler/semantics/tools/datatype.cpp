@@ -34,7 +34,7 @@ DataType DataType::StructDataType(vector<string> structPath) {
 }
 
 DataType::DataType() {
-    this->type = int_;
+    this->type = undefined_;
 }
 
 string DataType::toString() {
@@ -65,7 +65,7 @@ string DataType::toString() {
             res += " name " + id;
             break;
         case array_:
-            res += "array_ " + TypeToString(this->arrType) + " ";
+            res += "array_ " + TypeToString(this->arrType) + " " + id;
             res += "deep: " + to_string(this->arrDeep);
             res += " len: ";
             for (auto elem : arrLength) res += to_string(elem) + " ";
@@ -141,4 +141,19 @@ bool DataType::isEquals(const DataType &other) {
             break;
     }
     return res;
+}
+
+bool DataType::isUndefined() {
+    return this->type != undefined_;
+}
+
+void DataType::addArrType(DataType arrType) {
+    if(array_){
+        throw Exception(Exception::UNEXPECTED, "POKA NASRAT`");
+    }
+    else
+    {
+        this->arrType = arrType.type;
+        this->id = arrType.id;
+    }
 }
