@@ -40,6 +40,7 @@ public:
     bool isExist(const string& varName);
     bool isEquals(const VarTable & varTable);
     bool isExist(const string& varName, const ExprNode* blockExpr);
+    VarTableItem getVar(int varNum);
 };
 
 

@@ -119,3 +119,13 @@ bool VarTable::isEquals(const VarTable &varTable) {
     }
     return res;
 }
+
+VarTableItem VarTable::getVar(int varNum) {
+    if (items.size() < varNum || varNum < 0)
+    {
+        throw Exception(Exception::NOT_EXIST, "param not exist in method ");
+
+    }
+
+    return items[varNum];
+}

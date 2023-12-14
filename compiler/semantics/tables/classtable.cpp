@@ -278,3 +278,25 @@ void ClassTable::addLocalParam(string className, string methodName, VarTableItem
 
     ClassTable::Instance()->items[className].methodTable.items[methodName].localVarTable.items.push_back(varTableItem);
 }
+
+VarTableItem ClassTable::getParam(const string &className, const string &methodName, int paramNum) {
+
+    try {
+        return ClassTable::Instance()->getMethod(className, methodName).paramTable.getVar(paramNum);
+    }
+    catch(Exception e)
+    {
+        throw  Exception(Exception::NOT_EXIST, e.getMessage() + " " + className + " " + methodName);
+    }
+}
+
+VarTableItem ClassTable::getLocalVar(const string &className, const string &methodName, int localVarNum) {
+    try {
+        return ClassTable::Instance()->getMethod(className, methodName).localVarTable.getVar(localVarNum);
+    }
+    catch(Exception e)
+    {
+        throw  Exception(Exception::NOT_EXIST, e.getMessage() + " " + className + " " + methodName);
+    }
+}
+

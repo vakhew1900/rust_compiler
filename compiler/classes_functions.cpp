@@ -2270,6 +2270,8 @@ void ExprNode::transform(bool isConvertedToConst) {
         case minus:
         case mul_expr:
         case div_expr:
+            this->expr_left->curClassName = curClassName;
+            this->expr_right->curMethodName = curMethodName;
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -2291,6 +2293,8 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
             break;
         case mod:
+            this->expr_left->curClassName = curClassName;
+            this->expr_right->curMethodName = curMethodName;
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -2317,6 +2321,8 @@ void ExprNode::transform(bool isConvertedToConst) {
         case greater_equal:
         case less_equal:
 
+            this->expr_left->curClassName = curClassName;
+            this->expr_right->curMethodName = curMethodName;
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -2341,6 +2347,9 @@ void ExprNode::transform(bool isConvertedToConst) {
 
         case uminus:
 
+            this->expr_left->curClassName = curClassName;
+          //  this->expr_right->curMethodName = curMethodName;
+
             if (this->expr_left->isLiteral()) {
                 this->expr_left->transformConst();
             } else {
@@ -2356,6 +2365,8 @@ void ExprNode::transform(bool isConvertedToConst) {
 
         case negotation:
 
+            this->expr_left->curClassName = curClassName;
+         //   this->expr_right->curMethodName = curMethodName;
             if (this->expr_left->isLiteral()) {
                 this->expr_left->transformConst();
             } else {
@@ -2372,6 +2383,8 @@ void ExprNode::transform(bool isConvertedToConst) {
         case or_:
         case and_:
 
+            this->expr_left->curClassName = curClassName;
+            this->expr_right->curMethodName = curMethodName;
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -2393,6 +2406,9 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             break;
         case asign:
+
+            this->expr_left->curClassName = curClassName;
+            this->expr_right->curMethodName = curMethodName;
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -2403,7 +2419,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->expr_left = this->expr_left->expr_left;
             } else if (this->expr_left->type == field_access_expr) {
                 this->type = point_assign;
-                this->expr_middle = this->expr_left->expr_right;
+                this->expr_middle = ExprNode::PathCallExpr(id_, this->expr_left->Name, NULL);
                 this->expr_left->expr_right = NULL;
                 this->expr_left = this->expr_left->expr_left;
             } else if (this->expr_left->type != field_call && // TODO тут придется наверное поправить
@@ -2416,8 +2432,23 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
             //TODO добавить обработку констант
+            if(this->expr_left->localVarNum != -1)
+            {
+                VarTableItem  varTableItem = ClassTable::Instance()->getLocalVar(curClassName, curMethodName, this->expr_left->localVarNum);
+                if(this->expr_left->isConst == true)
+                {
+                    throw Exception(Exception::OPERATION_NOT_SUPPORTED, varTableItem.id + "is const and can`t supported asign operation");
+                }
+            }
+            else if(!this->expr_left->fieldName.empty()){
+                FieldTableItem fieldTableItem = ClassTable::Instance()->getField(curClassName, this->expr_left->fieldName);
+                if(this->expr_left->isConst == true)
+                {
+                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,  this->expr_left->fieldName + "is const and can`t supported asign operation");
+                }
+            }
 
-
+            /// TODO добавить обработку для массива
 
             break;
         case array_expr:
@@ -2426,8 +2457,65 @@ void ExprNode::transform(bool isConvertedToConst) {
                 for (auto elem: *expr_list->exprs) {
                     elem->transform(isConvertedToConst);
                 }
-
+            //TODO тут не забыть нафигачить провер очки
+            break;
         case array_expr_auto_fill:
+
+            this->expr_left->curClassName = curClassName;
+            this->expr_right->curMethodName = curMethodName;
+            this->expr_left->transform(isConvertedToConst);
+            this->expr_right->transform(isConvertedToConst);
+
+            if (this->expr_right->dataType.type != DataType::int_) {
+                throw Exception(Exception::NOT_SUPPORT, "array size expected i32, found " + this->expr_right->dataType.toString());
+            }
+
+            if(this->expr_left->type != int_lit)
+            {
+                if (this->expr_left->isConst == false)
+                {
+                    throw Exception(Exception::NOT_CONST, "array size must be constant");
+                }
+
+                if(this->expr_left->localVarNum != -1)
+                {
+                    VarTableItem  varTableItem = ClassTable::Instance()->getLocalVar(curClassName, curMethodName, this->expr_left->localVarNum);
+                    this->expr_right = varTableItem.value;
+                }
+                else if(!this->expr_left->fieldName.empty()){
+                    FieldTableItem fieldTableItem = ClassTable::Instance()->getField(curClassName, this->expr_left->fieldName);
+                    this->expr_right = fieldTableItem.value;
+                }
+
+            }
+
+            if(this->expr_right == NULL)
+            {
+              throw Exception(Exception::UNEXPECTED, "expr right is NULL. FUCK YEE");
+            }
+
+            {
+                int array_size = this->expr_right->Int;
+
+                for(int i = 0; i < array_size; i++)
+                {
+                    if(this->expr_list == NULL)
+                    {
+                        this->expr_list = new ExprListNode(this->expr_left);
+                    }
+                    else
+                    {
+                        ExprListNode::Append(this->expr_list, this->expr_left);
+                    }
+                }
+
+                this->expr_left = NULL;
+                this->expr_right = NULL;
+                this->type = ExprNode::array_expr;
+                this->transform(isConvertedToConst);
+            }
+
+            break;
         case index_expr:
         case range_expr:
             this->expr_left->transform(isConvertedToConst);
@@ -2492,13 +2580,18 @@ void ExprNode::transform(bool isConvertedToConst) {
             break;
 
         case int_lit:
+            this->dataType = DataType(DataType::int_);
         case float_lit:
+            this->dataType = DataType(DataType::float_);
         case char_lit:
+            this->dataType = DataType(DataType::char_);
         case string_lit:
+            this->dataType = DataType(DataType::string_);
         case raw_string_lit:
+            this->dataType = DataType(DataType::string_);
         case bool_lit:
+            this->dataType = DataType(DataType::bool_);
             break;
-
         case question:
         case ustar:
         case tuple_expr:
@@ -2512,8 +2605,6 @@ void ExprNode::transform(bool isConvertedToConst) {
         case super_expr:
         case continue_expr:
         case break_expr:
-            break;
-            break;
             break;
 
     }

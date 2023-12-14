@@ -64,6 +64,8 @@ public:
     ClassTableItem getParentClass(const string &className);
     FieldTableItem getField(const string& className, const string& fieldName);
     MethodTableItem getMethod(const string& className, const string& methodName);
+    VarTableItem getParam(const string& className, const string& methodName, int paramNum);
+    VarTableItem getLocalVar(const string& className, const string& methodName, int localVarNum);
     static string getDirectory(string className);
     static void isCorrectChild(string childName, string parentName);
     static void isCorrectTraitsImpl();

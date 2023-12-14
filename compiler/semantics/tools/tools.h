@@ -40,7 +40,8 @@ public:
         IMPL_AND_TRAIT_DECLARATION,
         EMPTY_STACK,
         VAR_ALREADY_EXISTS,
-        NOT_A_VAR
+        NOT_A_VAR,
+        UNEXPECTED
     };
 
     ExceptionType exceptionType;
