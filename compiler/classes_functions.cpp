@@ -2568,9 +2568,14 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             break;
         case index_expr:
+            break;
         case range_expr:
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
+            if(!this->expr_left->dataType.isEquals(this->expr_right->dataType)
+               || this->expr_left->dataType.type != DataType::int_) {
+                throw Exception(Exception::TYPE_ERROR, "range expression must be int_ and result: left=" + expr_left->dataType.toString() + "right=" + expr_right->dataType.toString());
+            }
         case field_access_expr:
             this->expr_left->transform(isConvertedToConst);
             break;
