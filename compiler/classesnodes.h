@@ -94,6 +94,7 @@ public:
 
     virtual void addDataTypeToDeclaration(const string &className);
     virtual void transform(bool isConvertedToConst = true);
+    void addMetaInfo(Node *node);
     //virtual void addDataType(const string &className);
 };
 

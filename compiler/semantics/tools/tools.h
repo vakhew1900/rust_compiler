@@ -43,7 +43,8 @@ public:
         NOT_A_VAR,
         UNEXPECTED,
         TYPE_ERROR,
-        ARRAY_SIZE
+        ARRAY_SIZE,
+        INDEX_ERROR,
     };
 
     ExceptionType exceptionType;

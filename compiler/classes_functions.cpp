@@ -2285,8 +2285,10 @@ void ExprNode::transform(bool isConvertedToConst) {
         case minus:
         case mul_expr:
         case div_expr:
-            this->expr_left->curClassName = curClassName;
-            this->expr_right->curMethodName = curMethodName;
+
+            addMetaInfo(this->expr_left);
+            addMetaInfo(this->expr_right);
+
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -2308,8 +2310,10 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
             break;
         case mod:
-            this->expr_left->curClassName = curClassName;
-            this->expr_right->curMethodName = curMethodName;
+
+            addMetaInfo(this->expr_left);
+            addMetaInfo(this->expr_right);
+
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -2336,8 +2340,9 @@ void ExprNode::transform(bool isConvertedToConst) {
         case greater_equal:
         case less_equal:
 
-            this->expr_left->curClassName = curClassName;
-            this->expr_right->curMethodName = curMethodName;
+            addMetaInfo(this->expr_left);
+            addMetaInfo(this->expr_right);
+
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -2361,8 +2366,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             break;
 
         case uminus:
-
-            this->expr_left->curClassName = curClassName;
+            addMetaInfo(this->expr_left);
             //  this->expr_right->curMethodName = curMethodName;
 
             if (this->expr_left->isLiteral()) {
@@ -2380,7 +2384,7 @@ void ExprNode::transform(bool isConvertedToConst) {
 
         case negotation:
 
-            this->expr_left->curClassName = curClassName;
+            addMetaInfo(this->expr_left);
             //   this->expr_right->curMethodName = curMethodName;
             if (this->expr_left->isLiteral()) {
                 this->expr_left->transformConst();
@@ -2397,9 +2401,9 @@ void ExprNode::transform(bool isConvertedToConst) {
 
         case or_:
         case and_:
+            addMetaInfo(this->expr_left);
+            addMetaInfo(this->expr_right);
 
-            this->expr_left->curClassName = curClassName;
-            this->expr_right->curMethodName = curMethodName;
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -2422,8 +2426,9 @@ void ExprNode::transform(bool isConvertedToConst) {
             break;
         case asign:
 
-            this->expr_left->curClassName = curClassName;
-            this->expr_right->curMethodName = curMethodName;
+            addMetaInfo(this->expr_left);
+            addMetaInfo(this->expr_right);
+
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -2471,6 +2476,7 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             if (this->expr_list != NULL)
                 for (auto elem: *expr_list->exprs) {
+                    addMetaInfo(elem);
                     elem->transform(isConvertedToConst);
                 }
 
@@ -2500,7 +2506,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 } else {
 
                     for (auto elem: *this->expr_list->exprs) {
-                        if(!elem->dataType.isEquals(firstElement)) {
+                        if (!elem->dataType.isEquals(firstElement)) {
                             throw Exception(Exception::ARRAY_SIZE, "incorrect size inner arrays");
                         }
                         //TODO склеить два массива
@@ -2518,8 +2524,8 @@ void ExprNode::transform(bool isConvertedToConst) {
             break;
         case array_expr_auto_fill:
 
-            this->expr_left->curClassName = curClassName;
-            this->expr_right->curMethodName = curMethodName;
+            addMetaInfo(this->expr_left);
+            addMetaInfo(this->expr_right);
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -2556,7 +2562,8 @@ void ExprNode::transform(bool isConvertedToConst) {
                     if (this->expr_list == NULL) {
                         this->expr_list = new ExprListNode(this->expr_left);
                     } else {
-                        ExprListNode::Append(this->expr_list, this->expr_left);
+                        ExprListNode::Append(this->expr_list,
+                                             this->expr_left); //TODO создание копии элемента а не сам элемент пихать
                     }
                 }
 
@@ -2568,16 +2575,62 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             break;
         case index_expr:
-            break;
-        case range_expr:
+            addMetaInfo(this->expr_left);
+            addMetaInfo(this->expr_right);
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
-            if(!this->expr_left->dataType.isEquals(this->expr_right->dataType)
-               || this->expr_left->dataType.type != DataType::int_) {
-                throw Exception(Exception::TYPE_ERROR, "range expression must be int_ and result: left=" + expr_left->dataType.toString() + "right=" + expr_right->dataType.toString());
+
+            if (this->expr_right->dataType.type != DataType::int_) {
+                throw Exception(Exception::TYPE_ERROR,
+                                "index must be i32. Index type: " + this->expr_right->dataType.toString());
+            }
+
+
+            if (this->expr_left->dataType.type != DataType::int_) {
+                throw Exception(Exception::TYPE_ERROR,
+                                "type error: expected: array_ result: " + this->expr_left->dataType.toString());
+            }
+
+            {
+                DataType newDataType = this->expr_left->dataType;
+                newDataType.arrDeep--;
+                newDataType.arrLength.pop_back();
+
+                if (newDataType.arrDeep == 0) {
+                    newDataType.type = this->expr_left->dataType.arrType;
+                }
+
+                this->isConst = this->expr_left->isConst;
+                this->isMut = this->expr_left->isMut;
+            }
+
+            break;
+        case range_expr:
+            addMetaInfo(this->expr_left);
+            addMetaInfo(this->expr_right);
+            this->expr_left->transform(isConvertedToConst);
+            this->expr_right->transform(isConvertedToConst);
+            if (!this->expr_left->dataType.isEquals(this->expr_right->dataType)
+                || this->expr_left->dataType.type != DataType::int_) {
+                throw Exception(Exception::TYPE_ERROR,
+                                "range expression must be int_ and result: left=" + expr_left->dataType.toString() +
+                                "right=" + expr_right->dataType.toString());
             }
         case field_access_expr:
+            addMetaInfo(this->expr_left);
             this->expr_left->transform(isConvertedToConst);
+
+            if (this->expr_left->dataType.type != DataType::class_) {
+                throw Exception(Exception::TYPE_ERROR, this->expr_left->dataType.type + "has not fields");
+            }
+
+            try {
+                this->dataType = ClassTable::Instance()->getField(this->expr_left->dataType.id, *this->Name).dataType;
+            }
+            catch (Exception e) {
+                throw e;
+            }
+
             break;
         case method_expr:
             this->expr_left->transform(isConvertedToConst);
@@ -2656,6 +2709,8 @@ void ExprNode::transform(bool isConvertedToConst) {
 
         case link:
             this->expr_left->transform(isConvertedToConst);
+            this->expr_left->curClassName = curClassName;
+            this->expr_left->curMethodName = curMethodName;
 
             if (this->expr_left->localVarNum != -1 && this->expr_left->fieldName.empty()) {
                 throw Exception(Exception::UNEXPECTED, "link operation with not var element");
@@ -2663,6 +2718,8 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->dataType = this->expr_left->dataType;
             break;
         case mut_link:
+            this->expr_left->curClassName = curClassName;
+            this->expr_left->curMethodName = curMethodName;
             this->expr_left->transform(isConvertedToConst);
 
             if (this->expr_left->localVarNum != -1 && this->expr_left->fieldName.empty()) {
@@ -3123,6 +3180,11 @@ bool Node::isEqualDataType(Node *node) {
 
 void Node::transform(bool isConvertedToConst) {
 
+}
+
+void Node::addMetaInfo(Node *node) {
+    node->curClassName = this->curClassName;
+    node->curMethodName = this->methodName;
 }
 
 

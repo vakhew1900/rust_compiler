@@ -196,7 +196,7 @@ void ClassTable::isCorrectChild(string childName, string parentName) {
 FieldTableItem ClassTable::getField(const string &className, const string &fieldName) {
 
     if (!ClassTable::Instance()->isFieldExist(className, fieldName)) {
-        throw Exception(Exception::NOT_EXIST, fieldName + " NOT_EXIST in namespace");
+        throw Exception(Exception::NOT_EXIST, fieldName + " NOT_EXIST in namespace " + className);
     }
 
     return Instance()->getClass(className).fieldTable.items[fieldName];
