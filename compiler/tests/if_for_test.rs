@@ -7,6 +7,8 @@ fn main() {
     } else {
         println("Число {} - нечетное.", number);
     }
+	
+	if(true) {4} else {3};
 
     println("Числа от 1 до {}: ", number);
     for i in 1..number {

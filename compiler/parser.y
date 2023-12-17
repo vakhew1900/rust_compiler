@@ -147,7 +147,7 @@ StmtList: Stmt { $$ = new StmtListNode($1); }
         | StmtList Stmt { $$ = StmtListNode::Append($1, $2); }
         ;
 
-Stmt: ';' { $$ = NULL; }
+Stmt: ';' { $$ = new StmtNode(StmtNode::semicolon, NULL, NULL, NULL); }
     | LetStmt { $$ = new StmtNode(StmtNode::let, NULL, NULL, $1); }
     | ExprStmt { $$ = $1;}
     | ConstStmt { $$ = StmtNode::ConstStmtToStmt($1)}

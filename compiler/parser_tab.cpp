@@ -1372,7 +1372,7 @@ case 3:
     break;}
 case 4:
 #line 150 "parser.y"
-{ yyval.stmt = NULL; ;
+{ yyval.stmt = new StmtNode(StmtNode::semicolon, NULL, NULL, NULL); ; ;
     break;}
 case 5:
 #line 151 "parser.y"

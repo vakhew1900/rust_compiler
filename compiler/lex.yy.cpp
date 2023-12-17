@@ -750,6 +750,7 @@ char *yytext;
 #line 2 "lex.l"
 // #include "_tab.h"
 #include "parser_tab.cpp"
+
 extern int yyparse();
 #define YY_NEVER_INTERACTIVE 1
 #define CHAR_EL 1

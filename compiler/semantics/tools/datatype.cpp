@@ -157,3 +157,20 @@ void DataType::addArrType(DataType arrType) {
         this->id = arrType.id;
     }
 }
+
+bool DataType::isEquals(vector<DataType> types) {
+    if(types.size() == 0)
+    {
+        return true;
+    }
+
+    DataType type = types.front();
+
+    bool res = true;
+
+    for(auto elem : types) {
+        res = res && elem.isEquals(type);
+    }
+
+    return res;
+}

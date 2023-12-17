@@ -15,21 +15,6 @@
 
 using namespace std;
 
-
-class  BlockExprStack
-{
-private:
-    static BlockExprStack* _instanse;
-    vector<ExprNode*> _stack;
-    BlockExprStack();
-    static void Instance();
-public:
-    static void pop();
-    static void push(ExprNode* exprNode);
-    static ExprNode* back();
-};
-
-
 class Node;
 
 class ProgramNode; // ProgramNode
@@ -233,6 +218,8 @@ public:
     void transform(bool isConvertedToConst = true) override;
     void transformConst();
     bool isLiteral();
+    void checkMethodParam();
+    void checkCancelExprNode(ExprNode * exprNode, bool isBreakCanceled = true);
 };
 
 class ExprListNode : public Node {

@@ -36,6 +36,7 @@ public:
     bool isEquals(const DataType &other);
     bool isUndefined();
     void addArrType(DataType arrType);
+    static bool isEquals(vector<DataType> types);
 };
 
 

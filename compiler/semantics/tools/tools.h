@@ -44,7 +44,8 @@ public:
         UNEXPECTED,
         TYPE_ERROR,
         ARRAY_SIZE,
-        INDEX_ERROR,
+        PARAM_ERROR,
+        STATIC_ERROR,
     };
 
     ExceptionType exceptionType;

@@ -4,43 +4,9 @@
 #include "classesnodes.h"
 
 int globId = 0;
-
-BlockExprStack *BlockExprStack::_instanse = NULL;
-
-BlockExprStack::BlockExprStack() {
-
-}
-
-void BlockExprStack::Instance() {
-    if (_instanse == NULL) {
-        _instanse = new BlockExprStack();
-    }
-}
-
-
-void BlockExprStack::pop() {
-    Instance();
-    _instanse->_stack.pop_back();
-}
-
-void BlockExprStack::push(ExprNode *exprNode) {
-    if (exprNode->type != ExprNode::block_expr) {
-        throw Exception(Exception::OPERATION_NOT_SUPPORTED, "NOT BLOCK EXPR");
-    }
-    BlockExprStack::Instance();
-
-    _instanse->_stack.push_back(exprNode);
-}
-
-ExprNode *BlockExprStack::back() {
-    Instance();
-    if (_instanse->_stack.empty()) {
-        throw Exception(Exception::EMPTY_STACK, "EMPTY STACK");
-    }
-
-    return _instanse->_stack.back();
-}
-
+vector<ExprNode *> blockExprList;
+vector<DataType> returnTypes;
+vector<DataType> breakTypes;
 
 ProgramNode::ProgramNode(ItemListNode *item_list) {
     this->id = ++globId;
@@ -1088,9 +1054,6 @@ void StmtNode::toDot(string &dot) {
             break;
     }
 
-    if (this->type == semicolon) {
-        return;
-    }
 
     createVertexDot(dot, this->id, "stmt", type, value);
 
@@ -2180,9 +2143,13 @@ void ItemNode::transform(bool isConvertedToConst) {
         case function_:
             body->curClassName = curClassName;
             body->curMethodName = *this->name;
-            BlockExprStack::push(body);
+            blockExprList.push_back(body);
+            returnTypes.clear();
             this->body->transform(isConvertedToConst);
-            BlockExprStack::pop();
+            blockExprList.pop_back();
+            if (blockExprList.size()) {
+                throw Exception(Exception::UNEXPECTED, "blockexpr не удалил(");
+            }
             break;
         case constStmt_:
             body->curClassName = curClassName;
@@ -2229,7 +2196,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                     this->varTableItem.isMut = mut;
                 }
                 varTableItem.id = *this->name;
-                varTableItem.blockExpr = BlockExprStack::back();
+                varTableItem.blockExpr = blockExprList.back();
 
                 {
                     DataType arrDataType = DataType();
@@ -2264,7 +2231,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                     throw Exception(Exception::INCORRECT_TYPE, "incorrect datatype");
                 }
 
-                varTableItem.blockExpr = BlockExprStack::back();
+                varTableItem.blockExpr = blockExprList.back();
                 ClassTable::Instance()->addLocalParam(curClassName, methodName, this->varTableItem);
                 break;
             case semicolon:
@@ -2288,6 +2255,8 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             addMetaInfo(this->expr_left);
             addMetaInfo(this->expr_right);
+            checkCancelExprNode(this->expr_left);
+            checkCancelExprNode(this->expr_right);
 
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
@@ -2313,6 +2282,8 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             addMetaInfo(this->expr_left);
             addMetaInfo(this->expr_right);
+            checkCancelExprNode(this->expr_left);
+            checkCancelExprNode(this->expr_right);
 
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
@@ -2342,6 +2313,8 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             addMetaInfo(this->expr_left);
             addMetaInfo(this->expr_right);
+            checkCancelExprNode(this->expr_left);
+            checkCancelExprNode(this->expr_right);
 
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
@@ -2367,6 +2340,7 @@ void ExprNode::transform(bool isConvertedToConst) {
 
         case uminus:
             addMetaInfo(this->expr_left);
+            checkCancelExprNode(this->expr_left);
             //  this->expr_right->curMethodName = curMethodName;
 
             if (this->expr_left->isLiteral()) {
@@ -2385,6 +2359,8 @@ void ExprNode::transform(bool isConvertedToConst) {
         case negotation:
 
             addMetaInfo(this->expr_left);
+            checkCancelExprNode(this->expr_left);
+
             //   this->expr_right->curMethodName = curMethodName;
             if (this->expr_left->isLiteral()) {
                 this->expr_left->transformConst();
@@ -2403,6 +2379,8 @@ void ExprNode::transform(bool isConvertedToConst) {
         case and_:
             addMetaInfo(this->expr_left);
             addMetaInfo(this->expr_right);
+            checkCancelExprNode(this->expr_left);
+            checkCancelExprNode(this->expr_right);
 
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
@@ -2428,6 +2406,8 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             addMetaInfo(this->expr_left);
             addMetaInfo(this->expr_right);
+            checkCancelExprNode(this->expr_left);
+            checkCancelExprNode(this->expr_right);
 
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
@@ -2468,7 +2448,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 }
             }
 
-            this->dataType = this->expr_left->dataType;
+            this->dataType = DataType(DataType::void_);
             /// TODO добавить обработку для массива
 
             break;
@@ -2477,6 +2457,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (this->expr_list != NULL)
                 for (auto elem: *expr_list->exprs) {
                     addMetaInfo(elem);
+                    checkCancelExprNode(elem);
                     elem->transform(isConvertedToConst);
                 }
 
@@ -2526,6 +2507,9 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             addMetaInfo(this->expr_left);
             addMetaInfo(this->expr_right);
+            checkCancelExprNode(this->expr_left);
+            checkCancelExprNode(this->expr_right);
+
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -2577,6 +2561,8 @@ void ExprNode::transform(bool isConvertedToConst) {
         case index_expr:
             addMetaInfo(this->expr_left);
             addMetaInfo(this->expr_right);
+            checkCancelExprNode(this->expr_left);
+            checkCancelExprNode(this->expr_right);
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -2608,6 +2594,9 @@ void ExprNode::transform(bool isConvertedToConst) {
         case range_expr:
             addMetaInfo(this->expr_left);
             addMetaInfo(this->expr_right);
+            checkCancelExprNode(this->expr_left);
+            checkCancelExprNode(this->expr_right);
+
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
             if (!this->expr_left->dataType.isEquals(this->expr_right->dataType)
@@ -2618,6 +2607,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
         case field_access_expr:
             addMetaInfo(this->expr_left);
+            checkCancelExprNode(this->expr_left);
             this->expr_left->transform(isConvertedToConst);
 
             if (this->expr_left->dataType.type != DataType::class_) {
@@ -2625,7 +2615,14 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
             try {
-                this->dataType = ClassTable::Instance()->getField(this->expr_left->dataType.id, *this->Name).dataType;
+                FieldTableItem fieldItem = ClassTable::Instance()->getField(this->expr_left->dataType.id, *this->Name);
+                this->dataType = fieldItem.dataType;
+                this->isConst = this->expr_left->isConst || fieldItem.isConst;
+                this->isMut = this->expr_left->isMut && !fieldItem.isConst;
+                if (fieldItem.isConst) {
+                    throw Exception(Exception::STATIC_ERROR,
+                                    this->expr_left->dataType.id + " " + *this->Name + "is static field");
+                }
             }
             catch (Exception e) {
                 throw e;
@@ -2633,42 +2630,178 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             break;
         case method_expr:
+            addMetaInfo(this->expr_left);
+            checkCancelExprNode(this->expr_left);
+            if (this->expr_list != NULL) {
+                addMetaInfo(this->expr_list);
+            }
             this->expr_left->transform(isConvertedToConst);
+
+            if (this->expr_left->dataType.type != DataType::class_) {
+                throw Exception(Exception::TYPE_ERROR, this->expr_left->dataType.type + "has not fields");
+            }
+
+            try {
+
+                this->checkMethodParam();
+                MethodTableItem methodItem = ClassTable::Instance()->getMethod(this->expr_left->dataType.id,
+                                                                               *this->Name);
+                if (methodItem.isStatic) {
+                    throw Exception(Exception::STATIC_ERROR,
+                                    this->expr_left->dataType.id + " " + *this->Name + "is static method");
+                }
+
+                this->dataType = methodItem.returnDataType;
+            }
+            catch (Exception e) {
+                throw e;
+            }
+
             break;
         case break_with_val_expr:
+            addMetaInfo(expr_left);
+            checkCancelExprNode(this->expr_left);
             this->expr_left->transform(isConvertedToConst);
+            breakTypes.push_back(this->expr_left->dataType);
+            break;
+        case break_expr:
+            addMetaInfo(expr_left);
+            checkCancelExprNode(this->expr_left);
+            breakTypes.push_back(DataType(DataType::void_));
+            break;
             break;
         case range_right:
+            addMetaInfo(expr_left);
             this->expr_left->transform(isConvertedToConst);
             this->expr_right = this->expr_left;
-            this->expr_left = NULL;
+            this->expr_left = ExprNode::ExprFromIntLiteral(int_lit, 0);
+            this->type = range_expr;
             break;
         case range_left:
+            addMetaInfo(expr_left);
+            checkCancelExprNode(this->expr_left);
             this->expr_left->transform(isConvertedToConst);
+            this->expr_right = ExprNode::ExprFromIntLiteral(int_lit, INT32_MAX);
+            this->type = range_expr;
             break;
         case return_expr:
+            addMetaInfo(expr_left);
+            checkCancelExprNode(expr_left);
             this->expr_left->transform(isConvertedToConst);
+            returnTypes.push_back(this->expr_left->dataType);
             break;
-        case if_expr_list:
+        case if_expr_list: {
+            vector<DataType> types;
             if (this->ifList != NULL) {
                 for (auto elem: *this->ifList) {
+                    addMetaInfo(elem);
+                    checkCancelExprNode(expr_left);
                     elem->transform(isConvertedToConst);
+                    types.push_back(elem->dataType);
                 }
             }
 
             if (this->else_body != NULL) {
+                addMetaInfo(else_body);
+                checkCancelExprNode(else_body);
                 this->else_body->transform(isConvertedToConst);
+                types.push_back(else_body->dataType);
             }
+
+            if (DataType::isEquals(types)) {
+                throw Exception(Exception::TYPE_ERROR, "if has different types");
+            }
+
+            this->dataType = types.front();
+        }
             break;
         case if_expr:
+            addMetaInfo(expr_left);
+            checkCancelExprNode(expr_left);
+            this->expr_left->transform(isConvertedToConst);
+
+            if (this->expr_left->dataType.type != DataType::bool_) {
+                throw Exception(Exception::TYPE_ERROR,
+                                "if condition expected: bool_, result: " + this->expr_left->dataType.toString());
+            }
+
+            addMetaInfo(body);
+            checkCancelExprNode(body);
+            this->body->transform(isConvertedToConst);
+            this->dataType = this->body->dataType;
             break;
         case loop_expr:
+
+            if (body->dataType.type == DataType::void_) {
+                throw Exception(Exception::INCORRECT_TYPE, "loop_expr cannot has return_expr");
+            }
+            {
+                addMetaInfo(body);
+                vector<DataType> breaks = breakTypes;
+                breakTypes.clear();
+                if (DataType::isEquals(breakTypes)) {
+                    throw Exception(Exception::TYPE_ERROR, "loop has different types");
+                }
+
+                breakTypes = breaks;
+            }
+
+
             break;
         case loop_while:
+
+            addMetaInfo(expr_left);
+            checkCancelExprNode(expr_left);
+            this->expr_left->transform(isConvertedToConst);
+
+            if (this->expr_left->dataType.type != DataType::bool_) {
+                throw Exception(Exception::TYPE_ERROR,
+                                "if condition expected: bool_, result: " + this->expr_left->dataType.toString());
+            }
+
+
+            if (body->dataType.type == DataType::void_) {
+                throw Exception(Exception::INCORRECT_TYPE, "loop_expr cannot has return_expr");
+            }
+            {
+                addMetaInfo(body);
+                vector<DataType> breaks = breakTypes;
+                breakTypes.clear();
+                if (DataType::isEquals(breakTypes)) {
+                    throw Exception(Exception::TYPE_ERROR, "");
+                }
+
+                breakTypes = breaks;
+            }
             break;
         case loop_for:
             break;
         case block_expr:
+            for (auto elem: *this->stmt_list->stmts) {
+                elem->transform(isConvertedToConst);
+
+                if (elem->type == StmtNode::exprstmt) {
+                    if ((elem->expr->type == loop_expr ||
+                        elem->expr->type == ExprNode::if_expr_list) &&
+                        elem->expr->dataType.type != DataType::void_) {
+                        elem++;
+                        if(elem != *this->stmt_list->stmts->end() &&
+                           elem->type != StmtNode::semicolon)
+                        {
+                            throw Exception(Exception::TYPE_ERROR, "if or loop without  semicolon should return  void_. Result:" + elem->expr->dataType.toString());
+                        }
+                        elem--;
+                    }
+
+                }
+            }
+
+            if (this->body == NULL) {
+                this->dataType = DataType(DataType::void_);
+            } else {
+                this->dataType = this->body->dataType;
+            }
+
             break;
         case struct_expr:
             break;
@@ -2677,6 +2810,7 @@ void ExprNode::transform(bool isConvertedToConst) {
         case static_method:
             break;
         case path_call_expr:
+            // this->transformPathCallExpr(curClassName,)
             break;
 
         case struct_creation:
@@ -2686,6 +2820,11 @@ void ExprNode::transform(bool isConvertedToConst) {
 
         case call_expr:
             //   this->transformPathCallExpr(curClassName, false);
+            break;
+        case id_:
+        case self_expr:
+        case super_expr:
+        case continue_expr:
             break;
 
         case int_lit:
@@ -2733,12 +2872,6 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->dataType = this->expr_left->dataType;
             break;
 
-        case id_:
-        case self_expr:
-        case super_expr:
-        case continue_expr:
-        case break_expr:
-            break;
 
     }
 
@@ -3171,6 +3304,57 @@ void ExprNode::transformConst() {
 
     this->expr_left = NULL;
     this->expr_right = NULL;
+}
+
+void ExprNode::checkMethodParam() {
+
+    MethodTableItem methodItem = ClassTable::Instance()->getMethod(this->expr_left->dataType.id,
+                                                                   *this->Name);
+
+    if (this->expr_list == NULL && this->methodTableItem.paramTable.items.size() == 0) {
+        return;
+    }
+
+    if (this->expr_list->exprs->size() != this->methodTableItem.paramTable.items.size()) {
+        throw Exception(Exception::PARAM_ERROR,
+                        "Param Error expected: " + to_string(this->methodTableItem.paramTable.items.size())
+                        + " param count result:" + to_string(this->expr_list->exprs->size()) + " param count");
+    }
+
+    int i = 0;
+    for (auto elem: *this->expr_list->exprs) {
+        VarTableItem varItem = this->methodTableItem.paramTable.items[i];
+        if (!varItem.dataType.isEquals(elem->dataType)) {
+            throw Exception(Exception::TYPE_ERROR,
+                            varItem.id + "type expected: " + varItem.dataType.toString() + "result: " +
+                            elem->dataType.toString());
+        }
+        i++;
+    }
+}
+
+void ExprNode::checkCancelExprNode(ExprNode *exprNode, bool isBreakCanceled) {
+
+    if (this->type == link) {
+        throw Exception(Exception::TYPE_ERROR, "operation not supported by link");
+    }
+
+    if (this->type == mut_link) {
+        throw Exception(Exception::TYPE_ERROR, "operation not supported by mut_link");
+    }
+
+    if (this->type == return_expr) {
+        throw Exception(Exception::TYPE_ERROR, "operation not supported by return_expr");
+    }
+
+    if (this->type == break_with_val_expr && isBreakCanceled) {
+        throw Exception(Exception::TYPE_ERROR, "operation not supported by break");
+    }
+
+    if (this->type == break_expr) {
+        throw Exception(Exception::TYPE_ERROR, "operation not supported by break");
+    }
+    //   if(this-)
 }
 
 
