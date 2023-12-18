@@ -70,6 +70,7 @@ public:
     static string getDirectory(string className);
     static void isCorrectChild(string childName, string parentName);
     static void isCorrectTraitsImpl();
+    static bool isHaveParent(const string& child);
 };
 
 

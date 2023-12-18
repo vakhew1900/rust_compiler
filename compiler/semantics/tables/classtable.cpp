@@ -304,3 +304,7 @@ bool ClassTable::isParent(const string &child, const string &parentName) {
     return ClassTable::Instance()->getClass(child).parentName == parentName;
 }
 
+bool ClassTable::isHaveParent(const string& child) {
+    return ClassTable::Instance()->getClass(child).isHaveParent();
+}
+

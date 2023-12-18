@@ -2944,8 +2944,25 @@ void ExprNode::transform(bool isConvertedToConst) {
         case id_:
             break;
         case self_expr:
+            {
+                MethodTableItem methodItem = ClassTable::Instance()->getMethod(curClassName, curMethodName);
+
+                if(methodItem.isStatic){
+                    throw Exception(Exception::STATIC_ERROR, "static error: self used in static method");
+                }
+
+                this->localVarNum = 0; //TODO бебебе
+                this->dataType = methodItem.paramTable.getVar(0).dataType;
+            }
             break;
         case super_expr:
+            if(ClassTable::isHaveParent(curClassName)){
+                this->dataType = DataType::StructDataType(ClassTable::Instance()->getClass(curClassName).parentName);
+            }
+            else
+            {
+                throw Exception(Exception::TYPE_ERROR, curClassName + " has not parent ");
+            }
             break;
 
 
