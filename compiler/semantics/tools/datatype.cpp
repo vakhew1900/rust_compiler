@@ -38,7 +38,7 @@ DataType::DataType() {
 }
 
 string DataType::toString() {
-    string res ="";
+    string res = "";
 
     switch (type) {
 
@@ -68,7 +68,7 @@ string DataType::toString() {
             res += "array_ " + TypeToString(this->arrType) + " " + id;
             res += "deep: " + to_string(this->arrDeep);
             res += " len: ";
-            for (auto elem : arrLength) res += to_string(elem) + " ";
+            for (auto elem: arrLength) res += to_string(elem) + " ";
             break;
     }
 
@@ -148,19 +148,16 @@ bool DataType::isUndefined() {
 }
 
 void DataType::addArrType(DataType arrType) {
-    if(this->type != DataType::array_){
+    if (this->type != DataType::array_) {
         throw Exception(Exception::UNEXPECTED, "POKA NASRAT`");
-    }
-    else
-    {
+    } else {
         this->arrType = arrType.type;
         this->id = arrType.id;
     }
 }
 
 bool DataType::isEquals(vector<DataType> types) {
-    if(types.size() == 0)
-    {
+    if (types.size() == 0) {
         return true;
     }
 
@@ -168,7 +165,7 @@ bool DataType::isEquals(vector<DataType> types) {
 
     bool res = true;
 
-    for(auto elem : types) {
+    for (auto elem: types) {
         res = res && elem.isEquals(type);
     }
 
@@ -177,16 +174,41 @@ bool DataType::isEquals(vector<DataType> types) {
 
 DataType DataType::getArrDataType() {
     DataType dataType = *this;
-    if(this->type != array_) {
-        throw Exception(Exception:: TYPE_ERROR, "cannot get ArrType because it is not array_");
+    if (this->type != array_) {
+        throw Exception(Exception::TYPE_ERROR, "cannot get ArrType because it is not array_");
     }
 
     dataType.arrDeep--;
     dataType.arrLength.pop_back();
 
-    if(dataType.arrDeep == 0){
+    if (dataType.arrDeep == 0) {
         dataType.type = dataType.arrType;
     }
 
     return dataType;
+}
+
+bool DataType::isCanConvert(DataType first, DataType second) {
+
+    if (first.type == second.type && first.type != class_ && first.type != array_ && first.type != void_) {
+        return true;
+    }
+
+    if (first.type == int_ && second.type == float_) {
+        return true;
+    }
+
+    if (first.type == int_ && second.type == char_) {
+        return true;
+    }
+
+    if(first.type == float_ && second.type == int_){
+        return  true;
+    }
+
+    if(first.type == char_ && second.type == int_){
+        return true;
+    }
+
+        return false;
 }

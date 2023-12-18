@@ -2933,11 +2933,20 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->checkStructExpr();
             break;
         case as:
+            if(DataType::isCanConvert(this->expr_left->dataType, this->typeNode->convertToDataType(curClassName))){
+                this->dataType = this->typeNode->convertToDataType(curClassName);
+            }
+            else {
+                throw Exception(Exception::TYPE_ERROR, "cannot convert type " + this->expr_left->dataType.toString() + " to " + this->typeNode->convertToDataType(curClassName).toString());
+            }
             break;
 
         case id_:
+            break;
         case self_expr:
+            break;
         case super_expr:
+            break;
 
 
         case int_lit:
