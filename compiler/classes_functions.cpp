@@ -2942,6 +2942,22 @@ void ExprNode::transform(bool isConvertedToConst) {
             break;
 
         case id_:
+        {
+            int tmp =  Node::getVarNumber(blockExprList, curClassName, curMethodName, *this->Name);
+            if(tmp != -1){
+                this->localVarNum = tmp;
+                VarTableItem varItem = ClassTable::Instance()->getLocalVar(curClassName, curMethodName, tmp);
+                this->isMut = varItem.isMut;
+                this->isConst = varItem.isConst;
+            }
+            else if (ClassTable::Instance()->isFieldExist(curClassName, *this->Name)){
+                this->fieldName = *this->Name;
+                FieldTableItem fieldItem = ClassTable::Instance()->getField(curClassName, *this->Name);
+                this->isMut = !fieldItem.isConst;
+                this->isConst = fieldItem.isConst;
+            }
+
+        }
             break;
         case self_expr:
             {
@@ -3606,6 +3622,19 @@ bool Node::isParent(const DataType& child, DataType parent) {
     }
 
     return ClassTable::Instance()->isParent(child.id, parent.id);
+}
+
+int Node::getVarNumber(vector<ExprNode *> &blockExprList, const string& className,const string& methodName, const string& varName) {
+    int res = -1;
+    int cur  = blockExprList.size() - 1;
+    while(res == -1 & cur >= 0){
+        if(ClassTable::Instance()->isLocalVarExist(className, methodName, varName, blockExprList[cur])){
+            res = ClassTable::Instance()->getMethod(className, methodName).localVarTable.getVarNumber(varName, blockExprList[cur]);
+            break;
+        }
+        cur--;
+    }
+    return res;
 }
 
 

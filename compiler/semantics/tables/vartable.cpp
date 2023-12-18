@@ -85,8 +85,6 @@ string VarTable::toString() {
     for (int i = 0; i < items.size(); i++) {
         res += to_string(i) + ": " + items[i].toString() + "\n";
     }
-
-    return res;
 }
 
 bool VarTable::isExist(const string &varName) {
@@ -101,8 +99,8 @@ bool VarTable::isExist(const string &varName) {
 bool VarTable::isExist(const string &varName, const ExprNode* blockExpr) {
     bool res = false;
 
-    for (auto elem: this->items) {
-        res = res || (elem.id == varName &&  elem.blockExpr == blockExpr);
+    for (auto i = items.rbegin(); i != items.rend(); ++i) {
+        res = res || (i->id == varName &&  i->blockExpr == blockExpr);
     }
     return res;
 }
@@ -131,3 +129,15 @@ VarTableItem VarTable::getVar(int varNum) {
 }
 
 const string VarTable::SELF_PARAM = "self";
+
+int VarTable::getVarNumber(const string &varName, const ExprNode *blockExpr) {
+
+    int cnt = items.size() - 1;
+    for (auto i = items.rbegin(); i != items.rend(); ++i) {
+        if (i->id == varName &&  i->blockExpr == blockExpr){
+            return cnt;
+        }
+        cnt--;
+    }
+    return -1;
+}
