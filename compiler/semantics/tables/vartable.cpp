@@ -114,7 +114,8 @@ bool VarTable::isEquals(const VarTable &varTable) {
         return res;
     }
     for(int i = 0; i < varTable.items.size(); i++){
-        res = res && this->items[i].isEquals(varTable.items[i]);
+        //TODO пофиксить мэйби костыль
+        res = res && (this->items[i].isEquals(varTable.items[i]) || (items[i].id == SELF_PARAM &&  varTable.items[i].id == SELF_PARAM));
     }
     return res;
 }

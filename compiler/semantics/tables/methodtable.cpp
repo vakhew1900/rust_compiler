@@ -43,7 +43,6 @@ bool MethodTableItem::isEqualsDeclaration(const MethodTableItem &other) {
     bool res = this->returnDataType.isEquals(other.returnDataType);
     res = res && this->paramTable.isEquals(other.paramTable);
     res = res && this->isStatic == other.isStatic;
-    res = res && this->isRefSelf == other.isRefSelf;
     return res;
 }
 
