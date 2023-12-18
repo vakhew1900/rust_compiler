@@ -2856,7 +2856,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->dataType = this->body->dataType;
             }
             break;
+
         case struct_expr:
+
             break;
         case struct_field_expr:
             break;
