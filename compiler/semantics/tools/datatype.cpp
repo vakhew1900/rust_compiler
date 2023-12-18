@@ -148,7 +148,7 @@ bool DataType::isUndefined() {
 }
 
 void DataType::addArrType(DataType arrType) {
-    if(array_){
+    if(this->type != DataType::array_){
         throw Exception(Exception::UNEXPECTED, "POKA NASRAT`");
     }
     else
@@ -173,4 +173,20 @@ bool DataType::isEquals(vector<DataType> types) {
     }
 
     return res;
+}
+
+DataType DataType::getArrDataType() {
+    DataType dataType = *this;
+    if(this->type != array_) {
+        throw Exception(Exception:: TYPE_ERROR, "cannot get ArrType because it is not array_");
+    }
+
+    dataType.arrDeep--;
+    dataType.arrLength.pop_back();
+
+    if(dataType.arrDeep == 0){
+        dataType.type = dataType.arrType;
+    }
+
+    return dataType;
 }

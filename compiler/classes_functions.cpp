@@ -2739,6 +2739,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 addMetaInfo(body);
                 vector<DataType> breaks = breakTypes;
                 breakTypes.clear();
+                body->transform(isConvertedToConst);
                 if (DataType::isEquals(breakTypes)) {
                     throw Exception(Exception::TYPE_ERROR, "loop has different types");
                 }
@@ -2760,23 +2761,74 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
 
-            if (body->dataType.type == DataType::void_) {
-                throw Exception(Exception::INCORRECT_TYPE, "loop_expr cannot has return_expr");
-            }
+
             {
                 addMetaInfo(body);
                 vector<DataType> breaks = breakTypes;
                 breakTypes.clear();
+                body->transform(isConvertedToConst);
                 if (DataType::isEquals(breakTypes)) {
-                    throw Exception(Exception::TYPE_ERROR, "");
+                    throw Exception(Exception::TYPE_ERROR, "while should return void");
                 }
 
                 breakTypes = breaks;
             }
+
+            if (body->dataType.type != DataType::void_) {
+                throw Exception(Exception::INCORRECT_TYPE, "while expr cannot has return_expr");
+            }
+
             break;
         case loop_for:
+
+            addMetaInfo(expr_left);
+            //checkCancelExprNode(expr_left);
+
+            if(this->expr_left->type == break_expr || this->expr_left->type == return_expr
+            || this->expr_left->type == break_with_val_expr) {
+                throw Exception(Exception::TYPE_ERROR, "Олег Александрович, ну че вы так  проверяете, не надо пожалуйста. У меня дети есть");
+            }
+
+            if(this->expr_left->dataType.type != DataType::array_ &&
+            this->expr_left->type != ExprNode::range_expr){
+                throw Exception(Exception::TYPE_ERROR, "for condition should be iterable: range_expr or DataType::array_");
+            }
+
+            {
+                DataType dataType = DataType(DataType::int_);
+                if(this->expr_left->dataType.type == DataType::array_) {
+                    dataType = this->expr_left->dataType.getArrDataType();
+                }
+
+                VarTableItem varItem = VarTableItem(*this->Name,dataType, this->expr_left->isMut, false, true, body);
+                ClassTable::Instance()->addLocalParam(curClassName, curMethodName, varItem);
+            }
+
+            if(this->expr_left->isRefExpr() == false && this->isVar()){
+                ExprNode *delExpr = ExprNode::DelObjectExpr(this->expr_left);
+                this->deleteExprList = new  ExprListNode(delExpr);
+            }
+
+            {
+                addMetaInfo(body);
+                vector<DataType> breaks = breakTypes;
+                breakTypes.clear();
+                this->body->transform(isConvertedToConst);
+
+                if (this->body->dataType.type != DataType::void_) {
+                    throw Exception(Exception::TYPE_ERROR,
+                                    "for condition should be iterable: range_expr or DataType::array_");
+                }
+
+                if (DataType::isEquals(breakTypes)) {
+                    throw Exception(Exception::TYPE_ERROR, "");
+                }
+                breakTypes = breaks;
+            }
             break;
         case block_expr:
+
+            blockExprList.push_back(this);
             for (auto elem: *this->stmt_list->stmts) {
                 elem->transform(isConvertedToConst);
 
@@ -2796,12 +2848,13 @@ void ExprNode::transform(bool isConvertedToConst) {
                 }
             }
 
+            blockExprList.pop_back();
+
             if (this->body == NULL) {
                 this->dataType = DataType(DataType::void_);
             } else {
                 this->dataType = this->body->dataType;
             }
-
             break;
         case struct_expr:
             break;
@@ -2847,21 +2900,25 @@ void ExprNode::transform(bool isConvertedToConst) {
             break;
 
         case link:
+            addMetaInfo(this->expr_left);
+            checkCancelExprNode(this->expr_left);
             this->expr_left->transform(isConvertedToConst);
-            this->expr_left->curClassName = curClassName;
-            this->expr_left->curMethodName = curMethodName;
-
-            if (this->expr_left->localVarNum != -1 && this->expr_left->fieldName.empty()) {
+            if (this->isVar() == false) {
                 throw Exception(Exception::UNEXPECTED, "link operation with not var element");
             }
+
             this->dataType = this->expr_left->dataType;
+            this->isMut = false;
+          //  if(this->dataType.)
+
             break;
         case mut_link:
-            this->expr_left->curClassName = curClassName;
-            this->expr_left->curMethodName = curMethodName;
+
+            addMetaInfo(this->expr_left);
+            checkCancelExprNode(this->expr_left);
             this->expr_left->transform(isConvertedToConst);
 
-            if (this->expr_left->localVarNum != -1 && this->expr_left->fieldName.empty()) {
+            if (this->isVar() == false) {
                 throw Exception(Exception::UNEXPECTED, "link operation with not var element");
             }
 
@@ -3355,6 +3412,31 @@ void ExprNode::checkCancelExprNode(ExprNode *exprNode, bool isBreakCanceled) {
         throw Exception(Exception::TYPE_ERROR, "operation not supported by break");
     }
     //   if(this-)
+}
+
+ExprNode *ExprNode::DelObjectExpr(ExprNode *expr) {
+    ExprNode* node = new ExprNode();
+    node->id = ++globId;
+    node->type = ExprNode::del_object;
+    node->expr_left = expr;
+
+    if(expr->isVar() == false){
+        throw Exception(Exception::UNEXPECTED, "it`s not a var");
+    }
+
+    if(expr->dataType.type != DataType::class_ && expr->dataType.type != DataType::array_) {
+        throw Exception(Exception:: UNEXPECTED, "type should be array_ or class_");
+    }
+
+    return node;
+}
+
+bool ExprNode::isRefExpr() {
+    return this->type == link || this->type == mut_link;
+}
+
+bool ExprNode::isVar() {
+    return this->localVarNum != -1 || this->fieldName.empty() == false;
 }
 
 

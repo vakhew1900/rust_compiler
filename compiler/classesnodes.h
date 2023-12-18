@@ -137,7 +137,7 @@ public:
         struct_expr, struct_field_expr, static_method, tuple_expr, super_expr,
         path_call_expr, add_if_block, struct_creation, as, undefined,
 
-        field_call, method_call, arr_asign, point_assign
+        field_call, method_call, arr_asign, point_assign, del_object,
     };
     Type type;
     char Char = 0;
@@ -156,6 +156,8 @@ public:
     ExprNode *body = NULL;
     ExprListNode *field_list = NULL;
     StmtListNode *stmt_list = NULL;
+
+    ExprListNode* deleteExprList = NULL;
 
     list<ExprNode *> *ifList = NULL;
     ExprNode *else_body = NULL;
@@ -212,6 +214,9 @@ public:
 
     static ExprNode *AsExpr(ExprNode *expr, TypeNode *typeNode);
 
+    // здесь уже нужна типизация объектов
+    static ExprNode* DelObjectExpr(ExprNode* expr);
+
     void toDot(string &dot, const string &pos = "");
 
     void transformPathCallExpr(string className, ExprNode::Type type, bool isType);
@@ -219,6 +224,8 @@ public:
     void transformConst();
     bool isLiteral();
     void checkMethodParam();
+    bool isRefExpr();
+    bool isVar();
     void checkCancelExprNode(ExprNode * exprNode, bool isBreakCanceled = true);
 };
 
