@@ -59,7 +59,7 @@ ExprNode *ExprNode::PathCallExpr(Type type, string *name, ExprNode *expr) {
 }
 
 ExprNode *ExprNode::ExprFromBoolLiteral(Type type, bool value) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->Bool = value;
@@ -67,7 +67,7 @@ ExprNode *ExprNode::ExprFromBoolLiteral(Type type, bool value) {
 }
 
 ExprNode *ExprNode::ExprFromIntLiteral(Type type, int value) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->Int = value;
@@ -75,7 +75,7 @@ ExprNode *ExprNode::ExprFromIntLiteral(Type type, int value) {
 }
 
 ExprNode *ExprNode::ExprFromFloatLiteral(Type type, float value) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->Float = value;
@@ -83,7 +83,7 @@ ExprNode *ExprNode::ExprFromFloatLiteral(Type type, float value) {
 }
 
 ExprNode *ExprNode::ExprFromCharLiteral(Type type, char value) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->Char = value;
@@ -91,7 +91,7 @@ ExprNode *ExprNode::ExprFromCharLiteral(Type type, char value) {
 }
 
 ExprNode *ExprNode::ExprFromStringLiteral(Type type, string *value) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->String = value;
@@ -99,7 +99,7 @@ ExprNode *ExprNode::ExprFromStringLiteral(Type type, string *value) {
 }
 
 ExprNode *ExprNode::StaticMethod(Type type, ExprNode *expr, ExprListNode *expr_list) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = expr;
@@ -138,7 +138,7 @@ ExprNode *ExprNode::StaticMethodExpr(Type type, string *name, string *parent_id,
 }
 
 ExprNode *ExprNode::BlockExpr(Type type, ExprNode *body, StmtListNode *stmt_list) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->body = body;
@@ -147,7 +147,7 @@ ExprNode *ExprNode::BlockExpr(Type type, ExprNode *body, StmtListNode *stmt_list
 }
 
 ExprNode *ExprNode::ArrExprFromList(Type type, ExprListNode *expr_list) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_list = expr_list;
@@ -155,7 +155,7 @@ ExprNode *ExprNode::ArrExprFromList(Type type, ExprListNode *expr_list) {
 }
 
 ExprNode *ExprNode::ArrExprAutoFill(Type type, ExprNode *first, ExprNode *second) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = first;
@@ -164,7 +164,7 @@ ExprNode *ExprNode::ArrExprAutoFill(Type type, ExprNode *first, ExprNode *second
 }
 
 ExprNode *ExprNode::TupleExpr(Type type, ExprNode *expr, int value) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = expr;
@@ -173,7 +173,7 @@ ExprNode *ExprNode::TupleExpr(Type type, ExprNode *expr, int value) {
 }
 
 ExprNode *ExprNode::CycleExpr(Type type, ExprNode *condition, ExprNode *body, string *id) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->body = body;
@@ -183,7 +183,7 @@ ExprNode *ExprNode::CycleExpr(Type type, ExprNode *condition, ExprNode *body, st
 }
 
 ExprNode *ExprNode::RangeExpr(Type type, ExprNode *left, ExprNode *right) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = left;
@@ -192,7 +192,7 @@ ExprNode *ExprNode::RangeExpr(Type type, ExprNode *left, ExprNode *right) {
 }
 
 ExprNode *ExprNode::IfExpr(Type type, ExprNode *condition, ExprNode *body) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = condition;
@@ -203,7 +203,7 @@ ExprNode *ExprNode::IfExpr(Type type, ExprNode *condition, ExprNode *body) {
 }
 
 ExprNode *ExprNode::IfExprList(ExprNode *ifExpr) {
-    ExprNode *new_node = new ExprNode();
+    auto *new_node = new ExprNode();
     new_node->id = ++globId;
     new_node->type = if_expr_list;
     new_node->ifList = new list<ExprNode *>{ifExpr};
@@ -1799,7 +1799,9 @@ void ItemNode::addImpl(string className, bool isTrait) {
 
                 if (isTrait && !ClassTable::Instance()->
                         isFieldExist(ClassTable::Instance()->getClass(className).parentName, *this->name)) {
-                    throw Exception(Exception::NOT_EXIST, "Impl Error: method" + *this->name + "in parent trait");
+                    throw Exception(Exception::NOT_EXIST, "Impl Error: field " + className + " " + *this->name +
+                                                          "  not exist in parent trait " +
+                                                          ClassTable::Instance()->getClass(className).parentName);
                 }
 
                 if (isTrait) {
@@ -1913,7 +1915,23 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
                 this->methodTableItem.returnDataType.type = DataType::void_;
             }
 
+
             if (this->params != NULL) {
+
+                if (this->params->func_type == FuncParamListNode::self) {
+                    VarTableItem varItem = VarTableItem(VarTable::SELF_PARAM, DataType::StructDataType(curClassName),
+                                                        false, false, true, false, body);
+
+                    this->methodTableItem.paramTable.items.push_back(varItem);
+                }
+
+                if (this->params->func_type == FuncParamListNode::self_ref) {
+                    VarTableItem varItem = VarTableItem(VarTable::SELF_PARAM, DataType::StructDataType(curClassName),
+                                                        false, true, true, false, body);
+
+                    this->methodTableItem.paramTable.items.push_back(varItem);
+                }
+
                 for (auto elem: *this->params->items) {
                     elem->methodName = *this->name;
                     elem->addDataTypeToDeclaration(className);
@@ -2056,12 +2074,14 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
     string res = "";
     switch (cur->type) {
         case ExprNode::id_:
+
             if (ClassTable::Instance()->isClassExist(className)) {
                 res += ClassTable::getDirectory(className);
             } else {
                 res += className;
             }
             res += +"/" + *cur->Name;
+
             break;
         case ExprNode::self_expr:
             ///TODO доделать
@@ -2143,6 +2163,12 @@ void ItemNode::transform(bool isConvertedToConst) {
         case function_:
             body->curClassName = curClassName;
             body->curMethodName = *this->name;
+
+            for (auto elem: ClassTable::Instance()->getMethod(curClassName, *this->name).paramTable.items) {
+                elem.blockExpr = body;
+                ClassTable::Instance()->addLocalParam(curClassName, *this->name, varTableItem);
+            }
+
             blockExprList.push_back(body);
             returnTypes.clear();
             this->body->transform(isConvertedToConst);
@@ -2422,8 +2448,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->expr_middle = ExprNode::PathCallExpr(id_, this->expr_left->Name, NULL);
                 this->expr_left->expr_right = NULL;
                 this->expr_left = this->expr_left->expr_left;
-            } else if (this->expr_left->type != field_call && // TODO тут придется наверное поправить
-                       this->expr_left->type != id_) {
+            } else if (!this->expr_left->isVar()) {
                 throw Exception(Exception::NOT_A_VAR, "left operand not a var");
             }
 
@@ -2663,11 +2688,13 @@ void ExprNode::transform(bool isConvertedToConst) {
             checkCancelExprNode(this->expr_left);
             this->expr_left->transform(isConvertedToConst);
             breakTypes.push_back(this->expr_left->dataType);
+            this->dataType = DataType(DataType::void_);
             break;
         case break_expr:
             addMetaInfo(expr_left);
             checkCancelExprNode(this->expr_left);
             breakTypes.push_back(DataType(DataType::void_));
+            this->dataType = DataType(DataType::void_);
             break;
             break;
         case range_right:
@@ -2689,6 +2716,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             checkCancelExprNode(expr_left);
             this->expr_left->transform(isConvertedToConst);
             returnTypes.push_back(this->expr_left->dataType);
+            this->dataType = DataType(DataType::void_);
             break;
         case if_expr_list: {
             vector<DataType> types;
@@ -2761,7 +2789,6 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
 
-
             {
                 addMetaInfo(body);
                 vector<DataType> breaks = breakTypes;
@@ -2784,29 +2811,31 @@ void ExprNode::transform(bool isConvertedToConst) {
             addMetaInfo(expr_left);
             //checkCancelExprNode(expr_left);
 
-            if(this->expr_left->type == break_expr || this->expr_left->type == return_expr
-            || this->expr_left->type == break_with_val_expr) {
-                throw Exception(Exception::TYPE_ERROR, "Олег Александрович, ну че вы так  проверяете, не надо пожалуйста. У меня дети есть");
+            if (this->expr_left->type == break_expr || this->expr_left->type == return_expr
+                || this->expr_left->type == break_with_val_expr) {
+                throw Exception(Exception::TYPE_ERROR,
+                                "Олег Александрович, ну че вы так  проверяете, не надо пожалуйста. У меня дети есть");
             }
 
-            if(this->expr_left->dataType.type != DataType::array_ &&
-            this->expr_left->type != ExprNode::range_expr){
-                throw Exception(Exception::TYPE_ERROR, "for condition should be iterable: range_expr or DataType::array_");
+            if (this->expr_left->dataType.type != DataType::array_ &&
+                this->expr_left->type != ExprNode::range_expr) {
+                throw Exception(Exception::TYPE_ERROR,
+                                "for condition should be iterable: range_expr or DataType::array_");
             }
 
             {
                 DataType dataType = DataType(DataType::int_);
-                if(this->expr_left->dataType.type == DataType::array_) {
+                if (this->expr_left->dataType.type == DataType::array_) {
                     dataType = this->expr_left->dataType.getArrDataType();
                 }
 
-                VarTableItem varItem = VarTableItem(*this->Name,dataType, this->expr_left->isMut, false, true, body);
+                VarTableItem varItem = VarTableItem(*this->Name, dataType, this->expr_left->isMut, false, true, body);
                 ClassTable::Instance()->addLocalParam(curClassName, curMethodName, varItem);
             }
 
-            if(this->expr_left->isRefExpr() == false && this->isVar()){
+            if (this->expr_left->isRefExpr() == false && this->isVar()) {
                 ExprNode *delExpr = ExprNode::DelObjectExpr(this->expr_left);
-                this->deleteExprList = new  ExprListNode(delExpr);
+                this->deleteExprList = new ExprListNode(delExpr);
             }
 
             {
@@ -2834,13 +2863,14 @@ void ExprNode::transform(bool isConvertedToConst) {
 
                 if (elem->type == StmtNode::exprstmt) {
                     if ((elem->expr->type == loop_expr ||
-                        elem->expr->type == ExprNode::if_expr_list) &&
+                         elem->expr->type == ExprNode::if_expr_list) &&
                         elem->expr->dataType.type != DataType::void_) {
                         elem++;
-                        if(elem != *this->stmt_list->stmts->end() &&
-                           elem->type != StmtNode::semicolon)
-                        {
-                            throw Exception(Exception::TYPE_ERROR, "if or loop without  semicolon should return  void_. Result:" + elem->expr->dataType.toString());
+                        if (elem != *this->stmt_list->stmts->end() &&
+                            elem->type != StmtNode::semicolon) {
+                            throw Exception(Exception::TYPE_ERROR,
+                                            "if or loop without  semicolon should return  void_. Result:" +
+                                            elem->expr->dataType.toString());
                         }
                         elem--;
                     }
@@ -2858,17 +2888,47 @@ void ExprNode::transform(bool isConvertedToConst) {
             break;
 
         case struct_expr:
-
             break;
         case struct_field_expr:
+            /* empty */
             break;
         case static_method:
+            addMetaInfo(this->expr_left);
+            checkCancelExprNode(this->expr_left);
+            this->expr_left->transformPathCallExpr(curClassName, ExprNode::static_method, false);
+            checkMethodParam();
+            this->expr_middle = ExprNode::CallAccessExpr(ExprNode::id_, new string(methodName), NULL, NULL);
+
+            if (ClassTable::Instance()->isMethodExist(this->expr_left->className, *this->expr_middle->Name)) {
+                this->dataType = ClassTable::Instance()->getMethod(this->expr_left->className,
+                                                                   *this->expr_middle->Name).returnDataType;
+            } else {
+                throw Exception(Exception::NOT_EXIST,
+                                "call method " + this->expr_left->className + " " + *this->expr_left->Name +
+                                "not exist");
+            }
+
             break;
         case path_call_expr:
-            // this->transformPathCallExpr(curClassName,)
+            addMetaInfo(this->expr_left);
+            checkCancelExprNode(this->expr_left);
+
+            this->expr_left->transformPathCallExpr(curClassName, ExprNode::static_method, false);
+            this->expr_middle = ExprNode::CallAccessExpr(ExprNode::id_, new string(methodName), NULL, NULL);
+
+            if (ClassTable::Instance()->isFieldExist(this->expr_left->className, *this->expr_middle->Name)) {
+                this->dataType = ClassTable::Instance()->getField(this->expr_left->className,
+                                                                  *this->expr_middle->Name).dataType;
+            } else {
+                throw Exception(Exception::NOT_EXIST,
+                                "call field " + this->expr_left->className + " " + *this->expr_left->Name +
+                                " not exist");
+            }
+
             break;
 
         case struct_creation:
+            this->checkStructExpr();
             break;
         case as:
             break;
@@ -2911,7 +2971,7 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             this->dataType = this->expr_left->dataType;
             this->isMut = false;
-          //  if(this->dataType.)
+            //  if(this->dataType.)
 
             break;
         case mut_link:
@@ -3382,6 +3442,12 @@ void ExprNode::checkMethodParam() {
 
     int i = 0;
     for (auto elem: *this->expr_list->exprs) {
+        addMetaInfo(elem);
+        if (elem->type == ExprNode::break_with_val_expr || elem->type == ExprNode::break_expr ||
+            elem->type == ExprNode::return_expr) {
+            throw Exception(Exception::TYPE_ERROR,
+                            "Олег Александрович вы че куда суете. Какие брейки в параметрах. Жесть. 1984");
+        }
         VarTableItem varItem = this->methodTableItem.paramTable.items[i];
         if (!varItem.dataType.isEquals(elem->dataType)) {
             throw Exception(Exception::TYPE_ERROR,
@@ -3417,17 +3483,17 @@ void ExprNode::checkCancelExprNode(ExprNode *exprNode, bool isBreakCanceled) {
 }
 
 ExprNode *ExprNode::DelObjectExpr(ExprNode *expr) {
-    ExprNode* node = new ExprNode();
+    ExprNode *node = new ExprNode();
     node->id = ++globId;
     node->type = ExprNode::del_object;
     node->expr_left = expr;
 
-    if(expr->isVar() == false){
+    if (expr->isVar() == false) {
         throw Exception(Exception::UNEXPECTED, "it`s not a var");
     }
 
-    if(expr->dataType.type != DataType::class_ && expr->dataType.type != DataType::array_) {
-        throw Exception(Exception:: UNEXPECTED, "type should be array_ or class_");
+    if (expr->dataType.type != DataType::class_ && expr->dataType.type != DataType::array_) {
+        throw Exception(Exception::UNEXPECTED, "type should be array_ or class_");
     }
 
     return node;
@@ -3439,6 +3505,39 @@ bool ExprNode::isRefExpr() {
 
 bool ExprNode::isVar() {
     return this->localVarNum != -1 || this->fieldName.empty() == false;
+}
+
+void ExprNode::checkStructExpr(bool isConvertedTransform) {
+
+    if (this->expr_left->type != path_call_expr && this->expr_left->type != id_) {
+        throw Exception(Exception::CONSTRUCTOR_ERROR, "expression should be paathCallExpr");
+    }
+
+    this->expr_left->transformPathCallExpr(curClassName, undefined, true);
+    this->className = this->expr_left->className;
+
+    int fieldSize = ClassTable::Instance()->getClass(className).fieldTable.items.size();
+
+    if (fieldSize != this->expr_list->exprs->size()) {
+        throw Exception(Exception::CONSTRUCTOR_ERROR,
+                        "fields count in constructor not equal field count in struct " + className);
+    }
+
+    for (auto elem: *this->expr_list->exprs) {
+        addMetaInfo(elem->expr_left);
+        checkCancelExprNode(elem->expr_left);
+        elem->expr_left->transform(isConvertedTransform);
+        if (ClassTable::Instance()->isFieldExist(className, *this->Name)) {
+            FieldTableItem fieldItem = ClassTable::Instance()->getField(className, this->className);
+            if (fieldItem.dataType.isEquals(elem->expr_left->dataType)) {
+                throw Exception(Exception::TYPE_ERROR,
+                                *this->Name + "field type should be " + fieldItem.toString() + " " +
+                                elem->expr_left->dataType.toString());
+            }
+        } else {
+            throw Exception(Exception::CONSTRUCTOR_ERROR, *this->Name + " field not exist in struct " + className);
+        }
+    }
 }
 
 

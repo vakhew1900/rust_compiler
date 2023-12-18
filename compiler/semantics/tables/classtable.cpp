@@ -18,9 +18,9 @@ string ClassTableItem::toString() {
     string res = "";
 
     if (isPub) {
-        res += "public ";
+        res += " public ";
     } else {
-        res += "package ";
+        res += " package ";
     }
 
     switch (classType) {
@@ -41,11 +41,11 @@ string ClassTableItem::toString() {
 
 
     if (parentName.size()) {
-        res += "parent: " + parentName;
+        res += " parent: " + parentName;
     }
 
-    res += "\nfieldTable:" + fieldTable.toString() + "\n";
-    res += "\nmethodTable:" + methodTable.toString() + "\n";
+    res += "\nfieldTable:\n" + fieldTable.toString();
+    res += "\nmethodTable:\n" + methodTable.toString() + "\n";
 
     return res;
 }

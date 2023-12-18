@@ -129,3 +129,5 @@ VarTableItem VarTable::getVar(int varNum) {
 
     return items[varNum];
 }
+
+const string VarTable::SELF_PARAM = "self";

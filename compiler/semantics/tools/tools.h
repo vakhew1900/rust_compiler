@@ -46,6 +46,7 @@ public:
         ARRAY_SIZE,
         PARAM_ERROR,
         STATIC_ERROR,
+        CONSTRUCTOR_ERROR,
     };
 
     ExceptionType exceptionType;

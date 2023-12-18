@@ -26,11 +26,11 @@ string MethodTableItem::toString() {
 
     if (isPub)
     {
-        res += "public ";
+        res += " public ";
     }
     else
     {
-        res += "package ";
+        res += " package ";
     }
 
     res += "returnType: " + returnDataType.toString() + "\n";

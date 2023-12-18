@@ -41,6 +41,7 @@ public:
     bool isEquals(const VarTable & varTable);
     bool isExist(const string& varName, const ExprNode* blockExpr);
     VarTableItem getVar(int varNum);
+    static const string SELF_PARAM;
 };
 
 

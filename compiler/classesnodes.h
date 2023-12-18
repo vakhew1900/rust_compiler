@@ -227,6 +227,8 @@ public:
     bool isRefExpr();
     bool isVar();
     void checkCancelExprNode(ExprNode * exprNode, bool isBreakCanceled = true);
+
+    void checkStructExpr(bool isConvertedTransform = true);
 };
 
 class ExprListNode : public Node {
