@@ -85,6 +85,7 @@ string VarTable::toString() {
     for (int i = 0; i < items.size(); i++) {
         res += to_string(i) + ": " + items[i].toString() + "\n";
     }
+    return res;
 }
 
 bool VarTable::isExist(const string &varName) {

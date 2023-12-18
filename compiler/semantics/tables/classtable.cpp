@@ -230,8 +230,8 @@ void ClassTable::isCorrectTraitsImpl() {
             for (auto method: parentItem.methodTable.items) {
                 if (!method.second.isEqualsDeclaration(curItem.methodTable.items[method.first])) {
                     throw Exception(Exception::IMPL_AND_TRAIT_DECLARATION,
-                                    "method " + method.first + "in trait " + curItem.parentName + " and in " + elem.first +
-                                    "have different declaration");
+                                    " method " + method.first + "in trait " + curItem.parentName + " and in " + elem.first +
+                                    " have different declaration");
                 }
             }
 
