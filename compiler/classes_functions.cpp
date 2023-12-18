@@ -2938,8 +2938,7 @@ void ExprNode::transform(bool isConvertedToConst) {
         case id_:
         case self_expr:
         case super_expr:
-        case continue_expr:
-            break;
+
 
         case int_lit:
             this->dataType = DataType(DataType::int_);
@@ -2993,6 +2992,7 @@ void ExprNode::transform(bool isConvertedToConst) {
 
 
         case call_expr:
+        case continue_expr:
             //   this->transformPathCallExpr(curClassName, false);
             break;
     }
@@ -3454,12 +3454,13 @@ void ExprNode::checkMethodParam() {
     for (auto elem: *this->expr_list->exprs) {
         addMetaInfo(elem);
         if (elem->type == ExprNode::break_with_val_expr || elem->type == ExprNode::break_expr ||
-            elem->type == ExprNode::return_expr) {
+            elem->type == ExprNode::return_expr || elem->type == ExprNode::continue_expr) {
             throw Exception(Exception::TYPE_ERROR,
                             "Олег Александрович вы че куда суете. Какие брейки в параметрах. Жесть. 1984");
         }
         VarTableItem varItem = paramTable.items[i];
-        if (!varItem.dataType.isEquals(elem->dataType)) {
+        if (!varItem.dataType.isEquals(elem->dataType) &&
+           !isParent(elem->dataType, varItem.dataType)) { //TODO проверить
             throw Exception(Exception::TYPE_ERROR,
                             varItem.id + "type expected: " + varItem.dataType.toString() + "result: " +
                             elem->dataType.toString());
@@ -3544,7 +3545,8 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
         elem->expr_left->transform(isConvertedTransform);
         if (ClassTable::Instance()->isFieldExist(className, *this->Name)) {
             FieldTableItem fieldItem = ClassTable::Instance()->getField(className, this->className);
-            if (fieldItem.dataType.isEquals(elem->expr_left->dataType)) {
+            if (fieldItem.dataType.isEquals(elem->expr_left->dataType) &&
+                    isParent(elem->expr_left->dataType, fieldItem.dataType)) {
                 throw Exception(Exception::TYPE_ERROR,
                                 *this->Name + "field type should be " + fieldItem.toString() + " " +
                                 elem->expr_left->dataType.toString());
@@ -3567,6 +3569,17 @@ void Node::transform(bool isConvertedToConst) {
 void Node::addMetaInfo(Node *node) {
     node->curClassName = this->curClassName;
     node->curMethodName = this->methodName;
+}
+
+bool Node::isParent(const DataType& child, DataType parent) {
+    if(child.type != DataType::class_){
+        return false;
+    }
+    if(parent.type != DataType::class_){
+        return false;
+    }
+
+    return ClassTable::Instance()->isParent(child.id, parent.id);
 }
 
 
