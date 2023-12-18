@@ -2668,7 +2668,6 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             try {
 
-                this->checkMethodParam();
                 MethodTableItem methodItem = ClassTable::Instance()->getMethod(this->expr_left->dataType.id,
                                                                                *this->Name);
                 if (methodItem.isStatic) {
@@ -2676,6 +2675,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                                     this->expr_left->dataType.id + " " + *this->Name + "is static method");
                 }
 
+                //VarTableItem selfVarItem = methodItem.localVarTable.getVar(0); ///TODO  пососи ебучая константа
+
+                this->checkMethodParam();
                 this->dataType = methodItem.returnDataType;
             }
             catch (Exception e) {
@@ -2933,9 +2935,6 @@ void ExprNode::transform(bool isConvertedToConst) {
         case as:
             break;
 
-        case call_expr:
-            //   this->transformPathCallExpr(curClassName, false);
-            break;
         case id_:
         case self_expr:
         case super_expr:
@@ -2955,6 +2954,7 @@ void ExprNode::transform(bool isConvertedToConst) {
         case bool_lit:
             this->dataType = DataType(DataType::bool_);
             break;
+
         case question:
         case ustar:
         case tuple_expr:
@@ -2992,6 +2992,9 @@ void ExprNode::transform(bool isConvertedToConst) {
             break;
 
 
+        case call_expr:
+            //   this->transformPathCallExpr(curClassName, false);
+            break;
     }
 
 }
@@ -3430,11 +3433,18 @@ void ExprNode::checkMethodParam() {
     MethodTableItem methodItem = ClassTable::Instance()->getMethod(this->expr_left->dataType.id,
                                                                    *this->Name);
 
-    if (this->expr_list == NULL && this->methodTableItem.paramTable.items.size() == 0) {
+    VarTable paramTable = this->methodTableItem.paramTable;
+
+    if(!methodItem.isStatic){ //TODO это говно надо чекнуть
+        paramTable.items.erase(paramTable.items.begin());
+    }
+
+    if (this->expr_list == NULL && paramTable.items.size() == 0) {
         return;
     }
 
-    if (this->expr_list->exprs->size() != this->methodTableItem.paramTable.items.size()) {
+
+    if (this->expr_list->exprs->size() != paramTable.items.size()) {
         throw Exception(Exception::PARAM_ERROR,
                         "Param Error expected: " + to_string(this->methodTableItem.paramTable.items.size())
                         + " param count result:" + to_string(this->expr_list->exprs->size()) + " param count");
@@ -3448,7 +3458,7 @@ void ExprNode::checkMethodParam() {
             throw Exception(Exception::TYPE_ERROR,
                             "Олег Александрович вы че куда суете. Какие брейки в параметрах. Жесть. 1984");
         }
-        VarTableItem varItem = this->methodTableItem.paramTable.items[i];
+        VarTableItem varItem = paramTable.items[i];
         if (!varItem.dataType.isEquals(elem->dataType)) {
             throw Exception(Exception::TYPE_ERROR,
                             varItem.id + "type expected: " + varItem.dataType.toString() + "result: " +
@@ -3513,8 +3523,13 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
         throw Exception(Exception::CONSTRUCTOR_ERROR, "expression should be paathCallExpr");
     }
 
+
     this->expr_left->transformPathCallExpr(curClassName, undefined, true);
     this->className = this->expr_left->className;
+
+    if(ClassTable::Instance()->getClass(this->className).classType != ClassTableItem::struct_){
+        throw Exception(Exception::TYPE_ERROR, "constructor error: " + className + " is not struct");
+    }
 
     int fieldSize = ClassTable::Instance()->getClass(className).fieldTable.items.size();
 
