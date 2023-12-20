@@ -1512,7 +1512,7 @@ void ProgramNode::getAllItems(std::string className) {
         }
 
         this->addImpl(className, false);
-
+        ClassTable::Instance()->getClass(ClassTable::globalClassName +  "/ID/Tweet");
         if (item_list != NULL) {
 
             for (auto elem: *item_list->items) {
@@ -2457,7 +2457,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
             //TODO добавить обработку констант
-            if (this->expr_left->localVarNum != -1) {
+            if (this->expr_left->localVarNum != -1) { ///
                 VarTableItem varTableItem = ClassTable::Instance()->getLocalVar(curClassName, curMethodName,
                                                                                 this->expr_left->localVarNum);
                 if (this->expr_left->isConst) {
@@ -2630,7 +2630,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 "range expression must be int_ and result: left=" + expr_left->dataType.toString() +
                                 "right=" + expr_right->dataType.toString());
             }
-        case field_access_expr:
+        case field_access_expr: /// Expression.ID
             addMetaInfo(this->expr_left);
             checkCancelExprNode(this->expr_left);
             this->expr_left->transform(isConvertedToConst);
@@ -2810,7 +2810,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             break;
         case loop_for:
 
-            addMetaInfo(expr_left);
+          //  addMetaInfo(expr_left); // for ID IN Expr array 1.. {}
             //checkCancelExprNode(expr_left);
 
             if (this->expr_left->type == break_expr || this->expr_left->type == return_expr
@@ -3269,7 +3269,7 @@ void ExprNode::transformConst() {
                 this->Bool = this->expr_left->Bool < this->expr_right->Bool;
             } else if (this->expr_left->dataType.type == DataType::int_) {
                 this->Bool = this->expr_left->Int < this->expr_right->Int;
-            } else if (this->expr_left->dataType.type == DataType::float_) {
+            } else if (this->expr_left->dataType.type == DataType::float_) { // 1 + 1 * 3 = 4
                 this->Bool = this->expr_left->Float < this->expr_right->Float;
             } else if (this->expr_left->dataType.type == DataType::char_) {
                 this->Bool = this->expr_left->Char < this->expr_right->Char;

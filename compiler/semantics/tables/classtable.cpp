@@ -204,7 +204,7 @@ FieldTableItem ClassTable::getField(const string &className, const string &field
 
 MethodTableItem ClassTable::getMethod(const string &className, const string &methodName) {
 
-    if (!ClassTable::Instance()->isMethodExist(className, methodName)) {
+    if (!ClassTable::Instance(  )->isMethodExist(className, methodName)) {
         throw Exception(Exception::NOT_EXIST, methodName + " NOT_EXIST in namespace");
     }
 
@@ -228,6 +228,11 @@ void ClassTable::isCorrectTraitsImpl() {
             ClassTableItem curItem = elem.second;
 
             for (auto method: parentItem.methodTable.items) {
+
+                if(ClassTable::Instance()->isMethodExist(elem.first, method.first) == false){ // случай когда мы не переопределяли методж
+                    continue;
+                }
+
                 if (!method.second.isEqualsDeclaration(curItem.methodTable.items[method.first])) {
                     throw Exception(Exception::IMPL_AND_TRAIT_DECLARATION,
                                     " method " + method.first + "in trait " + curItem.parentName + " and in " + elem.first +
