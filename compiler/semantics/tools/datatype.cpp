@@ -172,7 +172,7 @@ bool DataType::isEquals(vector<DataType> types) {
     return res;
 }
 
-DataType DataType::getArrDataType() {
+DataType DataType::getArrDataType() const {
     DataType dataType = *this;
     if (this->type != array_) {
         throw Exception(Exception::TYPE_ERROR, "cannot get ArrType because it is not array_");

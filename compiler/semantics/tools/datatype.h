@@ -39,7 +39,7 @@ public:
     void addArrType(DataType arrType);
     static bool isCanConvert(DataType first, DataType second);
     static bool isEquals(vector<DataType> types);
-    DataType getArrDataType();
+    DataType getArrDataType() const;
 };
 
 
