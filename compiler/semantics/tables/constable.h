@@ -8,6 +8,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include "semantics/tools/datatype.h"
 
 using namespace std;
 
@@ -50,6 +51,19 @@ public:
 
     string toString();
     string toCSV();
+    int Class(const string& className);
+    int Int(int val);
+    int Double(double val);
+    int String(const string& str);
+    int UTF8(const string& str);
+    int Val(ConstTableItem::ConstTableType constTableType, int val);
+    int Val(ConstTableItem::ConstTableType constTableType, int val1, int val2);
+    string MethodParam(const vector<DataType> &params, const DataType &returnType);
+    int Method(const string& method, const vector<DataType> &params,const DataType &returnType);
+    int Field(const string& field, const DataType& dataType);
+    int MethodRef(const string& className, const string& method, const vector<DataType> &params,const DataType &returnType);
+    int FieldRef(const string& className, const string& field, const DataType& dataType);
+    int add(ConstTableItem constTableItem);
 };
 
 

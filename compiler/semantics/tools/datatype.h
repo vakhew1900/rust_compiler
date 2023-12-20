@@ -32,6 +32,7 @@ public:
     static DataType StructDataType(vector<string> structPath);
     static DataType StructDataType(string id);
     string toString();
+    string toConstTableFormat() const;
     static string TypeToString(Type type);
     bool isEquals(const DataType &other);
     bool isUndefined();

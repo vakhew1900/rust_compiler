@@ -202,13 +202,52 @@ bool DataType::isCanConvert(DataType first, DataType second) {
         return true;
     }
 
-    if(first.type == float_ && second.type == int_){
-        return  true;
-    }
-
-    if(first.type == char_ && second.type == int_){
+    if (first.type == float_ && second.type == int_) {
         return true;
     }
 
-        return false;
+    if (first.type == char_ && second.type == int_) {
+        return true;
+    }
+
+    return false;
+}
+
+string DataType::toConstTableFormat() const {
+    string res;
+    switch (type) {
+
+        case void_:
+            res = "V";
+            break;
+        case int_:
+            res = "I";
+            break;
+        case float_:
+            res = "D";
+            break;
+        case char_:
+            res = "C";
+            break;
+        case bool_:
+            res = "Z";
+            break;
+        case string_:
+            res = "Ljava/lang/String;";
+            break;
+        case class_:
+            res = "L" + id + ";";
+            break;
+        case array_:
+            for (int i = 0; i < arrDeep; i++) {
+                res += "[";
+            }
+            res += getArrDataType().toConstTableFormat();
+            break;
+        case undefined_:
+            throw Exception(Exception::UNEXPECTED, "cannot convert type for consttable");
+            break;
+    }
+
+    return res;
 }
