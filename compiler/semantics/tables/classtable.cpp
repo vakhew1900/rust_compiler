@@ -204,7 +204,7 @@ FieldTableItem ClassTable::getField(const string &className, const string &field
 
 MethodTableItem ClassTable::getMethod(const string &className, const string &methodName) {
 
-    if (!ClassTable::Instance(  )->isMethodExist(className, methodName)) {
+    if (!ClassTable::Instance()->isMethodExist(className, methodName)) {
         throw Exception(Exception::NOT_EXIST, methodName + " NOT_EXIST in namespace");
     }
 
@@ -229,26 +229,28 @@ void ClassTable::isCorrectTraitsImpl() {
 
             for (auto method: parentItem.methodTable.items) {
 
-                if(ClassTable::Instance()->isMethodExist(elem.first, method.first) == false){ // случай когда мы не переопределяли методж
+                if (ClassTable::Instance()->isMethodExist(elem.first, method.first) ==
+                    false) { // случай когда мы не переопределяли методж
                     continue;
                 }
 
                 if (!method.second.isEqualsDeclaration(curItem.methodTable.items[method.first])) {
                     throw Exception(Exception::IMPL_AND_TRAIT_DECLARATION,
-                                    " method " + method.first + "in trait " + curItem.parentName + " and in " + elem.first +
+                                    " method " + method.first + "in trait " + curItem.parentName + " and in " +
+                                    elem.first +
                                     " have different declaration");
                 }
             }
 
             for (auto field: parentItem.fieldTable.items) {
 
-                if (!ClassTable::Instance()->isFieldExist(elem.first, field.first))
-                {
+                if (!ClassTable::Instance()->isFieldExist(elem.first, field.first)) {
                     continue;
                 }
                 if (!field.second.isEquals(curItem.fieldTable.items[field.first])) {
                     throw Exception(Exception::IMPL_AND_TRAIT_DECLARATION,
-                                    "field " + field.first + " in trait " + curItem.parentName + " and in " + elem.first +
+                                    "field " + field.first + " in trait " + curItem.parentName + " and in " +
+                                    elem.first +
                                     "have different declaration");
                 }
             }
@@ -276,9 +278,10 @@ bool ClassTable::isLocalVarExist(const string &className, const string &methodNa
 
 void ClassTable::addLocalParam(string className, string methodName, VarTableItem varTableItem) {
 
-    if(ClassTable::Instance()->isLocalVarExist(className, methodName, varTableItem.id, varTableItem.blockExpr))
-    {
-        throw Exception(Exception:: VAR_ALREADY_EXISTS, "var with this name "+ varTableItem.id + "in method " + methodName + " " + className  + " is already exists");
+    if (ClassTable::Instance()->isLocalVarExist(className, methodName, varTableItem.id, varTableItem.blockExpr)) {
+        throw Exception(Exception::VAR_ALREADY_EXISTS,
+                        "var with this name " + varTableItem.id + "in method " + methodName + " " + className +
+                        " is already exists");
     }
 
     ClassTable::Instance()->items[className].methodTable.items[methodName].localVarTable.items.push_back(varTableItem);
@@ -289,9 +292,8 @@ VarTableItem ClassTable::getParam(const string &className, const string &methodN
     try {
         return ClassTable::Instance()->getMethod(className, methodName).paramTable.getVar(paramNum);
     }
-    catch(Exception e)
-    {
-        throw  Exception(Exception::NOT_EXIST, e.getMessage() + " " + className + " " + methodName);
+    catch (Exception e) {
+        throw Exception(Exception::NOT_EXIST, e.getMessage() + " " + className + " " + methodName);
     }
 }
 
@@ -299,9 +301,8 @@ VarTableItem ClassTable::getLocalVar(const string &className, const string &meth
     try {
         return ClassTable::Instance()->getMethod(className, methodName).localVarTable.getVar(localVarNum);
     }
-    catch(Exception e)
-    {
-        throw  Exception(Exception::NOT_EXIST, e.getMessage() + " " + className + " " + methodName);
+    catch (Exception e) {
+        throw Exception(Exception::NOT_EXIST, e.getMessage() + " " + className + " " + methodName);
     }
 }
 
@@ -309,7 +310,65 @@ bool ClassTable::isParent(const string &child, const string &parentName) {
     return ClassTable::Instance()->getClass(child).parentName == parentName;
 }
 
-bool ClassTable::isHaveParent(const string& child) {
+bool ClassTable::isHaveParent(const string &child) {
     return ClassTable::Instance()->getClass(child).isHaveParent();
+}
+
+bool ClassTable::isHaveAccess(const string &requesterClass, const string &requestedClass) {
+    string requesterDirectory = getDirectory(requestedClass);
+    string requestedDirectory = getDirectory(requestedClass);
+
+    vector<string> requester = split(requestedDirectory, '/');
+    vector<string> requested = split(requestedDirectory, '/');
+
+    int counter = 0;
+    string res = "";
+    for (counter; counter < min(requester.size(), requested.size()); counter++) {
+        if (requester[counter] != requested[counter])
+            break;
+
+        if (counter) res += "/";
+        res += requested[counter];
+    }
+
+    for (int i = counter; i < requested.size(); i++) {
+        if (!res.empty()) {
+            res += "/";
+        }
+
+        if (!ClassTable::Instance()->getClass(res + moduleClassName).isPub) {
+            return false;
+        }
+
+        res += requested[i];
+    }
+
+    return isEqualDirectory(requestedClass, requesterClass) || ClassTable::Instance()->getClass(requestedClass).isPub;
+}
+
+bool ClassTable::isHaveAccessToMethtod(const string &requesterClass, const string &requestedClass,
+                                       const string &requestedMethod) {
+
+    try {
+        bool res = ClassTable::isHaveAccess(requesterClass, requestedClass);
+        return res && (ClassTable::Instance()->getMethod(requestedClass, requestedMethod).isPub || isEqualDirectory(requesterClass, requestedClass));
+    } catch (Exception e) {
+        throw e;
+    }
+}
+
+bool ClassTable::isHaveAccessToField(const string &requesterClass, const string &requestedClass,
+                                     const string &requestedField) {
+
+    try {
+        bool res = ClassTable::isHaveAccess(requesterClass, requestedClass);
+        return res && (ClassTable::Instance()->getField(requestedClass, requestedField).isPub || isEqualDirectory(requesterClass, requestedClass));
+    } catch (Exception e) {
+        throw e;
+    }
+}
+
+bool ClassTable::isEqualDirectory(const string &first, const string &second) {
+    return getDirectory(first) == getDirectory(second);
 }
 

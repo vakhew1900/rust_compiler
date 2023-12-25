@@ -251,3 +251,8 @@ string DataType::toConstTableFormat() const {
 
     return res;
 }
+
+bool DataType::isClass() {
+    return  this->type == DataType::class_ ||
+               this->type == DataType::array_ && this->arrType == DataType::class_;
+}

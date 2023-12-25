@@ -1512,7 +1512,7 @@ void ProgramNode::getAllItems(std::string className) {
         }
 
         this->addImpl(className, false);
-        ClassTable::Instance()->getClass(ClassTable::globalClassName +  "/ID/Tweet");
+        ClassTable::Instance()->getClass(ClassTable::globalClassName + "/ID/Tweet");
         if (item_list != NULL) {
 
             for (auto elem: *item_list->items) {
@@ -1614,11 +1614,13 @@ void ItemNode::getAllItems(std::string className) {
             case enum_:
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::enum_;
+                this->curClassName = className + "/" + *this->name;
                 if (this->visibility == pub) this->classTableItem.isPub = true;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
 
                 if (this->enumItems != NULL) {
                     for (auto elem: *this->enumItems->items) {
+                        elem->curClassName = className + "/" + *this->name;
                         elem->getAllItems(className + "/" + *this->name);
                     }
                 }
@@ -1629,7 +1631,7 @@ void ItemNode::getAllItems(std::string className) {
                 classTableItem.classType = ClassTableItem::struct_;
                 if (this->visibility == pub) this->classTableItem.isPub = true;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
-
+                this->curClassName = className + "/" + *this->name;
                 if (this->structItems->items != NULL) {
                     for (auto elem: *this->structItems->items) {
                         elem->curClassName = className + "/" + *this->name;
@@ -2176,10 +2178,48 @@ void ItemNode::transform(bool isConvertedToConst) {
             if (blockExprList.size()) {
                 throw Exception(Exception::UNEXPECTED, "blockexpr не удалил(");
             }
+
+            for (auto param: *this->params->items) {
+                try {
+                    if (param->dataType.isClass()) {
+                        if (!ClassTable::isHaveAccess(curClassName, param->dataType.id)) {
+                            throw Exception(Exception::ACCESS_ERROR,
+                                            *this->name + " has not access to " + param->dataType.id);
+                        }
+
+                        bool isPub = ClassTable::Instance()->getMethod(curClassName, *this->name).isPub;
+                        if (isPub && !ClassTable::Instance()->getClass(param->dataType.id).isPub){
+                            throw Exception(Exception::PRIVATE_ERROR, *this->name + " has param  " + param->dataType.id + " is private" );
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    throw e;
+                }
+            }
+
+            if (this->dataType.isClass()) {
+
+                if (!ClassTable::isHaveAccess(curClassName, dataType.id)) {
+                    throw Exception(Exception::ACCESS_ERROR, *this->name + " has not access to " + dataType.id);
+                }
+
+            }
+
             break;
         case constStmt_:
             body->curClassName = curClassName;
             this->expr->transform(isConvertedToConst);
+            if (this->dataType.isClass()) {
+                if(ClassTable::isHaveAccess(curClassName, dataType.id)) {
+                    throw Exception(Exception::ACCESS_ERROR, *this->name + " has not access to " + dataType.id);
+                }
+            }
+
+            if (!ClassTable::Instance()->getClass(dataType.id).isPub){
+                throw Exception(Exception::PRIVATE_ERROR, *this->name + " is public but type " + dataType.id + " is private" );
+            }
+
             break;
         case trait_:
         case impl_:
@@ -2191,6 +2231,20 @@ void ItemNode::transform(bool isConvertedToConst) {
             }
             break;
         case struct_:
+            for (auto elem: *structItems->items) {
+                if (elem->dataType.isClass()) {
+
+                    if(!ClassTable::isHaveAccess(curClassName, dataType.id)){
+                        throw Exception(Exception::ACCESS_ERROR, *this->name + " has not access to " + dataType.id);
+                    }
+
+                    bool isPubField = ClassTable::Instance()->getField(curClassName, *elem->name).isPub;
+                    bool isPrivateType = !ClassTable::Instance()->getClass(elem->dataType.id).isPub;
+                    if(isPubField && isPrivateType){
+                        throw Exception(Exception::PRIVATE_ERROR, *elem->name + " is public but type " + elem->dataType.id + " is private" );
+                    }
+                }
+            }
         case enum_:
             break;
     }
@@ -2528,6 +2582,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
             //TODO тут не забыть нафигачить провер очки
             break;
+
         case array_expr_auto_fill:
 
             addMetaInfo(this->expr_left);
@@ -2648,6 +2703,10 @@ void ExprNode::transform(bool isConvertedToConst) {
                     throw Exception(Exception::STATIC_ERROR,
                                     this->expr_left->dataType.id + " " + *this->Name + "is static field");
                 }
+
+                if(ClassTable::isHaveAccessToField(curClassName, this->expr_left->dataType.id, *this->Name)){
+                    throw Exception(Exception::ACCESS_ERROR, curClassName + " not has access to field " + *this->Name);
+                }
             }
             catch (Exception e) {
                 throw e;
@@ -2679,6 +2738,10 @@ void ExprNode::transform(bool isConvertedToConst) {
 
                 this->checkMethodParam();
                 this->dataType = methodItem.returnDataType;
+
+                if(ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->dataType.id, *this->Name)){
+                    throw Exception(Exception::ACCESS_ERROR, curClassName + " not has access to method " + *this->Name);
+                }
             }
             catch (Exception e) {
                 throw e;
@@ -2810,7 +2873,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             break;
         case loop_for:
 
-          //  addMetaInfo(expr_left); // for ID IN Expr array 1.. {}
+            //  addMetaInfo(expr_left); // for ID IN Expr array 1.. {}
             //checkCancelExprNode(expr_left);
 
             if (this->expr_left->type == break_expr || this->expr_left->type == return_expr
@@ -2899,7 +2962,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             checkCancelExprNode(this->expr_left);
             this->expr_left->transformPathCallExpr(curClassName, ExprNode::static_method, false);
             checkMethodParam();
-            this->expr_middle = ExprNode::CallAccessExpr(ExprNode::id_, new string(methodName), NULL, NULL);
+            this->expr_middle = ExprNode::CallAccessExpr(ExprNode::id_, new string(expr_left->methodName), NULL, NULL);
 
             if (ClassTable::Instance()->isMethodExist(this->expr_left->className, *this->expr_middle->Name)) {
                 this->dataType = ClassTable::Instance()->getMethod(this->expr_left->className,
@@ -2910,13 +2973,21 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 "not exist");
             }
 
+            if(!ClassTable::isHaveAccess(curClassName, this->expr_left->className)){
+                throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to " + this->expr_left->className);
+            }
+
+            if(!ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->className, *this->expr_middle->Name)){
+                throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to " + *this->expr_middle->Name);
+            }
+
             break;
         case path_call_expr:
             addMetaInfo(this->expr_left);
             checkCancelExprNode(this->expr_left);
 
             this->expr_left->transformPathCallExpr(curClassName, ExprNode::static_method, false);
-            this->expr_middle = ExprNode::CallAccessExpr(ExprNode::id_, new string(methodName), NULL, NULL);
+            this->expr_middle = ExprNode::CallAccessExpr(ExprNode::id_, new string(expr_left->fieldName), NULL, NULL);
 
             if (ClassTable::Instance()->isFieldExist(this->expr_left->className, *this->expr_middle->Name)) {
                 this->dataType = ClassTable::Instance()->getField(this->expr_left->className,
@@ -2933,24 +3004,23 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->checkStructExpr();
             break;
         case as:
-            if(DataType::isCanConvert(this->expr_left->dataType, this->typeNode->convertToDataType(curClassName))){
+            if (DataType::isCanConvert(this->expr_left->dataType, this->typeNode->convertToDataType(curClassName))) {
                 this->dataType = this->typeNode->convertToDataType(curClassName);
-            }
-            else {
-                throw Exception(Exception::TYPE_ERROR, "cannot convert type " + this->expr_left->dataType.toString() + " to " + this->typeNode->convertToDataType(curClassName).toString());
+            } else {
+                throw Exception(Exception::TYPE_ERROR,
+                                "cannot convert type " + this->expr_left->dataType.toString() + " to " +
+                                this->typeNode->convertToDataType(curClassName).toString());
             }
             break;
 
-        case id_:
-        {
-            int tmp =  Node::getVarNumber(blockExprList, curClassName, curMethodName, *this->Name);
-            if(tmp != -1){
+        case id_: {
+            int tmp = Node::getVarNumber(blockExprList, curClassName, curMethodName, *this->Name);
+            if (tmp != -1) {
                 this->localVarNum = tmp;
                 VarTableItem varItem = ClassTable::Instance()->getLocalVar(curClassName, curMethodName, tmp);
                 this->isMut = varItem.isMut;
                 this->isConst = varItem.isConst;
-            }
-            else if (ClassTable::Instance()->isFieldExist(curClassName, *this->Name)){
+            } else if (ClassTable::Instance()->isFieldExist(curClassName, *this->Name)) {
                 this->fieldName = *this->Name;
                 FieldTableItem fieldItem = ClassTable::Instance()->getField(curClassName, *this->Name);
                 this->isMut = !fieldItem.isConst;
@@ -2959,24 +3029,21 @@ void ExprNode::transform(bool isConvertedToConst) {
 
         }
             break;
-        case self_expr:
-            {
-                MethodTableItem methodItem = ClassTable::Instance()->getMethod(curClassName, curMethodName);
+        case self_expr: {
+            MethodTableItem methodItem = ClassTable::Instance()->getMethod(curClassName, curMethodName);
 
-                if(methodItem.isStatic){
-                    throw Exception(Exception::STATIC_ERROR, "static error: self used in static method");
-                }
-
-                this->localVarNum = 0; //TODO бебебе
-                this->dataType = methodItem.paramTable.getVar(0).dataType;
+            if (methodItem.isStatic) {
+                throw Exception(Exception::STATIC_ERROR, "static error: self used in static method");
             }
+
+            this->localVarNum = 0; //TODO бебебе
+            this->dataType = methodItem.paramTable.getVar(0).dataType;
+        }
             break;
         case super_expr:
-            if(ClassTable::isHaveParent(curClassName)){
+            if (ClassTable::isHaveParent(curClassName)) {
                 this->dataType = DataType::StructDataType(ClassTable::Instance()->getClass(curClassName).parentName);
-            }
-            else
-            {
+            } else {
                 throw Exception(Exception::TYPE_ERROR, curClassName + " has not parent ");
             }
             break;
@@ -3477,7 +3544,7 @@ void ExprNode::checkMethodParam() {
 
     VarTable paramTable = this->methodTableItem.paramTable;
 
-    if(!methodItem.isStatic){ //TODO это говно надо чекнуть
+    if (!methodItem.isStatic) { //TODO это говно надо чекнуть
         paramTable.items.erase(paramTable.items.begin());
     }
 
@@ -3502,7 +3569,7 @@ void ExprNode::checkMethodParam() {
         }
         VarTableItem varItem = paramTable.items[i];
         if (!varItem.dataType.isEquals(elem->dataType) &&
-           !isParent(elem->dataType, varItem.dataType)) { //TODO проверить
+            !isParent(elem->dataType, varItem.dataType)) { //TODO проверить
             throw Exception(Exception::TYPE_ERROR,
                             varItem.id + "type expected: " + varItem.dataType.toString() + "result: " +
                             elem->dataType.toString());
@@ -3570,7 +3637,7 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
     this->expr_left->transformPathCallExpr(curClassName, undefined, true);
     this->className = this->expr_left->className;
 
-    if(ClassTable::Instance()->getClass(this->className).classType != ClassTableItem::struct_){
+    if (ClassTable::Instance()->getClass(this->className).classType != ClassTableItem::struct_) {
         throw Exception(Exception::TYPE_ERROR, "constructor error: " + className + " is not struct");
     }
 
@@ -3581,14 +3648,21 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
                         "fields count in constructor not equal field count in struct " + className);
     }
 
+    if(!ClassTable::isHaveAccess(curClassName,  this->className)){
+        throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to " + this->expr_left->className);
+    }
+
     for (auto elem: *this->expr_list->exprs) {
         addMetaInfo(elem->expr_left);
         checkCancelExprNode(elem->expr_left);
         elem->expr_left->transform(isConvertedTransform);
         if (ClassTable::Instance()->isFieldExist(className, *this->Name)) {
             FieldTableItem fieldItem = ClassTable::Instance()->getField(className, this->className);
+            if(!ClassTable::isHaveAccessToField(curClassName, this->expr_left->className, *elem->Name)){
+                throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to private" + *elem->Name);
+            }
             if (fieldItem.dataType.isEquals(elem->expr_left->dataType) &&
-                    isParent(elem->expr_left->dataType, fieldItem.dataType)) {
+                isParent(elem->expr_left->dataType, fieldItem.dataType)) {
                 throw Exception(Exception::TYPE_ERROR,
                                 *this->Name + "field type should be " + fieldItem.toString() + " " +
                                 elem->expr_left->dataType.toString());
@@ -3613,23 +3687,25 @@ void Node::addMetaInfo(Node *node) {
     node->curMethodName = this->methodName;
 }
 
-bool Node::isParent(const DataType& child, DataType parent) {
-    if(child.type != DataType::class_){
+bool Node::isParent(const DataType &child, DataType parent) {
+    if (child.type != DataType::class_) {
         return false;
     }
-    if(parent.type != DataType::class_){
+    if (parent.type != DataType::class_) {
         return false;
     }
 
     return ClassTable::Instance()->isParent(child.id, parent.id);
 }
 
-int Node::getVarNumber(vector<ExprNode *> &blockExprList, const string& className,const string& methodName, const string& varName) {
+int Node::getVarNumber(vector<ExprNode *> &blockExprList, const string &className, const string &methodName,
+                       const string &varName) {
     int res = -1;
-    int cur  = blockExprList.size() - 1;
-    while(res == -1 & cur >= 0){
-        if(ClassTable::Instance()->isLocalVarExist(className, methodName, varName, blockExprList[cur])){
-            res = ClassTable::Instance()->getMethod(className, methodName).localVarTable.getVarNumber(varName, blockExprList[cur]);
+    int cur = blockExprList.size() - 1;
+    while (res == -1 & cur >= 0) {
+        if (ClassTable::Instance()->isLocalVarExist(className, methodName, varName, blockExprList[cur])) {
+            res = ClassTable::Instance()->getMethod(className, methodName).localVarTable.getVarNumber(varName,
+                                                                                                      blockExprList[cur]);
             break;
         }
         cur--;

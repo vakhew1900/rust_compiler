@@ -64,6 +64,8 @@ public:
     int MethodRef(const string& className, const string& method, const vector<DataType> &params,const DataType &returnType);
     int FieldRef(const string& className, const string& field, const DataType& dataType);
     int add(ConstTableItem constTableItem);
+    ConstTable();
+
 };
 
 

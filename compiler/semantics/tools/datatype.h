@@ -40,6 +40,8 @@ public:
     static bool isCanConvert(DataType first, DataType second);
     static bool isEquals(vector<DataType> types);
     DataType getArrDataType() const;
+
+    bool isClass();
 };
 
 

@@ -47,6 +47,8 @@ public:
         PARAM_ERROR,
         STATIC_ERROR,
         CONSTRUCTOR_ERROR,
+        ACCESS_ERROR,
+        PRIVATE_ERROR,
     };
 
     ExceptionType exceptionType;

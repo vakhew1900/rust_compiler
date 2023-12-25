@@ -233,3 +233,8 @@ int ConstTable::MethodRef(const string &className, const string &method, const v
     return res;
 }
 
+ConstTable::ConstTable() {
+        ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "Code");
+        items.push_back(item);
+}
+
