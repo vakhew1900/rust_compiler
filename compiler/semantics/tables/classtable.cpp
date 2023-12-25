@@ -372,3 +372,32 @@ bool ClassTable::isEqualDirectory(const string &first, const string &second) {
     return getDirectory(first) == getDirectory(second);
 }
 
+int ClassTable::addIntToConstTable(const string& className, int val){
+    Instance();
+    return _instanse->items[className].constTable.Int(val);
+}
+
+int ClassTable::addFloatToConstTable(const string& className, double val){
+    Instance();
+    return _instanse->items[className].constTable.Double(val);
+}
+
+int ClassTable::addStringToConstTable(const string& className, const string& str){
+    Instance();
+    return _instanse->items[className].constTable.String(str);
+}
+
+int ClassTable::addClassToConstTable(const string& className, const string& addingClassName){
+    Instance();
+    return _instanse->items[className].constTable.Class(addingClassName);
+}
+
+int ClassTable::addMethodRefToConstTable(const string& className, const string& addingClassName, const string& method, const vector<DataType> &params,const DataType &returnType){
+    Instance();
+    return _instanse->items[className].constTable.MethodRef(addingClassName, method, params, returnType);
+}
+
+int ClassTable::addFieldRefToConstTable(const string& className, const string& addingClassName, const string& field, const DataType& dataType){
+    Instance();
+    return _instanse->items[className].constTable.FieldRef(addingClassName, field, dataType);
+}

@@ -688,7 +688,7 @@ void TypeNode::toDot(string &dot) {
             break;
 
         case TypeNode::id_:
-            //  cout << this->name << "\n";
+
             createVertexDot(dot, this->id, "id_type", "", *this->name);
             break;
 
@@ -994,7 +994,7 @@ void ExprNode::toDot(string &dot, const string &pos) {
     if (this->ifList != NULL) {
 
         int ifCount = 1;
-        //    cout << "adfkshfadgdjaf\n";
+
         for (auto elem: *this->ifList) {
             connectVerticesDots(dot, this->id, elem->id);
             elem->toDot(dot, "condition" + to_string(ifCount++));
@@ -1206,7 +1206,7 @@ void ItemNode::toDot(string &dot) {
 void ItemListNode::toDot(string &dot) {
 
     createVertexDot(dot, this->id, "item_list");
-    //  cout << this->id << "\n";
+
     for (auto elem: *this->items) {
         int exprNum = 1;
         connectVerticesDots(dot, this->id, elem->id);
@@ -1755,6 +1755,7 @@ void ItemNode::addImpl(string className, bool isTrait) {
                 }
 
                 this->className = implClassName;
+                this->curClassName = implClassName;
                 break;
             case function_:
                 this->methodTableItem = MethodTableItem();
@@ -1908,8 +1909,9 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
         case enum_:
 
             for (auto elem: *this->enumItems->items) {
-                elem->addDataTypeToDeclaration(this->className + *this->name, enumSt);
+                elem->addDataTypeToDeclaration(className + "/" + *this->name, enumSt);
             }
+            this->curClassName = className + "/" + *this->name;
             break;
         case function_:
             this->methodTableItem.returnDataType = this->returnType->convertToDataType(className);
@@ -1969,6 +1971,8 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
             for (auto elem: *this->structItems->items) {
                 elem->addDataTypeToDeclaration(className + "/" + *this->name);
             }
+
+            this->curClassName = className + "/" + *this->name;
             break;
         case impl_:
             for (auto elem: *this->items->items) {
@@ -1986,6 +1990,7 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
             }
             break;
         case trait_:
+            this->curClassName = className + "/" + *this->name;
             if (this->items != NULL) {
                 for (auto elem: *this->items->items) {
                     elem->addDataTypeToDeclaration(className + "/" + *this->name);
@@ -2129,7 +2134,6 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
         throw Exception(Exception::NOT_EXIST, res + "NOT_EXIST");
     }
 
-//    cout << res << "\n";
     this->className = res;
 
 }
@@ -2143,7 +2147,8 @@ bool ExprNode::isLiteral() {
 
 void ProgramNode::transform(bool isConvertedToConst) {
 
-
+    string tmp = ClassTable::globalClassName + "/" + ClassTable::moduleClassName;
+    ClassTable::addClassToConstTable(tmp, tmp);
     if (this->item_list != NULL) {
         for (auto item: *this->item_list->items) {
             try {
@@ -2159,17 +2164,20 @@ void ProgramNode::transform(bool isConvertedToConst) {
 
 void ItemNode::transform(bool isConvertedToConst) {
 
+
     switch (this->item_type) {
 
-
-        case function_:
+        case function_: {
             body->curClassName = curClassName;
             body->curMethodName = *this->name;
-
+            vector<DataType> paramTypes;
             for (auto elem: ClassTable::Instance()->getMethod(curClassName, *this->name).paramTable.items) {
                 elem.blockExpr = body;
+                paramTypes.push_back(elem.dataType);
                 ClassTable::Instance()->addLocalParam(curClassName, *this->name, varTableItem);
             }
+
+            ClassTable::addMethodRefToConstTable(curClassName, curClassName, *this->name, paramTypes, this->dataType);
 
             blockExprList.push_back(body);
             returnTypes.clear();
@@ -2188,8 +2196,9 @@ void ItemNode::transform(bool isConvertedToConst) {
                         }
 
                         bool isPub = ClassTable::Instance()->getMethod(curClassName, *this->name).isPub;
-                        if (isPub && !ClassTable::Instance()->getClass(param->dataType.id).isPub){
-                            throw Exception(Exception::PRIVATE_ERROR, *this->name + " has param  " + param->dataType.id + " is private" );
+                        if (isPub && !ClassTable::Instance()->getClass(param->dataType.id).isPub) {
+                            throw Exception(Exception::PRIVATE_ERROR,
+                                            *this->name + " has param  " + param->dataType.id + " is private");
                         }
                     }
                 }
@@ -2205,21 +2214,23 @@ void ItemNode::transform(bool isConvertedToConst) {
                 }
 
             }
-
+        }
             break;
         case constStmt_:
             body->curClassName = curClassName;
             this->expr->transform(isConvertedToConst);
             if (this->dataType.isClass()) {
-                if(ClassTable::isHaveAccess(curClassName, dataType.id)) {
+                if (ClassTable::isHaveAccess(curClassName, dataType.id)) {
                     throw Exception(Exception::ACCESS_ERROR, *this->name + " has not access to " + dataType.id);
                 }
             }
 
-            if (!ClassTable::Instance()->getClass(dataType.id).isPub){
-                throw Exception(Exception::PRIVATE_ERROR, *this->name + " is public but type " + dataType.id + " is private" );
+            if (!ClassTable::Instance()->getClass(dataType.id).isPub) {
+                throw Exception(Exception::PRIVATE_ERROR,
+                                *this->name + " is public but type " + dataType.id + " is private");
             }
 
+            ClassTable::addFieldRefToConstTable(curClassName, curClassName, *this->name, this->dataType);
             break;
         case trait_:
         case impl_:
@@ -2231,21 +2242,39 @@ void ItemNode::transform(bool isConvertedToConst) {
             }
             break;
         case struct_:
+        {
+            vector<DataType> params;
+
             for (auto elem: *structItems->items) {
                 if (elem->dataType.isClass()) {
 
-                    if(!ClassTable::isHaveAccess(curClassName, dataType.id)){
+                    if (!ClassTable::isHaveAccess(curClassName, dataType.id)) {
                         throw Exception(Exception::ACCESS_ERROR, *this->name + " has not access to " + dataType.id);
                     }
 
                     bool isPubField = ClassTable::Instance()->getField(curClassName, *elem->name).isPub;
                     bool isPrivateType = !ClassTable::Instance()->getClass(elem->dataType.id).isPub;
-                    if(isPubField && isPrivateType){
-                        throw Exception(Exception::PRIVATE_ERROR, *elem->name + " is public but type " + elem->dataType.id + " is private" );
+                    if (isPubField && isPrivateType) {
+                        throw Exception(Exception::PRIVATE_ERROR,
+                                        *elem->name + " is public but type " + elem->dataType.id + " is private");
                     }
                 }
+
+                params.push_back(elem->dataType);
+                ClassTable::addFieldRefToConstTable(curClassName, curClassName, *elem->name, elem->dataType);
+
+                ClassTable::addMethodRefToConstTable(curClassName, curClassName, "<init>", params, DataType(DataType::void_));
             }
+
+
+
+        }
         case enum_:
+
+            for(auto elem:  *this->enumItems->items){
+                ClassTable::addFieldRefToConstTable(curClassName, curClassName, *elem->name, elem->dataType);
+            }
+
             break;
     }
 }
@@ -2305,6 +2334,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                 varTableItem.isConst = true;
                 varTableItem.id = *this->name;
                 this->expr->transformConst();
+                this->expr->transform();
                 varTableItem.dataType = this->typeChild->convertToDataType(curClassName);
 
                 if (!this->expr->dataType.isEquals(varTableItem.dataType)) {
@@ -2320,7 +2350,7 @@ void StmtNode::transform(bool isConvertedToConst) {
         }
     }
     catch (Exception e) {
-        cout << e.getMessage() << "\n";
+       throw e;
     }
 }
 
@@ -2704,9 +2734,11 @@ void ExprNode::transform(bool isConvertedToConst) {
                                     this->expr_left->dataType.id + " " + *this->Name + "is static field");
                 }
 
-                if(ClassTable::isHaveAccessToField(curClassName, this->expr_left->dataType.id, *this->Name)){
+                if (ClassTable::isHaveAccessToField(curClassName, this->expr_left->dataType.id, *this->Name)) {
                     throw Exception(Exception::ACCESS_ERROR, curClassName + " not has access to field " + *this->Name);
                 }
+
+                ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id, *this->Name, ClassTable::Instance()->getField(this->expr_left->dataType.id, *this->Name).dataType);
             }
             catch (Exception e) {
                 throw e;
@@ -2739,9 +2771,17 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->checkMethodParam();
                 this->dataType = methodItem.returnDataType;
 
-                if(ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->dataType.id, *this->Name)){
+                if (ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->dataType.id, *this->Name)) {
                     throw Exception(Exception::ACCESS_ERROR, curClassName + " not has access to method " + *this->Name);
                 }
+
+                vector<DataType> params;
+
+                for(auto elem : methodTableItem.paramTable.items){
+                    params.push_back(elem.dataType);
+                }
+
+                ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->dataType.id, *this->Name, params, methodItem.returnDataType);
             }
             catch (Exception e) {
                 throw e;
@@ -2973,14 +3013,27 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 "not exist");
             }
 
-            if(!ClassTable::isHaveAccess(curClassName, this->expr_left->className)){
-                throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to " + this->expr_left->className);
+            if (!ClassTable::isHaveAccess(curClassName, this->expr_left->className)) {
+                throw Exception(Exception::ACCESS_ERROR,
+                                curClassName + " has not access to " + this->expr_left->className);
             }
 
-            if(!ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->className, *this->expr_middle->Name)){
-                throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to " + *this->expr_middle->Name);
+            if (!ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->className,
+                                                   *this->expr_middle->Name)) {
+                throw Exception(Exception::ACCESS_ERROR,
+                                curClassName + " has not access to " + *this->expr_middle->Name);
             }
 
+            {
+                vector<DataType> params;
+                MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(this->expr_left->className, *this->expr_middle->Name);
+                for (auto elem: methodTableItem.paramTable.items) {
+                    params.push_back(elem.dataType);
+                }
+
+                ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, *this->expr_middle->Name, params,
+                                                     methodTableItem.returnDataType);
+            }
             break;
         case path_call_expr:
             addMetaInfo(this->expr_left);
@@ -2998,6 +3051,10 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 " not exist");
             }
 
+            {
+                ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->className, *this->expr_middle->Name, ClassTable::Instance()->getField(this->expr_left->className, *this->expr_middle->Name).dataType);
+            }
+
             break;
 
         case struct_creation:
@@ -3011,6 +3068,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 "cannot convert type " + this->expr_left->dataType.toString() + " to " +
                                 this->typeNode->convertToDataType(curClassName).toString());
             }
+
+
+
             break;
 
         case id_: {
@@ -3648,19 +3708,25 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
                         "fields count in constructor not equal field count in struct " + className);
     }
 
-    if(!ClassTable::isHaveAccess(curClassName,  this->className)){
+    if (!ClassTable::isHaveAccess(curClassName, this->className)) {
         throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to " + this->expr_left->className);
     }
+
+
+    vector<DataType> params;
 
     for (auto elem: *this->expr_list->exprs) {
         addMetaInfo(elem->expr_left);
         checkCancelExprNode(elem->expr_left);
         elem->expr_left->transform(isConvertedTransform);
-        if (ClassTable::Instance()->isFieldExist(className, *this->Name)) {
-            FieldTableItem fieldItem = ClassTable::Instance()->getField(className, this->className);
-            if(!ClassTable::isHaveAccessToField(curClassName, this->expr_left->className, *elem->Name)){
+        if (ClassTable::Instance()->isFieldExist(className, *elem->Name)) {
+            FieldTableItem fieldItem = ClassTable::Instance()->getField(className, *elem->Name);
+            if (!ClassTable::isHaveAccessToField(curClassName, this->expr_left->className, *elem->Name)) {
                 throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to private" + *elem->Name);
             }
+
+            params.push_back(fieldItem.dataType);
+
             if (fieldItem.dataType.isEquals(elem->expr_left->dataType) &&
                 isParent(elem->expr_left->dataType, fieldItem.dataType)) {
                 throw Exception(Exception::TYPE_ERROR,
@@ -3671,6 +3737,12 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
             throw Exception(Exception::CONSTRUCTOR_ERROR, *this->Name + " field not exist in struct " + className);
         }
     }
+
+
+
+        ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, "<init>", params,
+                                             DataType(DataType::void_));
+
 }
 
 

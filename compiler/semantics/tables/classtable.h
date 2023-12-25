@@ -75,6 +75,13 @@ public:
     static bool isHaveAccess(const string& requesterClass, const string& requestedClass);
     static bool isHaveAccessToMethtod(const string& requesterClass, const string& requestedClass, const string& requestedMethod);
     static bool isHaveAccessToField(const string& requesterClass, const string& requestedClass, const string& requestedField);
+
+    static int addIntToConstTable(const string& className, int val);
+    static int addFloatToConstTable(const string& className, double val);
+    static int addStringToConstTable(const string& className, const string& str);
+    static int addClassToConstTable(const string& className, const string& addingClassName);
+    static int addMethodRefToConstTable(const string& className, const string& addingClassName, const string& method, const vector<DataType> &params,const DataType &returnType);
+    static int addFieldRefToConstTable(const string& className, const string& addingClassName, const string& field, const DataType& dataType);
 };
 
 
