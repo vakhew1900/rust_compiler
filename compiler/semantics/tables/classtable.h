@@ -82,6 +82,8 @@ public:
     static int addClassToConstTable(const string& className, const string& addingClassName);
     static int addMethodRefToConstTable(const string& className, const string& addingClassName, const string& method, const vector<DataType> &params,const DataType &returnType);
     static int addFieldRefToConstTable(const string& className, const string& addingClassName, const string& field, const DataType& dataType);
+
+    static void isMainFunctionExist();
 };
 
 

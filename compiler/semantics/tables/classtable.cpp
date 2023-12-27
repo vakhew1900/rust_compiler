@@ -401,3 +401,19 @@ int ClassTable::addFieldRefToConstTable(const string& className, const string& a
     Instance();
     return _instanse->items[className].constTable.FieldRef(addingClassName, field, dataType);
 }
+
+void ClassTable::isMainFunctionExist() {
+    if(ClassTable::Instance()->isMethodExist(globalClassName + "/" + moduleClassName, "main")){
+        MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(globalClassName + "/" + moduleClassName, "main");
+
+        if(methodTableItem.paramTable.items.size()){
+           throw Exception(Exception::UNEXPECTED, "incorrect number of function parameters in `main`. expected 0 params");
+        }
+        if(!methodTableItem.returnDataType.isEquals(DataType(DataType::void_))){
+            throw Exception(Exception::TYPE_ERROR, "`main` can only void_. ReturnType now: " + methodTableItem.returnDataType.toString());
+        }
+    }
+    else {
+        throw Exception(Exception::NOT_EXIST, "consider adding a `main` function");
+    }
+}

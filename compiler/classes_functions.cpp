@@ -1523,6 +1523,7 @@ void ProgramNode::getAllItems(std::string className) {
         }
 
         ClassTable::isCorrectTraitsImpl();
+        ClassTable::isMainFunctionExist();
     }
     catch (Exception e) {
         cout << e.getMessage() << "\n";
@@ -1911,6 +1912,8 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
                 elem->addDataTypeToDeclaration(className + "/" + *this->name, enumSt);
             }
             this->curClassName = className + "/" + *this->name;
+
+
             break;
         case function_:
             this->methodTableItem.returnDataType = this->returnType->convertToDataType(className);
@@ -1937,11 +1940,7 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
 
                 for (auto elem: *this->params->items) {
                     elem->methodName = *this->name;
-                    if(*elem->name == "array"){
-                        Exception(Exception::EMPTY_STACK, "fff");
-                    }
                     elem->addDataTypeToDeclaration(className);
-//                    ClassTable::Instance()->addFuncParam(className, *this->name, elem->varTableItem);
                     elem->varTableItem.blockExpr = this->body;
 
                     if (this->methodTableItem.paramTable.isExist(*elem->name)) {
@@ -2026,11 +2025,13 @@ void EnumItemNode::addDataTypeToDeclaration(const string &className, set<int> &s
     }
 
     if (st.count(this->expr->Int)) {
-        throw Exception(Exception::INCORRECT_ENUM_VALUE, "INCORRECT_ENUM_VALUE: ENUM VALUE occurs twice ");
+        throw Exception(Exception::INCORRECT_ENUM_VALUE, "INCORRECT_ENUM_VALUE: ENUM VALUE " + to_string(this->expr->Int) + " occurs twice in " + className);
     }
 
+    st.insert(this->expr->Int);
     this->fieldTableItem.dataType = DataType::int_;
     this->fieldTableItem.value = this->expr;
+    ClassTable::Instance()->updateField(className, *this->name, this->fieldTableItem);
 }
 
 
@@ -2151,11 +2152,16 @@ bool ExprNode::isLiteral() {
 void ProgramNode::transform(bool isConvertedToConst) {
 
     string tmp = ClassTable::globalClassName + "/" + ClassTable::moduleClassName;
+    this->curClassName = className + "/" + ClassTable::moduleClassName;
     ClassTable::addClassToConstTable(tmp, tmp);
     if (this->item_list != NULL) {
         for (auto item: *this->item_list->items) {
             try {
+                if(item->item_type == ItemNode::function_ || item->item_type == ItemNode::constStmt_){
+                    item->curClassName = this->curClassName;
+                }
                 item->transform(isConvertedToConst);
+
             }
             catch (Exception e) {
                 cout << e.getMessage() << endl;
