@@ -1454,7 +1454,7 @@ void Node::createVertexDot(string &s, int id, string name, string type, string v
     }
 
     string tmp = "id" + to_string(id) +
-                 " [label=\"name=" + name + " " + type + value + visibility + pos + "id=" + to_string(id) + "\"];\n";
+                 " [label=\"name=" + name + " " + type + value + visibility + pos + "id=" + to_string(id) + " dtype=" + this->dataType.toString() +  "\"];\n";
 
     s += tmp;
 
@@ -1512,7 +1512,6 @@ void ProgramNode::getAllItems(std::string className) {
         }
 
         this->addImpl(className, false);
-        ClassTable::Instance()->getClass(ClassTable::globalClassName + "/ID/Tweet");
         if (item_list != NULL) {
 
             for (auto elem: *item_list->items) {
@@ -1938,6 +1937,9 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
 
                 for (auto elem: *this->params->items) {
                     elem->methodName = *this->name;
+                    if(*elem->name == "array"){
+                        Exception(Exception::EMPTY_STACK, "fff");
+                    }
                     elem->addDataTypeToDeclaration(className);
 //                    ClassTable::Instance()->addFuncParam(className, *this->name, elem->varTableItem);
                     elem->varTableItem.blockExpr = this->body;
@@ -1975,6 +1977,7 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
             this->curClassName = className + "/" + *this->name;
             break;
         case impl_:
+
             for (auto elem: *this->items->items) {
                 elem->addDataTypeToDeclaration(this->className);
             }
@@ -2273,6 +2276,7 @@ void ItemNode::transform(bool isConvertedToConst) {
 
             for(auto elem:  *this->enumItems->items){
                 ClassTable::addFieldRefToConstTable(curClassName, curClassName, *elem->name, elem->dataType);
+                elem->expr->transform();
             }
 
             break;
@@ -3111,14 +3115,25 @@ void ExprNode::transform(bool isConvertedToConst) {
 
         case int_lit:
             this->dataType = DataType(DataType::int_);
+            if(this->Int < INT16_MIN || this->Int > INT16_MAX){
+                ClassTable::addIntToConstTable(curClassName, this->Int);
+            }
+            break;
         case float_lit:
             this->dataType = DataType(DataType::float_);
+            ClassTable::addFloatToConstTable(curClassName, this->Float);
+            break;
         case char_lit:
             this->dataType = DataType(DataType::char_);
+            break;
         case string_lit:
             this->dataType = DataType(DataType::string_);
+            ClassTable::addStringToConstTable(curClassName, *this->String);
+            break;
         case raw_string_lit:
             this->dataType = DataType(DataType::string_);
+            ClassTable::addStringToConstTable(curClassName, *this->String);
+            break;
         case bool_lit:
             this->dataType = DataType(DataType::bool_);
             break;
@@ -3162,7 +3177,6 @@ void ExprNode::transform(bool isConvertedToConst) {
 
         case call_expr:
         case continue_expr:
-            //   this->transformPathCallExpr(curClassName, false);
             break;
     }
 
