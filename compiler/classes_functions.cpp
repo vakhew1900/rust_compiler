@@ -1982,14 +1982,19 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
             }
             break;
         case module_:
+            this->curClassName = className + "/" + *this->name + "/" + ClassTable::moduleClassName;
             if (this->items != NULL) {
                 for (auto elem: *this->items->items) {
                     string str = (elem->item_type == function_ || elem->item_type == constStmt_)
                                  ? "/" + ClassTable::moduleClassName : "";
 
+                    if(elem->item_type == function_ || elem->item_type == constStmt_){
+                        elem->curClassName = this->curClassName;
+                    }
                     elem->addDataTypeToDeclaration(className + "/" + *this->name + str);
                 }
             }
+
             break;
         case trait_:
             this->curClassName = className + "/" + *this->name;
@@ -2168,7 +2173,7 @@ bool ExprNode::isLiteral() {
 void ProgramNode::transform(bool isConvertedToConst) {
 
     string tmp = ClassTable::globalClassName + "/" + ClassTable::moduleClassName;
-    this->curClassName = className + "/" + ClassTable::moduleClassName;
+    this->curClassName = tmp;
     ClassTable::addClassToConstTable(tmp, tmp);
     if (this->item_list != NULL) {
         for (auto item: *this->item_list->items) {
@@ -2378,7 +2383,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                     }
                 }
 
-                ClassTable::Instance()->addLocalParam(curClassName, methodName, this->varTableItem);
+                ClassTable::Instance()->addLocalParam(curClassName, curMethodName, this->varTableItem);
                 break;
             case const_:
                 this->varTableItem = VarTableItem();
@@ -2398,7 +2403,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                 }
 
                 varTableItem.blockExpr = blockExprList.back();
-                ClassTable::Instance()->addLocalParam(curClassName, methodName, this->varTableItem);
+                ClassTable::Instance()->addLocalParam(curClassName, curMethodName, this->varTableItem);
                 break;
             case semicolon:
             case expression:
@@ -3141,11 +3146,13 @@ void ExprNode::transform(bool isConvertedToConst) {
                 VarTableItem varItem = ClassTable::Instance()->getLocalVar(curClassName, curMethodName, tmp);
                 this->isMut = varItem.isMut;
                 this->isConst = varItem.isConst;
+                this->dataType = varItem.dataType;
             } else if (ClassTable::Instance()->isFieldExist(curClassName, *this->Name)) {
                 this->fieldName = *this->Name;
                 FieldTableItem fieldItem = ClassTable::Instance()->getField(curClassName, *this->Name);
                 this->isMut = !fieldItem.isConst;
                 this->isConst = fieldItem.isConst;
+                this->dataType = fieldItem.dataType;
             }
 
         }
