@@ -2827,7 +2827,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->checkMethodParam(this->expr_left->dataType.id, *this->Name);
                 this->dataType = methodItem.returnDataType;
 
-                if (ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->dataType.id, *this->Name)) {
+                if (!ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->dataType.id, *this->Name)) {
                     throw Exception(Exception::ACCESS_ERROR, curClassName + " not has access to method " + *this->Name);
                 }
 
@@ -2897,7 +2897,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 types.push_back(else_body->dataType);
             }
 
-            if (DataType::isEquals(types)) {
+            if (!DataType::isEquals(types)) {
                 throw Exception(Exception::TYPE_ERROR, "if has different types");
             }
 
@@ -2929,7 +2929,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 vector<DataType> breaks = breakTypes;
                 breakTypes.clear();
                 body->transform(isConvertedToConst);
-                if (DataType::isEquals(breakTypes)) {
+                if (!DataType::isEquals(breakTypes)) {
                     throw Exception(Exception::TYPE_ERROR, "loop has different types");
                 }
 
@@ -2955,7 +2955,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 vector<DataType> breaks = breakTypes;
                 breakTypes.clear();
                 body->transform(isConvertedToConst);
-                if (DataType::isEquals(breakTypes)) {
+                if (!DataType::isEquals(breakTypes)) {
                     throw Exception(Exception::TYPE_ERROR, "while should return void");
                 }
 
@@ -3030,7 +3030,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                              elem->expr->type == ExprNode::if_expr_list) &&
                             elem->expr->dataType.type != DataType::void_) {
                             elem++;
-                            if (elem != *this->stmt_list->stmts->end() &&
+                            if (elem != this->stmt_list->stmts->back() &&
                                 elem->type != StmtNode::semicolon) {
                                 throw Exception(Exception::TYPE_ERROR,
                                                 "if or loop without  semicolon should return  void_. Result:" +
