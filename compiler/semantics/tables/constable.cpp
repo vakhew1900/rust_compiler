@@ -95,7 +95,14 @@ string ConstTable::toString() {
 }
 
 int ConstTable::Class(const string &className) {
-    return 0;
+    int utf8Val = UTF8(className);
+    int res = Val(ConstTableItem::CONSTANT_CLASS, utf8Val);
+
+    if(res == -1){
+        ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_CLASS, utf8Val);
+        res = this->add(item);
+    }
+    return res;
 }
 
 int ConstTable::Int(int val) {
@@ -141,7 +148,8 @@ int ConstTable::UTF8(const string &str) {
             return i;
         }
     }
-    return -1;
+
+    return  add(ConstTableItem(ConstTableItem::CONSTANT_UTF8, str));
 }
 
 int ConstTable::Val(ConstTableItem::ConstTableType constTableType, int val) {

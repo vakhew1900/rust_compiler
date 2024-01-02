@@ -205,7 +205,7 @@ FieldTableItem ClassTable::getField(const string &className, const string &field
 MethodTableItem ClassTable::getMethod(const string &className, const string &methodName) {
 
     if (!ClassTable::Instance()->isMethodExist(className, methodName)) {
-        throw Exception(Exception::NOT_EXIST, methodName + " NOT_EXIST in namespace");
+        throw Exception(Exception::NOT_EXIST, methodName + " NOT_EXIST in namespace " + className);
     }
 
     return Instance()->getClass(className).methodTable.items[methodName];

@@ -97,6 +97,7 @@ public:
     void getAllItems(std::string className) override;
     void addImpl(string className, bool isTrait) override;
     void transform(bool isConvertedToConst = true) override;
+    void makeAllConversions();
 };
 
 class TypeNode : public Node {
@@ -225,7 +226,7 @@ public:
     void transform(bool isConvertedToConst = true) override;
     void transformConst();
     bool isLiteral();
-    void checkMethodParam();
+    void checkMethodParam(const string& className, const string& methodName);
     bool isRefExpr();
     bool isVar();
     void checkCancelExprNode(ExprNode * exprNode, bool isBreakCanceled = true);

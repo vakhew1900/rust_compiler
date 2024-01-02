@@ -2947,7 +2947,7 @@ int main(int argc, char** argv) {
     global_program->toDot(dot);
     std::cout << dot << "\n";
     std::ofstream out("dot-tree.txt");
-    global_program->getAllItems(ClassTable::globalClassName);
+    global_program->makeAllConversions();
     string updatedDot;
     global_program->toDot(updatedDot);
     string res = ClassTable::Instance()->toString();

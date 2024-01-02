@@ -2028,6 +2028,9 @@ void EnumItemNode::addDataTypeToDeclaration(const string &className, set<int> &s
         throw Exception(Exception::INCORRECT_ENUM_VALUE, "INCORRECT_ENUM_VALUE: ENUM VALUE " + to_string(this->expr->Int) + " occurs twice in " + className);
     }
 
+
+    this->dataType = DataType(DataType::int_);
+
     st.insert(this->expr->Int);
     this->fieldTableItem.dataType = DataType::int_;
     this->fieldTableItem.value = this->expr;
@@ -2037,6 +2040,7 @@ void EnumItemNode::addDataTypeToDeclaration(const string &className, set<int> &s
 
 void StructFieldNode::addDataTypeToDeclaration(const string &className) {
     this->fieldTableItem.dataType = this->type->convertToDataType(className);
+    this->dataType = this->fieldTableItem.dataType;
     ClassTable::Instance()->updateField(className, *this->name, fieldTableItem);
 }
 
@@ -2073,6 +2077,18 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
 
     reverse(all(namePath));
     ///TODO доделать
+
+
+    if(isType == false && namePath.size() == 0){
+        this->className = className;
+        if(type == ExprNode::static_method){
+            this->methodName = *this->Name;
+        }
+        else {
+            this->fieldName = *this->Name;
+        }
+        return;
+    }
 
     if (type == ExprNode::static_method) {
         this->methodName = namePath.back();
@@ -2171,26 +2187,41 @@ void ProgramNode::transform(bool isConvertedToConst) {
 
 }
 
+void ProgramNode::makeAllConversions() {
+    this->getAllItems(ClassTable::globalClassName);
+    this->transform(true);
+}
+
 void ItemNode::transform(bool isConvertedToConst) {
 
 
     switch (this->item_type) {
 
         case function_: {
+            if(body != NULL){
+
             body->curClassName = curClassName;
             body->curMethodName = *this->name;
+            }
+
+            if(*this->name == "selfFunc") {
+                "ffff";
+            }
+
             vector<DataType> paramTypes;
             for (auto elem: ClassTable::Instance()->getMethod(curClassName, *this->name).paramTable.items) {
                 elem.blockExpr = body;
                 paramTypes.push_back(elem.dataType);
-                ClassTable::Instance()->addLocalParam(curClassName, *this->name, varTableItem);
+                ClassTable::Instance()->addLocalParam(curClassName, *this->name, elem);
             }
 
-            ClassTable::addMethodRefToConstTable(curClassName, curClassName, *this->name, paramTypes, this->dataType);
+            ClassTable::addMethodRefToConstTable(curClassName, curClassName, *this->name, paramTypes, ClassTable::Instance()->getMethod(this->curClassName, *this->name).returnDataType);
 
             blockExprList.push_back(body);
             returnTypes.clear();
-            this->body->transform(isConvertedToConst);
+            if(this->body != NULL) {
+                this->body->transform(isConvertedToConst);
+            }
             blockExprList.pop_back();
             if (blockExprList.size()) {
                 throw Exception(Exception::UNEXPECTED, "blockexpr не удалил(");
@@ -2226,20 +2257,25 @@ void ItemNode::transform(bool isConvertedToConst) {
         }
             break;
         case constStmt_:
-            body->curClassName = curClassName;
-            this->expr->transform(isConvertedToConst);
+            if(this->expr != NULL){
+                this->expr->curClassName = curClassName;
+                this->expr->transform(isConvertedToConst);
+            }
+
             if (this->dataType.isClass()) {
                 if (ClassTable::isHaveAccess(curClassName, dataType.id)) {
                     throw Exception(Exception::ACCESS_ERROR, *this->name + " has not access to " + dataType.id);
                 }
+
+                if (!ClassTable::Instance()->getClass(dataType.id).isPub) {
+                    throw Exception(Exception::PRIVATE_ERROR,
+                                    *this->name + " is public but type " + dataType.id + " is private");
+                }
             }
 
-            if (!ClassTable::Instance()->getClass(dataType.id).isPub) {
-                throw Exception(Exception::PRIVATE_ERROR,
-                                *this->name + " is public but type " + dataType.id + " is private");
-            }
 
-            ClassTable::addFieldRefToConstTable(curClassName, curClassName, *this->name, this->dataType);
+
+            ClassTable::addFieldRefToConstTable(curClassName, curClassName, *this->name, ClassTable::Instance()->getField(curClassName, *this->name).dataType);
             break;
         case trait_:
         case impl_:
@@ -2272,11 +2308,11 @@ void ItemNode::transform(bool isConvertedToConst) {
                 params.push_back(elem->dataType);
                 ClassTable::addFieldRefToConstTable(curClassName, curClassName, *elem->name, elem->dataType);
 
-                ClassTable::addMethodRefToConstTable(curClassName, curClassName, "<init>", params, DataType(DataType::void_));
             }
 
+            ClassTable::addMethodRefToConstTable(curClassName, curClassName, "<init>", params, DataType(DataType::void_));
 
-
+            break;
         }
         case enum_:
 
@@ -2306,7 +2342,7 @@ void StmtNode::transform(bool isConvertedToConst) {
         switch (this->type) {
             case exprstmt:
                 this->expr->curClassName = curClassName;
-                this->expr->curMethodName = methodName;
+                this->expr->curMethodName = curMethodName;
                 this->expr->transform(isConvertedToConst);
                 break;
             case let:
@@ -2324,8 +2360,13 @@ void StmtNode::transform(bool isConvertedToConst) {
                         arrDataType.type = typeChild->convertToDataType(curClassName).type;
                         arrDataType.id = typeChild->convertToDataType(curClassName).id;
                     }
-                    this->expr->arrDataType = arrDataType;
-                    this->expr->transform(isConvertedToConst);
+
+                    if(this->expr != NULL) {
+                        this->expr->curClassName = curClassName;
+                        this->expr->curMethodName = methodName;
+                        this->expr->arrDataType = arrDataType;
+                        this->expr->transform(isConvertedToConst);
+                    }
 
                     if (this->typeChild == NULL || this->typeChild->type == TypeNode::emptyType_) {
                         varTableItem.dataType = expr->dataType;
@@ -2343,6 +2384,11 @@ void StmtNode::transform(bool isConvertedToConst) {
                 this->varTableItem = VarTableItem();
                 varTableItem.isConst = true;
                 varTableItem.id = *this->name;
+
+                if(this->expr == NULL){
+                    throw Exception(Exception::UNEXPECTED, "const " + *this->name  + " must be initialized");
+                }
+
                 this->expr->transformConst();
                 this->expr->transform();
                 varTableItem.dataType = this->typeChild->convertToDataType(curClassName);
@@ -2778,7 +2824,7 @@ void ExprNode::transform(bool isConvertedToConst) {
 
                 //VarTableItem selfVarItem = methodItem.localVarTable.getVar(0); ///TODO  пососи ебучая константа
 
-                this->checkMethodParam();
+                this->checkMethodParam(this->expr_left->dataType.id, *this->Name);
                 this->dataType = methodItem.returnDataType;
 
                 if (ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->dataType.id, *this->Name)) {
@@ -2838,7 +2884,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (this->ifList != NULL) {
                 for (auto elem: *this->ifList) {
                     addMetaInfo(elem);
-                    checkCancelExprNode(expr_left);
+                   // checkCancelExprNode(expr_left);
                     elem->transform(isConvertedToConst);
                     types.push_back(elem->dataType);
                 }
@@ -2973,33 +3019,38 @@ void ExprNode::transform(bool isConvertedToConst) {
         case block_expr:
 
             blockExprList.push_back(this);
-            for (auto elem: *this->stmt_list->stmts) {
-                elem->transform(isConvertedToConst);
+            if(this->stmt_list != NULL) {
+                for (auto elem: *this->stmt_list->stmts) {
+                    elem->curClassName = curClassName;
+                    elem->curMethodName = curMethodName;
+                    elem->transform(isConvertedToConst);
 
-                if (elem->type == StmtNode::exprstmt) {
-                    if ((elem->expr->type == loop_expr ||
-                         elem->expr->type == ExprNode::if_expr_list) &&
-                        elem->expr->dataType.type != DataType::void_) {
-                        elem++;
-                        if (elem != *this->stmt_list->stmts->end() &&
-                            elem->type != StmtNode::semicolon) {
-                            throw Exception(Exception::TYPE_ERROR,
-                                            "if or loop without  semicolon should return  void_. Result:" +
-                                            elem->expr->dataType.toString());
+                    if (elem->type == StmtNode::exprstmt) {
+                        if ((elem->expr->type == loop_expr ||
+                             elem->expr->type == ExprNode::if_expr_list) &&
+                            elem->expr->dataType.type != DataType::void_) {
+                            elem++;
+                            if (elem != *this->stmt_list->stmts->end() &&
+                                elem->type != StmtNode::semicolon) {
+                                throw Exception(Exception::TYPE_ERROR,
+                                                "if or loop without  semicolon should return  void_. Result:" +
+                                                elem->expr->dataType.toString());
+                            }
+                            elem--;
                         }
-                        elem--;
-                    }
 
+                    }
                 }
             }
-
-            blockExprList.pop_back();
 
             if (this->body == NULL) {
                 this->dataType = DataType(DataType::void_);
             } else {
+                addMetaInfo(body);
+                this->body->transform(isConvertedToConst);
                 this->dataType = this->body->dataType;
             }
+            blockExprList.pop_back();
             break;
 
         case struct_expr:
@@ -3011,7 +3062,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             addMetaInfo(this->expr_left);
             checkCancelExprNode(this->expr_left);
             this->expr_left->transformPathCallExpr(curClassName, ExprNode::static_method, false);
-            checkMethodParam();
+            checkMethodParam(this->expr_left->className, this->expr_left->methodName);
             this->expr_middle = ExprNode::CallAccessExpr(ExprNode::id_, new string(expr_left->methodName), NULL, NULL);
 
             if (ClassTable::Instance()->isMethodExist(this->expr_left->className, *this->expr_middle->Name)) {
@@ -3111,11 +3162,7 @@ void ExprNode::transform(bool isConvertedToConst) {
         }
             break;
         case super_expr:
-            if (ClassTable::isHaveParent(curClassName)) {
-                this->dataType = DataType::StructDataType(ClassTable::Instance()->getClass(curClassName).parentName);
-            } else {
-                throw Exception(Exception::TYPE_ERROR, curClassName + " has not parent ");
-            }
+            throw Exception(Exception::NOT_SUPPORT,"here are too many leading `super` keywords");
             break;
 
 
@@ -3617,44 +3664,51 @@ void ExprNode::transformConst() {
     this->expr_right = NULL;
 }
 
-void ExprNode::checkMethodParam() {
+void ExprNode::checkMethodParam(const string& className, const string& methodName) {
 
-    MethodTableItem methodItem = ClassTable::Instance()->getMethod(this->expr_left->dataType.id,
-                                                                   *this->Name);
-
-    VarTable paramTable = this->methodTableItem.paramTable;
-
-    if (!methodItem.isStatic) { //TODO это говно надо чекнуть
-        paramTable.items.erase(paramTable.items.begin());
-    }
-
-    if (this->expr_list == NULL && paramTable.items.size() == 0) {
-        return;
-    }
+    try {
+        MethodTableItem methodItem = ClassTable::Instance()->getMethod(className,
+                                                                       methodName);
 
 
-    if (this->expr_list->exprs->size() != paramTable.items.size()) {
-        throw Exception(Exception::PARAM_ERROR,
-                        "Param Error expected: " + to_string(this->methodTableItem.paramTable.items.size())
-                        + " param count result:" + to_string(this->expr_list->exprs->size()) + " param count");
-    }
+        VarTable paramTable = methodItem.paramTable;
 
-    int i = 0;
-    for (auto elem: *this->expr_list->exprs) {
-        addMetaInfo(elem);
-        if (elem->type == ExprNode::break_with_val_expr || elem->type == ExprNode::break_expr ||
-            elem->type == ExprNode::return_expr || elem->type == ExprNode::continue_expr) {
-            throw Exception(Exception::TYPE_ERROR,
-                            "Олег Александрович вы че куда суете. Какие брейки в параметрах. Жесть. 1984");
+        if (!methodItem.isStatic) { //TODO это говно надо чекнуть
+            paramTable.items.erase(paramTable.items.begin());
         }
-        VarTableItem varItem = paramTable.items[i];
-        if (!varItem.dataType.isEquals(elem->dataType) &&
-            !isParent(elem->dataType, varItem.dataType)) { //TODO проверить
-            throw Exception(Exception::TYPE_ERROR,
-                            varItem.id + "type expected: " + varItem.dataType.toString() + "result: " +
-                            elem->dataType.toString());
+
+        if (this->expr_list == NULL && paramTable.items.size() == 0) {
+            return;
         }
-        i++;
+
+
+        if (this->expr_list->exprs->size() != paramTable.items.size()) {
+            throw Exception(Exception::PARAM_ERROR,
+                            "Param Error expected: " + to_string(this->methodTableItem.paramTable.items.size())
+                            + " param count result:" + to_string(this->expr_list->exprs->size()) + " param count");
+        }
+
+        int i = 0;
+        for (auto elem: *this->expr_list->exprs) {
+            addMetaInfo(elem);
+            elem->transform();
+            if (elem->type == ExprNode::break_with_val_expr || elem->type == ExprNode::break_expr ||
+                elem->type == ExprNode::return_expr || elem->type == ExprNode::continue_expr) {
+                throw Exception(Exception::TYPE_ERROR,
+                                "Олег Александрович вы че куда суете. Какие брейки в параметрах. Жесть. 1984");
+            }
+            VarTableItem varItem = paramTable.items[i];
+            if (!varItem.dataType.isEquals(elem->dataType) &&
+                !isParent(elem->dataType, varItem.dataType)) { //TODO проверить
+                throw Exception(Exception::TYPE_ERROR,
+                                varItem.id + " type expected: " + varItem.dataType.toString() + " result: " +
+                                elem->dataType.toString());
+            }
+            i++;
+        }
+    }
+    catch (Exception e){
+        throw e;
     }
 }
 
@@ -3776,7 +3830,7 @@ void Node::transform(bool isConvertedToConst) {
 
 void Node::addMetaInfo(Node *node) {
     node->curClassName = this->curClassName;
-    node->curMethodName = this->methodName;
+    node->curMethodName = this->curMethodName;
 }
 
 bool Node::isParent(const DataType &child, DataType parent) {
