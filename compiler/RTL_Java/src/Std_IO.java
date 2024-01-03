@@ -1,8 +1,11 @@
 public class Std_IO {
 
-    public static void println(Object object) {
-        System.out.println(object);
-    }
+    public static void println_int(String str, String val) {
+            if (!str.contains("{}")) {
+                throw new IllegalArgumentException("Format string is not contains {}");
+            }
+            System.out.println(str.replace("{}", val);
+        }
 
     public static void println_int(String str, int value) {
         if (!str.contains("{}")) {

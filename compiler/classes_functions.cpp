@@ -2,6 +2,7 @@
 // Created by arsen on 27.10.2023.
 //
 #include "classesnodes.h"
+#include "semantics/rtl/RTLContainer.h"
 
 int globId = 0;
 vector<ExprNode *> blockExprList;
@@ -2193,6 +2194,7 @@ void ProgramNode::transform(bool isConvertedToConst) {
 }
 
 void ProgramNode::makeAllConversions() {
+    RTLContainer();
     this->getAllItems(ClassTable::globalClassName);
     this->transform(true);
 }
