@@ -1545,13 +1545,14 @@ void ItemNode::getAllItems(std::string className) {
                 }
 
                 if ((this->params->func_type == FuncParamListNode::self_ref
-                     || this->params->func_type == FuncParamListNode::self) &&
+                     || this->params->func_type == FuncParamListNode::self || this->params->func_type == FuncParamListNode::mut_self_ref) &&
                     ClassTable::Instance()->getClass(className).classType == ClassTableItem::mod_) {
                     throw Exception(Exception::NOT_A_METHOD, "function " + *this->name + " NOT_A_METHOD");
                 }
 
                 if ((this->params->func_type == FuncParamListNode::self_ref
-                     || this->params->func_type == FuncParamListNode::self)) {
+                     || this->params->func_type == FuncParamListNode::self)
+                     || this->params->func_type == FuncParamListNode::mut_self_ref) {
                     this->methodTableItem.isStatic = false;
 
                     if (this->params->func_type == FuncParamListNode::self_ref) {
@@ -1780,7 +1781,8 @@ void ItemNode::addImpl(string className, bool isTrait) {
                 }
 
                 if ((this->params->func_type == FuncParamListNode::self_ref
-                     || this->params->func_type == FuncParamListNode::self)) {
+                     || this->params->func_type == FuncParamListNode::self)
+                     || this->params->func_type == FuncParamListNode::mut_self_ref) {
                     this->methodTableItem.isStatic = false;
 
                     if (this->params->func_type == FuncParamListNode::self_ref) {
@@ -1935,6 +1937,13 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
                 if (this->params->func_type == FuncParamListNode::self_ref) {
                     VarTableItem varItem = VarTableItem(VarTable::SELF_PARAM, DataType::StructDataType(curClassName),
                                                         false, true, true, false, body);
+
+                    this->methodTableItem.paramTable.items.push_back(varItem);
+                }
+
+                if (this->params->func_type == FuncParamListNode::mut_self_ref) {
+                    VarTableItem varItem = VarTableItem(VarTable::SELF_PARAM, DataType::StructDataType(curClassName),
+                                                        true, true, true, false, body);
 
                     this->methodTableItem.paramTable.items.push_back(varItem);
                 }
@@ -2266,6 +2275,7 @@ void ItemNode::transform(bool isConvertedToConst) {
         case constStmt_:
             if(this->expr != NULL){
                 this->expr->curClassName = curClassName;
+               // this->expr->curMethodName = curMethodName;
                 this->expr->transform(isConvertedToConst);
             }
 
@@ -2370,7 +2380,7 @@ void StmtNode::transform(bool isConvertedToConst) {
 
                     if(this->expr != NULL) {
                         this->expr->curClassName = curClassName;
-                        this->expr->curMethodName = methodName;
+                        this->expr->curMethodName = curMethodName;
                         this->expr->arrDataType = arrDataType;
                         this->expr->transform(isConvertedToConst);
                     }
@@ -2389,6 +2399,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                 break;
             case const_:
                 this->varTableItem = VarTableItem();
+
                 varTableItem.isConst = true;
                 varTableItem.id = *this->name;
 
@@ -2396,6 +2407,8 @@ void StmtNode::transform(bool isConvertedToConst) {
                     throw Exception(Exception::UNEXPECTED, "const " + *this->name  + " must be initialized");
                 }
 
+                this->expr->curClassName = curClassName;
+                this->expr->curMethodName = curMethodName;
                 this->expr->transformConst();
                 this->expr->transform();
                 varTableItem.dataType = this->typeChild->convertToDataType(curClassName);
@@ -2585,6 +2598,41 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
+
+
+           if (!this->expr_left->isVar()) {
+                throw Exception(Exception::NOT_A_VAR, "left operand not a var");
+            }
+
+            if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
+                throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE in asign: " + this->expr_left->dataType.toString() + " and " +  this->expr_right->dataType.toString() );
+            }
+
+            //TODO добавить обработку констант
+            if (this->expr_left->localVarNum != -1) { ///
+                VarTableItem varTableItem = ClassTable::Instance()->getLocalVar(curClassName, curMethodName,
+                                                                                this->expr_left->localVarNum);
+                if (this->expr_left->isConst || this->expr_left->isMut == false) {
+                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                    varTableItem.id + "is const and can`t supported asign operation");
+                }
+            } else if (!this->expr_left->fieldName.empty()) {
+                FieldTableItem fieldTableItem = ClassTable::Instance()->getField(curClassName,
+                                                                                 this->expr_left->fieldName);
+                if (this->expr_left->isConst || this->expr_left->isMut == false) {
+                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                    this->expr_left->fieldName + "is const and can`t supported asign operation");
+                }
+            }
+
+            if(this->expr_left->isConst || this->expr_left->isMut == false){
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                *this->expr_left->Name  + " is const and can`t supported asign operation");
+            }
+
+            this->dataType = DataType(DataType::void_);
+            /// TODO добавить обработку для массива
+
             if (this->expr_left->type == array_expr) {
                 this->type = array_expr;
                 this->expr_middle = this->expr_left->expr_right;
@@ -2595,33 +2643,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->expr_middle = ExprNode::PathCallExpr(id_, this->expr_left->Name, NULL);
                 this->expr_left->expr_right = NULL;
                 this->expr_left = this->expr_left->expr_left;
-            } else if (!this->expr_left->isVar()) {
-                throw Exception(Exception::NOT_A_VAR, "left operand not a var");
             }
 
-            if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
-                throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE in asign");
-            }
 
-            //TODO добавить обработку констант
-            if (this->expr_left->localVarNum != -1) { ///
-                VarTableItem varTableItem = ClassTable::Instance()->getLocalVar(curClassName, curMethodName,
-                                                                                this->expr_left->localVarNum);
-                if (this->expr_left->isConst) {
-                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
-                                    varTableItem.id + "is const and can`t supported asign operation");
-                }
-            } else if (!this->expr_left->fieldName.empty()) {
-                FieldTableItem fieldTableItem = ClassTable::Instance()->getField(curClassName,
-                                                                                 this->expr_left->fieldName);
-                if (this->expr_left->isConst) {
-                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
-                                    this->expr_left->fieldName + "is const and can`t supported asign operation");
-                }
-            }
-
-            this->dataType = DataType(DataType::void_);
-            /// TODO добавить обработку для массива
 
             break;
         case array_expr:
@@ -2797,7 +2821,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                                     this->expr_left->dataType.id + " " + *this->Name + "is static field");
                 }
 
-                if (ClassTable::isHaveAccessToField(curClassName, this->expr_left->dataType.id, *this->Name)) {
+                if (!ClassTable::isHaveAccessToField(curClassName, this->expr_left->dataType.id, *this->Name)) {
                     throw Exception(Exception::ACCESS_ERROR, curClassName + " not has access to field " + *this->Name);
                 }
 
@@ -3163,11 +3187,12 @@ void ExprNode::transform(bool isConvertedToConst) {
             MethodTableItem methodItem = ClassTable::Instance()->getMethod(curClassName, curMethodName);
 
             if (methodItem.isStatic) {
-                throw Exception(Exception::STATIC_ERROR, "static error: self used in static method");
+                throw Exception(Exception::STATIC_ERROR, "static error: self used in static method " );
             }
 
             this->localVarNum = 0; //TODO бебебе
             this->dataType = methodItem.paramTable.getVar(0).dataType;
+            this->isMut = methodItem.paramTable.getVar(0).isMut;
         }
             break;
         case super_expr:
@@ -3772,7 +3797,7 @@ bool ExprNode::isRefExpr() {
 }
 
 bool ExprNode::isVar() {
-    return this->localVarNum != -1 || this->fieldName.empty() == false;
+    return this->localVarNum != -1 || this->fieldName.empty() == false || this->type == field_access_expr;
 }
 
 void ExprNode::checkStructExpr(bool isConvertedTransform) {
