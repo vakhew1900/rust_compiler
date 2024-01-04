@@ -49,6 +49,7 @@ public:
         CONSTRUCTOR_ERROR,
         ACCESS_ERROR,
         PRIVATE_ERROR,
+        LOOP_ERROR,
     };
 
     ExceptionType exceptionType;

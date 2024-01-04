@@ -11,7 +11,7 @@ void RTLContainer::addReadFunctions() {
 
     for (int i = 0; i < methodName.size(); i++) {
         MethodTableItem methodTableItem = MethodTableItem();
-        methodTableItem.isPub;
+        methodTableItem.isPub = true;
         methodTableItem.isHasBody = true;
         methodTableItem.isStatic = true;
         methodTableItem.returnDataType = returnTypes[i];
@@ -29,7 +29,7 @@ void RTLContainer::addPrintFunctions() {
 
     for (int i = 0; i < methodName.size(); i++) {
         MethodTableItem methodTableItem = MethodTableItem();
-        methodTableItem.isPub;
+        methodTableItem.isPub = true;
         methodTableItem.isHasBody = true;
         methodTableItem.isStatic = true;
         methodTableItem.returnDataType = returnDataType;
@@ -47,5 +47,6 @@ void RTLContainer::addPrintFunctions() {
 RTLContainer::RTLContainer() {
     addReadFunctions();
     addPrintFunctions();
-    ClassTable::Instance()->addClass("RTL", rtlClass);
+    rtlClass.isPub = true;
+    ClassTable::Instance()->addClass(ClassTable::RTLClassName, rtlClass);
 }

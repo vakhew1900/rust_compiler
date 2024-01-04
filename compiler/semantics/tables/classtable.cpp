@@ -138,8 +138,8 @@ ClassTableItem ClassTable::getClass(const string &className) {
 }
 
 const string ClassTable::moduleClassName = "moduleClass";
-const string ClassTable::globalClassName = "GLOBAL_CLASS";
-
+const string ClassTable::globalClassName = "src";
+const string ClassTable::RTLClassName = "RTL";
 string ClassTable::getDirectory(string className) {
     vector<string> classPath = split(className, '/');
 

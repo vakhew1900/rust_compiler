@@ -5,6 +5,7 @@
 #include "semantics/rtl/RTLContainer.h"
 
 int globId = 0;
+int loopCnt = 0;
 vector<ExprNode *> blockExprList;
 vector<DataType> returnTypes;
 vector<DataType> breakTypes;
@@ -2943,12 +2944,18 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_left->transform(isConvertedToConst);
             breakTypes.push_back(this->expr_left->dataType);
             this->dataType = DataType(DataType::void_);
+            if(loopCnt == 0){
+                throw Exception(Exception::LOOP_ERROR, "continue is loop outside");
+            }
             break;
         case break_expr:
             addMetaInfo(expr_left);
             checkCancelExprNode(this->expr_left);
             breakTypes.push_back(DataType(DataType::void_));
             this->dataType = DataType(DataType::void_);
+            if(loopCnt == 0){
+                throw Exception(Exception::LOOP_ERROR, "continue is loop outside");
+            }
             break;
             break;
         case range_right:
@@ -3021,11 +3028,12 @@ void ExprNode::transform(bool isConvertedToConst) {
                 addMetaInfo(body);
                 vector<DataType> breaks = breakTypes;
                 breakTypes.clear();
+                loopCnt++;
                 body->transform(isConvertedToConst);
                 if (!DataType::isEquals(breakTypes)) {
                     throw Exception(Exception::TYPE_ERROR, "loop has different types");
                 }
-
+                loopCnt--;
                 breakTypes = breaks;
             }
 
@@ -3047,11 +3055,12 @@ void ExprNode::transform(bool isConvertedToConst) {
                 addMetaInfo(body);
                 vector<DataType> breaks = breakTypes;
                 breakTypes.clear();
+                loopCnt++;
                 body->transform(isConvertedToConst);
                 if (!DataType::isEquals(breakTypes)) {
                     throw Exception(Exception::TYPE_ERROR, "while should return void");
                 }
-
+                loopCnt--;
                 breakTypes = breaks;
             }
 
@@ -3096,6 +3105,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 addMetaInfo(body);
                 vector<DataType> breaks = breakTypes;
                 breakTypes.clear();
+                loopCnt++;
                 this->body->transform(isConvertedToConst);
 
                 if (this->body->dataType.type != DataType::void_) {
@@ -3106,6 +3116,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 if (DataType::isEquals(breakTypes)) {
                     throw Exception(Exception::TYPE_ERROR, "");
                 }
+                loopCnt--;
                 breakTypes = breaks;
             }
             break;
@@ -3155,18 +3166,23 @@ void ExprNode::transform(bool isConvertedToConst) {
             addMetaInfo(this->expr_left);
             checkCancelExprNode(this->expr_left);
             this->expr_left->transformPathCallExpr(curClassName, ExprNode::static_method, false);
-            checkMethodParam(this->expr_left->className, this->expr_left->methodName);
             this->expr_middle = ExprNode::CallAccessExpr(ExprNode::id_, new string(expr_left->methodName), NULL, NULL);
 
             if (ClassTable::Instance()->isMethodExist(this->expr_left->className, *this->expr_middle->Name)) {
                 this->dataType = ClassTable::Instance()->getMethod(this->expr_left->className,
                                                                    *this->expr_middle->Name).returnDataType;
-            } else {
+            } else if (ClassTable::Instance()->isMethodExist(ClassTable::RTLClassName, *this->expr_middle->Name)) {
+                this->expr_left->className = ClassTable::RTLClassName;
+                this->dataType = ClassTable::Instance()->getMethod(this->expr_left->className,
+                                                                   *this->expr_middle->Name).returnDataType;
+            }
+            else {
                 throw Exception(Exception::NOT_EXIST,
                                 "call method " + this->expr_left->className + " " + *this->expr_left->Name +
                                 "not exist");
             }
 
+            checkMethodParam(this->expr_left->className, this->expr_left->methodName);
             if (!ClassTable::isHaveAccess(curClassName, this->expr_left->className)) {
                 throw Exception(Exception::ACCESS_ERROR,
                                 curClassName + " has not access to " + this->expr_left->className);
@@ -3331,6 +3347,9 @@ void ExprNode::transform(bool isConvertedToConst) {
 
         case call_expr:
         case continue_expr:
+            if(loopCnt == 0){
+                throw Exception(Exception::LOOP_ERROR, "continue is loop outside");
+            }
             break;
     }
 
@@ -3922,7 +3941,7 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
         }
 
 
-        ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, "<init>", params,
+        ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, "<init>", vector<DataType>(),
                                              DataType(DataType::void_));
 
         this->dataType = DataType::StructDataType(this->className);

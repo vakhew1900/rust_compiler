@@ -44,6 +44,7 @@ public:
     string toString();
     static const string moduleClassName;
     static const string globalClassName;
+    static const string RTLClassName;
 
     static ClassTable* Instance();
     void addMethod(string className, string methodName, MethodTableItem methodTableItem);
