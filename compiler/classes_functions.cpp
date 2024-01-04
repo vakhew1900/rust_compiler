@@ -955,6 +955,24 @@ void ExprNode::toDot(string &dot, const string &pos) {
         case as:
             type = "as";
             break;
+        case undefined:
+            type = varName(undefined);
+            break;
+        case field_call:
+            type = varName(field_call);
+            break;
+        case method_call:
+            type = varName(method_call);
+            break;
+        case arr_asign:
+            type = varName(arr_asign);
+            break;
+        case point_assign:
+            type = varName(point_assign);
+            break;
+        case del_object:
+            type = varName(del_object);
+            break;
     }
 
     if (this->id == 3) {
@@ -965,6 +983,11 @@ void ExprNode::toDot(string &dot, const string &pos) {
     if (this->expr_left != NULL) {
         connectVerticesDots(dot, this->id, this->expr_left->id);
         this->expr_left->toDot(dot, "expr_left");
+    }
+
+    if (this->expr_middle != NULL) {
+        connectVerticesDots(dot, this->id, this->expr_middle->id);
+        this->expr_middle->toDot(dot, "expr_middle");
     }
 
     if (this->expr_right != NULL) {
@@ -2638,8 +2661,8 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->dataType = DataType(DataType::void_);
             /// TODO добавить обработку для массива
 
-            if (this->expr_left->type == array_expr) {
-                this->type = array_expr;
+            if (this->expr_left->type == index_expr) {
+                this->type = arr_asign;
                 this->expr_middle = this->expr_left->expr_right;
                 this->expr_left->expr_right = NULL;
                 this->expr_left = this->expr_left->expr_left;
@@ -2797,7 +2820,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
 
-            if (this->expr_left->dataType.type != DataType::int_) {
+            if (this->expr_left->dataType.type != DataType:: array_) {
                 throw Exception(Exception::TYPE_ERROR,
                                 "type error: expected: array_ result: " + this->expr_left->dataType.toString());
             }
@@ -2811,9 +2834,14 @@ void ExprNode::transform(bool isConvertedToConst) {
                     newDataType.type = this->expr_left->dataType.arrType;
                 }
 
+                this->dataType = newDataType;
                 this->isConst = this->expr_left->isConst;
                 this->isMut = this->expr_left->isMut;
             }
+
+            this->localVarNum = expr_left->localVarNum;
+            this->fieldName = expr_left->fieldName;
+
 
             break;
         case range_expr:
@@ -2860,6 +2888,9 @@ void ExprNode::transform(bool isConvertedToConst) {
             catch (Exception e) {
                 throw e;
             }
+
+            this->localVarNum = expr_left->localVarNum;
+            this->fieldName = expr_left->fieldName;
 
             break;
         case method_expr:
@@ -3180,7 +3211,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                 ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->className, *this->expr_middle->Name,
                                                     ClassTable::Instance()->getField(this->expr_left->className,
                                                                                      *this->expr_middle->Name).dataType);
+
             }
+
 
             break;
 
@@ -3831,7 +3864,7 @@ bool ExprNode::isRefExpr() {
 }
 
 bool ExprNode::isVar() {
-    return this->localVarNum != -1 || this->fieldName.empty() == false || this->type == field_access_expr;
+    return this->localVarNum != -1 || this->fieldName.empty() == false;
 }
 
 void ExprNode::checkStructExpr(bool isConvertedTransform) {
