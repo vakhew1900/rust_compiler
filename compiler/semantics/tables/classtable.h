@@ -83,6 +83,7 @@ public:
     static int addMethodRefToConstTable(const string& className, const string& addingClassName, const string& method, const vector<DataType> &params,const DataType &returnType);
     static int addFieldRefToConstTable(const string& className, const string& addingClassName, const string& field, const DataType& dataType);
 
+    static int getStructFieldCount(const string& className);
     static void isMainFunctionExist();
 };
 

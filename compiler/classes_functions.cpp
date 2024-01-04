@@ -1666,7 +1666,7 @@ void EnumItemNode::getAllItems(std::string className) {
 
 void StructFieldNode::getAllItems(std::string className) {
     this->fieldTableItem = FieldTableItem();
-    this->fieldTableItem.isConst = true;
+    this->fieldTableItem.isConst = false;
     if (this->visibility == pub) this->fieldTableItem.isPub = true;
 
     try {
@@ -3772,60 +3772,65 @@ bool ExprNode::isVar() {
 
 void ExprNode::checkStructExpr(bool isConvertedTransform) {
 
-    if (this->expr_left->type != path_call_expr && this->expr_left->type != id_) {
-        throw Exception(Exception::CONSTRUCTOR_ERROR, "expression should be paathCallExpr");
-    }
-
-
-    this->expr_left->transformPathCallExpr(curClassName, undefined, true);
-    this->className = this->expr_left->className;
-
-    if (ClassTable::Instance()->getClass(this->className).classType != ClassTableItem::struct_) {
-        throw Exception(Exception::TYPE_ERROR, "constructor error: " + className + " is not struct");
-    }
-
-    int fieldSize = ClassTable::Instance()->getClass(className).fieldTable.items.size();
-
-    if (fieldSize != this->expr_list->exprs->size()) {
-        throw Exception(Exception::CONSTRUCTOR_ERROR,
-                        "fields count in constructor not equal field count in struct " + className);
-    }
-
-    if (!ClassTable::isHaveAccess(curClassName, this->className)) {
-        throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to " + this->expr_left->className);
-    }
-
-
-    vector<DataType> params;
-
-    for (auto elem: *this->expr_list->exprs) {
-        addMetaInfo(elem->expr_left);
-        checkCancelExprNode(elem->expr_left);
-        elem->expr_left->transform(isConvertedTransform);
-        if (ClassTable::Instance()->isFieldExist(className, *elem->Name)) {
-            FieldTableItem fieldItem = ClassTable::Instance()->getField(className, *elem->Name);
-            if (!ClassTable::isHaveAccessToField(curClassName, this->expr_left->className, *elem->Name)) {
-                throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to private" + *elem->Name);
-            }
-
-            params.push_back(fieldItem.dataType);
-
-            if (fieldItem.dataType.isEquals(elem->expr_left->dataType) &&
-                isParent(elem->expr_left->dataType, fieldItem.dataType)) {
-                throw Exception(Exception::TYPE_ERROR,
-                                *this->Name + "field type should be " + fieldItem.toString() + " " +
-                                elem->expr_left->dataType.toString());
-            }
-        } else {
-            throw Exception(Exception::CONSTRUCTOR_ERROR, *this->Name + " field not exist in struct " + className);
+    try {
+        if (this->expr_left->type != path_call_expr && this->expr_left->type != id_) {
+            throw Exception(Exception::CONSTRUCTOR_ERROR, "expression should be paathCallExpr");
         }
-    }
 
+
+        this->expr_left->transformPathCallExpr(curClassName, undefined, true);
+        this->className = this->expr_left->className;
+
+        if (ClassTable::Instance()->getClass(this->className).classType != ClassTableItem::struct_) {
+            throw Exception(Exception::TYPE_ERROR, "constructor error: " + className + " is not struct");
+        }
+
+        int fieldSize = ClassTable::getStructFieldCount(className);
+
+        if (fieldSize != this->field_list->exprs->size()) {
+            throw Exception(Exception::CONSTRUCTOR_ERROR,
+                            "fields count in constructor not equal field count in struct " + className +  ". Expected: " + to_string(fieldSize) + " result: " + to_string(this->field_list->exprs->size()));
+        }
+
+        if (!ClassTable::isHaveAccess(curClassName, this->className)) {
+            throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to " + this->expr_left->className);
+        }
+
+
+        vector<DataType> params;
+
+        for (auto elem: *this->field_list->exprs) {
+            addMetaInfo(elem->expr_left);
+            checkCancelExprNode(elem->expr_left);
+            elem->expr_left->transform(isConvertedTransform);
+            if (ClassTable::Instance()->isFieldExist(className, *elem->Name)) {
+                FieldTableItem fieldItem = ClassTable::Instance()->getField(className, *elem->Name);
+                if (!ClassTable::isHaveAccessToField(curClassName, this->expr_left->className, *elem->Name)) {
+                    throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to private" + *elem->Name);
+                }
+
+                params.push_back(fieldItem.dataType);
+
+                if (fieldItem.dataType.isEquals(elem->expr_left->dataType) &&
+                    isParent(elem->expr_left->dataType, fieldItem.dataType)) {
+                    throw Exception(Exception::TYPE_ERROR,
+                                    *this->Name + "field type should be " + fieldItem.toString() + " " +
+                                    elem->expr_left->dataType.toString());
+                }
+            } else {
+                throw Exception(Exception::CONSTRUCTOR_ERROR, *this->Name + " field not exist in struct " + className);
+            }
+        }
 
 
         ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, "<init>", params,
                                              DataType(DataType::void_));
 
+    }
+    catch (Exception e)
+    {
+        throw e;
+    }
 }
 
 

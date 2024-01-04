@@ -417,3 +417,18 @@ void ClassTable::isMainFunctionExist() {
         throw Exception(Exception::NOT_EXIST, "consider adding a `main` function");
     }
 }
+
+int ClassTable::getStructFieldCount(const string &className) {
+    ClassTableItem classTableItem = ClassTable::Instance()->getClass(className);
+
+    if(classTableItem.classType != ClassTableItem::struct_){
+        throw Exception(Exception::TYPE_ERROR, className + " is not struct");
+    }
+
+    int res = 0;
+
+    for(auto elem : classTableItem.fieldTable.items){
+        res += elem.second.isConst == false;
+    }
+    return res;
+}
