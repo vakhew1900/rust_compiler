@@ -1455,7 +1455,8 @@ void Node::createVertexDot(string &s, int id, string name, string type, string v
     }
 
     string tmp = "id" + to_string(id) +
-                 " [label=\"name=" + name + " " + type + value + visibility + pos + "id=" + to_string(id) + " dtype=" + this->dataType.toString() +  "\"];\n";
+                 " [label=\"name=" + name + " " + type + value + visibility + pos + "id=" + to_string(id) + " dtype=" +
+                 this->dataType.toString() + "\"];\n";
 
     s += tmp;
 
@@ -1545,14 +1546,15 @@ void ItemNode::getAllItems(std::string className) {
                 }
 
                 if ((this->params->func_type == FuncParamListNode::self_ref
-                     || this->params->func_type == FuncParamListNode::self || this->params->func_type == FuncParamListNode::mut_self_ref) &&
+                     || this->params->func_type == FuncParamListNode::self ||
+                     this->params->func_type == FuncParamListNode::mut_self_ref) &&
                     ClassTable::Instance()->getClass(className).classType == ClassTableItem::mod_) {
                     throw Exception(Exception::NOT_A_METHOD, "function " + *this->name + " NOT_A_METHOD");
                 }
 
                 if ((this->params->func_type == FuncParamListNode::self_ref
                      || this->params->func_type == FuncParamListNode::self)
-                     || this->params->func_type == FuncParamListNode::mut_self_ref) {
+                    || this->params->func_type == FuncParamListNode::mut_self_ref) {
                     this->methodTableItem.isStatic = false;
 
                     if (this->params->func_type == FuncParamListNode::self_ref) {
@@ -1782,7 +1784,7 @@ void ItemNode::addImpl(string className, bool isTrait) {
 
                 if ((this->params->func_type == FuncParamListNode::self_ref
                      || this->params->func_type == FuncParamListNode::self)
-                     || this->params->func_type == FuncParamListNode::mut_self_ref) {
+                    || this->params->func_type == FuncParamListNode::mut_self_ref) {
                     this->methodTableItem.isStatic = false;
 
                     if (this->params->func_type == FuncParamListNode::self_ref) {
@@ -1998,7 +2000,7 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
                     string str = (elem->item_type == function_ || elem->item_type == constStmt_)
                                  ? "/" + ClassTable::moduleClassName : "";
 
-                    if(elem->item_type == function_ || elem->item_type == constStmt_){
+                    if (elem->item_type == function_ || elem->item_type == constStmt_) {
                         elem->curClassName = this->curClassName;
                     }
                     elem->addDataTypeToDeclaration(className + "/" + *this->name + str);
@@ -2040,7 +2042,9 @@ void EnumItemNode::addDataTypeToDeclaration(const string &className, set<int> &s
     }
 
     if (st.count(this->expr->Int)) {
-        throw Exception(Exception::INCORRECT_ENUM_VALUE, "INCORRECT_ENUM_VALUE: ENUM VALUE " + to_string(this->expr->Int) + " occurs twice in " + className);
+        throw Exception(Exception::INCORRECT_ENUM_VALUE,
+                        "INCORRECT_ENUM_VALUE: ENUM VALUE " + to_string(this->expr->Int) + " occurs twice in " +
+                        className);
     }
 
 
@@ -2094,12 +2098,11 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
     ///TODO доделать
 
 
-    if(isType == false && namePath.size() == 0){
+    if (isType == false && namePath.size() == 0) {
         this->className = className;
-        if(type == ExprNode::static_method){
+        if (type == ExprNode::static_method) {
             this->methodName = *this->Name;
-        }
-        else {
+        } else {
             this->fieldName = *this->Name;
         }
         return;
@@ -2188,7 +2191,7 @@ void ProgramNode::transform(bool isConvertedToConst) {
     if (this->item_list != NULL) {
         for (auto item: *this->item_list->items) {
             try {
-                if(item->item_type == ItemNode::function_ || item->item_type == ItemNode::constStmt_){
+                if (item->item_type == ItemNode::function_ || item->item_type == ItemNode::constStmt_) {
                     item->curClassName = this->curClassName;
                 }
                 item->transform(isConvertedToConst);
@@ -2214,13 +2217,13 @@ void ItemNode::transform(bool isConvertedToConst) {
     switch (this->item_type) {
 
         case function_: {
-            if(body != NULL){
+            if (body != NULL) {
 
-            body->curClassName = curClassName;
-            body->curMethodName = *this->name;
+                body->curClassName = curClassName;
+                body->curMethodName = *this->name;
             }
 
-            if(*this->name == "selfFunc") {
+            if (*this->name == "selfFunc") {
                 "ffff";
             }
 
@@ -2231,11 +2234,13 @@ void ItemNode::transform(bool isConvertedToConst) {
                 ClassTable::Instance()->addLocalParam(curClassName, *this->name, elem);
             }
 
-            ClassTable::addMethodRefToConstTable(curClassName, curClassName, *this->name, paramTypes, ClassTable::Instance()->getMethod(this->curClassName, *this->name).returnDataType);
+            ClassTable::addMethodRefToConstTable(curClassName, curClassName, *this->name, paramTypes,
+                                                 ClassTable::Instance()->getMethod(this->curClassName,
+                                                                                   *this->name).returnDataType);
 
             blockExprList.push_back(body);
             returnTypes.clear();
-            if(this->body != NULL) {
+            if (this->body != NULL) {
                 this->body->transform(isConvertedToConst);
             }
             blockExprList.pop_back();
@@ -2273,9 +2278,9 @@ void ItemNode::transform(bool isConvertedToConst) {
         }
             break;
         case constStmt_:
-            if(this->expr != NULL){
+            if (this->expr != NULL) {
                 this->expr->curClassName = curClassName;
-               // this->expr->curMethodName = curMethodName;
+                // this->expr->curMethodName = curMethodName;
                 this->expr->transform(isConvertedToConst);
             }
 
@@ -2291,8 +2296,8 @@ void ItemNode::transform(bool isConvertedToConst) {
             }
 
 
-
-            ClassTable::addFieldRefToConstTable(curClassName, curClassName, *this->name, ClassTable::Instance()->getField(curClassName, *this->name).dataType);
+            ClassTable::addFieldRefToConstTable(curClassName, curClassName, *this->name,
+                                                ClassTable::Instance()->getField(curClassName, *this->name).dataType);
             break;
         case trait_:
         case impl_:
@@ -2303,8 +2308,7 @@ void ItemNode::transform(bool isConvertedToConst) {
                 }
             }
             break;
-        case struct_:
-        {
+        case struct_: {
             vector<DataType> params;
 
             for (auto elem: *structItems->items) {
@@ -2327,13 +2331,14 @@ void ItemNode::transform(bool isConvertedToConst) {
 
             }
 
-            ClassTable::addMethodRefToConstTable(curClassName, curClassName, "<init>", params, DataType(DataType::void_));
+            ClassTable::addMethodRefToConstTable(curClassName, curClassName, "<init>", params,
+                                                 DataType(DataType::void_));
 
             break;
         }
         case enum_:
 
-            for(auto elem:  *this->enumItems->items){
+            for (auto elem: *this->enumItems->items) {
                 ClassTable::addFieldRefToConstTable(curClassName, curClassName, *elem->name, elem->dataType);
                 elem->expr->transform();
             }
@@ -2374,11 +2379,10 @@ void StmtNode::transform(bool isConvertedToConst) {
                     DataType arrDataType = DataType();
 
                     if (this->typeChild == NULL || this->typeChild->type == TypeNode::array_) {
-                        arrDataType.type = typeChild->convertToDataType(curClassName).type;
-                        arrDataType.id = typeChild->convertToDataType(curClassName).id;
+                        arrDataType = this->typeChild->convertToDataType(curClassName).getArrDataType();
                     }
 
-                    if(this->expr != NULL) {
+                    if (this->expr != NULL) {
                         this->expr->curClassName = curClassName;
                         this->expr->curMethodName = curMethodName;
                         this->expr->arrDataType = arrDataType;
@@ -2390,7 +2394,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                     } else {
                         varTableItem.dataType = this->typeChild->convertToDataType(curClassName);
                         if (!this->expr->dataType.isEquals(varTableItem.dataType)) {
-                            throw Exception(Exception::INCORRECT_TYPE, "incorrect datatype");
+                            throw Exception(Exception::INCORRECT_TYPE, "incorrect datatype. Expected: " + varTableItem.dataType.toString() + "result: " + this->expr->dataType.toString() );
                         }
                     }
                 }
@@ -2403,8 +2407,8 @@ void StmtNode::transform(bool isConvertedToConst) {
                 varTableItem.isConst = true;
                 varTableItem.id = *this->name;
 
-                if(this->expr == NULL){
-                    throw Exception(Exception::UNEXPECTED, "const " + *this->name  + " must be initialized");
+                if (this->expr == NULL) {
+                    throw Exception(Exception::UNEXPECTED, "const " + *this->name + " must be initialized");
                 }
 
                 this->expr->curClassName = curClassName;
@@ -2426,7 +2430,7 @@ void StmtNode::transform(bool isConvertedToConst) {
         }
     }
     catch (Exception e) {
-       throw e;
+        throw e;
     }
 }
 
@@ -2599,13 +2603,14 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_right->transform(isConvertedToConst);
 
 
-
-           if (!this->expr_left->isVar()) {
+            if (!this->expr_left->isVar()) {
                 throw Exception(Exception::NOT_A_VAR, "left operand not a var");
             }
 
             if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
-                throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE in asign: " + this->expr_left->dataType.toString() + " and " +  this->expr_right->dataType.toString() );
+                throw Exception(Exception::NOT_EQUAL_DATA_TYPE,
+                                "NOT EQUAL DATA_TYPE in asign: " + this->expr_left->dataType.toString() + " and " +
+                                this->expr_right->dataType.toString());
             }
 
             //TODO добавить обработку констант
@@ -2625,9 +2630,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                 }
             }
 
-            if(this->expr_left->isConst || this->expr_left->isMut == false){
+            if (this->expr_left->isConst || this->expr_left->isMut == false) {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED,
-                                *this->expr_left->Name  + " is const and can`t supported asign operation");
+                                *this->expr_left->Name + " is const and can`t supported asign operation");
             }
 
             this->dataType = DataType(DataType::void_);
@@ -2646,56 +2651,79 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
 
-
             break;
         case array_expr:
 
-            if (this->expr_list != NULL)
+            if (this->expr_list != NULL) {
                 for (auto elem: *expr_list->exprs) {
                     addMetaInfo(elem);
                     checkCancelExprNode(elem);
                     elem->transform(isConvertedToConst);
                 }
 
-            if (this->expr_list->exprs->size()) {
+                if (this->expr_list->exprs->size()) {
 
-                vector<DataType> arrTypes;
-                DataType firstElement = this->expr_list->exprs->front()->dataType;
-                if (firstElement.type != DataType::array_) {
-                    for (auto elem: *this->expr_list->exprs) {
-                        auto dataType = elem->dataType;
-                        if (dataType.type == DataType::class_
-                            && dataType.type == arrDataType.type) {
-                            if (!ClassTable::Instance()->isParent(dataType.id, arrDataType.id)) {
-                                throw Exception(Exception::TYPE_ERROR,
-                                                dataType.id + " " + arrDataType.id + " incompatible types in array");
+                    vector<DataType> arrTypes;
+                    DataType firstElement = this->expr_list->exprs->front()->dataType;
+                    if (firstElement.type != DataType::array_) {
+                        for (auto elem: *this->expr_list->exprs) {
+                            auto dataType = elem->dataType;
+
+                            if (dataType.type != DataType::class_) {
+                                if (!dataType.isEquals(firstElement)) {
+                                    throw Exception(Exception::TYPE_ERROR,
+                                    "not correct types in array");
+                                }
+                            }
+                            else if (dataType.type  == DataType::class_){
+                                if (!dataType.isEquals(firstElement)
+                                 && (this->arrDataType.type != DataType:: class_ ||
+                                 !ClassTable::Instance()->isParent(this->dataType.id, this->arrDataType.id))){
+                                    throw Exception(Exception::TYPE_ERROR, "not correct types in array");
+                                }
                             }
 
-                            arrTypes.push_back(elem->dataType);
+
                         }
+
+
+                        this->dataType = DataType();
+                        this->dataType.type = DataType::array_;
+                        this->dataType.arrDeep = 1;
+
+                        if(firstElement.type != DataType::class_ || arrDataType.isUndefined()){
+                            this->dataType.addArrType(firstElement);
+                        }
+                        else if (arrDataType.type != DataType::class_){
+                            throw Exception(Exception::TYPE_ERROR, "type error in array. Expected: " + arrDataType.toString() + "Result: " + firstElement.toString());
+                        }
+                        else if (firstElement.isEquals(this->arrDataType)) {
+                            this->dataType.addArrType(firstElement);
+                        }
+                        else if (ClassTable::Instance()->isParent(firstElement.id, this->arrDataType.id)){
+                            this->dataType.addArrType(arrDataType);
+                        }
+                        else {
+                            throw Exception(Exception::TYPE_ERROR, "type error in array. Expected: " + arrDataType.toString() + "Result: " + firstElement.toString());
+                        }
+
+                    } else {
+
+                        for (auto elem: *this->expr_list->exprs) {
+                            if (!elem->dataType.isEquals(firstElement)) {
+                                throw Exception(Exception::ARRAY_SIZE, "incorrect size inner arrays");
+                            }
+                            //TODO склеить два массива
+                            arrTypes.insert(arrTypes.end(), all(elem->dataType.arrTypes));
+                        }
+                        this->dataType = firstElement;
+                        this->dataType.arrDeep++;
                     }
 
-                    this->dataType = DataType();
-                    this->dataType.type = DataType::array_;
-                    this->dataType.addArrType(arrDataType);
-                    this->dataType.arrDeep = 1;
+                    this->dataType.arrLength.push_back(expr_list->exprs->size());
+                    this->dataType.arrTypes = arrTypes;
 
-                } else {
-
-                    for (auto elem: *this->expr_list->exprs) {
-                        if (!elem->dataType.isEquals(firstElement)) {
-                            throw Exception(Exception::ARRAY_SIZE, "incorrect size inner arrays");
-                        }
-                        //TODO склеить два массива
-                        arrTypes.insert(arrTypes.end(), all(elem->dataType.arrTypes));
-                    }
-                    this->dataType = firstElement;
-                    this->dataType.arrDeep++;
                 }
-
-                this->dataType.arrLength.push_back(expr_list->exprs->size());
-                this->dataType.arrTypes = arrTypes;
-
             }
             //TODO тут не забыть нафигачить провер очки
             break;
@@ -2724,7 +2752,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                     VarTableItem varTableItem = ClassTable::Instance()->getLocalVar(curClassName, curMethodName,
                                                                                     this->expr_left->localVarNum);
                     this->expr_right = varTableItem.value;
-                } else if (!this->expr_left->fieldName.empty()) {
+                } else if (!this->expr_left->fieldName.empty() ) {
                     FieldTableItem fieldTableItem = ClassTable::Instance()->getField(curClassName,
                                                                                      this->expr_left->fieldName);
                     this->expr_right = fieldTableItem.value;
@@ -2825,7 +2853,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                     throw Exception(Exception::ACCESS_ERROR, curClassName + " not has access to field " + *this->Name);
                 }
 
-                ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id, *this->Name, ClassTable::Instance()->getField(this->expr_left->dataType.id, *this->Name).dataType);
+                ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id, *this->Name,
+                                                    ClassTable::Instance()->getField(this->expr_left->dataType.id,
+                                                                                     *this->Name).dataType);
             }
             catch (Exception e) {
                 throw e;
@@ -2864,11 +2894,12 @@ void ExprNode::transform(bool isConvertedToConst) {
 
                 vector<DataType> params;
 
-                for(auto elem : methodTableItem.paramTable.items){
+                for (auto elem: methodTableItem.paramTable.items) {
                     params.push_back(elem.dataType);
                 }
 
-                ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->dataType.id, *this->Name, params, methodItem.returnDataType);
+                ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->dataType.id, *this->Name, params,
+                                                     methodItem.returnDataType);
             }
             catch (Exception e) {
                 throw e;
@@ -2915,7 +2946,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (this->ifList != NULL) {
                 for (auto elem: *this->ifList) {
                     addMetaInfo(elem);
-                   // checkCancelExprNode(expr_left);
+                    // checkCancelExprNode(expr_left);
                     elem->transform(isConvertedToConst);
                     types.push_back(elem->dataType);
                 }
@@ -3050,7 +3081,7 @@ void ExprNode::transform(bool isConvertedToConst) {
         case block_expr:
 
             blockExprList.push_back(this);
-            if(this->stmt_list != NULL) {
+            if (this->stmt_list != NULL) {
                 for (auto elem: *this->stmt_list->stmts) {
                     elem->curClassName = curClassName;
                     elem->curMethodName = curMethodName;
@@ -3118,12 +3149,14 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             {
                 vector<DataType> params;
-                MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(this->expr_left->className, *this->expr_middle->Name);
+                MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(this->expr_left->className,
+                                                                                    *this->expr_middle->Name);
                 for (auto elem: methodTableItem.paramTable.items) {
                     params.push_back(elem.dataType);
                 }
 
-                ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, *this->expr_middle->Name, params,
+                ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, *this->expr_middle->Name,
+                                                     params,
                                                      methodTableItem.returnDataType);
             }
             break;
@@ -3144,7 +3177,9 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
             {
-                ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->className, *this->expr_middle->Name, ClassTable::Instance()->getField(this->expr_left->className, *this->expr_middle->Name).dataType);
+                ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->className, *this->expr_middle->Name,
+                                                    ClassTable::Instance()->getField(this->expr_left->className,
+                                                                                     *this->expr_middle->Name).dataType);
             }
 
             break;
@@ -3160,7 +3195,6 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 "cannot convert type " + this->expr_left->dataType.toString() + " to " +
                                 this->typeNode->convertToDataType(curClassName).toString());
             }
-
 
 
             break;
@@ -3187,7 +3221,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             MethodTableItem methodItem = ClassTable::Instance()->getMethod(curClassName, curMethodName);
 
             if (methodItem.isStatic) {
-                throw Exception(Exception::STATIC_ERROR, "static error: self used in static method " );
+                throw Exception(Exception::STATIC_ERROR, "static error: self used in static method ");
             }
 
             this->localVarNum = 0; //TODO бебебе
@@ -3196,13 +3230,13 @@ void ExprNode::transform(bool isConvertedToConst) {
         }
             break;
         case super_expr:
-            throw Exception(Exception::NOT_SUPPORT,"here are too many leading `super` keywords");
+            throw Exception(Exception::NOT_SUPPORT, "here are too many leading `super` keywords");
             break;
 
 
         case int_lit:
             this->dataType = DataType(DataType::int_);
-            if(this->Int < INT16_MIN || this->Int > INT16_MAX){
+            if (this->Int < INT16_MIN || this->Int > INT16_MAX) {
                 ClassTable::addIntToConstTable(curClassName, this->Int);
             }
             break;
@@ -3698,7 +3732,7 @@ void ExprNode::transformConst() {
     this->expr_right = NULL;
 }
 
-void ExprNode::checkMethodParam(const string& className, const string& methodName) {
+void ExprNode::checkMethodParam(const string &className, const string &methodName) {
 
     try {
         MethodTableItem methodItem = ClassTable::Instance()->getMethod(className,
@@ -3715,7 +3749,7 @@ void ExprNode::checkMethodParam(const string& className, const string& methodNam
             return;
         }
 
-        if(this->expr_list == NULL){
+        if (this->expr_list == NULL) {
             throw Exception(Exception::PARAM_ERROR,
                             "Param Error expected: " + to_string(paramTable.items.size())
                             + " param count result:" + to_string(0) + " param count");
@@ -3746,7 +3780,7 @@ void ExprNode::checkMethodParam(const string& className, const string& methodNam
             i++;
         }
     }
-    catch (Exception e){
+    catch (Exception e) {
         throw e;
     }
 }
@@ -3819,7 +3853,9 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
 
         if (fieldSize != this->field_list->exprs->size()) {
             throw Exception(Exception::CONSTRUCTOR_ERROR,
-                            "fields count in constructor not equal field count in struct " + className +  ". Expected: " + to_string(fieldSize) + " result: " + to_string(this->field_list->exprs->size()));
+                            "fields count in constructor not equal field count in struct " + className +
+                            ". Expected: " + to_string(fieldSize) + " result: " +
+                            to_string(this->field_list->exprs->size()));
         }
 
         if (!ClassTable::isHaveAccess(curClassName, this->className)) {
@@ -3859,8 +3895,7 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
         this->dataType = DataType::StructDataType(this->className);
 
     }
-    catch (Exception e)
-    {
+    catch (Exception e) {
         throw e;
     }
 }
