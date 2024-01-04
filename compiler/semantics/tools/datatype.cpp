@@ -70,6 +70,9 @@ string DataType::toString() {
             res += " len: ";
             for (auto elem: arrLength) res += to_string(elem) + " ";
             break;
+        case undefined_:
+            res += varName(undefined_);
+            break;
     }
 
     return res;

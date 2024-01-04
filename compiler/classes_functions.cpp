@@ -2817,7 +2817,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_left->transform(isConvertedToConst);
 
             if (this->expr_left->dataType.type != DataType::class_) {
-                throw Exception(Exception::TYPE_ERROR, this->expr_left->dataType.type + "has not fields");
+                throw Exception(Exception::TYPE_ERROR, this->expr_left->dataType.toString() + "has not methods");
             }
 
             try {
@@ -3690,6 +3690,11 @@ void ExprNode::checkMethodParam(const string& className, const string& methodNam
             return;
         }
 
+        if(this->expr_list == NULL){
+            throw Exception(Exception::PARAM_ERROR,
+                            "Param Error expected: " + to_string(paramTable.items.size())
+                            + " param count result:" + to_string(0) + " param count");
+        }
 
         if (this->expr_list->exprs->size() != paramTable.items.size()) {
             throw Exception(Exception::PARAM_ERROR,
@@ -3825,6 +3830,8 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
 
         ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, "<init>", params,
                                              DataType(DataType::void_));
+
+        this->dataType = DataType::StructDataType(this->className);
 
     }
     catch (Exception e)
