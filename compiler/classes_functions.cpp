@@ -2418,7 +2418,9 @@ void StmtNode::transform(bool isConvertedToConst) {
                     } else {
                         varTableItem.dataType = this->typeChild->convertToDataType(curClassName);
                         if (!this->expr->dataType.isEquals(varTableItem.dataType)) {
-                            throw Exception(Exception::INCORRECT_TYPE, "incorrect datatype. Expected: " + varTableItem.dataType.toString() + "result: " + this->expr->dataType.toString() );
+                            throw Exception(Exception::INCORRECT_TYPE,
+                                            "incorrect datatype. Expected: " + varTableItem.dataType.toString() +
+                                            "result: " + this->expr->dataType.toString());
                         }
                     }
                 }
@@ -2477,9 +2479,10 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             if (this->expr_left->isLiteral() && this->expr_right->isLiteral() && isConvertedToConst) {
                 this->transformConst();
+                this->transform();
             } else {
                 if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
-                    throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE");
+                    throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE " + this->expr_left->dataType.toString() + " " +  this->expr_right->dataType.toString());
                 }
 
                 if (this->expr_left->dataType.type != DataType::int_
@@ -2502,22 +2505,25 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
+            if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
+                throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE" + this->expr_left->dataType.toString() + " " +  this->expr_right->dataType.toString());
+            }
+
+            if (this->expr_left->dataType.type != DataType::int_) {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                "datatype " + this->expr_left->dataType.toString() +
+                                " not supported operation mod");
+            }
+
+            this->dataType = this->expr_left->dataType;
+
             if (this->expr_left->isLiteral() && this->expr_right->isLiteral() && isConvertedToConst) {
                 this->transformConst();
-            } else {
-                if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
-                    throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE");
-                }
-
-                if (this->expr_left->dataType.type != DataType::int_) {
-                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
-                                    "datatype " + this->expr_left->dataType.toString() +
-                                    " not supported operation mod");
-                }
-
-                this->dataType = this->expr_left->dataType;
+                this->transform();
             }
+
             break;
+
         case equal:
         case not_equal:
         case greater:
@@ -2533,21 +2539,23 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
+
+            if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
+                throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE" + this->expr_left->dataType.toString() + " " +  this->expr_right->dataType.toString());
+            }
+
+            if (this->expr_left->dataType.type == DataType::array_
+                || this->expr_left->dataType.type == DataType::class_) {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                "datatype " + this->expr_left->dataType.toString() +
+                                " not supported comparison operation");
+            }
+
+            this->dataType = DataType(DataType::bool_);
+
             if (this->expr_left->isLiteral() && this->expr_right->isLiteral() && isConvertedToConst) {
                 this->transformConst();
-            } else {
-                if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
-                    throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE");
-                }
-
-                if (this->expr_left->dataType.type == DataType::array_
-                    || this->expr_left->dataType.type == DataType::class_) {
-                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
-                                    "datatype " + this->expr_left->dataType.toString() +
-                                    " not supported comparison operation");
-                }
-
-                this->dataType = this->expr_left->dataType;
+                this->transform();
             }
 
             break;
@@ -2555,36 +2563,42 @@ void ExprNode::transform(bool isConvertedToConst) {
         case uminus:
             addMetaInfo(this->expr_left);
             checkCancelExprNode(this->expr_left);
+            this->expr_left->transform(isConvertedToConst);
             //  this->expr_right->curMethodName = curMethodName;
 
-            if (this->expr_left->isLiteral()) {
-                this->expr_left->transformConst();
-            } else {
-                if (this->expr_left->dataType.type != DataType::float_
-                    && this->expr_left->dataType.type != DataType::int_) {
-                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
-                                    "datatype " + this->expr_left->dataType.toString() +
-                                    " not supported uminus operation");
-                }
-                this->dataType = this->expr_left->dataType;
+            if (this->expr_left->dataType.type != DataType::float_
+                && this->expr_left->dataType.type != DataType::int_) {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                "datatype " + this->expr_left->dataType.toString() +
+                                " not supported uminus operation");
             }
+            this->dataType = this->expr_left->dataType;
+
+            if (this->expr_left->isLiteral()) {
+                this->transformConst();
+                this->transform();
+            }
+
             break;
 
         case negotation:
 
             addMetaInfo(this->expr_left);
             checkCancelExprNode(this->expr_left);
+            this->expr_left->transform(isConvertedToConst);
 
             //   this->expr_right->curMethodName = curMethodName;
+
+            if (this->expr_left->dataType.type != DataType::bool_) {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                "datatype " + this->expr_left->dataType.toString() +
+                                " not supported uminus operation");
+            }
+            this->dataType = this->expr_left->dataType;
+
             if (this->expr_left->isLiteral()) {
-                this->expr_left->transformConst();
-            } else {
-                if (this->expr_left->dataType.type != DataType::bool_) {
-                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
-                                    "datatype " + this->expr_left->dataType.toString() +
-                                    " not supported uminus operation");
-                }
-                this->dataType = this->expr_left->dataType;
+                this->transformConst();
+                this->transform();
             }
 
             break;
@@ -2597,23 +2611,24 @@ void ExprNode::transform(bool isConvertedToConst) {
             checkCancelExprNode(this->expr_right);
 
             this->expr_left->transform(isConvertedToConst);
-            this->expr_right->transform(isConvertedToConst);
+            this->expr_right->transform(isConvertedToConst && false);
 
             if (this->expr_left->isLiteral() && this->expr_right->isLiteral() && isConvertedToConst) {
                 this->transformConst();
-            } else {
-                if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
-                    throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE");
-                }
-
-                if (this->expr_left->dataType.type != DataType::bool_) {
-                    throw Exception(Exception::OPERATION_NOT_SUPPORTED,
-                                    "datatype " + this->expr_left->dataType.toString() +
-                                    " not supported and/or operation");
-                }
-
-                this->dataType = this->expr_left->dataType;
+                this->transform();
             }
+
+            if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
+                throw Exception(Exception::NOT_EQUAL_DATA_TYPE, "NOT EQUAL DATA_TYPE" + this->expr_left->dataType.toString() + " " +  this->expr_right->dataType.toString());
+            }
+
+            if (this->expr_left->dataType.type != DataType::bool_) {
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED,
+                                "datatype " + this->expr_left->dataType.toString() +
+                                " not supported and/or operation");
+            }
+
+            this->dataType = this->expr_left->dataType;
 
             break;
         case asign:
@@ -2696,13 +2711,12 @@ void ExprNode::transform(bool isConvertedToConst) {
                             if (dataType.type != DataType::class_) {
                                 if (!dataType.isEquals(firstElement)) {
                                     throw Exception(Exception::TYPE_ERROR,
-                                    "not correct types in array");
+                                                    "not correct types in array");
                                 }
-                            }
-                            else if (dataType.type  == DataType::class_){
+                            } else if (dataType.type == DataType::class_) {
                                 if (!dataType.isEquals(firstElement)
-                                 && (this->arrDataType.type != DataType:: class_ ||
-                                 !ClassTable::Instance()->isParent(this->dataType.id, this->arrDataType.id))){
+                                    && (this->arrDataType.type != DataType::class_ ||
+                                        !ClassTable::Instance()->isParent(this->dataType.id, this->arrDataType.id))) {
                                     throw Exception(Exception::TYPE_ERROR, "not correct types in array");
                                 }
                             }
@@ -2715,20 +2729,20 @@ void ExprNode::transform(bool isConvertedToConst) {
                         this->dataType.type = DataType::array_;
                         this->dataType.arrDeep = 1;
 
-                        if(firstElement.type != DataType::class_ || arrDataType.isUndefined()){
+                        if (firstElement.type != DataType::class_ || arrDataType.isUndefined()) {
                             this->dataType.addArrType(firstElement);
-                        }
-                        else if (arrDataType.type != DataType::class_){
-                            throw Exception(Exception::TYPE_ERROR, "type error in array. Expected: " + arrDataType.toString() + "Result: " + firstElement.toString());
-                        }
-                        else if (firstElement.isEquals(this->arrDataType)) {
+                        } else if (arrDataType.type != DataType::class_) {
+                            throw Exception(Exception::TYPE_ERROR,
+                                            "type error in array. Expected: " + arrDataType.toString() + "Result: " +
+                                            firstElement.toString());
+                        } else if (firstElement.isEquals(this->arrDataType)) {
                             this->dataType.addArrType(firstElement);
-                        }
-                        else if (ClassTable::Instance()->isParent(firstElement.id, this->arrDataType.id)){
+                        } else if (ClassTable::Instance()->isParent(firstElement.id, this->arrDataType.id)) {
                             this->dataType.addArrType(arrDataType);
-                        }
-                        else {
-                            throw Exception(Exception::TYPE_ERROR, "type error in array. Expected: " + arrDataType.toString() + "Result: " + firstElement.toString());
+                        } else {
+                            throw Exception(Exception::TYPE_ERROR,
+                                            "type error in array. Expected: " + arrDataType.toString() + "Result: " +
+                                            firstElement.toString());
                         }
 
                     } else {
@@ -2776,7 +2790,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                     VarTableItem varTableItem = ClassTable::Instance()->getLocalVar(curClassName, curMethodName,
                                                                                     this->expr_left->localVarNum);
                     this->expr_right = varTableItem.value;
-                } else if (!this->expr_left->fieldName.empty() ) {
+                } else if (!this->expr_left->fieldName.empty()) {
                     FieldTableItem fieldTableItem = ClassTable::Instance()->getField(curClassName,
                                                                                      this->expr_left->fieldName);
                     this->expr_right = fieldTableItem.value;
@@ -2821,7 +2835,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
 
-            if (this->expr_left->dataType.type != DataType:: array_) {
+            if (this->expr_left->dataType.type != DataType::array_) {
                 throw Exception(Exception::TYPE_ERROR,
                                 "type error: expected: array_ result: " + this->expr_left->dataType.toString());
             }
@@ -2859,13 +2873,15 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 "range expression must be int_ and result: left=" + expr_left->dataType.toString() +
                                 "right=" + expr_right->dataType.toString());
             }
+
+            break;
         case field_access_expr: /// Expression.ID
             addMetaInfo(this->expr_left);
             checkCancelExprNode(this->expr_left);
             this->expr_left->transform(isConvertedToConst);
 
             if (this->expr_left->dataType.type != DataType::class_) {
-                throw Exception(Exception::TYPE_ERROR, this->expr_left->dataType.type + "has not fields");
+                throw Exception(Exception::TYPE_ERROR, this->expr_left->dataType.toString() + " has not fields");
             }
 
             try {
@@ -2944,7 +2960,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_left->transform(isConvertedToConst);
             breakTypes.push_back(this->expr_left->dataType);
             this->dataType = DataType(DataType::void_);
-            if(loopCnt == 0){
+            if (loopCnt == 0) {
                 throw Exception(Exception::LOOP_ERROR, "continue is loop outside");
             }
             break;
@@ -2953,7 +2969,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             checkCancelExprNode(this->expr_left);
             breakTypes.push_back(DataType(DataType::void_));
             this->dataType = DataType(DataType::void_);
-            if(loopCnt == 0){
+            if (loopCnt == 0) {
                 throw Exception(Exception::LOOP_ERROR, "continue is loop outside");
             }
             break;
@@ -2961,15 +2977,26 @@ void ExprNode::transform(bool isConvertedToConst) {
         case range_right:
             addMetaInfo(expr_left);
             this->expr_left->transform(isConvertedToConst);
+            if (expr_left->dataType.type != DataType::int_) {
+                throw Exception(Exception::TYPE_ERROR,
+                                "range expr should be int_. Result: " + expr_left->dataType.toString());
+            }
+
             this->expr_right = this->expr_left;
             this->expr_left = ExprNode::ExprFromIntLiteral(int_lit, 0);
+            this->expr_left->dataType = DataType(DataType::int_);
             this->type = range_expr;
             break;
         case range_left:
             addMetaInfo(expr_left);
             checkCancelExprNode(this->expr_left);
             this->expr_left->transform(isConvertedToConst);
+            if (expr_left->dataType.type != DataType::int_) {
+                throw Exception(Exception::TYPE_ERROR,
+                                "range expr should be int_. Result: " + expr_left->dataType.toString());
+            }
             this->expr_right = ExprNode::ExprFromIntLiteral(int_lit, INT32_MAX);
+            this->expr_right->dataType = DataType(DataType::int_);
             this->type = range_expr;
             break;
         case return_expr:
@@ -3030,10 +3057,14 @@ void ExprNode::transform(bool isConvertedToConst) {
                 breakTypes.clear();
                 loopCnt++;
                 body->transform(isConvertedToConst);
+                if(breakTypes.empty()){
+                    throw Exception(Exception::LOOP_ERROR, "loop should has break");
+                }
                 if (!DataType::isEquals(breakTypes)) {
                     throw Exception(Exception::TYPE_ERROR, "loop has different types");
                 }
                 loopCnt--;
+                this->dataType = breaks.front();
                 breakTypes = breaks;
             }
 
@@ -3068,12 +3099,13 @@ void ExprNode::transform(bool isConvertedToConst) {
                 throw Exception(Exception::INCORRECT_TYPE, "while expr cannot has return_expr");
             }
 
+            this->dataType = body->dataType;
             break;
         case loop_for:
 
-            //  addMetaInfo(expr_left); // for ID IN Expr array 1.. {}
+            addMetaInfo(expr_left); // for ID IN Expr array 1.. {}
             //checkCancelExprNode(expr_left);
-
+            this->expr_left->transform(isConvertedToConst);
             if (this->expr_left->type == break_expr || this->expr_left->type == return_expr
                 || this->expr_left->type == break_with_val_expr) {
                 throw Exception(Exception::TYPE_ERROR,
@@ -3092,7 +3124,8 @@ void ExprNode::transform(bool isConvertedToConst) {
                     dataType = this->expr_left->dataType.getArrDataType();
                 }
 
-                VarTableItem varItem = VarTableItem(*this->Name, dataType, this->expr_left->isMut, false, true, body);
+                VarTableItem varItem = VarTableItem(*this->Name, dataType, this->expr_left->isMut, false, true, false,
+                                                    body);
                 ClassTable::Instance()->addLocalParam(curClassName, curMethodName, varItem);
             }
 
@@ -3113,12 +3146,14 @@ void ExprNode::transform(bool isConvertedToConst) {
                                     "for condition should be iterable: range_expr or DataType::array_");
                 }
 
-                if (DataType::isEquals(breakTypes)) {
-                    throw Exception(Exception::TYPE_ERROR, "");
+                if (!DataType::isEquals(breakTypes)) {
+                    throw Exception(Exception::TYPE_ERROR, "breaks should be void_ in for");
                 }
                 loopCnt--;
                 breakTypes = breaks;
             }
+
+            this->dataType = body->dataType;
             break;
         case block_expr:
 
@@ -3175,8 +3210,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->expr_left->className = ClassTable::RTLClassName;
                 this->dataType = ClassTable::Instance()->getMethod(this->expr_left->className,
                                                                    *this->expr_middle->Name).returnDataType;
-            }
-            else {
+            } else {
                 throw Exception(Exception::NOT_EXIST,
                                 "call method " + this->expr_left->className + " " + *this->expr_left->Name +
                                 "not exist");
@@ -3237,6 +3271,9 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->checkStructExpr();
             break;
         case as:
+            addMetaInfo(this->expr_left);
+            checkCancelExprNode(this->expr_left);
+            this->expr_left->transform(isConvertedToConst);
             if (DataType::isCanConvert(this->expr_left->dataType, this->typeNode->convertToDataType(curClassName))) {
                 this->dataType = this->typeNode->convertToDataType(curClassName);
             } else {
@@ -3262,6 +3299,8 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->isMut = !fieldItem.isConst;
                 this->isConst = fieldItem.isConst;
                 this->dataType = fieldItem.dataType;
+            } else {
+                throw Exception(Exception::NOT_EXIST, "var " + *this->Name + "not exist");
             }
 
         }
@@ -3347,7 +3386,7 @@ void ExprNode::transform(bool isConvertedToConst) {
 
         case call_expr:
         case continue_expr:
-            if(loopCnt == 0){
+            if (loopCnt == 0) {
                 throw Exception(Exception::LOOP_ERROR, "continue is loop outside");
             }
             break;

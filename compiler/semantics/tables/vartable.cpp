@@ -102,6 +102,9 @@ bool VarTable::isExist(const string &varName, const ExprNode* blockExpr) {
 
     for (auto i = items.rbegin(); i != items.rend(); ++i) {
         res = res || (i->id == varName &&  i->blockExpr == blockExpr);
+        bool f = i->id == varName;
+        bool f2 = i->blockExpr == blockExpr;
+        "fffffff";
     }
     return res;
 }

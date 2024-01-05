@@ -13,6 +13,12 @@ fn main() {
     };
 
     for i in 0..9 {
-        print!("{}  ", arr[i]);
+        println_int("{}  ", arr[i]);
     };
+	
+	let x = -10;
+	let y = - x;
+	let f = false;
+	let z = x * y + x / y - x % 10 + ('c' as i32) + 10*12-13 + 100 / 10 + 10 % 2;
+	let b = ( x != y  && x < y || x > 20) ;
 }
