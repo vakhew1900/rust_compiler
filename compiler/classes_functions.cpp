@@ -3174,14 +3174,23 @@ void ExprNode::transform(bool isConvertedToConst) {
                         if ((elem->expr->type == loop_expr ||
                              elem->expr->type == ExprNode::if_expr_list) &&
                             elem->expr->dataType.type != DataType::void_) {
-                            elem++;
-                            if (elem != this->stmt_list->stmts->back() &&
-                                elem->type != StmtNode::semicolon) {
+
+                            if(elem == this->stmt_list->stmts->back() && this->body != NULL){
                                 throw Exception(Exception::TYPE_ERROR,
                                                 "if or loop without  semicolon should return  void_. Result:" +
                                                 elem->expr->dataType.toString());
                             }
-                            elem--;
+
+                            if (elem != this->stmt_list->stmts->back()) {
+                                elem++;
+                                if(elem->type != StmtNode::semicolon){
+                                    throw Exception(Exception::TYPE_ERROR,
+                                                    "if or loop without  semicolon should return  void_. Result:" +
+                                                    elem->expr->dataType.toString());
+                                }
+                                elem--;
+                            }
+
                         }
 
                     }
@@ -3189,7 +3198,14 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
             if (this->body == NULL) {
-                this->dataType = DataType(DataType::void_);
+                auto last_stmt = this->stmt_list->stmts->back();
+                if(last_stmt->type == StmtNode::exprstmt &&
+                (last_stmt->expr->type == ExprNode::loop_expr || (last_stmt->expr->type == ExprNode::if_expr_list))){
+                    this->dataType = last_stmt->expr->dataType;
+                }
+                else {
+                    this->dataType = DataType(DataType::void_);
+                }
             } else {
                 addMetaInfo(body);
                 this->body->transform(isConvertedToConst);
