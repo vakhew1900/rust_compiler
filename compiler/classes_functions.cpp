@@ -2963,10 +2963,11 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (loopCnt == 0) {
                 throw Exception(Exception::LOOP_ERROR, "continue is loop outside");
             }
+
             break;
         case break_expr:
-            addMetaInfo(expr_left);
-            checkCancelExprNode(this->expr_left);
+         //   addMetaInfo(expr_left);
+          //  checkCancelExprNode(this->expr_left);
             breakTypes.push_back(DataType(DataType::void_));
             this->dataType = DataType(DataType::void_);
             if (loopCnt == 0) {
@@ -3028,7 +3029,10 @@ void ExprNode::transform(bool isConvertedToConst) {
                 throw Exception(Exception::TYPE_ERROR, "if has different types");
             }
 
-            this->dataType = types.front();
+            if(types.size())
+                this->dataType = types.front();
+            else
+                this->dataType = DataType(DataType::void_);
         }
             break;
         case if_expr:
@@ -3064,7 +3068,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                     throw Exception(Exception::TYPE_ERROR, "loop has different types");
                 }
                 loopCnt--;
-                this->dataType = breaks.front();
+                this->dataType = breakTypes.front();
                 breakTypes = breaks;
             }
 
@@ -3088,6 +3092,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 breakTypes.clear();
                 loopCnt++;
                 body->transform(isConvertedToConst);
+                breakTypes.push_back(DataType(DataType::void_));
                 if (!DataType::isEquals(breakTypes)) {
                     throw Exception(Exception::TYPE_ERROR, "while should return void");
                 }
@@ -3146,6 +3151,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                                     "for condition should be iterable: range_expr or DataType::array_");
                 }
 
+                breakTypes.push_back(DataType(DataType::void_));
                 if (!DataType::isEquals(breakTypes)) {
                     throw Exception(Exception::TYPE_ERROR, "breaks should be void_ in for");
                 }
@@ -3878,26 +3884,29 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
 
 void ExprNode::checkCancelExprNode(ExprNode *exprNode, bool isBreakCanceled) {
 
-    if (this->type == link) {
+    if (exprNode->type == link) {
         throw Exception(Exception::TYPE_ERROR, "operation not supported by link");
     }
 
-    if (this->type == mut_link) {
+    if (exprNode->type == mut_link) {
         throw Exception(Exception::TYPE_ERROR, "operation not supported by mut_link");
     }
 
-    if (this->type == return_expr) {
+    if (exprNode->type == return_expr) {
         throw Exception(Exception::TYPE_ERROR, "operation not supported by return_expr");
     }
 
-    if (this->type == break_with_val_expr && isBreakCanceled) {
+    if (exprNode->type == break_with_val_expr && isBreakCanceled) {
+        throw Exception(Exception::TYPE_ERROR, "operation not supported by break with expr");
+    }
+
+    if (exprNode->type == break_expr) {
         throw Exception(Exception::TYPE_ERROR, "operation not supported by break");
     }
 
-    if (this->type == break_expr) {
-        throw Exception(Exception::TYPE_ERROR, "operation not supported by break");
+    if (exprNode->type == continue_expr) {
+        throw Exception(Exception::TYPE_ERROR, "operation not supported by continue");
     }
-    //   if(this-)
 }
 
 ExprNode *ExprNode::DelObjectExpr(ExprNode *expr) {
