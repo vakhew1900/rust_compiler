@@ -242,9 +242,7 @@ string DataType::toConstTableFormat() const {
             res = "L" + id + ";";
             break;
         case array_:
-            for (int i = 0; i < arrDeep; i++) {
-                res += "[";
-            }
+            res += "[";
             res += getArrDataType().toConstTableFormat();
             break;
         case undefined_:

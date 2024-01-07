@@ -10,6 +10,9 @@ mod ID {
 		const z: bool = 11 == 12 || 12 > 11 && 10.0 != 11.1 && 'a' < 'c';
 		const str : String = "fffffffff";	
 		const ch: char = 'c';
+		const float : f64 = 1e12;
+		const float2 : f64 = 1.1345;
+		const big_int : i32 = 1111111;
 	}
 
 	pub struct Tweet {
