@@ -2266,15 +2266,20 @@ void ItemNode::transform(bool isConvertedToConst) {
                                                                                    *this->name).returnDataType);
 
             blockExprList.push_back(body);
-            returnTypes.clear();
             if (this->body != NULL) {
                 this->body->transform(isConvertedToConst);
                 MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(this->curClassName, *this->name);
                 if(!this->body->dataType.isEquals(methodTableItem.returnDataType)){
-                    throw Exception(Exception::UNEXPECTED, *this->name + "should return " + methodTableItem.returnDataType.toString() + "but result: "  + body->dataType.toString());
+                    throw Exception(Exception::TYPE_ERROR, *this->name + "should return " + methodTableItem.returnDataType.toString() + "but result: "  + body->dataType.toString());
                 }
 
+                returnTypes.push_back(methodTableItem.returnDataType);
+                if(!DataType::isEquals(returnTypes)){
+                    throw Exception(Exception::TYPE_ERROR, *this->name + "should return  " + methodTableItem.returnDataType.toString() + "but result is not");
+                }
             }
+
+            returnTypes.clear();
             blockExprList.pop_back();
             if (blockExprList.size()) {
                 throw Exception(Exception::UNEXPECTED, "blockexpr не удалил(");

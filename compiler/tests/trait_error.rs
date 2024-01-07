@@ -30,6 +30,14 @@ mod ID {
 			//self.reply = false;
 			//format("{}: {}", self.username, self.content)
 			
+			if( 10 < var) { 
+				return "true";
+			}
+			
+			if ( 10 == var) {
+				return "false";
+			}
+			
 			"dffasdsfd"
 		}
 
