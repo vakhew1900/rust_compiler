@@ -2237,10 +2237,11 @@ void ProgramNode::makeAllConversions() {
 
 void ItemNode::transform(bool isConvertedToConst) {
 
-
+try {
     switch (this->item_type) {
 
         case function_: {
+            returnTypes.clear();
             if (body != NULL) {
 
                 body->curClassName = curClassName;
@@ -2258,7 +2259,7 @@ void ItemNode::transform(bool isConvertedToConst) {
                 ClassTable::Instance()->addLocalParam(curClassName, *this->name, elem);
             }
 
-            if(ClassTable::Instance()->getMethod(curClassName, *this->name).isStatic == false){
+            if (ClassTable::Instance()->getMethod(curClassName, *this->name).isStatic == false) {
                 paramTypes.erase(paramTypes.begin());
             }
             ClassTable::addMethodRefToConstTable(curClassName, curClassName, *this->name, paramTypes,
@@ -2269,13 +2270,17 @@ void ItemNode::transform(bool isConvertedToConst) {
             if (this->body != NULL) {
                 this->body->transform(isConvertedToConst);
                 MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(this->curClassName, *this->name);
-                if(!this->body->dataType.isEquals(methodTableItem.returnDataType)){
-                    throw Exception(Exception::TYPE_ERROR, *this->name + "should return " + methodTableItem.returnDataType.toString() + "but result: "  + body->dataType.toString());
+                if (!this->body->dataType.isEquals(methodTableItem.returnDataType)) {
+                    throw Exception(Exception::TYPE_ERROR,
+                                    *this->name + "should return " + methodTableItem.returnDataType.toString() +
+                                    "but result: " + body->dataType.toString());
                 }
 
                 returnTypes.push_back(methodTableItem.returnDataType);
-                if(!DataType::isEquals(returnTypes)){
-                    throw Exception(Exception::TYPE_ERROR, *this->name + "should return  " + methodTableItem.returnDataType.toString() + "but result is not");
+                if (!DataType::isEquals(returnTypes)) {
+                    throw Exception(Exception::TYPE_ERROR,
+                                    *this->name + "should return  " + methodTableItem.returnDataType.toString() +
+                                    " but result is not");
                 }
             }
 
@@ -2383,6 +2388,11 @@ void ItemNode::transform(bool isConvertedToConst) {
             break;
     }
 }
+catch (Exception e){
+    blockExprList.clear();
+    cerr << e.getMessage() << endl;
+}
+}
 
 void StmtListNode::transform(bool isConvertedToConst) {
 
@@ -2469,7 +2479,7 @@ void StmtNode::transform(bool isConvertedToConst) {
         }
     }
     catch (Exception e) {
-        throw e;
+        cerr << e.getMessage() << "\n";
     }
 }
 
@@ -4012,7 +4022,7 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
             if (ClassTable::Instance()->isFieldExist(className, *elem->Name)) {
                 FieldTableItem fieldItem = ClassTable::Instance()->getField(className, *elem->Name);
                 if (!ClassTable::isHaveAccessToField(curClassName, this->expr_left->className, *elem->Name)) {
-                    throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to private" + *elem->Name);
+                    throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to private " + *elem->Name);
                 }
 
                 params.push_back(fieldItem.dataType);

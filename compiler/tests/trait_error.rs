@@ -76,7 +76,7 @@ enum Enum {
 
 fn main() { 
 
-	let tweet = ID::Tweet {username: "user", content: "content", reply: false, retweet: false};
+	let tweet: ID::Tweet = ID::Tweet {username: "user", content: "content", reply: false, retweet: false};
 	tweet.summarize(11);
 	let x = tweet.username;
 	let mut array: [i32; 4] = [2, 3, 4, 5];
@@ -84,6 +84,7 @@ fn main() {
 	println("{}", "func_func_func");
 	tweet.tmp();
 	let y: f64 = ID::Tweet::float2;
+	
 	//array[1] = "FFFFFFFFFF";
 //	let y;
 	//y = 'x';
