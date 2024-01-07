@@ -1552,7 +1552,7 @@ void ProgramNode::getAllItems(std::string className) {
         ClassTable::isMainFunctionExist();
     }
     catch (Exception e) {
-        cout << e.getMessage() << "\n";
+        cerr << e.getMessage() << "\n";
     }
 }
 
@@ -2222,7 +2222,7 @@ void ProgramNode::transform(bool isConvertedToConst) {
 
             }
             catch (Exception e) {
-                cout << e.getMessage() << endl;
+                cerr << e.getMessage() << endl;
             }
         }
     }
@@ -3197,20 +3197,29 @@ void ExprNode::transform(bool isConvertedToConst) {
                 }
             }
 
-            if (this->body == NULL) {
+
+            if (this->body == NULL && this->stmt_list != NULL && this->stmt_list->stmts->size()) {
                 auto last_stmt = this->stmt_list->stmts->back();
                 if(last_stmt->type == StmtNode::exprstmt &&
                 (last_stmt->expr->type == ExprNode::loop_expr || (last_stmt->expr->type == ExprNode::if_expr_list))){
                     this->dataType = last_stmt->expr->dataType;
+                    this->body = last_stmt->expr;
+                    this->stmt_list->stmts->pop_back();
                 }
                 else {
                     this->dataType = DataType(DataType::void_);
                 }
-            } else {
+            }
+
+            if(this->body != NULL) {
                 addMetaInfo(body);
                 this->body->transform(isConvertedToConst);
                 this->dataType = this->body->dataType;
             }
+            else {
+                this->dataType = DataType(DataType::void_);
+            }
+
             blockExprList.pop_back();
             break;
 

@@ -62,7 +62,7 @@ string ConstTableItem::toString(int index) {
             break;
         case CONSTANT_NAME_AND_TYPE:
             row += varName(CONSTANT_NAME_AND_TYPE);
-            row += ", " + to_string(val1) + to_string(val2);
+            row += ", " + to_string(val1) + " " + to_string(val2);
             break;
 
         case CONSTANT_FLOAT:

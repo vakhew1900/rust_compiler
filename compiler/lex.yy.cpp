@@ -2949,12 +2949,16 @@ int main(int argc, char** argv) {
     global_program->toDot(dot);
     std::cout << dot << "\n";
     std::ofstream out("dot-tree.txt");
+
     global_program->makeAllConversions();
     string updatedDot;
     global_program->toDot(updatedDot);
+
     string res = ClassTable::Instance()->toString();
     out << updatedDot << "\n";
     cout << ClassTable::Instance()->toString() << "\n";
+
+    ClassTable::createConstTableCSV();
     return 0;
 }
 

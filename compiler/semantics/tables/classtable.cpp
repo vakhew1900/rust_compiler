@@ -3,6 +3,7 @@
 //
 
 #include "classtable.h"
+#include <fstream>
 
 ClassTableItem::ClassTableItem() {
 
@@ -140,6 +141,7 @@ ClassTableItem ClassTable::getClass(const string &className) {
 const string ClassTable::moduleClassName = "moduleClass";
 const string ClassTable::globalClassName = "src";
 const string ClassTable::RTLClassName = "RTL";
+
 string ClassTable::getDirectory(string className) {
     vector<string> classPath = split(className, '/');
 
@@ -351,7 +353,8 @@ bool ClassTable::isHaveAccessToMethtod(const string &requesterClass, const strin
 
     try {
         bool res = ClassTable::isHaveAccess(requesterClass, requestedClass);
-        return res && (ClassTable::Instance()->getMethod(requestedClass, requestedMethod).isPub || isEqualDirectory(requesterClass, requestedClass));
+        return res && (ClassTable::Instance()->getMethod(requestedClass, requestedMethod).isPub ||
+                       isEqualDirectory(requesterClass, requestedClass));
     } catch (Exception e) {
         throw e;
     }
@@ -362,7 +365,8 @@ bool ClassTable::isHaveAccessToField(const string &requesterClass, const string 
 
     try {
         bool res = ClassTable::isHaveAccess(requesterClass, requestedClass);
-        return res && (ClassTable::Instance()->getField(requestedClass, requestedField).isPub || isEqualDirectory(requesterClass, requestedClass));
+        return res && (ClassTable::Instance()->getField(requestedClass, requestedField).isPub ||
+                       isEqualDirectory(requesterClass, requestedClass));
     } catch (Exception e) {
         throw e;
     }
@@ -372,48 +376,52 @@ bool ClassTable::isEqualDirectory(const string &first, const string &second) {
     return getDirectory(first) == getDirectory(second);
 }
 
-int ClassTable::addIntToConstTable(const string& className, int val){
+int ClassTable::addIntToConstTable(const string &className, int val) {
     Instance();
     return _instanse->items[className].constTable.Int(val);
 }
 
-int ClassTable::addFloatToConstTable(const string& className, double val){
+int ClassTable::addFloatToConstTable(const string &className, double val) {
     Instance();
     return _instanse->items[className].constTable.Double(val);
 }
 
-int ClassTable::addStringToConstTable(const string& className, const string& str){
+int ClassTable::addStringToConstTable(const string &className, const string &str) {
     Instance();
     return _instanse->items[className].constTable.String(str);
 }
 
-int ClassTable::addClassToConstTable(const string& className, const string& addingClassName){
+int ClassTable::addClassToConstTable(const string &className, const string &addingClassName) {
     Instance();
     return _instanse->items[className].constTable.Class(addingClassName);
 }
 
-int ClassTable::addMethodRefToConstTable(const string& className, const string& addingClassName, const string& method, const vector<DataType> &params,const DataType &returnType){
+int ClassTable::addMethodRefToConstTable(const string &className, const string &addingClassName, const string &method,
+                                         const vector<DataType> &params, const DataType &returnType) {
     Instance();
     return _instanse->items[className].constTable.MethodRef(addingClassName, method, params, returnType);
 }
 
-int ClassTable::addFieldRefToConstTable(const string& className, const string& addingClassName, const string& field, const DataType& dataType){
+int ClassTable::addFieldRefToConstTable(const string &className, const string &addingClassName, const string &field,
+                                        const DataType &dataType) {
     Instance();
     return _instanse->items[className].constTable.FieldRef(addingClassName, field, dataType);
 }
 
 void ClassTable::isMainFunctionExist() {
-    if(ClassTable::Instance()->isMethodExist(globalClassName + "/" + moduleClassName, "main")){
-        MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(globalClassName + "/" + moduleClassName, "main");
+    if (ClassTable::Instance()->isMethodExist(globalClassName + "/" + moduleClassName, "main")) {
+        MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(globalClassName + "/" + moduleClassName,
+                                                                            "main");
 
-        if(methodTableItem.paramTable.items.size()){
-           throw Exception(Exception::UNEXPECTED, "incorrect number of function parameters in `main`. expected 0 params");
+        if (methodTableItem.paramTable.items.size()) {
+            throw Exception(Exception::UNEXPECTED,
+                            "incorrect number of function parameters in `main`. expected 0 params");
         }
-        if(!methodTableItem.returnDataType.isEquals(DataType(DataType::void_))){
-            throw Exception(Exception::TYPE_ERROR, "`main` can only void_. ReturnType now: " + methodTableItem.returnDataType.toString());
+        if (!methodTableItem.returnDataType.isEquals(DataType(DataType::void_))) {
+            throw Exception(Exception::TYPE_ERROR,
+                            "`main` can only void_. ReturnType now: " + methodTableItem.returnDataType.toString());
         }
-    }
-    else {
+    } else {
         throw Exception(Exception::NOT_EXIST, "consider adding a `main` function");
     }
 }
@@ -421,14 +429,41 @@ void ClassTable::isMainFunctionExist() {
 int ClassTable::getStructFieldCount(const string &className) {
     ClassTableItem classTableItem = ClassTable::Instance()->getClass(className);
 
-    if(classTableItem.classType != ClassTableItem::struct_){
+    if (classTableItem.classType != ClassTableItem::struct_) {
         throw Exception(Exception::TYPE_ERROR, className + " is not struct");
     }
 
     int res = 0;
 
-    for(auto elem : classTableItem.fieldTable.items){
+    for (auto elem: classTableItem.fieldTable.items) {
         res += elem.second.isConst == false;
     }
     return res;
+}
+
+void ClassTable::createConstTableCSV() {
+    path classtable_dir = "./classtable/";
+
+    if (!exists(classtable_dir)) {
+        create_directory(classtable_dir);
+        cout << "Directory created: " << classtable_dir << endl;
+    }
+
+    for(auto elem : ClassTable::Instance()->items){
+        string filename = elem.first + ".csv";
+        path filepath = classtable_dir / filename;
+        if(!exists(filepath.parent_path())){
+            create_directory(filepath.parent_path());
+        }
+        ofstream out(filepath);
+        if (out.is_open()) {
+            out << elem.second.constTable.toCSV() << endl;
+            out.close();
+
+        }
+        else {
+            // Handle the case if any error occured
+            cerr << "Failed to create file: " << filepath << endl;
+        }
+    }
 }

@@ -10,8 +10,10 @@
 #include "fieldtable.h"
 #include "constable.h"
 #include <map>
+#include <filesystem>
 
 using namespace std;
+using namespace std::filesystem;
 
 class ClassTableItem{
 public:
@@ -86,6 +88,7 @@ public:
 
     static int getStructFieldCount(const string& className);
     static void isMainFunctionExist();
+    static void createConstTableCSV();
 };
 
 
