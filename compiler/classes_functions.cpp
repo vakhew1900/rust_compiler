@@ -2258,6 +2258,9 @@ void ItemNode::transform(bool isConvertedToConst) {
                 ClassTable::Instance()->addLocalParam(curClassName, *this->name, elem);
             }
 
+            if(ClassTable::Instance()->getMethod(curClassName, *this->name).isStatic == false){
+                paramTypes.erase(paramTypes.begin());
+            }
             ClassTable::addMethodRefToConstTable(curClassName, curClassName, *this->name, paramTypes,
                                                  ClassTable::Instance()->getMethod(this->curClassName,
                                                                                    *this->name).returnDataType);
@@ -2942,10 +2945,12 @@ void ExprNode::transform(bool isConvertedToConst) {
 
                 vector<DataType> params;
 
-                for (auto elem: methodTableItem.paramTable.items) {
+                for (auto elem: methodItem.paramTable.items) {
                     params.push_back(elem.dataType);
                 }
-
+                if(methodItem.isStatic == false){
+                    params.erase(params.begin());
+                }
                 ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->dataType.id, *this->Name, params,
                                                      methodItem.returnDataType);
             }
@@ -3276,7 +3281,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             addMetaInfo(this->expr_left);
             checkCancelExprNode(this->expr_left);
 
-            this->expr_left->transformPathCallExpr(curClassName, ExprNode::static_method, false);
+            this->expr_left->transformPathCallExpr(curClassName, ExprNode::field_access_expr, false);
             this->expr_middle = ExprNode::CallAccessExpr(ExprNode::id_, new string(expr_left->fieldName), NULL, NULL);
 
             if (ClassTable::Instance()->isFieldExist(this->expr_left->className, *this->expr_middle->Name)) {
