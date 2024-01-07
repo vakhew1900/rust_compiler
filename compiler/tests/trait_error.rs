@@ -29,7 +29,10 @@ mod ID {
 			let var = 600000;
 			//self.reply = false;
 			//format("{}: {}", self.username, self.content)
+			
+			"dffasdsfd"
 		}
+
 		
 	}
 	
@@ -71,6 +74,8 @@ fn main() {
 	let mut array: [i32; 4] = [2, 3, 4, 5];
 	array[0] = 10;
 	println("{}", "func_func_func");
+	tweet.tmp();
+	let y: f64 = ID::Tweet::float2;
 	//array[1] = "FFFFFFFFFF";
 //	let y;
 	//y = 'x';

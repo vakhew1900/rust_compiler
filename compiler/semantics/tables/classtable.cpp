@@ -353,7 +353,7 @@ bool ClassTable::isHaveAccessToMethtod(const string &requesterClass, const strin
 
     try {
         bool res = ClassTable::isHaveAccess(requesterClass, requestedClass);
-        return res && (ClassTable::Instance()->getMethod(requestedClass, requestedMethod).isPub ||
+        return res && (ClassTable::Instance()->getMethodDeep(requestedClass, requestedMethod).isPub ||
                        isEqualDirectory(requesterClass, requestedClass));
     } catch (Exception e) {
         throw e;
@@ -365,7 +365,7 @@ bool ClassTable::isHaveAccessToField(const string &requesterClass, const string 
 
     try {
         bool res = ClassTable::isHaveAccess(requesterClass, requestedClass);
-        return res && (ClassTable::Instance()->getField(requestedClass, requestedField).isPub ||
+        return res && (ClassTable::Instance()->getFieldDeep(requestedClass, requestedField).isPub ||
                        isEqualDirectory(requesterClass, requestedClass));
     } catch (Exception e) {
         throw e;
@@ -466,4 +466,55 @@ void ClassTable::createConstTableCSV() {
             cerr << "Failed to create file: " << filepath << endl;
         }
     }
+}
+
+bool ClassTable::isMethodExistDeep(const string &className, const string &methodName) {
+
+    if (ClassTable::Instance()->isMethodExist(className, methodName)) {
+        return true;
+    }
+
+    return ClassTable::isHaveParent(className) &&
+            isMethodExistDeep(ClassTable::getParentClassName(className), methodName);
+}
+
+bool ClassTable:: isFieldExistDeep(const string& className, const string& fieldName){
+    if (ClassTable::Instance()->isFieldExist(className, fieldName)) {
+        return true;
+    }
+
+    return ClassTable::isHaveParent(className) &&
+            isFieldExistDeep(ClassTable::getParentClassName(className), fieldName);
+}
+
+string ClassTable::getParentClassName(const std::string &className) {
+    ClassTableItem classTableItem = ClassTable::Instance()->getClass(className);
+    if (!ClassTable::isHaveParent(className)){
+        throw Exception(Exception::NOT_EXIST, className + " not has parent");
+    }
+    return classTableItem.parentName;
+}
+
+MethodTableItem ClassTable::getMethodDeep(const string &className, const string &methodName) {
+    if(!ClassTable::isMethodExistDeep(className, methodName)){
+        throw Exception(Exception::NOT_EXIST, className + " not has method " + methodName);
+    }
+
+    if(ClassTable::Instance()->isMethodExist(className, methodName)){
+        return ClassTable::Instance()->getMethod(className, methodName);
+    }
+
+    return ClassTable::getMethodDeep(ClassTable::getParentClassName(className), methodName);
+}
+
+FieldTableItem ClassTable::getFieldDeep(const string &className, const string &fieldName) {
+    if(!ClassTable::isFieldExistDeep(className, fieldName)){
+        throw Exception(Exception::NOT_EXIST, className + " not has field " + fieldName);
+    }
+
+    if(ClassTable::Instance()->isFieldExist(className, fieldName)){
+        return ClassTable::Instance()->getField(className, fieldName);
+    }
+
+    return ClassTable::getFieldDeep(ClassTable::getParentClassName(className), fieldName);
 }

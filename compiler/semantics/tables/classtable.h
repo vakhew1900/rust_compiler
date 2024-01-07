@@ -57,6 +57,7 @@ public:
     void addParent(string childName, string parentName);
     void addLocalParam(string className,string methodName, VarTableItem varTableItem);
     void addFuncParam(string className,string methodName, VarTableItem varTableItem);
+
     bool isClassExist(const string& className);
     bool isMethodExist(const string& className, const string& methodName);
     bool isFieldExist(const string& className, const string& methodName);
@@ -64,6 +65,7 @@ public:
     bool isLocalVarExist(const string& className, const string& methodName, const string& varName);
     bool isLocalVarExist(const string& className, const string& methodName, const string& varName, const ExprNode* blockExpr);
     bool isParent(const string& child, const string& parentName);
+
     ClassTableItem getClass(const string& className);
     ClassTableItem getParentClass(const string &className);
     FieldTableItem getField(const string& className, const string& fieldName);
@@ -89,6 +91,14 @@ public:
     static int getStructFieldCount(const string& className);
     static void isMainFunctionExist();
     static void createConstTableCSV();
+
+    static bool isMethodExistDeep(const string& className, const string& methodName);
+    static bool isFieldExistDeep(const string& className, const string& fieldName);
+    static string getParentClassName(const string& className);
+    static FieldTableItem getFieldDeep(const string& className, const string& fieldName);
+    static MethodTableItem getMethodDeep(const string& className, const string& methodName);
+
+
 };
 
 

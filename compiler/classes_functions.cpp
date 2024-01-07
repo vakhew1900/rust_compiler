@@ -2269,6 +2269,11 @@ void ItemNode::transform(bool isConvertedToConst) {
             returnTypes.clear();
             if (this->body != NULL) {
                 this->body->transform(isConvertedToConst);
+                MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(this->curClassName, *this->name);
+                if(!this->body->dataType.isEquals(methodTableItem.returnDataType)){
+                    throw Exception(Exception::UNEXPECTED, *this->name + "should return " + methodTableItem.returnDataType.toString() + "but result: "  + body->dataType.toString());
+                }
+
             }
             blockExprList.pop_back();
             if (blockExprList.size()) {
@@ -2422,7 +2427,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                         varTableItem.dataType = this->typeChild->convertToDataType(curClassName);
                         if (!this->expr->dataType.isEquals(varTableItem.dataType)) {
                             throw Exception(Exception::INCORRECT_TYPE,
-                                            "incorrect datatype. Expected: " + varTableItem.dataType.toString() +
+                                            "incorrect let" + varTableItem.id + "datatype. Expected: " + varTableItem.dataType.toString() +
                                             "result: " + this->expr->dataType.toString());
                         }
                     }
@@ -2927,7 +2932,7 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             try {
 
-                MethodTableItem methodItem = ClassTable::Instance()->getMethod(this->expr_left->dataType.id,
+                MethodTableItem methodItem = ClassTable::Instance()->getMethodDeep(this->expr_left->dataType.id,
                                                                                *this->Name);
                 if (methodItem.isStatic) {
                     throw Exception(Exception::STATIC_ERROR,
@@ -3239,8 +3244,8 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_left->transformPathCallExpr(curClassName, ExprNode::static_method, false);
             this->expr_middle = ExprNode::CallAccessExpr(ExprNode::id_, new string(expr_left->methodName), NULL, NULL);
 
-            if (ClassTable::Instance()->isMethodExist(this->expr_left->className, *this->expr_middle->Name)) {
-                this->dataType = ClassTable::Instance()->getMethod(this->expr_left->className,
+            if (ClassTable::isMethodExistDeep(this->expr_left->className, *this->expr_middle->Name)) {
+                this->dataType = ClassTable::getMethodDeep(this->expr_left->className,
                                                                    *this->expr_middle->Name).returnDataType;
             } else if (ClassTable::Instance()->isMethodExist(ClassTable::RTLClassName, *this->expr_middle->Name)) {
                 this->expr_left->className = ClassTable::RTLClassName;
@@ -3266,7 +3271,7 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             {
                 vector<DataType> params;
-                MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(this->expr_left->className,
+                MethodTableItem methodTableItem = ClassTable::getMethodDeep(this->expr_left->className,
                                                                                     *this->expr_middle->Name);
                 for (auto elem: methodTableItem.paramTable.items) {
                     params.push_back(elem.dataType);
@@ -3281,11 +3286,11 @@ void ExprNode::transform(bool isConvertedToConst) {
             addMetaInfo(this->expr_left);
             checkCancelExprNode(this->expr_left);
 
-            this->expr_left->transformPathCallExpr(curClassName, ExprNode::field_access_expr, false);
-            this->expr_middle = ExprNode::CallAccessExpr(ExprNode::id_, new string(expr_left->fieldName), NULL, NULL);
+            this->transformPathCallExpr(curClassName, ExprNode::field_access_expr, false);
+            this->expr_middle = ExprNode::CallAccessExpr(ExprNode::id_, new string(fieldName), NULL, NULL);
 
-            if (ClassTable::Instance()->isFieldExist(this->expr_left->className, *this->expr_middle->Name)) {
-                this->dataType = ClassTable::Instance()->getField(this->expr_left->className,
+            if (ClassTable::isFieldExistDeep(this->className, *this->expr_middle->Name)) {
+                this->dataType = ClassTable::getFieldDeep(this->className,
                                                                   *this->expr_middle->Name).dataType;
             } else {
                 throw Exception(Exception::NOT_EXIST,
@@ -3294,8 +3299,8 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
             {
-                ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->className, *this->expr_middle->Name,
-                                                    ClassTable::Instance()->getField(this->expr_left->className,
+                ClassTable::addFieldRefToConstTable(curClassName, this->className, *this->expr_middle->Name,
+                                                    ClassTable::Instance()->getFieldDeep(this->className,
                                                                                      *this->expr_middle->Name).dataType);
 
             }
@@ -3862,7 +3867,7 @@ void ExprNode::transformConst() {
 void ExprNode::checkMethodParam(const string &className, const string &methodName) {
 
     try {
-        MethodTableItem methodItem = ClassTable::Instance()->getMethod(className,
+        MethodTableItem methodItem = ClassTable::Instance()->getMethodDeep(className,
                                                                        methodName);
 
 
