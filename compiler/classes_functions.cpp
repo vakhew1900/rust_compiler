@@ -2271,6 +2271,11 @@ void ItemNode::transform(bool isConvertedToConst) {
                 for (auto elem: ClassTable::Instance()->getMethod(curClassName, *this->name).paramTable.items) {
                     elem.blockExpr = body;
                     paramTypes.push_back(elem.dataType);
+
+                    if(elem.isRef && elem.dataType.isSimple()){
+                        throw Exception(Exception::NOT_SUPPORT, elem.dataType.toString() + " is simple and ref. Not support this");
+                    }
+
                     ClassTable::Instance()->addLocalParam(curClassName, *this->name, elem);
                 }
 
@@ -3180,7 +3185,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                     dataType = this->expr_left->dataType.getArrDataType();
                 }
 
-                VarTableItem varItem = VarTableItem(*this->Name, dataType, this->expr_left->isMut, false, true, false,
+                VarTableItem varItem = VarTableItem(*this->Name, dataType, this->expr_left->isMut && this->expr_left->isRefExpr(), false, true, false,
                                                     body);
                 ClassTable::Instance()->addLocalParam(curClassName, curMethodName, varItem);
             }
@@ -3188,6 +3193,11 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (this->expr_left->isRefExpr() == false && this->isVar()) {
                 ExprNode *delExpr = ExprNode::DelObjectExpr(this->expr_left);
                 this->deleteExprList = new ExprListNode(delExpr);
+            }
+
+            if(this->expr_left->isRefExpr() && this->expr_left->dataType.type == DataType::array_ &&
+            this->expr_left->dataType.arrDeep == 1 && this->expr_left->dataType.getArrDataType().isSimple()){
+                throw Exception(Exception::NOT_SUPPORT, this->expr_left->dataType.toString() + " not support link operation");
             }
 
             {
@@ -3450,13 +3460,18 @@ void ExprNode::transform(bool isConvertedToConst) {
             addMetaInfo(this->expr_left);
             checkCancelExprNode(this->expr_left);
             this->expr_left->transform(isConvertedToConst);
-            if (this->isVar() == false) {
+            if (this->expr_left->isVar() == false) {
                 throw Exception(Exception::UNEXPECTED, "link operation with not var element");
             }
 
             this->dataType = this->expr_left->dataType;
             this->isMut = false;
-            //  if(this->dataType.)
+            this->localVarNum = this->expr_left->isVar();
+            this->fieldName = this->expr_left->fieldName;
+
+            if(this->dataType.type != DataType::class_ && this->dataType.type != DataType::string_){
+                throw Exception(Exception::NOT_SUPPORT, "operation mut_link not support with simple type");
+            }
 
             break;
         case mut_link:
@@ -3465,7 +3480,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             checkCancelExprNode(this->expr_left);
             this->expr_left->transform(isConvertedToConst);
 
-            if (this->isVar() == false) {
+            if (this->expr_left->isVar() == false) {
                 throw Exception(Exception::UNEXPECTED, "link operation with not var element");
             }
 
@@ -3474,6 +3489,13 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
             this->dataType = this->expr_left->dataType;
+            this->localVarNum = this->expr_left->isVar();
+            this->fieldName = this->expr_left->fieldName;
+            this->isMut = true;
+
+            if(this->dataType.type != DataType::class_ && this->dataType.type != DataType::string_){
+                throw Exception(Exception::NOT_SUPPORT, "operation mut_link not support with simple type");
+            }
             break;
 
 

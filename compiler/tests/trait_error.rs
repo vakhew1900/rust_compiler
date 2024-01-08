@@ -92,8 +92,12 @@ fn main() {
 	let y: f64 = ID::Tweet::float2;
 	ID::myFunc();
 	//crate::myFunc();
-	if true { 3 }
-	crate::myFunc();
+	//if true { 3 }
+	crate::ID::myFunc();
+	
+	for x in array {
+		let y = x + 10;
+	}
 	//array[1] = "FFFFFFFFFF";
 //	let y;
 	//y = 'x';

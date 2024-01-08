@@ -257,3 +257,7 @@ bool DataType::isClass() {
     return  this->type == DataType::class_ ||
                this->type == DataType::array_ && this->arrType == DataType::class_;
 }
+
+bool DataType::isSimple() {
+    return this->type != array_ && this->type != class_ && this->type != string_;
+}

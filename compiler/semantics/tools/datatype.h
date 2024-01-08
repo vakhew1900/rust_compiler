@@ -41,6 +41,8 @@ public:
     static bool isEquals(vector<DataType> types);
     DataType getArrDataType() const;
 
+    bool isSimple();
+
     bool isClass();
 };
 
