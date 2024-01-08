@@ -107,6 +107,8 @@ public:
     };
     Type type;
     string *name;
+    bool isImpl = false;
+
     TypeNode *typeArr = NULL;
     ExprNode *exprArr = NULL;
 

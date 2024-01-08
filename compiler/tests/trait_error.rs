@@ -91,6 +91,8 @@ fn main() {
 	tweet.tmp();
 	let y: f64 = ID::Tweet::float2;
 	ID::myFunc();
+	//crate::myFunc();
+	if true { 3 }
 	crate::myFunc();
 	//array[1] = "FFFFFFFFFF";
 //	let y;

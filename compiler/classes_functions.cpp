@@ -3215,8 +3215,10 @@ void ExprNode::transform(bool isConvertedToConst) {
         case block_expr:
 
             blockExprList.push_back(this);
-            if (this->stmt_list != NULL) {
-                for (auto elem: *this->stmt_list->stmts) {
+            if (this->stmt_list != NULL && this->stmt_list->stmts->size()) {
+                int cur  = 0;
+                for (auto it = this->stmt_list->stmts->begin(); it != this->stmt_list->stmts->end(); it++) {
+                    auto elem = *it;
                     elem->curClassName = curClassName;
                     elem->curMethodName = curMethodName;
                     elem->transform(isConvertedToConst);
@@ -3228,23 +3230,27 @@ void ExprNode::transform(bool isConvertedToConst) {
 
                             if (elem == this->stmt_list->stmts->back() && this->body != NULL) {
                                 throw Exception(Exception::TYPE_ERROR,
-                                                "if or loop without  semicolon should return  void_. Result:" +
+                                                "if or loop without  semicolon should return  void_. Result: " +
                                                 elem->expr->dataType.toString());
                             }
 
                             if (elem != this->stmt_list->stmts->back()) {
-                                elem++;
-                                if (elem->type != StmtNode::semicolon) {
+
+                                StmtNode* nextElem = *(std::next(it, 1));
+
+                                if (nextElem->type != StmtNode::semicolon) {
                                     throw Exception(Exception::TYPE_ERROR,
-                                                    "if or loop without  semicolon should return  void_. Result:" +
-                                                    elem->expr->dataType.toString());
+                                                    "if or loop without  semicolon should return  void_. result: " +
+                                                            nextElem->expr->dataType.toString());
                                 }
-                                elem--;
+                             //   elem--;
                             }
 
                         }
 
                     }
+
+
                 }
             }
 
@@ -4067,8 +4073,8 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
 
                 params.push_back(fieldItem.dataType);
 
-                if (fieldItem.dataType.isEquals(elem->expr_left->dataType) &&
-                    isParent(elem->expr_left->dataType, fieldItem.dataType)) {
+                if (!fieldItem.dataType.isEquals(elem->expr_left->dataType) &&
+                    !isParent(elem->expr_left->dataType, fieldItem.dataType)) {
                     throw Exception(Exception::TYPE_ERROR,
                                     *this->Name + "field type should be " + fieldItem.toString() + " " +
                                     elem->expr_left->dataType.toString());
