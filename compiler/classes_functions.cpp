@@ -3928,7 +3928,7 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
             }
             VarTableItem varItem = paramTable.items[i];
             bool isElemRef =  varItem.isRef == elem->isRefExpr();
-            bool isElemMut = !varItem.isMut || varItem.isMut == elem->isMut;
+            bool isElemMut = !varItem.isMut || varItem.isMut == elem->isMut || (elem->isSimpleType() && !isElemRef);
             bool isElemConst = !varItem.isConst || (!varItem.isMut && varItem.isConst == elem->isConst);
             bool checker = isElemMut && isElemRef && isElemConst;
            // bool checker = varItem.isRef == elem->isRefExpr() && varItem.isMut == elem->isMut && (varItem.isConst == elem->isConst || elem->isSimpleType());
