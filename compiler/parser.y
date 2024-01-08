@@ -182,10 +182,12 @@ FuncStmt: DecFuncStmt { $$ = $1; }
 
 DecFuncStmt: FN ID '(' FuncParamListEmpty ')' ';' { $$ = new FuncStmtNode($2, 0, $4, 0); }
            | FN ID '(' FuncParamListEmpty ')' RIGHT_ARROW  Type ';' { $$ = new FuncStmtNode($2, $7, $4, 0); }
+           | FN ID '(' FuncParamListEmpty ')' RIGHT_ARROW IMPL Type ';' { $8->isImpl = true; $$ = new FuncStmtNode($2, $8, $4, 0); }
            ;
 
 ImplFuncStmt: FN ID '(' FuncParamListEmpty ')' BlockExpr { $$ = new FuncStmtNode($2, 0, $4, $6); }
             | FN ID '(' FuncParamListEmpty ')' RIGHT_ARROW  Type BlockExpr { $$ = new FuncStmtNode($2, $7, $4, $8); }
+            | FN ID '(' FuncParamListEmpty ')' RIGHT_ARROW  IMPL Type BlockExpr { $8->isImpl = true; $$ = new FuncStmtNode($2, $8, $4, $9); }
             ;
 
 FuncParamListEmpty: /* empty */ { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListNode::static_, 0); }
@@ -199,10 +201,14 @@ FuncParamList: SELF { $$ = FuncParamListNode::FunctionParamsFinal(FuncParamListN
              | FuncParamList ',' FuncParam { $$ = FuncParamListNode::Append($1, $3); }
              ;
 
-FuncParam: ID ':' Type { $$ = new FuncParamNode($1, $3, FuncParamNode::noMut); }
+FuncParam: ID ':' Type {$$ = new FuncParamNode($1, $3, FuncParamNode::noMut); }
+         | ID ':' IMPL Type {$4->isImpl = true; $$ = new FuncParamNode($1, $4, FuncParamNode::noMut); }
          | MUT ID ':' Type { $$ = new FuncParamNode($2, $4, FuncParamNode::mut); }
+         | MUT ID ':' IMPL Type {$5->isImpl = true; $$ = new FuncParamNode($2, $5, FuncParamNode::mut); }
          | ID ':' MUT_REF Type { $$ = new FuncParamNode($1, $4, FuncParamNode::mut_ref); }
+         | ID ':' MUT_REF IMPL Type { $5->isImpl = true; $$ = new FuncParamNode($1, $5, FuncParamNode::mut_ref); }
          | ID ':' '&' Type { $$ = new FuncParamNode($1, $4, FuncParamNode::link); }
+         | ID ':' '&' IMPL Type { $5->isImpl = true; $$ = new FuncParamNode($1, $5, FuncParamNode::link); }
          ;
 
 /* ========== Struct =========== */
