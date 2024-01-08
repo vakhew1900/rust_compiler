@@ -147,7 +147,7 @@ bool DataType::isEquals(const DataType &other) {
 }
 
 bool DataType::isUndefined() {
-    return this->type != undefined_;
+    return this->type == undefined_;
 }
 
 void DataType::addArrType(DataType arrType) {

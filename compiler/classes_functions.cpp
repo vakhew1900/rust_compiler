@@ -2792,8 +2792,8 @@ void ExprNode::transform(bool isConvertedToConst) {
                             } else if (dataType.type == DataType::class_) {
                                 if (!dataType.isEquals(firstElement)
                                     && (this->arrDataType.type != DataType::class_ ||
-                                        !ClassTable::Instance()->isParent(this->dataType.id, this->arrDataType.id))) {
-                                    throw Exception(Exception::TYPE_ERROR, "not correct types in array");
+                                        !ClassTable::Instance()->isParent(dataType.id, this->arrDataType.id))) {
+                                    throw Exception(Exception::TYPE_ERROR, "not correct types in array. Expected: " + this->arrDataType.id + " Result: " + dataType.id );
                                 }
                             }
 
