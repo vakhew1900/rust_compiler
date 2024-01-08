@@ -86,6 +86,8 @@ fn main() {
 	let mut array: [i32; 4] = [2, 3, 4, 5];
 	array[0] = 10;
 	println("{}", "func_func_func");
+	println_int("{}", 4);
+	println_int("{}", array[0]);
 	tweet.tmp();
 	let y: f64 = ID::Tweet::float2;
 	ID::myFunc();

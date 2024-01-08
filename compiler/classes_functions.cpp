@@ -2206,6 +2206,9 @@ bool ExprNode::isLiteral() {
            this->type == ExprNode::string_lit || this->type == ExprNode::raw_string_lit;
 }
 
+bool ExprNode::isSimpleType(){
+    return isLiteral() && this->type != ExprNode::string_lit && this->type != ExprNode::raw_string_lit;
+}
 
 void ProgramNode::transform(bool isConvertedToConst) {
 
@@ -3383,24 +3386,30 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (this->Int < INT16_MIN || this->Int > INT16_MAX) {
                 ClassTable::addIntToConstTable(curClassName, this->Int);
             }
+            this->isConst = true;
             break;
         case float_lit:
             this->dataType = DataType(DataType::float_);
             ClassTable::addFloatToConstTable(curClassName, this->Float);
+            this->isConst = true;
             break;
         case char_lit:
             this->dataType = DataType(DataType::char_);
+            this->isConst = true;
             break;
         case string_lit:
             this->dataType = DataType(DataType::string_);
             ClassTable::addStringToConstTable(curClassName, *this->String);
+            this->isConst = true;
             break;
         case raw_string_lit:
             this->dataType = DataType(DataType::string_);
             ClassTable::addStringToConstTable(curClassName, *this->String);
+            this->isConst = true;
             break;
         case bool_lit:
             this->dataType = DataType(DataType::bool_);
+            this->isConst = true;
             break;
 
         case question:
@@ -3918,11 +3927,18 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
                                 "Олег Александрович вы че куда суете. Какие брейки в параметрах. Жесть. 1984");
             }
             VarTableItem varItem = paramTable.items[i];
+            bool isElemRef =  varItem.isRef == elem->isRefExpr();
+            bool isElemMut = !varItem.isMut || varItem.isMut == elem->isMut;
+            bool isElemConst = !varItem.isConst || (!varItem.isMut && varItem.isConst == elem->isConst);
+            bool checker = isElemMut && isElemRef && isElemConst;
+           // bool checker = varItem.isRef == elem->isRefExpr() && varItem.isMut == elem->isMut && (varItem.isConst == elem->isConst || elem->isSimpleType());
             if (!varItem.dataType.isEquals(elem->dataType) &&
-                !isParent(elem->dataType, varItem.dataType)) { //TODO проверить
+                !isParent(elem->dataType, varItem.dataType) || !checker) { //TODO проверить
+
+                VarTableItem resultVarItem = VarTableItem(varItem.id, elem->dataType, elem->isMut, isRefExpr(), true, elem->isConst);
                 throw Exception(Exception::TYPE_ERROR,
-                                varItem.id + " type expected: " + varItem.dataType.toString() + " result: " +
-                                elem->dataType.toString());
+                                varItem.id + " type expected: " + varItem.toString() + " result: " +
+                                resultVarItem.toString() + " ");
             }
             i++;
         }
@@ -3977,7 +3993,7 @@ ExprNode *ExprNode::DelObjectExpr(ExprNode *expr) {
 }
 
 bool ExprNode::isRefExpr() {
-    return this->type == link || this->type == mut_link;
+    return this->type == link || this->type == mut_link || this->dataType.type == DataType::string_;
 }
 
 bool ExprNode::isVar() {

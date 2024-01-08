@@ -232,6 +232,8 @@ public:
     void checkCancelExprNode(ExprNode * exprNode, bool isBreakCanceled = true);
 
     void checkStructExpr(bool isConvertedTransform = true);
+
+    bool isSimpleType();
 };
 
 class ExprListNode : public Node {

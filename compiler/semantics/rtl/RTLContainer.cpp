@@ -34,9 +34,9 @@ void RTLContainer::addPrintFunctions() {
         methodTableItem.isStatic = true;
         methodTableItem.returnDataType = returnDataType;
 
-        VarTableItem varTableItem = VarTableItem("str", DataType(DataType::string_), false, true, false, false);
+        VarTableItem varTableItem = VarTableItem("str", DataType(DataType::string_), false, true, false, true);
         methodTableItem.paramTable.items.push_back(varTableItem);
-        varTableItem = VarTableItem("val",params[i] , false, true, false, false);
+        varTableItem = VarTableItem("val",params[i] , false, params[i].type == DataType::string_ , false, false);
         methodTableItem.paramTable.items.push_back(varTableItem);
 
         methodTableItem.isRTL = true;
