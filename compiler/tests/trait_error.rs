@@ -98,9 +98,15 @@ fn main() {
 	for x in array {
 		let y = x + 10;
 	}
-	//array[1] = "FFFFFFFFFF";
-//	let y;
-	//y = 'x';
+	
+	let mut matrix :[[i32; 2]; 2] =
+	[
+	  [1, 2],
+	  [3, 4]
+	];
+	
+	matrix[0][1] = 32;
+	
 }
 
 /*
