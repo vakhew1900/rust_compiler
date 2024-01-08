@@ -2101,6 +2101,24 @@ void FuncParamNode::addDataTypeToDeclaration(const string &className) {
     this->varTableItem.id = *this->name;
     this->varTableItem.dataType = this->type->convertToDataType(className);
 
+    bool isTrait = false;
+
+    if (this->varTableItem.dataType.isClass()) {
+        ClassTableItem classTableItem = ClassTable::Instance()->getClass(this->varTableItem.dataType.id);
+
+        if (classTableItem.classType == ClassTableItem::mod_) {
+            throw Exception(Exception::TYPE_ERROR,
+                            this->varTableItem.dataType.id + "cannot be function param because it`s mod_");
+        }
+
+        isTrait = classTableItem.classType == ClassTableItem::trait_;
+    }
+
+    if(this->type->isImpl && !isTrait){
+        throw Exception(Exception::TYPE_ERROR,
+                        "keyword  `impl` can`t use with " + this->varTableItem.dataType.toString() + " because it`s not a trait_");
+    }
+
     switch (this->param_type) {
 
         case noMut:
@@ -2272,14 +2290,15 @@ void ItemNode::transform(bool isConvertedToConst) {
                     elem.blockExpr = body;
                     paramTypes.push_back(elem.dataType);
 
-                    if(elem.isRef && elem.dataType.isSimple()){
-                        throw Exception(Exception::NOT_SUPPORT, elem.dataType.toString() + " is simple and ref. Not support this");
+                    if (elem.isRef && elem.dataType.isSimple()) {
+                        throw Exception(Exception::NOT_SUPPORT,
+                                        elem.dataType.toString() + " is simple and ref. Not support this");
                     }
 
                     ClassTable::Instance()->addLocalParam(curClassName, *this->name, elem);
                 }
 
-                if (ClassTable::Instance()->getMethod(curClassName, *this->name).isStatic == false) {
+                if (ClassTable::Instance()->getMethod(curClassName, *this->name).isStatic == false && paramTypes.size()) {
                     paramTypes.erase(paramTypes.begin());
                 }
                 ClassTable::addMethodRefToConstTable(curClassName, curClassName, *this->name, paramTypes,
@@ -2368,6 +2387,9 @@ void ItemNode::transform(bool isConvertedToConst) {
             case module_:
                 if (items != NULL) {
                     for (auto elem: *this->items->items) {
+                        if(item_type == impl_ && impl_type == ImplType::inherent){
+                            elem->isEqualDataType(elem);
+                        }
                         elem->transform(isConvertedToConst);
                     }
                 }
@@ -3185,7 +3207,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                     dataType = this->expr_left->dataType.getArrDataType();
                 }
 
-                VarTableItem varItem = VarTableItem(*this->Name, dataType, this->expr_left->isMut && this->expr_left->isRefExpr(), false, true, false,
+                VarTableItem varItem = VarTableItem(*this->Name, dataType,
+                                                    this->expr_left->isMut && this->expr_left->isRefExpr(), false, true,
+                                                    false,
                                                     body);
                 ClassTable::Instance()->addLocalParam(curClassName, curMethodName, varItem);
             }
@@ -3195,9 +3219,10 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->deleteExprList = new ExprListNode(delExpr);
             }
 
-            if(this->expr_left->isRefExpr() && this->expr_left->dataType.type == DataType::array_ &&
-            this->expr_left->dataType.arrDeep == 1 && this->expr_left->dataType.getArrDataType().isSimple()){
-                throw Exception(Exception::NOT_SUPPORT, this->expr_left->dataType.toString() + " not support link operation");
+            if (this->expr_left->isRefExpr() && this->expr_left->dataType.type == DataType::array_ &&
+                this->expr_left->dataType.arrDeep == 1 && this->expr_left->dataType.getArrDataType().isSimple()) {
+                throw Exception(Exception::NOT_SUPPORT,
+                                this->expr_left->dataType.toString() + " not support link operation");
             }
 
             {
@@ -3226,7 +3251,7 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             blockExprList.push_back(this);
             if (this->stmt_list != NULL && this->stmt_list->stmts->size()) {
-                int cur  = 0;
+                int cur = 0;
                 for (auto it = this->stmt_list->stmts->begin(); it != this->stmt_list->stmts->end(); it++) {
                     auto elem = *it;
                     elem->curClassName = curClassName;
@@ -3246,14 +3271,14 @@ void ExprNode::transform(bool isConvertedToConst) {
 
                             if (elem != this->stmt_list->stmts->back()) {
 
-                                StmtNode* nextElem = *(std::next(it, 1));
+                                StmtNode *nextElem = *(std::next(it, 1));
 
                                 if (nextElem->type != StmtNode::semicolon) {
                                     throw Exception(Exception::TYPE_ERROR,
                                                     "if or loop without  semicolon should return  void_. result: " +
-                                                            nextElem->expr->dataType.toString());
+                                                    nextElem->expr->dataType.toString());
                                 }
-                             //   elem--;
+                                //   elem--;
                             }
 
                         }
@@ -3469,7 +3494,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->localVarNum = this->expr_left->isVar();
             this->fieldName = this->expr_left->fieldName;
 
-            if(this->dataType.type != DataType::class_ && this->dataType.type != DataType::string_){
+            if (this->dataType.type != DataType::class_ && this->dataType.type != DataType::string_) {
                 throw Exception(Exception::NOT_SUPPORT, "operation mut_link not support with simple type");
             }
 
@@ -3493,7 +3518,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->fieldName = this->expr_left->fieldName;
             this->isMut = true;
 
-            if(this->dataType.type != DataType::class_ && this->dataType.type != DataType::string_){
+            if (this->dataType.type != DataType::class_ && this->dataType.type != DataType::string_) {
                 throw Exception(Exception::NOT_SUPPORT, "operation mut_link not support with simple type");
             }
             break;

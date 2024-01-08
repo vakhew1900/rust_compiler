@@ -56,7 +56,7 @@ mod ID {
 	
 	
 	impl Tweet {
-		pub fn myFunc(x : i32, object: &Tweet,  y:f64, z: char, b: bool, array:[[[i32; 4]; 3];12]) {
+		pub fn myFunc(x : i32, object: & impl Summary,  y:f64, z: char, b: bool, array:[[[i32; 4]; 3];12]) {
 			1 + 1;
 		}
 		

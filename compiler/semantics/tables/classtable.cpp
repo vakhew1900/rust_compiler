@@ -161,7 +161,7 @@ void ClassTable::addParent(string childName, string parentName) {
     }
 
     this->items[childName].parentName = parentName;
-    cout << childName << " " << parentName << "\n";
+  //  cout << childName << " " << parentName << "\n";
 }
 
 void ClassTable::isCorrectChild(string childName, string parentName) {
