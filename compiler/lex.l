@@ -74,6 +74,7 @@ as { printf("Found KW_AS: %s\n", yytext); return AS; }
 break { printf("Found KW_BREAK: %s\n", yytext); return BREAK;}
 const { printf("Found KW_CONST: %s\n", yytext); return CONST;}
 continue { printf("Found KW_CONTINUE: %s\n", yytext); return CONTINUE;}
+crate { printf("Found KW_CRATE: %s\n", yytext);  return CRATE;}
 else { printf("Found KW_ELSE: %s\n", yytext); return ELSE;}
 enum { printf("Found KW_ENUM: %s\n", yytext); return ENUM;}
 extern { printf("Found KW_EXTERN: %s\n", yytext); }
@@ -549,6 +550,8 @@ int main(int argc, char** argv) {
     const char *filename = argv[1];
 #else
     const char *filename = "../tests/trait_error.rs";
+//    const char *filename = "../tests/bubble_sort_rust.rs";
+//    const char *filename = "../tests/check_cycle_break_continue_rust.rs";
 #endif
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
@@ -563,12 +566,17 @@ int main(int argc, char** argv) {
     string dot;
     global_program->toDot(dot);
     std::cout << dot << "\n";
-
     std::ofstream out("dot-tree.txt");
-    out << dot << "\n";
-    global_program->getAllItems(ClassTable::globalClassName);
+
+    global_program->makeAllConversions();
+    string updatedDot;
+    global_program->toDot(updatedDot);
+
     string res = ClassTable::Instance()->toString();
+    out << updatedDot << "\n";
     cout << ClassTable::Instance()->toString() << "\n";
+
+    ClassTable::createConstTableCSV();
     return 0;
 }
 

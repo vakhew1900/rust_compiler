@@ -140,7 +140,7 @@ public:
         struct_expr, struct_field_expr, static_method, tuple_expr, super_expr,
         path_call_expr, add_if_block, struct_creation, as, undefined,
 
-        field_call, method_call, arr_asign, point_assign, del_object,
+        field_call, method_call, arr_asign, point_assign, del_object, crate_expr,
     };
     Type type;
     char Char = 0;

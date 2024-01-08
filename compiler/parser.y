@@ -109,7 +109,7 @@
 %token IF ELSE
 %token LET MUT CONST
 %token FN ENUM STRUCT TRAIT
-%token IMPL SELF BIG_SELF PUB SELF_REF MUT_SELF_REF MUT_REF MOD SUPER
+%token IMPL SELF BIG_SELF PUB SELF_REF MUT_SELF_REF MUT_REF MOD SUPER CRATE
 %token ';'  RIGHT_ARROW
 
 /* BREAK и RETURN  в документации почему-то присуствует в приоритетах операций. Стоит наверное с этим разобраться */
@@ -459,6 +459,7 @@ ExprWithoutBlock: CHAR_LITERAL { $$ = ExprNode::ExprFromCharLiteral(ExprNode::ch
 PathCallExpr: ID { $$ =  ExprNode::CallAccessExpr(ExprNode::id_, $1, 0, 0); }
             | SUPER { $$ =  ExprNode::CallAccessExpr(ExprNode::super_expr, new string("super"), 0, 0); }
             | SELF { $$ =  ExprNode::CallAccessExpr(ExprNode::self_expr, new string("self"), 0, 0); }
+            | CRATE { $$ =  ExprNode::CallAccessExpr(ExprNode::crate_expr, new string("crate_expr"), 0, 0); }
             | PathCallExpr DOUBLEDOTS ID { $$ = ExprNode::PathCallExpr(ExprNode::path_call_expr, $3, $1); }
             ;
 

@@ -48,7 +48,7 @@ mod ID {
 		age : i32
 	}
 	
-	fn myFunc() {
+	pub fn myFunc() {
 		let x = 10;
 		let y = 11;
 		x + y * 11 + 12;
@@ -91,6 +91,7 @@ fn main() {
 	tweet.tmp();
 	let y: f64 = ID::Tweet::float2;
 	ID::myFunc();
+	crate::myFunc();
 	//array[1] = "FFFFFFFFFF";
 //	let y;
 	//y = 'x';
