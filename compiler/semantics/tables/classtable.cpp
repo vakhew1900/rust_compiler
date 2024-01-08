@@ -317,10 +317,15 @@ bool ClassTable::isHaveParent(const string &child) {
 }
 
 bool ClassTable::isHaveAccess(const string &requesterClass, const string &requestedClass) {
-    string requesterDirectory = getDirectory(requestedClass);
+
+    if(requestedClass == ClassTable::RTLClassName){
+        return true;
+    }
+
+    string requesterDirectory = getDirectory(requesterClass);
     string requestedDirectory = getDirectory(requestedClass);
 
-    vector<string> requester = split(requestedDirectory, '/');
+    vector<string> requester = split(requesterDirectory, '/');
     vector<string> requested = split(requestedDirectory, '/');
 
     int counter = 0;
@@ -331,6 +336,18 @@ bool ClassTable::isHaveAccess(const string &requesterClass, const string &reques
 
         if (counter) res += "/";
         res += requested[counter];
+    }
+
+
+    if(counter == requested.size()){
+        return true;
+    }
+
+    res += "/"  + requested[counter];
+    counter++;
+
+    if(res + "/" + ClassTable::moduleClassName == requestedClass){
+        return true;
     }
 
     for (int i = counter; i < requested.size(); i++) {
@@ -345,6 +362,8 @@ bool ClassTable::isHaveAccess(const string &requesterClass, const string &reques
         res += requested[i];
     }
 
+    bool f = ClassTable::Instance()->getClass(requestedClass).isPub;
+    bool debug_f = isEqualDirectory(requestedClass, requesterClass) || ClassTable::Instance()->getClass(requestedClass).isPub;
     return isEqualDirectory(requestedClass, requesterClass) || ClassTable::Instance()->getClass(requestedClass).isPub;
 }
 
@@ -352,9 +371,10 @@ bool ClassTable::isHaveAccessToMethtod(const string &requesterClass, const strin
                                        const string &requestedMethod) {
 
     try {
-        bool res = ClassTable::isHaveAccess(requesterClass, requestedClass);
-        return res && (ClassTable::Instance()->getMethodDeep(requestedClass, requestedMethod).isPub ||
-                       isEqualDirectory(requesterClass, requestedClass));
+        bool isHaveAccessToClass = ClassTable::isHaveAccess(requesterClass, requestedClass);
+        bool isPub = ClassTable::getMethodDeep(requestedClass, requestedMethod).isPub;
+        bool tmp = isSubDirectory(getDirectory(requesterClass), getDirectory(requestedClass));
+        return isHaveAccessToClass && (isPub || tmp);
     } catch (Exception e) {
         throw e;
     }
@@ -364,9 +384,10 @@ bool ClassTable::isHaveAccessToField(const string &requesterClass, const string 
                                      const string &requestedField) {
 
     try {
-        bool res = ClassTable::isHaveAccess(requesterClass, requestedClass);
-        return res && (ClassTable::Instance()->getFieldDeep(requestedClass, requestedField).isPub ||
-                       isEqualDirectory(requesterClass, requestedClass));
+        bool isHaveAccessToClass = ClassTable::isHaveAccess(requesterClass, requestedClass);
+        bool isPub = ClassTable::getFieldDeep(requestedClass, requestedField).isPub;
+        bool tmp = isSubDirectory(getDirectory(requesterClass), getDirectory(requestedClass));
+        return isHaveAccessToClass && (isPub || tmp);
     } catch (Exception e) {
         throw e;
     }
@@ -518,3 +539,22 @@ FieldTableItem ClassTable::getFieldDeep(const string &className, const string &f
 
     return ClassTable::getFieldDeep(ClassTable::getParentClassName(className), fieldName);
 }
+
+bool ClassTable::isSubDirectory(const string &subdir, const string &dir) {
+
+    vector<string> dirContainer = split(dir, '/');
+    vector<string> subdirContainer = split(subdir, '/');
+
+    if (subdirContainer.size() < dirContainer.size())
+    {
+        return false;
+    }
+
+    while(subdirContainer.size() > dirContainer.size()){
+        subdirContainer.pop_back();
+    }
+
+    return subdirContainer == dirContainer;
+}
+
+

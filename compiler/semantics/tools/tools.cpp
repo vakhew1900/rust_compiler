@@ -3,7 +3,7 @@
 //
 #include "tools.h"
 
-vector<string> split(string &str, char separator) {
+vector<string> split(const string &str, char separator) {
     vector<string> strings;
     int startIndex = 0, endIndex = 0;
     for (int i = 0; i <= str.size(); i++) {

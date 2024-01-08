@@ -3,6 +3,7 @@ mod ID {
 		fn summarize(&self, x:i32) -> String;
 		fn tmp(&self) {
 			self.summarize(32);
+			let man = Man { age : 33 };
 			//println("sdfkgdsfhjgfds");
 		}
 		const x: i32 = 11 / 2 % 3 + 12*3 - 16;
@@ -40,8 +41,11 @@ mod ID {
 			
 			"dffasdsfd"
 		}
-
 		
+	}
+	
+	struct Man {
+		age : i32
 	}
 	
 	fn myFunc() {
@@ -84,7 +88,7 @@ fn main() {
 	println("{}", "func_func_func");
 	tweet.tmp();
 	let y: f64 = ID::Tweet::float2;
-	
+	ID::myFunc();
 	//array[1] = "FFFFFFFFFF";
 //	let y;
 	//y = 'x';

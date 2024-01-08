@@ -77,6 +77,7 @@ public:
     static void isCorrectTraitsImpl();
     static bool isHaveParent(const string& child);
     static bool isEqualDirectory(const string& first, const string &second);
+    static bool isSubDirectory(const string& subdir, const string &dir);
     static bool isHaveAccess(const string& requesterClass, const string& requestedClass);
     static bool isHaveAccessToMethtod(const string& requesterClass, const string& requestedClass, const string& requestedMethod);
     static bool isHaveAccessToField(const string& requesterClass, const string& requestedClass, const string& requestedField);
