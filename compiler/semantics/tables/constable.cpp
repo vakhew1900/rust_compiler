@@ -82,9 +82,12 @@ string ConstTableItem::toString(int index) {
 string ConstTable::toCSV() {
 
     string csv = "Const №, Const Type, Const Value\n";
-    int index = 1;
+    int index = 0;
     for (auto item: items) {
-        csv += item.toString(index++);
+        if(index) {
+            csv += item.toString(index);
+        }
+        index++;
     }
 
     return csv;
@@ -98,7 +101,7 @@ int ConstTable::Class(const string &className) {
     int utf8Val = UTF8(className);
     int res = Val(ConstTableItem::CONSTANT_CLASS, utf8Val);
 
-    if(res == -1){
+    if(res <= 0){
         ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_CLASS, utf8Val);
         res = this->add(item);
     }
@@ -128,14 +131,14 @@ int ConstTable::Double(double val) {
 
 int ConstTable::String(const string &str) {
     int utf8Val = UTF8(str);
-    if(utf8Val == -1){
+    if(utf8Val <= 0){
         ConstTableItem constTableItem = ConstTableItem(ConstTableItem::CONSTANT_UTF8, str);
         utf8Val = add(constTableItem);
     }
 
     int res = Val(ConstTableItem::CONSTANT_STRING, utf8Val);
 
-    if(res == -1) {
+    if(res <= 0) {
         ConstTableItem constTableItem = ConstTableItem(ConstTableItem::CONSTANT_STRING, utf8Val);
         res = add(constTableItem);
     }
@@ -185,7 +188,7 @@ int ConstTable::Method(const string &method, const vector<DataType> &params, con
     int type = UTF8(MethodParam(params, returnType));
     int res = Val(ConstTableItem::CONSTANT_NAME_AND_TYPE, name, type);
 
-    if(res == -1){
+    if(res <= 0){
         ConstTableItem constTableItem = ConstTableItem(ConstTableItem::CONSTANT_NAME_AND_TYPE, name, type);
         res = add(constTableItem);
     }
@@ -206,7 +209,7 @@ int ConstTable::Field(const string &field, const DataType &dataType) {
     int type = UTF8(dataType.toConstTableFormat());
     int res = Val(ConstTableItem::CONSTANT_NAME_AND_TYPE, name, type);
 
-    if(res == -1){
+    if(res <= 0){
         ConstTableItem constTableItem = ConstTableItem(ConstTableItem::CONSTANT_NAME_AND_TYPE, name, type);
         res = add(constTableItem);
     }
@@ -218,7 +221,7 @@ int ConstTable::FieldRef(const string &className, const string &field, const Dat
     int fieldRef = Field(field, dataType);
     int res = Val(ConstTableItem::CONSTANT_FIELD_REF, classRef, fieldRef);
 
-    if(res == -1){
+    if(res <= 0){
         ConstTableItem constTableItem = ConstTableItem(ConstTableItem::CONSTANT_FIELD_REF, classRef, fieldRef);
         res = add(constTableItem);
     }
@@ -233,7 +236,7 @@ int ConstTable::MethodRef(const string &className, const string &method, const v
     int methodRef = Method(method,params, returnType);
     int res = Val(ConstTableItem::CONSTANT_METHOD_REF, classRef, methodRef);
 
-    if(res == -1){
+    if(res <= 0){
         ConstTableItem constTableItem = ConstTableItem(ConstTableItem::CONSTANT_METHOD_REF, classRef, methodRef);
         res = add(constTableItem);
     }
@@ -242,7 +245,9 @@ int ConstTable::MethodRef(const string &className, const string &method, const v
 }
 
 ConstTable::ConstTable() {
-        ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "Code");
+        ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "trash");
+        items.push_back(item);
+        item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "Code");
         items.push_back(item);
 }
 
