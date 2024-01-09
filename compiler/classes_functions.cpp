@@ -3276,7 +3276,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 if (nextElem->type != StmtNode::semicolon) {
                                     throw Exception(Exception::TYPE_ERROR,
                                                     "if or loop without  semicolon should return  void_. result: " +
-                                                    nextElem->expr->dataType.toString());
+                                                    elem->expr->dataType.toString());
                                 }
                                 //   elem--;
                             }

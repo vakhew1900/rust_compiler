@@ -36,7 +36,7 @@ mod ID {
 			}
 			
 			if ( 10 == var) {
-				return "false";
+				return "false";	
 			}
 			
 			"dffasdsfd"
@@ -79,7 +79,7 @@ enum Enum {
 
 
 fn main() { 
-
+												
 	let tweet: ID::Tweet = ID::Tweet {username: "user", content: "content", reply: false, retweet: false};
 	tweet.summarize(11);
 	let x = tweet.username;
@@ -99,15 +99,19 @@ fn main() {
 		let y = x + 10;
 	}
 	
+	
 	let mut matrix :[[i32; 2]; 2] =
 	[
 	  [1, 2],
 	  [3, 4]
 	];
 	
+	if(true) {4}
 	matrix[0][1] = 32;
 	
 }
+
+// ID -> src/ID/moduleClass src/ModuleClass
 
 /*
  1 ВСЕ СТРУКТУРЫ МОДУЛИ ФУНКЦИИ (свободные и находящиесся в трейте)
