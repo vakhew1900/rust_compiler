@@ -2417,7 +2417,7 @@ void ItemNode::transform(bool isConvertedToConst) {
 
                 }
 
-                ClassTable::addMethodRefToConstTable(curClassName, curClassName, "<init>", params,
+                ClassTable::addMethodRefToConstTable(curClassName, curClassName, "<init>", vector<DataType>(),
                                                      DataType(DataType::void_));
 
                 break;

@@ -82,7 +82,7 @@ string ConstTableItem::toString(int index) {
 string ConstTable::toCSV() {
 
     string csv = "Const №, Const Type, Const Value\n";
-    int index = 0;
+    int index = 1;
     for (auto item: items) {
         csv += item.toString(index++);
     }
