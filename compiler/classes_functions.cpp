@@ -1997,7 +1997,7 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
 
                 }
             }
-
+            this->methodTableItem.body = this->body;
             ClassTable::Instance()->updateMethod(className, *this->name, this->methodTableItem);
             break;
         case constStmt_:

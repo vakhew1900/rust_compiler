@@ -1,4 +1,5 @@
 mod ID {
+	
 	pub trait Summary {
 		fn summarize(&self, x:i32) -> String;
 		fn tmp(&self) {
@@ -65,6 +66,10 @@ mod ID {
 			self.reply = false;
 		}
 	}
+	
+	mod xx {
+			
+	}
 }
 
 
@@ -106,7 +111,7 @@ fn main() {
 	  [3, 4]
 	];
 	
-	if(true) {4}
+	if(true) {4};
 	matrix[0][1] = 32;
 	
 }
