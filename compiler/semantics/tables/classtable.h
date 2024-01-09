@@ -98,7 +98,7 @@ public:
     static string getParentClassName(const string& className);
     static FieldTableItem getFieldDeep(const string& className, const string& fieldName);
     static MethodTableItem getMethodDeep(const string& className, const string& methodName);
-
+    static void isCorrectTraitImpl(const std::string &childName, const std::string &parentName);
 
 };
 

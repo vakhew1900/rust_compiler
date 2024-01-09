@@ -181,7 +181,7 @@ void ClassTable::isCorrectChild(string childName, string parentName) {
 
         if (!Instance()->isFieldExist(childName, fieldName)
             && Instance()->getField(parentName, fieldName).isInit == false) {
-            throw Exception(Exception::NOT_EXIST, fieldName + "not declaration in struct");
+            throw Exception(Exception::NOT_EXIST, fieldName + " not declaration in struct");
         }
     }
 
@@ -190,9 +190,10 @@ void ClassTable::isCorrectChild(string childName, string parentName) {
 
         if (!Instance()->isMethodExist(childName, methodName)
             && Instance()->getMethod(parentName, methodName).isHasBody == false) {
-            throw Exception(Exception::NOT_EXIST, methodName + "not declaration in struct");
+            throw Exception(Exception::NOT_EXIST, methodName + " not declaration in struct");
         }
     }
+
 }
 
 FieldTableItem ClassTable::getField(const string &className, const string &fieldName) {
@@ -226,38 +227,59 @@ void ClassTable::isCorrectTraitsImpl() {
 
     for (auto elem: _instanse->items) {
         if (elem.second.isHaveParent()) {
-            ClassTableItem parentItem = ClassTable::Instance()->getParentClass(elem.first);
-            ClassTableItem curItem = elem.second;
 
-            for (auto method: parentItem.methodTable.items) {
+            string parentName = ClassTable::getParentClassName(elem.first);
 
-                if (ClassTable::Instance()->isMethodExist(elem.first, method.first) ==
-                    false) { // случай когда мы не переопределяли методж
-                    continue;
+            while(!parentName.empty()){
+                isCorrectTraitImpl(elem.first, parentName);
+
+                if(ClassTable::isHaveParent(parentName)){
+                    parentName =  ClassTable::getParentClassName(parentName);
                 }
-
-                if (!method.second.isEqualsDeclaration(curItem.methodTable.items[method.first])) {
-                    throw Exception(Exception::IMPL_AND_TRAIT_DECLARATION,
-                                    " method " + method.first + "in trait " + curItem.parentName + " and in " +
-                                    elem.first +
-                                    " have different declaration");
+                else {
+                    break;
                 }
             }
 
-            for (auto field: parentItem.fieldTable.items) {
-
-                if (!ClassTable::Instance()->isFieldExist(elem.first, field.first)) {
-                    continue;
-                }
-                if (!field.second.isEquals(curItem.fieldTable.items[field.first])) {
-                    throw Exception(Exception::IMPL_AND_TRAIT_DECLARATION,
-                                    "field " + field.first + " in trait " + curItem.parentName + " and in " +
-                                    elem.first +
-                                    "have different declaration");
-                }
-            }
         }
     }
+
+}
+
+void ClassTable::isCorrectTraitImpl(const std::string &childName, const std::string &parentName) {
+
+    ClassTableItem item = ClassTable::Instance()->getClass(childName);
+    auto elem = make_pair(childName, item);
+
+        ClassTableItem parentItem = ClassTable::Instance()->getClass(parentName);
+        ClassTableItem curItem = elem.second;
+
+        for (auto method: parentItem.methodTable.items) {
+
+            if (!ClassTable::Instance()->isMethodExist(elem.first, method.first)) { // случай когда мы не переопределяли методж
+                continue;
+            }
+
+            if (!method.second.isEqualsDeclaration(curItem.methodTable.items[method.first])) {
+                throw Exception(Exception::IMPL_AND_TRAIT_DECLARATION,
+                                " method " + method.first + "in trait " + curItem.parentName + " and in " +
+                                elem.first +
+                                " have different declaration");
+            }
+        }
+
+        for (auto field: parentItem.fieldTable.items) {
+
+            if (!ClassTable::Instance()->isFieldExist(elem.first, field.first)) {
+                continue;
+            }
+            if (!field.second.isEquals(curItem.fieldTable.items[field.first])) {
+                throw Exception(Exception::IMPL_AND_TRAIT_DECLARATION,
+                                "field " + field.first + " in trait " + curItem.parentName + " and in " +
+                                elem.first +
+                                "have different declaration");
+            }
+        }
 
 }
 
@@ -309,7 +331,18 @@ VarTableItem ClassTable::getLocalVar(const string &className, const string &meth
 }
 
 bool ClassTable::isParent(const string &child, const string &parentName) {
-    return ClassTable::Instance()->getClass(child).parentName == parentName;
+
+    if (!ClassTable::isHaveParent(child)){
+        return false;
+    }
+
+    if(ClassTable::Instance()->getClass(child).parentName == parentName){
+        return true;
+    }
+    else {
+        return ClassTable::Instance()->isParent(ClassTable::getParentClassName(child), parentName);
+    }
+
 }
 
 bool ClassTable::isHaveParent(const string &child) {
