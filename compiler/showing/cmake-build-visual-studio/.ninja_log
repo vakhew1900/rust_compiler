@@ -1,0 +1,14 @@
+# ninja log v5
+0	1439	7193544770512271	CMakeFiles/compiler.dir/lex.yy.cpp.obj	980e698c3fc23620
+1439	1700	7193544772612276	compiler.exe	e7abb4c8bba7af35
+1	445	7217695553897694	build.ninja	bd4e6f21133d8f59
+7	424	7217695553897694	build.ninja	bd4e6f21133d8f59
+10	1816	7217695572477715	CMakeFiles/compiler.dir/lex.yy.cpp.obj	980e698c3fc23620
+0	1833	7217695572627658	CMakeFiles/compiler.dir/classes_functions.cpp.obj	e25da91174be0c1d
+1834	2249	7217695576197739	compiler.exe	27186ecf26bbaa40
+1	518	7217696867443549	compiler.exe	27186ecf26bbaa40
+1	1346	7217781816621377	CMakeFiles/compiler.dir/lex.yy.cpp.obj	980e698c3fc23620
+11	1363	7217781816801305	CMakeFiles/compiler.dir/classes_functions.cpp.obj	e25da91174be0c1d
+1363	1611	7217781818831379	compiler.exe	27186ecf26bbaa40
+1	1396	7217835414430599	CMakeFiles/compiler.dir/classes_functions.cpp.obj	e25da91174be0c1d
+1396	1633	7217835416411353	compiler.exe	27186ecf26bbaa40
