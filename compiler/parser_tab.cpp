@@ -1379,7 +1379,7 @@ yyreduce:
 
 case 1:
 #line 139 "parser.y"
-{ yyval.prg = ProgramNode::global_program = new ProgramNode(yyvsp[0].item_list); ;
+{ yyval.prg = global_program = new ProgramNode(yyvsp[0].item_list); ;
     break;}
 case 2:
 #line 145 "parser.y"

@@ -1,5 +1,5 @@
 # ninja log v5
-6	2084	7265271561357331	CMakeFiles/compiler.dir/lex.yy.cpp.obj	54cf7e13fb9ab04e
+11	3075	7265297022608586	CMakeFiles/compiler.dir/lex.yy.cpp.obj	54cf7e13fb9ab04e
 2320	4236	7265219356837999	CMakeFiles/compiler.dir/semantics/tables/constable.cpp.obj	2cfb578f36fab193
 13	1984	7265219334317811	CMakeFiles/compiler.dir/semantics/tools/tools.cpp.obj	5b7460dfd73911e3
 36	2320	7265219337667824	CMakeFiles/compiler.dir/semantics/tools/datatype.cpp.obj	4501e6c32f108ab0
@@ -8,7 +8,9 @@
 2429	5816	7265219372611304	CMakeFiles/compiler.dir/semantics/rtl/RTLContainer.cpp.obj	e0bfdeed6d66ebde
 2380	4697	7265219361440099	CMakeFiles/compiler.dir/semantics/tables/methodtable.cpp.obj	eec705ff56220866
 1988	6367	7265219378061965	CMakeFiles/compiler.dir/semantics/tables/classtable.cpp.obj	eef79cdaaa1f62fb
-5	6748	7265269076210401	CMakeFiles/compiler.dir/classes_functions.cpp.obj	122c8514fd70308d
-9	1908	7265275016406831	CMakeFiles/compiler.dir/main.cpp.obj	61384f87f4227ef6
-10	2755	7265269712489039	CMakeFiles/compiler.dir/parser_tab.cpp.obj	7845732efe2b11dd
-1	237	7265275547161924	build.ninja	7dab91b0f765c02c
+7	6090	7265296783742013	CMakeFiles/compiler.dir/classes_functions.cpp.obj	122c8514fd70308d
+16	2305	7265296746013128	CMakeFiles/compiler.dir/main.cpp.obj	61384f87f4227ef6
+8	2053	7265297911326270	CMakeFiles/compiler.dir/parser_tab.cpp.obj	7845732efe2b11dd
+1	229	7265298945463721	build.ninja	7dab91b0f765c02c
+9	2456	7265299041528988	CMakeFiles/compiler.dir/main.cpp.obj	61384f87f4227ef6
+22	2603	7265299042990203	CMakeFiles/compiler.dir/lex.yy.cpp.obj	54cf7e13fb9ab04e

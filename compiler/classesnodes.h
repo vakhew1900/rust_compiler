@@ -19,6 +19,8 @@ class Node;
 
 class ProgramNode; // ProgramNode
 
+ProgramNode* global_program;
+
 class ExprNode; // ExprNode
 class ExprListNode; // expr_list_node
 class StmtNode; // stmt_node
@@ -89,7 +91,7 @@ public:
 
 class ProgramNode : public Node {
 public:
-    static ProgramNode* global_program;
+    //static ProgramNode* global_program;
     ItemListNode *item_list = NULL;
 
     ProgramNode(ItemListNode *item_list);

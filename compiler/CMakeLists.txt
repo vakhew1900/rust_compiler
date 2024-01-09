@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(.)
 
-add_executable(compiler "lex.yy.cpp"
+add_executable(compiler "main.cpp"
         unistd.h
         classes_functions.cpp
         classesnodes.h
@@ -26,7 +26,7 @@ add_executable(compiler "lex.yy.cpp"
         semantics/tables/constable.h
         semantics/rtl/RTLContainer.cpp
         semantics/rtl/RTLContainer.h
-        main.cpp
+        lex.yy.cpp
         parser_tab.h
         parser_tab.cpp
 )

@@ -49,8 +49,8 @@ cmake_ninja_workdir = D$:/Studying/4.1/Compile/lr2/Compiler_repo/rust_compiler/c
 
 build cmake_object_order_depends_target_compiler: phony || CMakeFiles/compiler.dir
 
-build CMakeFiles/compiler.dir/lex.yy.cpp.obj: CXX_COMPILER__compiler_unscanned_Debug D$:/Studying/4.1/Compile/lr2/Compiler_repo/rust_compiler/compiler/lex.yy.cpp || cmake_object_order_depends_target_compiler
-  DEP_FILE = CMakeFiles\compiler.dir\lex.yy.cpp.obj.d
+build CMakeFiles/compiler.dir/main.cpp.obj: CXX_COMPILER__compiler_unscanned_Debug D$:/Studying/4.1/Compile/lr2/Compiler_repo/rust_compiler/compiler/main.cpp || cmake_object_order_depends_target_compiler
+  DEP_FILE = CMakeFiles\compiler.dir\main.cpp.obj.d
   FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
   INCLUDES = -ID:/Studying/4.1/Compile/lr2/Compiler_repo/rust_compiler/compiler/.
   OBJECT_DIR = CMakeFiles\compiler.dir
@@ -119,8 +119,8 @@ build CMakeFiles/compiler.dir/semantics/rtl/RTLContainer.cpp.obj: CXX_COMPILER__
   OBJECT_DIR = CMakeFiles\compiler.dir
   OBJECT_FILE_DIR = CMakeFiles\compiler.dir\semantics\rtl
 
-build CMakeFiles/compiler.dir/main.cpp.obj: CXX_COMPILER__compiler_unscanned_Debug D$:/Studying/4.1/Compile/lr2/Compiler_repo/rust_compiler/compiler/main.cpp || cmake_object_order_depends_target_compiler
-  DEP_FILE = CMakeFiles\compiler.dir\main.cpp.obj.d
+build CMakeFiles/compiler.dir/lex.yy.cpp.obj: CXX_COMPILER__compiler_unscanned_Debug D$:/Studying/4.1/Compile/lr2/Compiler_repo/rust_compiler/compiler/lex.yy.cpp || cmake_object_order_depends_target_compiler
+  DEP_FILE = CMakeFiles\compiler.dir\lex.yy.cpp.obj.d
   FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
   INCLUDES = -ID:/Studying/4.1/Compile/lr2/Compiler_repo/rust_compiler/compiler/.
   OBJECT_DIR = CMakeFiles\compiler.dir
@@ -141,7 +141,7 @@ build CMakeFiles/compiler.dir/parser_tab.cpp.obj: CXX_COMPILER__compiler_unscann
 #############################################
 # Link the executable compiler.exe
 
-build compiler.exe: CXX_EXECUTABLE_LINKER__compiler_Debug CMakeFiles/compiler.dir/lex.yy.cpp.obj CMakeFiles/compiler.dir/classes_functions.cpp.obj CMakeFiles/compiler.dir/semantics/tools/datatype.cpp.obj CMakeFiles/compiler.dir/semantics/tables/fieldtable.cpp.obj CMakeFiles/compiler.dir/semantics/tables/vartable.cpp.obj CMakeFiles/compiler.dir/semantics/tools/tools.cpp.obj CMakeFiles/compiler.dir/semantics/tables/methodtable.cpp.obj CMakeFiles/compiler.dir/semantics/tables/classtable.cpp.obj CMakeFiles/compiler.dir/semantics/tables/constable.cpp.obj CMakeFiles/compiler.dir/semantics/rtl/RTLContainer.cpp.obj CMakeFiles/compiler.dir/main.cpp.obj CMakeFiles/compiler.dir/parser_tab.cpp.obj
+build compiler.exe: CXX_EXECUTABLE_LINKER__compiler_Debug CMakeFiles/compiler.dir/main.cpp.obj CMakeFiles/compiler.dir/classes_functions.cpp.obj CMakeFiles/compiler.dir/semantics/tools/datatype.cpp.obj CMakeFiles/compiler.dir/semantics/tables/fieldtable.cpp.obj CMakeFiles/compiler.dir/semantics/tables/vartable.cpp.obj CMakeFiles/compiler.dir/semantics/tools/tools.cpp.obj CMakeFiles/compiler.dir/semantics/tables/methodtable.cpp.obj CMakeFiles/compiler.dir/semantics/tables/classtable.cpp.obj CMakeFiles/compiler.dir/semantics/tables/constable.cpp.obj CMakeFiles/compiler.dir/semantics/rtl/RTLContainer.cpp.obj CMakeFiles/compiler.dir/lex.yy.cpp.obj CMakeFiles/compiler.dir/parser_tab.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\compiler.dir

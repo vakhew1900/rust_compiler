@@ -37,13 +37,13 @@ int main(int argc, char** argv) {
 //    fclose(file);
 
     string dot;
-    ProgramNode::global_program->toDot(dot);
+    global_program->toDot(dot);
     std::cout << dot << "\n";
     std::ofstream out("dot-tree.txt");
 
-    ProgramNode::global_program->makeAllConversions();
+    global_program->makeAllConversions();
     string updatedDot;
-    ProgramNode::global_program->toDot(updatedDot);
+    global_program->toDot(updatedDot);
 
     string res = ClassTable::Instance()->toString();
     out << updatedDot << "\n";

@@ -136,7 +136,7 @@
 
 /* ---------------------- PROGRAM --------------------------- */
 
-Program: ItemListEmpty { $$ = ProgramNode::global_program = new ProgramNode($1); }
+Program: ItemListEmpty { $$ = global_program = new ProgramNode($1); }
 /* Необходимо уточнить, надо ли как-то обозначить, что Stmt все должны быть Item, иначе программа не заработает */
 
 /* ----------------------------- STATEMENT -----------------------------  */
