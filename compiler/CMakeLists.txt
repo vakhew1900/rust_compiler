@@ -26,4 +26,6 @@ add_executable(compiler "lex.yy.cpp"
         semantics/tables/constable.h
         semantics/rtl/RTLContainer.cpp
         semantics/rtl/RTLContainer.h
+        code_generation/command.cpp
+        code_generation/command.h
 )
