@@ -50,7 +50,7 @@ enum Visibility {
 class Node {
 public:
     int id;
-    int line;
+    int line = 1;
     DataType dataType;
     MethodTableItem methodTableItem;
     FieldTableItem fieldTableItem;
@@ -85,6 +85,7 @@ public:
     static int getVarNumber(vector<ExprNode*> &blockExprList,const string& className,const string& methodName,const string& varName);
     //virtual void addDataType(const string &className);
     void convertEnumValue();
+    void setLine(Node* node);
 };
 
 
