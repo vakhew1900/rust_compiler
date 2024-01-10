@@ -300,6 +300,7 @@ AssociatedItem: FuncStmt { $$ = ItemNode::DeclarationFunction(self, $1); } // Im
 /* ============ TRAIT ================ */
 
 TraitStmt: TRAIT ID '{' AssociatedItemListEmpty '}' { $$ = new TraitNode($2, $4); }
+         | TRAIT ID ':' ID '{' AssociatedItemListEmpty '}' { $$ = new TraitNode($2, $6, $4); }
          ;
 
 /* ============ CONST =============== */

@@ -9,6 +9,7 @@ int loopCnt = 0;
 vector<ExprNode *> blockExprList;
 vector<DataType> returnTypes;
 vector<DataType> breakTypes;
+map<string, set<string>> impl_set; // пиздец
 
 ProgramNode::ProgramNode(ItemListNode *item_list) {
     this->id = ++globId;
@@ -283,6 +284,13 @@ TraitNode::TraitNode(string *name, ItemListNode *items) {
     this->items = items;
 }
 
+TraitNode::TraitNode(string *name, ItemListNode *items, string *parentName) {
+    this->id = ++globId;
+    this->name = name;
+    this->items = items;
+    this->parentName = parentName;
+}
+
 //ImplNode
 ImplStmtNode::ImplStmtNode(Type impl_type, TypeNode *type, ExprNode *exprNode, ItemListNode *list) {
     this->id = ++globId;
@@ -503,6 +511,7 @@ ItemNode *ItemNode::DeclarationTrait(Visibility visibility, TraitNode *node) {
 
     new_node->name = node->name;
     new_node->items = node->items;
+    new_node->parentName = node->parentName;
 
     Visibility currentVisibility = visibility;
     if (visibility != pub) {
@@ -1176,6 +1185,10 @@ void ItemNode::toDot(string &dot) {
 
         case trait_:
             type = "trait_";
+
+            if(this->isHaveParent()){
+                type += " parent=" + *this->parentName;
+            }
             break;
 
         case impl_:
@@ -1628,6 +1641,13 @@ void ItemNode::getAllItems(std::string className) {
                     }
                 }
 
+                if(this->isHaveParent()){
+                    string name = className + *this->name;
+                    string parentName = className + *this->parentName;
+                    impl_set[name].insert(parentName);
+                }
+
+
                 break;
             case module_:
                 this->classTableItem = ClassTableItem();
@@ -1772,6 +1792,7 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     }
 
                     ClassTable::Instance()->addParent(implClassName, traitClassName);
+                    this->checkImpl(implClassName, traitClassName);
 
                 }
 
@@ -1793,6 +1814,8 @@ void ItemNode::addImpl(string className, bool isTrait) {
 
                 this->className = implClassName;
                 this->curClassName = implClassName;
+
+
                 break;
             case function_:
                 this->methodTableItem = MethodTableItem();
@@ -2118,6 +2141,9 @@ void FuncParamNode::addDataTypeToDeclaration(const string &className) {
         throw Exception(Exception::TYPE_ERROR,
                         "keyword  `impl` can`t use with " + this->varTableItem.dataType.toString() + " because it`s not a trait_");
     }
+    else if (isTrait && !this->type->isImpl){
+        throw Exception(Exception::TYPE_ERROR, this->varTableItem.dataType.toString() + " can`t be a function param because it`s trait_");
+    }
 
     switch (this->param_type) {
 
@@ -2435,6 +2461,22 @@ void ItemNode::transform(bool isConvertedToConst) {
     catch (Exception e) {
         blockExprList.clear();
         cerr << e.getMessage() << endl;
+    }
+}
+
+bool ItemNode::isHaveParent() {
+    return this->parentName != NULL;
+}
+
+void ItemNode::checkImpl(const string &structName, const string &traitName) {
+
+    string  tmpTraitName = traitName;
+
+    while(ClassTable::isHaveParent(tmpTraitName)){
+        tmpTraitName = ClassTable::getParentClassName(tmpTraitName);
+        if(!impl_set[structName].count(tmpTraitName)){
+            throw Exception(Exception::NOT_IMPLEMICATION, structName + " should have impl " + traitName);
+        }
     }
 }
 

@@ -320,22 +320,20 @@ public:
     ItemType item_type;
     Visibility visibility;
 
-
     string *name = NULL;
     TypeNode *returnType = NULL;
     FuncParamListNode *params = NULL;
     ExprNode *body = NULL;
 
-
     ImplType impl_type;
     TypeNode *type = NULL;
-
 
     StructFieldListNode *structItems = NULL;
     EnumItemListNode *enumItems = NULL;
     ItemListNode *items = NULL;
 
     ExprNode *expr = NULL;
+    string *parentName;
 
     static ItemNode *DeclarationEnum(Visibility visibility, EnumStmtNode *node);
 
@@ -362,6 +360,9 @@ public:
     void addImpl(string className, bool isTrait) override;
     void addDataTypeToDeclaration(const std::string &className) override;
     void transform(bool isConvertedToConst = true) override;
+    bool isHaveParent();
+    void checkImpl(const string &structName, const string &traitName);
+
 };
 
 
@@ -532,8 +533,10 @@ class TraitNode : public Node {
 public:
     string *name = NULL;
     ItemListNode *items = NULL;
+    string *parentName =  NULL;
 
     TraitNode(string *name, ItemListNode *items);
+    TraitNode(string *name, ItemListNode *items, string *parentName);
 
     void toDot(string &dot);
 };
