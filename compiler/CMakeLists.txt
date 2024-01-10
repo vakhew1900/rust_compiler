@@ -29,4 +29,5 @@ add_executable(compiler "lex.yy.cpp"
         code_generation/command.h
         code_generation/tools/byte_convert.h
         code_generation/tools/byte_convert.cpp
+        code_generation/tools/enums.h
 )
