@@ -9,7 +9,7 @@ trait HasAngles: Shape {
     fn angles_count(&self) -> i32;
 	
 	fn area(&self) -> f64 {
-        4
+        4.0
     }
 }
 
