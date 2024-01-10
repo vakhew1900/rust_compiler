@@ -100,6 +100,8 @@ public:
     static MethodTableItem getMethodDeep(const string& className, const string& methodName);
     static void isCorrectTraitImpl(const std::string &childName, const std::string &parentName);
 
+    static  bool  isEnum(const string& className);
+
 };
 
 

@@ -597,4 +597,8 @@ bool ClassTable::isSubDirectory(const string &subdir, const string &dir) {
     return subdirContainer == dirContainer;
 }
 
+bool ClassTable::isEnum(const string &className) {
+    return ClassTable::Instance()->getClass(className).classType == ClassTableItem::enum_;
+}
+
 

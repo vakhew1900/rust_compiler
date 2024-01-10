@@ -2143,6 +2143,13 @@ void FuncParamNode::addDataTypeToDeclaration(const string &className) {
         isTrait = classTableItem.classType == ClassTableItem::trait_;
     }
 
+    if(this->varTableItem.dataType.isClass()){
+        string className = this->varTableItem.dataType.id;
+        if(ClassTable::isEnum(className)){
+            this->varTableItem.dataType = DataType(DataType::int_);
+        }
+    }
+
     if(this->type->isImpl && !isTrait){
         throw Exception(Exception::TYPE_ERROR,
                         "keyword  `impl` can`t use with " + this->varTableItem.dataType.toString() + " because it`s not a trait_");
@@ -2150,6 +2157,8 @@ void FuncParamNode::addDataTypeToDeclaration(const string &className) {
     else if (isTrait && !this->type->isImpl){
         throw Exception(Exception::TYPE_ERROR, this->varTableItem.dataType.toString() + " can`t be a function param because it`s trait_");
     }
+
+    this->convertEnumValue();
 
     switch (this->param_type) {
 
@@ -2560,6 +2569,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                     }
                 }
 
+                this->convertEnumValue();
                 ClassTable::Instance()->addLocalParam(curClassName, curMethodName, this->varTableItem);
                 break;
             case const_:
@@ -2583,6 +2593,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                 }
 
                 varTableItem.blockExpr = blockExprList.back();
+                this->convertEnumValue();
                 ClassTable::Instance()->addLocalParam(curClassName, curMethodName, this->varTableItem);
                 break;
             case semicolon:
@@ -4248,6 +4259,15 @@ int Node::getVarNumber(vector<ExprNode *> &blockExprList, const string &classNam
         cur--;
     }
     return res;
+}
+
+void Node::convertEnumValue() {
+    if(this->varTableItem.dataType.isClass()){
+        string className = this->varTableItem.dataType.id;
+        if(ClassTable::isEnum(className)){
+            this->varTableItem.dataType = DataType(DataType::int_);
+        }
+    }
 }
 
 

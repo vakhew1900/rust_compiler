@@ -2937,11 +2937,11 @@ int main(int argc, char** argv) {
 
     const char *filename = argv[1];
 #else
-//    const char *filename = "../tests/trait_error.rs";
+    const char *filename = "../tests/trait_error.rs";
 //    const char *filename = "../tests/bubble_sort_rust.rs";
 //    const char *filename = "../tests/check_cycle_break_continue_rust.rs";
 //    const char *filename = "../tests/polymorphysm.rs";
-    const char *filename = "../tests/polymorphysm_emae.rs";
+//    const char *filename = "../tests/polymorphysm_emae.rs";
 #endif
     FILE *file = fopen(filename, "r");
     if (file == NULL) {

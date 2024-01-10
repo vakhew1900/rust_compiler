@@ -114,6 +114,13 @@ fn main() {
 	if(true) {4};
 	matrix[0][1] = 32;
 	
+	let enumVar = Enum::Bar;
+	
+	if enumVar == Enum::Bar
+	{
+		println("fsaddfs {}", "yes");
+	}
+	
 }
 
 // ID -> src/ID/moduleClass src/ModuleClass
