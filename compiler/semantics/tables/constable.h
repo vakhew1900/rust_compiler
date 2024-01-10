@@ -42,6 +42,7 @@ public:
     ConstTableItem(ConstTableType constTableType, int val1, int val2);
     ConstTableItem(ConstTableType constTableType, double  floatVal);
     string toString(int index);
+    vector<char> toBytes();
 };
 
 
@@ -65,7 +66,7 @@ public:
     int FieldRef(const string& className, const string& field, const DataType& dataType);
     int add(ConstTableItem constTableItem);
     ConstTable();
-
+    vector<char> toBytes();
 };
 
 

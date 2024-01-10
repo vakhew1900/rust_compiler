@@ -79,6 +79,10 @@ string ConstTableItem::toString(int index) {
     return row;
 }
 
+vector<char> ConstTableItem::toBytes() {
+    return vector<char>();
+}
+
 string ConstTable::toCSV() {
 
     string csv = "Const №, Const Type, Const Value\n";
@@ -98,6 +102,7 @@ string ConstTable::toString() {
 }
 
 int ConstTable::Class(const string &className) {
+
     int utf8Val = UTF8(className);
     int res = Val(ConstTableItem::CONSTANT_CLASS, utf8Val);
 
@@ -109,6 +114,7 @@ int ConstTable::Class(const string &className) {
 }
 
 int ConstTable::Int(int val) {
+
     for (int i = 0; i < this->items.size(); i++) {
         if (items[i].constTableType == ConstTableItem::CONSTANT_INTEGER && items[i].val1 == val) {
             return i;
@@ -120,6 +126,7 @@ int ConstTable::Int(int val) {
 }
 
 int ConstTable::Double(double val) {
+
     for (int i = 0; i < this->items.size(); i++) {
         if (items[i].constTableType == ConstTableItem::CONSTANT_DOUBLE && items[i].floatVal == val) {
             return i;
@@ -130,6 +137,7 @@ int ConstTable::Double(double val) {
 }
 
 int ConstTable::String(const string &str) {
+
     int utf8Val = UTF8(str);
     if(utf8Val <= 0){
         ConstTableItem constTableItem = ConstTableItem(ConstTableItem::CONSTANT_UTF8, str);
@@ -146,6 +154,7 @@ int ConstTable::String(const string &str) {
 }
 
 int ConstTable::UTF8(const string &str) {
+
     for (int i = 0; i < this->items.size(); i++) {
         if (items[i].constTableType == ConstTableItem::CONSTANT_UTF8 && items[i].utf8 == str) {
             return i;
@@ -156,6 +165,7 @@ int ConstTable::UTF8(const string &str) {
 }
 
 int ConstTable::Val(ConstTableItem::ConstTableType constTableType, int val) {
+
     for (int i = 0; i < this->items.size(); i++) {
         if (items[i].constTableType == constTableType && items[i].val1 == val) {
             return i;
@@ -165,12 +175,14 @@ int ConstTable::Val(ConstTableItem::ConstTableType constTableType, int val) {
 }
 
 int ConstTable::add(ConstTableItem constTableItem) {
+
     this->items.push_back(constTableItem);
     int res = items.size() - 1;
     return res;
 }
 
 string ConstTable::MethodParam(const vector<DataType> &params, const DataType &returnType) {
+
     string res = "(";
 
     for (int i = 0; i < params.size(); i++)
@@ -184,6 +196,7 @@ string ConstTable::MethodParam(const vector<DataType> &params, const DataType &r
 }
 
 int ConstTable::Method(const string &method, const vector<DataType> &params, const DataType &returnType) {
+
     int name = UTF8(method);
     int type = UTF8(MethodParam(params, returnType));
     int res = Val(ConstTableItem::CONSTANT_NAME_AND_TYPE, name, type);
@@ -196,6 +209,7 @@ int ConstTable::Method(const string &method, const vector<DataType> &params, con
 }
 
 int ConstTable::Val(ConstTableItem::ConstTableType constTableType, int val1, int val2) {
+
     for (int i = 0; i < this->items.size(); i++) {
         if (items[i].constTableType == constTableType && items[i].val1 == val1 && items[i].val2 == val2) {
             return i;
@@ -205,6 +219,7 @@ int ConstTable::Val(ConstTableItem::ConstTableType constTableType, int val1, int
 }
 
 int ConstTable::Field(const string &field, const DataType &dataType) {
+
     int name = UTF8(field);
     int type = UTF8(dataType.toConstTableFormat());
     int res = Val(ConstTableItem::CONSTANT_NAME_AND_TYPE, name, type);
@@ -217,6 +232,7 @@ int ConstTable::Field(const string &field, const DataType &dataType) {
 }
 
 int ConstTable::FieldRef(const string &className, const string &field, const DataType &dataType) {
+
     int classRef = Class(className);
     int fieldRef = Field(field, dataType);
     int res = Val(ConstTableItem::CONSTANT_FIELD_REF, classRef, fieldRef);
@@ -245,9 +261,14 @@ int ConstTable::MethodRef(const string &className, const string &method, const v
 }
 
 ConstTable::ConstTable() {
+
         ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "trash");
         items.push_back(item);
         item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "Code");
         items.push_back(item);
+}
+
+vector<char> ConstTable::toBytes() {
+    return vector<char>();
 }
 
