@@ -118,7 +118,7 @@ fn main() {
 	
 	if enumVar == Enum::Bar
 	{
-		println("fsaddfs {}", "yes");
+		println_int("fsaddfs {}", "yes");
 	}
 	
 }

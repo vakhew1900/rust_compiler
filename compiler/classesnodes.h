@@ -50,7 +50,7 @@ enum Visibility {
 class Node {
 public:
     int id;
-    int line = 1;
+    int line = 0;
     DataType dataType;
     MethodTableItem methodTableItem;
     FieldTableItem fieldTableItem;

@@ -1659,14 +1659,14 @@ void ItemNode::getAllItems(std::string className) {
                 if (this->visibility == pub) this->methodTableItem.isPub = true;
                 if (ClassTable::Instance()->getClass(className).classType != ClassTableItem::trait_ &&
                     this->methodTableItem.isHasBody == false) {
-                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_IMPLEMICATION");
+                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_IMPLEMICATION", this->line);
                 }
 
                 if ((this->params->func_type == FuncParamListNode::self_ref
                      || this->params->func_type == FuncParamListNode::self ||
                      this->params->func_type == FuncParamListNode::mut_self_ref) &&
                     ClassTable::Instance()->getClass(className).classType == ClassTableItem::mod_) {
-                    throw Exception(Exception::NOT_A_METHOD, "function " + *this->name + " NOT_A_METHOD");
+                    throw Exception(Exception::NOT_A_METHOD, "function " + *this->name + " NOT_A_METHOD", this->line);
                 }
 
                 if ((this->params->func_type == FuncParamListNode::self_ref
@@ -1687,7 +1687,7 @@ void ItemNode::getAllItems(std::string className) {
                 if (this->visibility == pub) this->fieldTableItem.isPub = true;
                 if (this->fieldTableItem.isInit == false &&
                     ClassTable::Instance()->getClass(className).classType != ClassTableItem::trait_) {
-                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_DEFINED");
+                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_DEFINED", this->line);
                 }
 
                 fieldTableItem.isConst = true;
@@ -1704,7 +1704,7 @@ void ItemNode::getAllItems(std::string className) {
                         if (elem->visibility == pub) {
                             throw Exception(Exception::PUB_NOT_PERMITTED,
                                             "pub` not permitted here because it's implied :" + *this->name + " " +
-                                            *elem->name);
+                                            *elem->name, this->line);
                         }
                         elem->visibility = pub;
                         elem->curClassName = className + "/" + *this->name;
@@ -1846,13 +1846,13 @@ void ItemNode::addImpl(string className, bool isTrait) {
             case impl_:
 
                 if (this->type->type != TypeNode::path_call_expr_) {
-                    throw Exception(Exception::NOT_SUPPORT, "Impl not struct type NOT SUPPORT");
+                    throw Exception(Exception::NOT_SUPPORT, "Impl not struct type NOT SUPPORT", this->line);
                 }
 
                 this->type->pathCallExpr->transformPathCallExpr(className, ExprNode::undefined, true);
                 implClassName = this->type->pathCallExpr->className;
                 if (!ClassTable::Instance()->isClassExist(implClassName)) {
-                    throw Exception(Exception::NOT_EXIST, "Impl struct " + implClassName + " Not Exist");
+                    throw Exception(Exception::NOT_EXIST, "Impl struct " + implClassName + " Not Exist", this->line);
                 }
 
                 if (this->impl_type == trait) {
@@ -1860,7 +1860,8 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     this->expr->transformPathCallExpr(className, ExprNode::undefined, true);
                     traitClassName = this->expr->className;
                     if (!ClassTable::Instance()->isClassExist(traitClassName)) {
-                        throw Exception(Exception::NOT_EXIST, "Trait struct in impl" + traitClassName + "Not Exist");
+                        throw Exception(Exception::NOT_EXIST, "Trait struct in impl" + traitClassName + "Not Exist",
+                                        this->line);
                     }
 
                     ClassTable::Instance()->addParent(implClassName, traitClassName);
@@ -1873,7 +1874,7 @@ void ItemNode::addImpl(string className, bool isTrait) {
                         if (this->impl_type == trait && elem->visibility == pub) {
                             throw Exception(Exception::PUB_NOT_PERMITTED,
                                             "pub` not permitted here because it's implied :" + implClassName + " " +
-                                            *elem->name);
+                                            *elem->name, this->line);
                         }
                         elem->curClassName = implClassName;
                         elem->addImpl(implClassName, this->impl_type == trait);
@@ -1896,14 +1897,15 @@ void ItemNode::addImpl(string className, bool isTrait) {
 
                 if (ClassTable::Instance()->getClass(className).classType != ClassTableItem::trait_ &&
                     !this->methodTableItem.isHasBody) {
-                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_IMPLEMICATION");
+                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_IMPLEMICATION", this->line);
                 }
 
                 if (isTrait &&
                     !ClassTable::Instance()->isMethodExist(ClassTable::Instance()->getClass(className).parentName,
                                                            *this->name)) {
                     throw Exception(Exception::NOT_EXIST, "Impl Error: method " + *this->name + " in parent trait " +
-                                                          ClassTable::Instance()->getClass(className).parentName);
+                                                          ClassTable::Instance()->getClass(className).parentName,
+                                    this->line);
                 }
 
                 if (isTrait) {
@@ -1931,14 +1933,15 @@ void ItemNode::addImpl(string className, bool isTrait) {
                 if (this->visibility == pub) this->fieldTableItem.isPub = true;
                 if (!this->fieldTableItem.isInit &&
                     ClassTable::Instance()->getClass(className).classType != ClassTableItem::trait_) {
-                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_DEFINED");
+                    throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_DEFINED", this->line);
                 }
 
                 if (isTrait && !ClassTable::Instance()->
                         isFieldExist(ClassTable::Instance()->getClass(className).parentName, *this->name)) {
                     throw Exception(Exception::NOT_EXIST, "Impl Error: field " + className + " " + *this->name +
                                                           "  not exist in parent trait " +
-                                                          ClassTable::Instance()->getClass(className).parentName);
+                                                          ClassTable::Instance()->getClass(className).parentName,
+                                    this->line);
                 }
 
                 if (isTrait) {
@@ -1996,11 +1999,11 @@ DataType TypeNode::convertToDataType(const string &className) {
                 dataType.arrType = innerDataType.arrType;
 
                 if (exprArr->type != ExprNode::int_lit) {
-                    throw Exception(Exception::INCORRECT_CONST, "not INT_LIT");
+                    throw Exception(Exception::INCORRECT_CONST, "not INT_LIT", this->line);
                 }
 
                 if (this->exprArr->Int <= 0) {
-                    throw Exception(Exception::INCORRECT_ARR_LENGTH, "array length less than one");
+                    throw Exception(Exception::INCORRECT_ARR_LENGTH, "array length less than one", this->line);
                 }
 
                 if (innerDataType.type == DataType::array_) {
@@ -2023,7 +2026,7 @@ DataType TypeNode::convertToDataType(const string &className) {
             dataType.id = this->pathCallExpr->className;
 
             if (ClassTable::Instance()->getClass(dataType.id).classType == ClassTableItem::mod_) {
-                throw Exception(Exception::UNEXPECTED, dataType.id + "is module and not a type");
+                throw Exception(Exception::UNEXPECTED, dataType.id + "is module and not a type", this->line);
             }
             break;
     }
@@ -2087,7 +2090,7 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
                     if (this->methodTableItem.paramTable.isExist(*elem->name)) {
                         throw Exception(Exception::DEFINED_MULTIPLE,
                                         "Function Param " + *elem->name + " in function " + *this->name +
-                                        " DEFINED_MULTIPLE");
+                                        " DEFINED_MULTIPLE", elem->line);
                     }
                     this->methodTableItem.paramTable.items.push_back(elem->varTableItem);
 
@@ -2104,7 +2107,8 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
             if (!fieldTableItem.dataType.isEquals(this->expr->dataType)) {
                 throw Exception(Exception::INCORRECT_TYPE,
                                 "Expected type for " + *this->name + " in " + className + ":" +
-                                fieldTableItem.dataType.toString() + " Result: " + this->expr->dataType.toString());
+                                fieldTableItem.dataType.toString() + " Result: " + this->expr->dataType.toString(),
+                                this->line);
             }
 
             ClassTable::Instance()->updateField(className, *this->name, this->fieldTableItem);
@@ -2162,18 +2166,19 @@ void EnumItemNode::addDataTypeToDeclaration(const string &className, set<int> &s
         this->expr->transformConst();
 
         if (this->expr->type != ExprNode::int_lit) {
-            throw Exception(Exception::NOT_CONST, "ENUM VALUE SHOULD BE INT LITERAL");
+            throw Exception(Exception::NOT_CONST, "ENUM VALUE SHOULD BE INT LITERAL", this->line);
         }
     }
 
     if (this->expr->Int > 255 || this->expr->Int < 0) {
-        throw Exception(Exception::INCORRECT_ENUM_VALUE, "ENUM VALUE SHOULD BE u8");
+        throw Exception(Exception::INCORRECT_ENUM_VALUE, "ENUM VALUE SHOULD BE u8", this->line);
     }
 
     if (st.count(this->expr->Int)) {
         throw Exception(Exception::INCORRECT_ENUM_VALUE,
-                        "INCORRECT_ENUM_VALUE: ENUM VALUE " + to_string(this->expr->Int) + " occurs twice in " +
-                        className);
+                        "INCORRECT_ENUM_VALUE: ENUM VALUE " + to_string(this->expr->Int) +
+                        " occurs twice in " +
+                        className, this->line);
     }
 
 
@@ -2204,7 +2209,7 @@ void FuncParamNode::addDataTypeToDeclaration(const string &className) {
 
         if (classTableItem.classType == ClassTableItem::mod_) {
             throw Exception(Exception::TYPE_ERROR,
-                            this->varTableItem.dataType.id + "cannot be function param because it`s mod_");
+                            this->varTableItem.dataType.id + "cannot be function param because it`s mod_", this->line);
         }
 
         isTrait = classTableItem.classType == ClassTableItem::trait_;
@@ -2220,10 +2225,11 @@ void FuncParamNode::addDataTypeToDeclaration(const string &className) {
     if (this->type->isImpl && !isTrait) {
         throw Exception(Exception::TYPE_ERROR,
                         "keyword  `impl` can`t use with " + this->varTableItem.dataType.toString() +
-                        " because it`s not a trait_");
+                        " because it`s not a trait_", this->line);
     } else if (isTrait && !this->type->isImpl) {
         throw Exception(Exception::TYPE_ERROR,
-                        this->varTableItem.dataType.toString() + " can`t be a function param because it`s trait_");
+                        this->varTableItem.dataType.toString() +
+                        " can`t be a function param because it`s trait_", this->line);
     }
 
     this->convertEnumValue();
@@ -2332,7 +2338,7 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
     }
 
     if (!ClassTable::Instance()->isClassExist(res)) {
-        throw Exception(Exception::NOT_EXIST, res + "NOT_EXIST");
+        throw Exception(Exception::NOT_EXIST, res + "NOT_EXIST", this->line);
     }
 
     this->className = res;
@@ -2401,7 +2407,7 @@ void ItemNode::transform(bool isConvertedToConst) {
 
                     if (elem.isRef && elem.dataType.isSimple()) {
                         throw Exception(Exception::NOT_SUPPORT,
-                                        elem.dataType.toString() + " is simple and ref. Not support this");
+                                        elem.dataType.toString() + " is simple and ref. Not support this", this->line);
                     }
 
                     ClassTable::Instance()->addLocalParam(curClassName, *this->name, elem);
@@ -2422,22 +2428,24 @@ void ItemNode::transform(bool isConvertedToConst) {
                                                                                         *this->name);
                     if (!this->body->dataType.isEquals(methodTableItem.returnDataType)) {
                         throw Exception(Exception::TYPE_ERROR,
-                                        *this->name + "should return " + methodTableItem.returnDataType.toString() +
-                                        " but result: " + body->dataType.toString());
+                                        *this->name + "should return " +
+                                        methodTableItem.returnDataType.toString() +
+                                        " but result: " + body->dataType.toString(), this->line);
                     }
 
                     returnTypes.push_back(methodTableItem.returnDataType);
                     if (!DataType::isEquals(returnTypes)) {
                         throw Exception(Exception::TYPE_ERROR,
-                                        *this->name + "should return  " + methodTableItem.returnDataType.toString() +
-                                        " but result is not");
+                                        *this->name + "should return  " +
+                                        methodTableItem.returnDataType.toString() +
+                                        " but result is not", this->line);
                     }
                 }
 
                 returnTypes.clear();
                 blockExprList.pop_back();
                 if (blockExprList.size()) {
-                    throw Exception(Exception::UNEXPECTED, "blockexpr не удалил(");
+                    throw Exception(Exception::UNEXPECTED, "blockexpr не удалил(", this->line);
                 }
 
                 for (auto param: *this->params->items) {
@@ -2445,13 +2453,14 @@ void ItemNode::transform(bool isConvertedToConst) {
                         if (param->dataType.isClass()) {
                             if (!ClassTable::isHaveAccess(curClassName, param->dataType.id)) {
                                 throw Exception(Exception::ACCESS_ERROR,
-                                                *this->name + " has not access to " + param->dataType.id);
+                                                *this->name + " has not access to " + param->dataType.id, this->line);
                             }
 
                             bool isPub = ClassTable::Instance()->getMethod(curClassName, *this->name).isPub;
                             if (isPub && !ClassTable::Instance()->getClass(param->dataType.id).isPub) {
                                 throw Exception(Exception::PRIVATE_ERROR,
-                                                *this->name + " has param  " + param->dataType.id + " is private");
+                                                *this->name + " has param  " + param->dataType.id + " is private",
+                                                this->line);
                             }
                         }
                     }
@@ -2463,7 +2472,8 @@ void ItemNode::transform(bool isConvertedToConst) {
                 if (this->dataType.isClass()) {
 
                     if (!ClassTable::isHaveAccess(curClassName, dataType.id)) {
-                        throw Exception(Exception::ACCESS_ERROR, *this->name + " has not access to " + dataType.id);
+                        throw Exception(Exception::ACCESS_ERROR, *this->name + " has not access to " + dataType.id,
+                                        this->line);
                     }
 
                 }
@@ -2478,12 +2488,13 @@ void ItemNode::transform(bool isConvertedToConst) {
 
                 if (this->dataType.isClass()) {
                     if (ClassTable::isHaveAccess(curClassName, dataType.id)) {
-                        throw Exception(Exception::ACCESS_ERROR, *this->name + " has not access to " + dataType.id);
+                        throw Exception(Exception::ACCESS_ERROR, *this->name + " has not access to " + dataType.id,
+                                        this->line);
                     }
 
                     if (!ClassTable::Instance()->getClass(dataType.id).isPub) {
                         throw Exception(Exception::PRIVATE_ERROR,
-                                        *this->name + " is public but type " + dataType.id + " is private");
+                                        *this->name + " is public but type " + dataType.id + " is private", this->line);
                     }
                 }
 
@@ -2511,14 +2522,16 @@ void ItemNode::transform(bool isConvertedToConst) {
                     if (elem->dataType.isClass()) {
 
                         if (!ClassTable::isHaveAccess(curClassName, dataType.id)) {
-                            throw Exception(Exception::ACCESS_ERROR, *this->name + " has not access to " + dataType.id);
+                            throw Exception(Exception::ACCESS_ERROR, *this->name + " has not access to " + dataType.id,
+                                            this->line);
                         }
 
                         bool isPubField = ClassTable::Instance()->getField(curClassName, *elem->name).isPub;
                         bool isPrivateType = !ClassTable::Instance()->getClass(elem->dataType.id).isPub;
                         if (isPubField && isPrivateType) {
                             throw Exception(Exception::PRIVATE_ERROR,
-                                            *elem->name + " is public but type " + elem->dataType.id + " is private");
+                                            *elem->name + " is public but type " + elem->dataType.id + " is private",
+                                            elem->line);
                         }
                     }
 
@@ -2559,7 +2572,7 @@ void ItemNode::checkImpl(const string &structName, const string &traitName) {
     while (ClassTable::isHaveParent(tmpTraitName)) {
         tmpTraitName = ClassTable::getParentClassName(tmpTraitName);
         if (!impl_set[structName].count(tmpTraitName)) {
-            throw Exception(Exception::NOT_IMPLEMICATION, structName + " should have impl " + traitName);
+            throw Exception(Exception::NOT_IMPLEMICATION, structName + " should have impl " + traitName, this->line);
         }
     }
 }
@@ -2634,7 +2647,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                             throw Exception(Exception::INCORRECT_TYPE,
                                             "incorrect let" + varTableItem.id + "datatype. Expected: " +
                                             varTableItem.dataType.toString() +
-                                            "result: " + this->expr->dataType.toString());
+                                            "result: " + this->expr->dataType.toString(), this->line);
                         }
                     }
                 }
@@ -2649,7 +2662,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                 varTableItem.id = *this->name;
 
                 if (this->expr == NULL) {
-                    throw Exception(Exception::UNEXPECTED, "const " + *this->name + " must be initialized");
+                    throw Exception(Exception::UNEXPECTED, "const " + *this->name + " must be initialized", this->line);
                 }
 
                 this->expr->curClassName = curClassName;
@@ -2659,7 +2672,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                 varTableItem.dataType = this->typeChild->convertToDataType(curClassName);
 
                 if (!this->expr->dataType.isEquals(varTableItem.dataType)) {
-                    throw Exception(Exception::INCORRECT_TYPE, "incorrect datatype");
+                    throw Exception(Exception::INCORRECT_TYPE, "incorrect datatype", this->line);
                 }
 
                 varTableItem.blockExpr = blockExprList.back();
@@ -2700,14 +2713,14 @@ void ExprNode::transform(bool isConvertedToConst) {
                 if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
                     throw Exception(Exception::NOT_EQUAL_DATA_TYPE,
                                     "NOT EQUAL DATA_TYPE " + this->expr_left->dataType.toString() + " " +
-                                    this->expr_right->dataType.toString());
+                                    this->expr_right->dataType.toString(), this->line);
                 }
 
                 if (this->expr_left->dataType.type != DataType::int_
                     && this->expr_left->dataType.type != DataType::float_) {
                     throw Exception(Exception::OPERATION_NOT_SUPPORTED,
                                     "datatype " + this->expr_left->dataType.toString() +
-                                    " not supported maths operation");
+                                    " not supported maths operation", this->line);
                 }
 
                 this->dataType = this->expr_left->dataType;
@@ -2732,7 +2745,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (this->expr_left->dataType.type != DataType::int_) {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED,
                                 "datatype " + this->expr_left->dataType.toString() +
-                                " not supported operation mod");
+                                " not supported operation mod", this->line);
             }
 
             this->dataType = this->expr_left->dataType;
@@ -2763,14 +2776,14 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
                 throw Exception(Exception::NOT_EQUAL_DATA_TYPE,
                                 "NOT EQUAL DATA_TYPE" + this->expr_left->dataType.toString() + " " +
-                                this->expr_right->dataType.toString());
+                                this->expr_right->dataType.toString(), this->line);
             }
 
             if (this->expr_left->dataType.type == DataType::array_
                 || this->expr_left->dataType.type == DataType::class_) {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED,
                                 "datatype " + this->expr_left->dataType.toString() +
-                                " not supported comparison operation");
+                                " not supported comparison operation", this->line);
             }
 
             this->dataType = DataType(DataType::bool_);
@@ -2792,7 +2805,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 && this->expr_left->dataType.type != DataType::int_) {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED,
                                 "datatype " + this->expr_left->dataType.toString() +
-                                " not supported uminus operation");
+                                " not supported uminus operation", this->line);
             }
             this->dataType = this->expr_left->dataType;
 
@@ -2814,7 +2827,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (this->expr_left->dataType.type != DataType::bool_) {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED,
                                 "datatype " + this->expr_left->dataType.toString() +
-                                " not supported uminus operation");
+                                " not supported uminus operation", this->line);
             }
             this->dataType = this->expr_left->dataType;
 
@@ -2843,13 +2856,13 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
                 throw Exception(Exception::NOT_EQUAL_DATA_TYPE,
                                 "NOT EQUAL DATA_TYPE" + this->expr_left->dataType.toString() + " " +
-                                this->expr_right->dataType.toString());
+                                this->expr_right->dataType.toString(), this->line);
             }
 
             if (this->expr_left->dataType.type != DataType::bool_) {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED,
                                 "datatype " + this->expr_left->dataType.toString() +
-                                " not supported and/or operation");
+                                " not supported and/or operation", this->line);
             }
 
             this->dataType = this->expr_left->dataType;
@@ -2867,13 +2880,14 @@ void ExprNode::transform(bool isConvertedToConst) {
 
 
             if (!this->expr_left->isVar()) {
-                throw Exception(Exception::NOT_A_VAR, "left operand not a var");
+                throw Exception(Exception::NOT_A_VAR, "left operand not a var", this->line);
             }
 
             if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
                 throw Exception(Exception::NOT_EQUAL_DATA_TYPE,
-                                "NOT EQUAL DATA_TYPE in asign: " + this->expr_left->dataType.toString() + " and " +
-                                this->expr_right->dataType.toString());
+                                "NOT EQUAL DATA_TYPE in asign: " + this->expr_left->dataType.toString() +
+                                " and " +
+                                this->expr_right->dataType.toString(), this->line);
             }
 
             //TODO добавить обработку констант
@@ -2882,20 +2896,21 @@ void ExprNode::transform(bool isConvertedToConst) {
                                                                                 this->expr_left->localVarNum);
                 if (this->expr_left->isConst || this->expr_left->isMut == false) {
                     throw Exception(Exception::OPERATION_NOT_SUPPORTED,
-                                    varTableItem.id + "is const and can`t supported asign operation");
+                                    varTableItem.id + "is const and can`t supported asign operation", this->line);
                 }
             } else if (!this->expr_left->fieldName.empty()) {
                 FieldTableItem fieldTableItem = ClassTable::Instance()->getField(curClassName,
                                                                                  this->expr_left->fieldName);
                 if (this->expr_left->isConst || this->expr_left->isMut == false) {
                     throw Exception(Exception::OPERATION_NOT_SUPPORTED,
-                                    this->expr_left->fieldName + "is const and can`t supported asign operation");
+                                    this->expr_left->fieldName + "is const and can`t supported asign operation",
+                                    this->line);
                 }
             }
 
             if (this->expr_left->isConst || this->expr_left->isMut == false) {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED,
-                                *this->expr_left->Name + " is const and can`t supported asign operation");
+                                *this->expr_left->Name + " is const and can`t supported asign operation", this->line);
             }
 
             this->dataType = DataType(DataType::void_);
@@ -2935,7 +2950,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                             if (dataType.type != DataType::class_) {
                                 if (!dataType.isEquals(firstElement)) {
                                     throw Exception(Exception::TYPE_ERROR,
-                                                    "not correct types in array");
+                                                    "not correct types in array", elem->line);
                                 }
                             } else if (dataType.type == DataType::class_) {
                                 if (!dataType.isEquals(firstElement)
@@ -2943,7 +2958,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                                         !ClassTable::Instance()->isParent(dataType.id, this->arrDataType.id))) {
                                     throw Exception(Exception::TYPE_ERROR,
                                                     "not correct types in array. Expected: " + this->arrDataType.id +
-                                                    " Result: " + dataType.id);
+                                                    " Result: " + dataType.id, this->line);
                                 }
                             }
 
@@ -2959,23 +2974,25 @@ void ExprNode::transform(bool isConvertedToConst) {
                             this->dataType.addArrType(firstElement);
                         } else if (arrDataType.type != DataType::class_) {
                             throw Exception(Exception::TYPE_ERROR,
-                                            "type error in array. Expected: " + arrDataType.toString() + "Result: " +
-                                            firstElement.toString());
+                                            "type error in array. Expected: " + arrDataType.toString() +
+                                            "Result: " +
+                                            firstElement.toString(), this->line);
                         } else if (firstElement.isEquals(this->arrDataType)) {
                             this->dataType.addArrType(firstElement);
                         } else if (ClassTable::Instance()->isParent(firstElement.id, this->arrDataType.id)) {
                             this->dataType.addArrType(arrDataType);
                         } else {
                             throw Exception(Exception::TYPE_ERROR,
-                                            "type error in array. Expected: " + arrDataType.toString() + "Result: " +
-                                            firstElement.toString());
+                                            "type error in array. Expected: " + arrDataType.toString() +
+                                            "Result: " +
+                                            firstElement.toString(), this->line);
                         }
 
                     } else {
 
                         for (auto elem: *this->expr_list->exprs) {
                             if (!elem->dataType.isEquals(firstElement)) {
-                                throw Exception(Exception::ARRAY_SIZE, "incorrect size inner arrays");
+                                throw Exception(Exception::ARRAY_SIZE, "incorrect size inner arrays", elem->line);
                             }
                             //TODO склеить два массива
                             arrTypes.insert(arrTypes.end(), all(elem->dataType.arrTypes));
@@ -3004,12 +3021,12 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             if (this->expr_right->dataType.type != DataType::int_) {
                 throw Exception(Exception::NOT_SUPPORT,
-                                "array size expected i32, found " + this->expr_right->dataType.toString());
+                                "array size expected i32, found " + this->expr_right->dataType.toString(), this->line);
             }
 
             if (this->expr_left->type != int_lit) {
                 if (this->expr_left->isConst == false) {
-                    throw Exception(Exception::NOT_CONST, "array size must be constant");
+                    throw Exception(Exception::NOT_CONST, "array size must be constant", this->line);
                 }
 
                 if (this->expr_left->localVarNum != -1) {
@@ -3025,7 +3042,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
             if (this->expr_right == NULL) {
-                throw Exception(Exception::UNEXPECTED, "expr right is NULL. FUCK YEE");
+                throw Exception(Exception::UNEXPECTED, "expr right is NULL. FUCK YEE", this->line);
             }
 
             {
@@ -3057,13 +3074,14 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             if (this->expr_right->dataType.type != DataType::int_) {
                 throw Exception(Exception::TYPE_ERROR,
-                                "index must be i32. Index type: " + this->expr_right->dataType.toString());
+                                "index must be i32. Index type: " + this->expr_right->dataType.toString(), this->line);
             }
 
 
             if (this->expr_left->dataType.type != DataType::array_) {
                 throw Exception(Exception::TYPE_ERROR,
-                                "type error: expected: array_ result: " + this->expr_left->dataType.toString());
+                                "type error: expected: array_ result: " +
+                                this->expr_left->dataType.toString(), this->line);
             }
 
             {
@@ -3096,8 +3114,9 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (!this->expr_left->dataType.isEquals(this->expr_right->dataType)
                 || this->expr_left->dataType.type != DataType::int_) {
                 throw Exception(Exception::TYPE_ERROR,
-                                "range expression must be int_ and result: left=" + expr_left->dataType.toString() +
-                                "right=" + expr_right->dataType.toString());
+                                "range expression must be int_ and result: left=" +
+                                expr_left->dataType.toString() +
+                                "right=" + expr_right->dataType.toString(), this->line);
             }
 
             break;
@@ -3107,7 +3126,8 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_left->transform(isConvertedToConst);
 
             if (this->expr_left->dataType.type != DataType::class_) {
-                throw Exception(Exception::TYPE_ERROR, this->expr_left->dataType.toString() + " has not fields");
+                throw Exception(Exception::TYPE_ERROR,
+                                this->expr_left->dataType.toString() + " has not fields", this->line);
             }
 
             try {
@@ -3117,11 +3137,12 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->isMut = this->expr_left->isMut && !fieldItem.isConst;
                 if (fieldItem.isConst) {
                     throw Exception(Exception::STATIC_ERROR,
-                                    this->expr_left->dataType.id + " " + *this->Name + "is static field");
+                                    this->expr_left->dataType.id + " " + *this->Name + "is static field", this->line);
                 }
 
                 if (!ClassTable::isHaveAccessToField(curClassName, this->expr_left->dataType.id, *this->Name)) {
-                    throw Exception(Exception::ACCESS_ERROR, curClassName + " not has access to field " + *this->Name);
+                    throw Exception(Exception::ACCESS_ERROR, curClassName + " not has access to field " + *this->Name,
+                                    this->line);
                 }
 
                 ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id, *this->Name,
@@ -3145,7 +3166,8 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_left->transform(isConvertedToConst);
 
             if (this->expr_left->dataType.type != DataType::class_) {
-                throw Exception(Exception::TYPE_ERROR, this->expr_left->dataType.toString() + "has not methods");
+                throw Exception(Exception::TYPE_ERROR,
+                                this->expr_left->dataType.toString() + "has not methods", this->line);
             }
 
             try {
@@ -3154,7 +3176,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                                                                                    *this->Name);
                 if (methodItem.isStatic) {
                     throw Exception(Exception::STATIC_ERROR,
-                                    this->expr_left->dataType.id + " " + *this->Name + "is static method");
+                                    this->expr_left->dataType.id + " " + *this->Name + "is static method", this->line);
                 }
 
                 //VarTableItem selfVarItem = methodItem.localVarTable.getVar(0); ///TODO  пососи ебучая константа
@@ -3163,7 +3185,8 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->dataType = methodItem.returnDataType;
 
                 if (!ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->dataType.id, *this->Name)) {
-                    throw Exception(Exception::ACCESS_ERROR, curClassName + " not has access to method " + *this->Name);
+                    throw Exception(Exception::ACCESS_ERROR, curClassName + " not has access to method " + *this->Name,
+                                    this->line);
                 }
 
                 vector<DataType> params;
@@ -3189,7 +3212,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             breakTypes.push_back(this->expr_left->dataType);
             this->dataType = DataType(DataType::void_);
             if (loopCnt == 0) {
-                throw Exception(Exception::LOOP_ERROR, "continue is loop outside");
+                throw Exception(Exception::LOOP_ERROR, "continue is loop outside", this->line);
             }
 
             break;
@@ -3199,7 +3222,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             breakTypes.push_back(DataType(DataType::void_));
             this->dataType = DataType(DataType::void_);
             if (loopCnt == 0) {
-                throw Exception(Exception::LOOP_ERROR, "continue is loop outside");
+                throw Exception(Exception::LOOP_ERROR, "continue is loop outside", this->line);
             }
             break;
             break;
@@ -3208,7 +3231,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_left->transform(isConvertedToConst);
             if (expr_left->dataType.type != DataType::int_) {
                 throw Exception(Exception::TYPE_ERROR,
-                                "range expr should be int_. Result: " + expr_left->dataType.toString());
+                                "range expr should be int_. Result: " + expr_left->dataType.toString(), this->line);
             }
 
             this->expr_right = this->expr_left;
@@ -3222,7 +3245,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_left->transform(isConvertedToConst);
             if (expr_left->dataType.type != DataType::int_) {
                 throw Exception(Exception::TYPE_ERROR,
-                                "range expr should be int_. Result: " + expr_left->dataType.toString());
+                                "range expr should be int_. Result: " + expr_left->dataType.toString(), this->line);
             }
             this->expr_right = ExprNode::ExprFromIntLiteral(int_lit, INT32_MAX);
             this->expr_right->dataType = DataType(DataType::int_);
@@ -3254,7 +3277,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
             if (!DataType::isEquals(types)) {
-                throw Exception(Exception::TYPE_ERROR, "if has different types");
+                throw Exception(Exception::TYPE_ERROR, "if has different types", this->line);
             }
 
             if (types.size())
@@ -3270,7 +3293,8 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             if (this->expr_left->dataType.type != DataType::bool_) {
                 throw Exception(Exception::TYPE_ERROR,
-                                "if condition expected: bool_, result: " + this->expr_left->dataType.toString());
+                                "if condition expected: bool_, result: " +
+                                this->expr_left->dataType.toString(), this->line);
             }
 
             addMetaInfo(body);
@@ -3281,7 +3305,7 @@ void ExprNode::transform(bool isConvertedToConst) {
         case loop_expr:
 
             if (body->dataType.type == DataType::void_) {
-                throw Exception(Exception::INCORRECT_TYPE, "loop_expr cannot has return_expr");
+                throw Exception(Exception::INCORRECT_TYPE, "loop_expr cannot has return_expr", this->line);
             }
             {
                 addMetaInfo(body);
@@ -3290,10 +3314,10 @@ void ExprNode::transform(bool isConvertedToConst) {
                 loopCnt++;
                 body->transform(isConvertedToConst);
                 if (breakTypes.empty()) {
-                    throw Exception(Exception::LOOP_ERROR, "loop should has break");
+                    throw Exception(Exception::LOOP_ERROR, "loop should has break", this->line);
                 }
                 if (!DataType::isEquals(breakTypes)) {
-                    throw Exception(Exception::TYPE_ERROR, "loop has different types");
+                    throw Exception(Exception::TYPE_ERROR, "loop has different types", this->line);
                 }
                 loopCnt--;
                 this->dataType = breakTypes.front();
@@ -3310,7 +3334,8 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             if (this->expr_left->dataType.type != DataType::bool_) {
                 throw Exception(Exception::TYPE_ERROR,
-                                "if condition expected: bool_, result: " + this->expr_left->dataType.toString());
+                                "if condition expected: bool_, result: " +
+                                this->expr_left->dataType.toString(), this->line);
             }
 
 
@@ -3322,14 +3347,14 @@ void ExprNode::transform(bool isConvertedToConst) {
                 body->transform(isConvertedToConst);
                 breakTypes.push_back(DataType(DataType::void_));
                 if (!DataType::isEquals(breakTypes)) {
-                    throw Exception(Exception::TYPE_ERROR, "while should return void");
+                    throw Exception(Exception::TYPE_ERROR, "while should return void", this->line);
                 }
                 loopCnt--;
                 breakTypes = breaks;
             }
 
             if (body->dataType.type != DataType::void_) {
-                throw Exception(Exception::INCORRECT_TYPE, "while expr cannot has return_expr");
+                throw Exception(Exception::INCORRECT_TYPE, "while expr cannot has return_expr", this->line);
             }
 
             this->dataType = body->dataType;
@@ -3342,13 +3367,14 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (this->expr_left->type == break_expr || this->expr_left->type == return_expr
                 || this->expr_left->type == break_with_val_expr) {
                 throw Exception(Exception::TYPE_ERROR,
-                                "Олег Александрович, ну че вы так  проверяете, не надо пожалуйста. У меня дети есть");
+                                "Олег Александрович, ну че вы так  проверяете, не надо пожалуйста. У меня дети есть",
+                                this->line);
             }
 
             if (this->expr_left->dataType.type != DataType::array_ &&
                 this->expr_left->type != ExprNode::range_expr) {
                 throw Exception(Exception::TYPE_ERROR,
-                                "for condition should be iterable: range_expr or DataType::array_");
+                                "for condition should be iterable: range_expr or DataType::array_", this->line);
             }
 
             {
@@ -3372,7 +3398,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (this->expr_left->isRefExpr() && this->expr_left->dataType.type == DataType::array_ &&
                 this->expr_left->dataType.arrDeep == 1 && this->expr_left->dataType.getArrDataType().isSimple()) {
                 throw Exception(Exception::NOT_SUPPORT,
-                                this->expr_left->dataType.toString() + " not support link operation");
+                                this->expr_left->dataType.toString() + " not support link operation", this->line);
             }
 
             {
@@ -3384,12 +3410,12 @@ void ExprNode::transform(bool isConvertedToConst) {
 
                 if (this->body->dataType.type != DataType::void_) {
                     throw Exception(Exception::TYPE_ERROR,
-                                    "for condition should be iterable: range_expr or DataType::array_");
+                                    "for condition should be iterable: range_expr or DataType::array_", this->line);
                 }
 
                 breakTypes.push_back(DataType(DataType::void_));
                 if (!DataType::isEquals(breakTypes)) {
-                    throw Exception(Exception::TYPE_ERROR, "breaks should be void_ in for");
+                    throw Exception(Exception::TYPE_ERROR, "breaks should be void_ in for", this->line);
                 }
                 loopCnt--;
                 breakTypes = breaks;
@@ -3416,7 +3442,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                             if (elem == this->stmt_list->stmts->back() && this->body != NULL) {
                                 throw Exception(Exception::TYPE_ERROR,
                                                 "if or loop without  semicolon should return  void_. Result: " +
-                                                elem->expr->dataType.toString());
+                                                elem->expr->dataType.toString(), elem->line);
                             }
 
                             if (elem != this->stmt_list->stmts->back()) {
@@ -3426,9 +3452,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 if (nextElem->type != StmtNode::semicolon) {
                                     throw Exception(Exception::TYPE_ERROR,
                                                     "if or loop without  semicolon should return  void_. result: " +
-                                                    elem->expr->dataType.toString());
+                                                    elem->expr->dataType.toString(), elem->line);
                                 }
-                                //   elem--;
+
                             }
 
                         }
@@ -3485,19 +3511,19 @@ void ExprNode::transform(bool isConvertedToConst) {
             } else {
                 throw Exception(Exception::NOT_EXIST,
                                 "call method " + this->expr_left->className + " " + *this->expr_left->Name +
-                                " not exist");
+                                " not exist", this->line);
             }
 
             checkMethodParam(this->expr_left->className, this->expr_left->methodName);
             if (!ClassTable::isHaveAccess(curClassName, this->expr_left->className)) {
                 throw Exception(Exception::ACCESS_ERROR,
-                                curClassName + " has not access to " + this->expr_left->className);
+                                curClassName + " has not access to " + this->expr_left->className, this->line);
             }
 
             if (!ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->className,
                                                    *this->expr_middle->Name)) {
                 throw Exception(Exception::ACCESS_ERROR,
-                                curClassName + " has not access to " + *this->expr_middle->Name);
+                                curClassName + " has not access to " + *this->expr_middle->Name, this->line);
             }
 
             {
@@ -3526,7 +3552,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             } else {
                 throw Exception(Exception::NOT_EXIST,
                                 "call field " + this->expr_left->className + " " + *this->expr_left->Name +
-                                " not exist");
+                                " not exist", this->line);
             }
 
             {
@@ -3551,7 +3577,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             } else {
                 throw Exception(Exception::TYPE_ERROR,
                                 "cannot convert type " + this->expr_left->dataType.toString() + " to " +
-                                this->typeNode->convertToDataType(curClassName).toString());
+                                this->typeNode->convertToDataType(curClassName).toString(), this->line);
             }
 
 
@@ -3572,7 +3598,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->isConst = fieldItem.isConst;
                 this->dataType = fieldItem.dataType;
             } else {
-                throw Exception(Exception::NOT_EXIST, "var " + *this->Name + "not exist");
+                throw Exception(Exception::NOT_EXIST, "var " + *this->Name + "not exist", this->line);
             }
 
         }
@@ -3581,7 +3607,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             MethodTableItem methodItem = ClassTable::Instance()->getMethod(curClassName, curMethodName);
 
             if (methodItem.isStatic) {
-                throw Exception(Exception::STATIC_ERROR, "static error: self used in static method ");
+                throw Exception(Exception::STATIC_ERROR, "static error: self used in static method ", this->line);
             }
 
             this->localVarNum = 0; //TODO бебебе
@@ -3590,7 +3616,7 @@ void ExprNode::transform(bool isConvertedToConst) {
         }
             break;
         case super_expr:
-            throw Exception(Exception::NOT_SUPPORT, "here are too many leading `super` keywords");
+            throw Exception(Exception::NOT_SUPPORT, "here are too many leading `super` keywords", this->line);
             break;
 
 
@@ -3628,7 +3654,7 @@ void ExprNode::transform(bool isConvertedToConst) {
         case question:
         case ustar:
         case tuple_expr:
-            throw Exception(Exception::NOT_SUPPORT, "this operation not supported");
+            throw Exception(Exception::NOT_SUPPORT, "this operation not supported", this->line);
             break;
 
         case link:
@@ -3636,7 +3662,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             checkCancelExprNode(this->expr_left);
             this->expr_left->transform(isConvertedToConst);
             if (this->expr_left->isVar() == false) {
-                throw Exception(Exception::UNEXPECTED, "link operation with not var element");
+                throw Exception(Exception::UNEXPECTED, "link operation with not var element", this->line);
             }
 
             this->dataType = this->expr_left->dataType;
@@ -3645,7 +3671,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->fieldName = this->expr_left->fieldName;
 
             if (this->dataType.type != DataType::class_ && this->dataType.type != DataType::string_) {
-                throw Exception(Exception::NOT_SUPPORT, "operation mut_link not support with simple type");
+                throw Exception(Exception::NOT_SUPPORT, "operation mut_link not support with simple type", this->line);
             }
 
             break;
@@ -3656,11 +3682,12 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_left->transform(isConvertedToConst);
 
             if (this->expr_left->isVar() == false) {
-                throw Exception(Exception::UNEXPECTED, "link operation with not var element");
+                throw Exception(Exception::UNEXPECTED, "link operation with not var element", this->line);
             }
 
             if (this->expr_left->isMut == false) {
-                throw Exception(Exception::UNEXPECTED, "Cannot create mut link element because var is not mut");
+                throw Exception(Exception::UNEXPECTED, "Cannot create mut link element because var is not mut",
+                                this->line);
             }
 
             this->dataType = this->expr_left->dataType;
@@ -3669,7 +3696,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->isMut = true;
 
             if (this->dataType.type != DataType::class_ && this->dataType.type != DataType::string_) {
-                throw Exception(Exception::NOT_SUPPORT, "operation mut_link not support with simple type");
+                throw Exception(Exception::NOT_SUPPORT, "operation mut_link not support with simple type", this->line);
             }
             break;
 
@@ -3677,7 +3704,7 @@ void ExprNode::transform(bool isConvertedToConst) {
         case call_expr:
         case continue_expr:
             if (loopCnt == 0) {
-                throw Exception(Exception::LOOP_ERROR, "continue is loop outside");
+                throw Exception(Exception::LOOP_ERROR, "continue is loop outside", this->line);
             }
             break;
     }
@@ -3707,10 +3734,10 @@ void ExprNode::transformConst() {
             if (!this->expr_left->isEqualDataType(this->expr_right)) {
                 throw Exception(Exception::NOT_EQUAL_DATA_TYPE,
                                 "NOT EQUAL DATATYPE " + this->expr_left->dataType.toString() + " and" +
-                                this->expr_right->dataType.toString());
+                                this->expr_right->dataType.toString(), this->line);
             }
             if (!this->expr_left->isLiteral() || !this->expr_right->isLiteral()) {
-                throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
+                throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST", this->line);
             }
             break;
         case uminus:
@@ -3718,7 +3745,7 @@ void ExprNode::transformConst() {
         case as:
             this->expr_left->transformConst();
             if (!this->expr_left->isLiteral()) {
-                throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
+                throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST", this->line);
             }
             break;
     }
@@ -3733,7 +3760,8 @@ void ExprNode::transformConst() {
                 this->Float = this->expr_left->Float + this->expr_right->Float;
                 this->type = float_lit;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
 
             this->dataType.type = this->expr_left->dataType.type;
@@ -3746,7 +3774,8 @@ void ExprNode::transformConst() {
                 this->Float = this->expr_left->Float - this->expr_right->Float;
                 this->type = float_lit;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
 
             this->dataType.type = this->expr_left->dataType.type;
@@ -3759,7 +3788,8 @@ void ExprNode::transformConst() {
                 this->Float = this->expr_left->Float * this->expr_right->Float;
                 this->type = float_lit;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
 
             this->dataType.type = this->expr_left->dataType.type;
@@ -3767,18 +3797,19 @@ void ExprNode::transformConst() {
         case div_expr:
             if (this->expr_left->dataType.type == DataType::int_) {
                 if (this->expr_right->Int == 0) {
-                    throw Exception(Exception::NULL_DIVIDE, "NULL DIVIDE");
+                    throw Exception(Exception::NULL_DIVIDE, "NULL DIVIDE", this->line);
                 }
                 this->Int = this->expr_left->Int / this->expr_right->Int;
                 this->type = int_lit;
             } else if (this->expr_left->dataType.type == DataType::float_) {
                 if (this->expr_right->Float == 0) {
-                    throw Exception(Exception::NULL_DIVIDE, "NULL DIVIDE");
+                    throw Exception(Exception::NULL_DIVIDE, "NULL DIVIDE", this->line);
                 }
                 this->Float = this->expr_left->Float / this->expr_right->Float;
                 this->type = float_lit;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
 
             this->dataType.type = this->expr_left->dataType.type;
@@ -3786,12 +3817,13 @@ void ExprNode::transformConst() {
         case mod:
             if (this->expr_left->dataType.type == DataType::int_) {
                 if (this->expr_right->Int == 0) {
-                    throw Exception(Exception::NULL_DIVIDE, "NULL DIVIDE");
+                    throw Exception(Exception::NULL_DIVIDE, "NULL DIVIDE", this->line);
                 }
                 this->Int = this->expr_left->Int % this->expr_right->Int;
                 this->type = int_lit;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
 
             this->dataType.type = this->expr_left->dataType.type;
@@ -3801,7 +3833,7 @@ void ExprNode::transformConst() {
             if (this->expr_left->dataType.type == DataType::bool_) {
 
                 if (!this->expr_left->isLiteral()) {
-                    throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
+                    throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST", this->line);
                 }
 
                 if (this->expr_left->Bool == 1) {
@@ -3810,20 +3842,22 @@ void ExprNode::transformConst() {
                     this->expr_right->transformConst();
 
                     if (!this->expr_right->isLiteral()) {
-                        throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
+                        throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST", this->line);
                     }
 
                     if (this->expr_right->dataType.type == DataType::bool_) {
                         this->Bool = this->expr_right->Bool;
                     } else {
                         throw Exception(Exception::OPERATION_NOT_SUPPORTED,
-                                        "THIS LITERAL NOT SUPPORTED THIS OPERATION. RIGHT OPERAND ARE NOT BOOL");
+                                        "THIS LITERAL NOT SUPPORTED THIS OPERATION. RIGHT OPERAND ARE NOT BOOL",
+                                        this->line);
                     }
 
                 }
                 //this->Bool = this->expr_left->Bool || this->expr_right->Bool;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION - OR");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION - OR",
+                                this->line);
             }
 
             this->type = bool_lit;
@@ -3832,7 +3866,7 @@ void ExprNode::transformConst() {
         case and_:
             this->expr_left->transformConst();
             if (!this->expr_left->isLiteral()) {
-                throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
+                throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST", this->line);
             }
             if (this->expr_left->dataType.type == DataType::bool_) {
                 if (this->expr_left->Bool == 0) {
@@ -3841,18 +3875,20 @@ void ExprNode::transformConst() {
                     this->expr_right->transformConst();
 
                     if (!this->expr_right->isLiteral()) {
-                        throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST");
+                        throw Exception(Exception::NOT_CONST, "Excepted CONST but it NOT CONST", this->line);
                     }
 
                     if (this->expr_right->dataType.type == DataType::bool_) {
                         this->Bool = this->expr_right->Bool;
                     } else {
                         throw Exception(Exception::OPERATION_NOT_SUPPORTED,
-                                        "THIS LITERAL NOT SUPPORTED THIS OPERATION. RIGHT OPERAND ARE NOT BOOL");
+                                        "THIS LITERAL NOT SUPPORTED THIS OPERATION. RIGHT OPERAND ARE NOT BOOL",
+                                        this->line);
                     }
                 }
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION - AND");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION - AND",
+                                this->line);
             }
 
             this->type = bool_lit;
@@ -3868,7 +3904,8 @@ void ExprNode::transformConst() {
             } else if (this->expr_left->dataType.type == DataType::char_) {
                 this->Bool = this->expr_left->Char == this->expr_right->Char;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
 
             this->type = bool_lit;
@@ -3885,7 +3922,8 @@ void ExprNode::transformConst() {
             } else if (this->expr_left->dataType.type == DataType::char_) {
                 this->Bool = this->expr_left->Char != this->expr_right->Char;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
             this->type = bool_lit;
             this->dataType.type = DataType::bool_;
@@ -3901,7 +3939,8 @@ void ExprNode::transformConst() {
                 this->Bool = this->expr_left->Char > this->expr_right->Char;
                 this->type = bool_lit;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
 
             this->type = bool_lit;
@@ -3917,7 +3956,8 @@ void ExprNode::transformConst() {
             } else if (this->expr_left->dataType.type == DataType::char_) {
                 this->Bool = this->expr_left->Char < this->expr_right->Char;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
             this->type = bool_lit;
             this->dataType.type = DataType::bool_;
@@ -3932,7 +3972,8 @@ void ExprNode::transformConst() {
             } else if (this->expr_left->dataType.type == DataType::char_) {
                 this->Bool = this->expr_left->Char >= this->expr_right->Char;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
             this->type = bool_lit;
             this->dataType.type = DataType::bool_;
@@ -3949,7 +3990,8 @@ void ExprNode::transformConst() {
                 this->Bool = this->expr_left->Char <= this->expr_right->Char;
 
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
 
             this->type = bool_lit;
@@ -3963,7 +4005,8 @@ void ExprNode::transformConst() {
                 this->Float = this->expr_left->Float <= this->expr_right->Float;
                 this->type = float_lit;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
             this->dataType.type = this->expr_left->dataType.type;
             break;
@@ -3972,7 +4015,8 @@ void ExprNode::transformConst() {
                 this->Bool = !this->expr_left->Bool;
                 this->type = bool_lit;
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
 
             this->dataType.type = DataType::bool_;
@@ -3988,7 +4032,7 @@ void ExprNode::transformConst() {
                         break;
                     case DataType::char_:
                         if (this->expr_left->Int > 255 || this->expr_left->Int < 0) {
-                            throw Exception(Exception::CANNOT_CONVERTED, "Too long for char");
+                            throw Exception(Exception::CANNOT_CONVERTED, "Too long for char", this->line);
                         }
                         this->Char = this->expr_left->Int;
                         this->dataType.type = DataType::char_;
@@ -4000,7 +4044,7 @@ void ExprNode::transformConst() {
                     case DataType::class_:
                     case DataType::array_:
                     case DataType::void_:
-                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other");
+                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other", this->line);
                         break;
                     case DataType::int_:
                         break;
@@ -4019,7 +4063,7 @@ void ExprNode::transformConst() {
                     case DataType::class_:
                     case DataType::array_:
                     case DataType::void_:
-                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other");
+                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other", this->line);
                         break;
                     case DataType::float_:
                         break;
@@ -4039,13 +4083,14 @@ void ExprNode::transformConst() {
                     case DataType::class_:
                     case DataType::array_:
                     case DataType::void_:
-                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other");
+                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other", this->line);
                         break;
                     case DataType::float_:
                         break;
                 }
             } else {
-                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION");
+                throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
+                                this->line);
             }
 
             break;
@@ -4133,13 +4178,14 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
         if (this->expr_list == NULL) {
             throw Exception(Exception::PARAM_ERROR,
                             "Param Error expected: " + to_string(paramTable.items.size())
-                            + " param count result:" + to_string(0) + " param count");
+                            + " param count result:" + to_string(0) + " param count", this->line);
         }
 
         if (this->expr_list->exprs->size() != paramTable.items.size()) {
             throw Exception(Exception::PARAM_ERROR,
-                            "Param Error expected: " + to_string(this->methodTableItem.paramTable.items.size())
-                            + " param count result:" + to_string(this->expr_list->exprs->size()) + " param count");
+                            "Param Error expected: " +
+                            to_string(this->methodTableItem.paramTable.items.size())
+                            + " param count result:" + to_string(this->expr_list->exprs->size()) + " param count", this->line);
         }
 
         int i = 0;
@@ -4149,7 +4195,8 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
             if (elem->type == ExprNode::break_with_val_expr || elem->type == ExprNode::break_expr ||
                 elem->type == ExprNode::return_expr || elem->type == ExprNode::continue_expr) {
                 throw Exception(Exception::TYPE_ERROR,
-                                "Олег Александрович вы че куда суете. Какие брейки в параметрах. Жесть. 1984");
+                                "Олег Александрович вы че куда суете. Какие брейки в параметрах. Жесть. 1984",
+                                elem->line);
             }
             VarTableItem varItem = paramTable.items[i];
             bool isElemRef = varItem.isRef == elem->isRefExpr();
@@ -4164,7 +4211,7 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
                                                           elem->isConst);
                 throw Exception(Exception::TYPE_ERROR,
                                 varItem.id + " type expected: " + varItem.toString() + " result: " +
-                                resultVarItem.toString() + " ");
+                                resultVarItem.toString() + " ", this->line);
             }
             i++;
         }
@@ -4177,27 +4224,27 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
 void ExprNode::checkCancelExprNode(ExprNode *exprNode, bool isBreakCanceled) {
 
     if (exprNode->type == link) {
-        throw Exception(Exception::TYPE_ERROR, "operation not supported by link");
+        throw Exception(Exception::TYPE_ERROR, "operation not supported by link", this->line);
     }
 
     if (exprNode->type == mut_link) {
-        throw Exception(Exception::TYPE_ERROR, "operation not supported by mut_link");
+        throw Exception(Exception::TYPE_ERROR, "operation not supported by mut_link", this->line);
     }
 
     if (exprNode->type == return_expr) {
-        throw Exception(Exception::TYPE_ERROR, "operation not supported by return_expr");
+        throw Exception(Exception::TYPE_ERROR, "operation not supported by return_expr", this->line);
     }
 
     if (exprNode->type == break_with_val_expr && isBreakCanceled) {
-        throw Exception(Exception::TYPE_ERROR, "operation not supported by break with expr");
+        throw Exception(Exception::TYPE_ERROR, "operation not supported by break with expr", this->line);
     }
 
     if (exprNode->type == break_expr) {
-        throw Exception(Exception::TYPE_ERROR, "operation not supported by break");
+        throw Exception(Exception::TYPE_ERROR, "operation not supported by break", this->line);
     }
 
     if (exprNode->type == continue_expr) {
-        throw Exception(Exception::TYPE_ERROR, "operation not supported by continue");
+        throw Exception(Exception::TYPE_ERROR, "operation not supported by continue", this->line);
     }
 }
 
@@ -4208,11 +4255,11 @@ ExprNode *ExprNode::DelObjectExpr(ExprNode *expr) {
     node->expr_left = expr;
 
     if (expr->isVar() == false) {
-        throw Exception(Exception::UNEXPECTED, "it`s not a var");
+        throw Exception(Exception::UNEXPECTED, "it`s not a var", expr->line);
     }
 
     if (expr->dataType.type != DataType::class_ && expr->dataType.type != DataType::array_) {
-        throw Exception(Exception::UNEXPECTED, "type should be array_ or class_");
+        throw Exception(Exception::UNEXPECTED, "type should be array_ or class_", expr->line);
     }
 
     return node;
@@ -4230,7 +4277,7 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
 
     try {
         if (this->expr_left->type != path_call_expr && this->expr_left->type != id_) {
-            throw Exception(Exception::CONSTRUCTOR_ERROR, "expression should be paathCallExpr");
+            throw Exception(Exception::CONSTRUCTOR_ERROR, "expression should be paathCallExpr", this->line);
         }
 
 
@@ -4238,7 +4285,7 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
         this->className = this->expr_left->className;
 
         if (ClassTable::Instance()->getClass(this->className).classType != ClassTableItem::struct_) {
-            throw Exception(Exception::TYPE_ERROR, "constructor error: " + className + " is not struct");
+            throw Exception(Exception::TYPE_ERROR, "constructor error: " + className + " is not struct", this->line);
         }
 
         int fieldSize = ClassTable::getStructFieldCount(className);
@@ -4247,11 +4294,12 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
             throw Exception(Exception::CONSTRUCTOR_ERROR,
                             "fields count in constructor not equal field count in struct " + className +
                             ". Expected: " + to_string(fieldSize) + " result: " +
-                            to_string(this->field_list->exprs->size()));
+                            to_string(this->field_list->exprs->size()), this->line);
         }
 
         if (!ClassTable::isHaveAccess(curClassName, this->className)) {
-            throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to " + this->expr_left->className);
+            throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to " + this->expr_left->className,
+                            this->line);
         }
 
 
@@ -4265,7 +4313,7 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
                 FieldTableItem fieldItem = ClassTable::Instance()->getField(className, *elem->Name);
                 if (!ClassTable::isHaveAccessToField(curClassName, this->expr_left->className, *elem->Name)) {
                     throw Exception(Exception::ACCESS_ERROR,
-                                    curClassName + " has not access to private " + *elem->Name);
+                                    curClassName + " has not access to private " + *elem->Name, elem->line);
                 }
 
                 params.push_back(fieldItem.dataType);
@@ -4274,7 +4322,7 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
                     !isParent(elem->expr_left->dataType, fieldItem.dataType)) {
                     throw Exception(Exception::TYPE_ERROR,
                                     *this->Name + "field type should be " + fieldItem.toString() + " " +
-                                    elem->expr_left->dataType.toString());
+                                    elem->expr_left->dataType.toString(), elem->line);
                 }
             } else {
                 throw Exception(Exception::CONSTRUCTOR_ERROR, *this->Name + " field not exist in struct " + className);
@@ -4345,7 +4393,7 @@ void Node::convertEnumValue() {
 void Node::setLine(Node *node) {
     if (node != NULL) {
         this->line = node->line;
-    } else if(!this->line) {
+    } else if (!this->line) {
         this->line = LineNum::getLineNum();
     }
 }

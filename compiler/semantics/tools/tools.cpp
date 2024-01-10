@@ -35,7 +35,10 @@ Exception::Exception(ExceptionType exceptionType, const string& message) {
 
 Exception::Exception(Exception::ExceptionType exceptionType, const string& message, int line) {
     this->exceptionType = exceptionType;
-    this->message = "line " + to_string(line) + " " + message;
+    string tmp =  "line " + to_string(line) + ": ";
+    if(!line) tmp = "";
+
+    this->message = tmp + message;
 }
 
 int LineNum::lineNum = 0;
