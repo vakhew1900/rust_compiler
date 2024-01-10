@@ -54,10 +54,18 @@ public:
 
     ExceptionType exceptionType;
     string getMessage();
-    Exception(ExceptionType exceptionType, string message);
+    Exception(ExceptionType exceptionType, const string& message);
+    Exception(ExceptionType exceptionType, const string& message, int line);
 
 };
 
+
+class LineNum {
+public:
+    static void setLineNum(int line);
+    static int getLineNum();
+    static int lineNum;
+};
 
 #endif //COMPILER_TOOLS_H
 

@@ -1047,7 +1047,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 70 "lex.l"
-{ lineNumber++; }
+{ lineNumber++;  LineNum::setLineNum(lineNumber);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
@@ -2940,8 +2940,6 @@ int main(int argc, char** argv) {
     const char *filename = "../tests/trait_error.rs";
 //    const char *filename = "../tests/bubble_sort_rust.rs";
 //    const char *filename = "../tests/check_cycle_break_continue_rust.rs";
-//    const char *filename = "../tests/polymorphysm.rs";
-//    const char *filename = "../tests/polymorphysm_emae.rs";
 #endif
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
@@ -2954,13 +2952,8 @@ int main(int argc, char** argv) {
     fclose(file);
 
     string dot;
-
-    if(global_program == NULL){
-        return 1;
-    }
-
     global_program->toDot(dot);
-    //std::cout << dot << "\n";
+    std::cout << dot << "\n";
     std::ofstream out("dot-tree.txt");
 
     global_program->makeAllConversions();
@@ -2969,11 +2962,10 @@ int main(int argc, char** argv) {
 
     string res = ClassTable::Instance()->toString();
     out << updatedDot << "\n";
-    cout << ClassTable::Instance()->toString() << "\n"; // файл
+    cout << ClassTable::Instance()->toString() << "\n";
 
     ClassTable::createConstTableCSV();
     return 0;
 }
-
 
 

@@ -2,6 +2,7 @@
 // Created by T0mmy on 27.11.2023.
 //
 #include "tools.h"
+#include <string>
 
 vector<string> split(const string &str, char separator) {
     vector<string> strings;
@@ -27,9 +28,22 @@ string Exception::getMessage() {
     return message;
 }
 
-Exception::Exception(ExceptionType exceptionType, string message) {
+Exception::Exception(ExceptionType exceptionType, const string& message) {
     this->exceptionType = exceptionType;
     this->message = message;
 }
 
+Exception::Exception(Exception::ExceptionType exceptionType, const string& message, int line) {
+    this->exceptionType = exceptionType;
+    this->message = "line " + to_string(line) + " " + message;
+}
 
+int LineNum::lineNum = 0;
+
+void LineNum::setLineNum(int line) {
+    LineNum::lineNum = line;
+}
+
+int LineNum::getLineNum() {
+    return LineNum::lineNum;
+}

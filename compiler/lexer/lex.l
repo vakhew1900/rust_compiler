@@ -67,7 +67,7 @@ DIGIT [0-9]
 
 %}
 
-\n { lineNumber++; }
+\n { lineNumber++;  LineNum::setLineNum(lineNumber);}
 [[:space:]] { }
 
 as { printf("Found KW_AS: %s\n", yytext); return AS; }
@@ -579,6 +579,5 @@ int main(int argc, char** argv) {
     ClassTable::createConstTableCSV();
     return 0;
 }
-
 
 
