@@ -116,6 +116,8 @@ ExprNode *ExprNode::ExprFromStringLiteral(Type type, string *value) {
 
 ExprNode *ExprNode::StaticMethod(Type type, ExprNode *expr, ExprListNode *expr_list) {
     auto *new_node = new ExprNode();
+    new_node->setLine(expr);
+    new_node->setLine(expr_list);
     new_node->id = ++globId;
     new_node->type = type;
     new_node->expr_left = expr;
