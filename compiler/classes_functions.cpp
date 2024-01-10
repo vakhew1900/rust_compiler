@@ -10,6 +10,7 @@ vector<ExprNode *> blockExprList;
 vector<DataType> returnTypes;
 vector<DataType> breakTypes;
 map<string, set<string>> impl_set; // пиздец
+vector<ItemNode*> not_completed;
 
 ProgramNode::ProgramNode(ItemListNode *item_list) {
     this->id = ++globId;
@@ -1559,6 +1560,10 @@ void ProgramNode::getAllItems(std::string className) {
             }
         }
 
+        for(auto elem : not_completed){
+            elem->modifyInheritence();
+        }
+
         this->addImpl(className, false);
         if (item_list != NULL) {
 
@@ -1640,13 +1645,10 @@ void ItemNode::getAllItems(std::string className) {
                         elem->getAllItems(className + "/" + *this->name);
                     }
                 }
-
                 if(this->isHaveParent()){
-                    string name = className + *this->name;
-                    string parentName = className + *this->parentName;
-                    impl_set[name].insert(parentName);
+                    this->directory = className;
+                    not_completed.push_back(this);
                 }
-
 
                 break;
             case module_:
@@ -1698,6 +1700,10 @@ void ItemNode::getAllItems(std::string className) {
                 break;
 
             case impl_:
+                if(this->impl_type == ImplType::trait){
+                    not_completed.push_back(this);
+                    this->directory = className;
+                }
                 break;
         }
     }
@@ -1830,7 +1836,7 @@ void ItemNode::addImpl(string className, bool isTrait) {
                 if (isTrait &&
                     !ClassTable::Instance()->isMethodExist(ClassTable::Instance()->getClass(className).parentName,
                                                            *this->name)) {
-                    throw Exception(Exception::NOT_EXIST, "Impl Error: method" + *this->name + "in parent trait");
+                    throw Exception(Exception::NOT_EXIST, "Impl Error: method " + *this->name + " in parent trait " + ClassTable::Instance()->getClass(className).parentName);
                 }
 
                 if (isTrait) {
@@ -2339,7 +2345,7 @@ void ItemNode::transform(bool isConvertedToConst) {
                     if (!this->body->dataType.isEquals(methodTableItem.returnDataType)) {
                         throw Exception(Exception::TYPE_ERROR,
                                         *this->name + "should return " + methodTableItem.returnDataType.toString() +
-                                        "but result: " + body->dataType.toString());
+                                        " but result: " + body->dataType.toString());
                     }
 
                     returnTypes.push_back(methodTableItem.returnDataType);
@@ -2477,6 +2483,25 @@ void ItemNode::checkImpl(const string &structName, const string &traitName) {
         if(!impl_set[structName].count(tmpTraitName)){
             throw Exception(Exception::NOT_IMPLEMICATION, structName + " should have impl " + traitName);
         }
+    }
+}
+
+void ItemNode::modifyInheritence() {
+    switch (item_type) {
+        case trait_:
+            if(this->isHaveParent()){
+                ClassTable::Instance()->addParent(this->directory +"/"+*this->name, this->directory + "/" + *this->parentName);
+            }
+            break;
+        case impl_:
+            if(this->type->type == TypeNode::path_call_expr_){
+                this->type->pathCallExpr->transformPathCallExpr(directory, ExprNode::undefined, true);
+                this->expr->transformPathCallExpr(directory, ExprNode::undefined, true);
+                string parentName =this->expr->className;
+                string name = this->type->pathCallExpr->className;
+                impl_set[name].insert(parentName);
+            }
+            break;
     }
 }
 

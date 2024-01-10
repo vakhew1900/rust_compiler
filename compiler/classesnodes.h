@@ -335,6 +335,8 @@ public:
     ExprNode *expr = NULL;
     string *parentName;
 
+    string directory;
+
     static ItemNode *DeclarationEnum(Visibility visibility, EnumStmtNode *node);
 
     static ItemNode *DeclarationFunction(Visibility visibility, FuncStmtNode *node);
@@ -362,6 +364,7 @@ public:
     void transform(bool isConvertedToConst = true) override;
     bool isHaveParent();
     void checkImpl(const string &structName, const string &traitName);
+    void modifyInheritence();
 
 };
 

@@ -157,7 +157,14 @@ string ClassTable::getDirectory(string className) {
 
 void ClassTable::addParent(string childName, string parentName) {
     if (ClassTable::Instance()->getClass(childName).isHaveParent()) {
-        throw Exception(Exception::STRUCT_WITH_TWO_TRAIT, "struct" + childName + "should not has two traits");
+
+        string currentParentName = ClassTable::getParentClassName(childName);
+        if(ClassTable::Instance()->isParent(currentParentName, parentName)){
+           parentName = currentParentName;
+        }
+        else if (!ClassTable::Instance()->isParent(parentName, currentParentName)) {
+            throw Exception(Exception::STRUCT_WITH_TWO_TRAIT, "struct" + childName + " should not has two traits");
+        }
     }
 
     this->items[childName].parentName = parentName;
