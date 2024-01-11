@@ -1,11 +1,8 @@
 //
-// Created by T0mmy on 11.01.2024.
+// Created by T0mmy on 12.01.2024.
 //
-#include "command.h"
-#include "code_generator.h"
-#include "code_generation/command.h"
-#include "code_generation/tools/utils.h"
-#include "code_generation/tools/byte_convert.h"
+
+#include "codegenerator.h"
 
 vector<char> CodeGenerator::generateField(const string& className, const string &fieldName,  FieldTableItem fieldTableItem) {
 
