@@ -9,6 +9,7 @@
 #include <map>
 #include <vector>
 #include "semantics/tools/datatype.h"
+#include "code_generation/tools/utils.h"
 
 using namespace std;
 

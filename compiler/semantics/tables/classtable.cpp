@@ -469,6 +469,12 @@ int ClassTable::addFieldRefToConstTable(const string &className, const string &a
     return _instanse->items[className].constTable.FieldRef(addingClassName, field, dataType);
 }
 
+int ClassTable::addUTF8ToConstTable(const string &className, const string &utf8) {
+    Instance();
+    return _instanse->items[className].constTable.UTF8(utf8);
+}
+
+
 void ClassTable::isMainFunctionExist() {
     if (ClassTable::Instance()->isMethodExist(globalClassName + "/" + moduleClassName, "main")) {
         MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(globalClassName + "/" + moduleClassName,

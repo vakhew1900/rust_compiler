@@ -6,7 +6,6 @@
 #include "constable.h"
 #include "semantics/tools/tools.h"
 #include "code_generation/tools/byte_convert.h"
-#define u2(x)  x.begin() + 2, x.end()
 
 
 ConstTableItem::ConstTableItem(ConstTableItem::ConstTableType constTableType, string utf8) {

@@ -2,10 +2,11 @@
 // Created by T0mmy on 10.01.2024.
 //
 
-#ifndef COMPILER_ENUMS_H
-#define COMPILER_ENUMS_H
-
+#ifndef COMPILER_UTILS_H
+#define COMPILER_UTILS_H
+#include <cstdint>
 #include "byte_convert.h"
+#define u2(x)  x.begin() + 2, x.end()
 
 enum class AccessFlags : uint16_t
 {
@@ -30,4 +31,4 @@ enum class ArrayType : uint8_t
     Long = 11
 };
 
-#endif //COMPILER_ENUMS_H
+#endif //COMPILER_UTILS_H
