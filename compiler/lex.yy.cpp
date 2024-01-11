@@ -2964,6 +2964,9 @@ int main(int argc, char** argv) {
     out << updatedDot << "\n";
     cout << ClassTable::Instance()->toString() << "\n";
 
+    std::ofstream tableout("tables.txt");
+    tableout << ClassTable::Instance()->toString() << "\n";
+
     ClassTable::createConstTableCSV();
     return 0;
 }
