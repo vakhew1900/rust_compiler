@@ -33,4 +33,5 @@ add_executable(compiler "lex.yy.cpp"
         code_generation/codegenerator.cpp
         code_generation/codegenerator.h
         code_generation/generate.cpp
+        semantics/semantic.php.cpp
 )

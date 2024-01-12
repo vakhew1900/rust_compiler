@@ -4,12 +4,14 @@
 
 #include "codegenerator.h"
 
-vector<char> CodeGenerator::generateField(const string& className, const string &fieldName,  FieldTableItem fieldTableItem) {
+vector<char> CodeGenerator::generateField(const string& className, const string &fieldName) {
 
     vector<char> bytes;
     vector<char> buffer;
 
     // флаги
+    FieldTableItem fieldTableItem = ClassTable::Instance()->getField(className, fieldName);
+
     unsigned int accessFlag  = uint16_t(AccessFlags::Public);
     if(fieldTableItem.isConst){
         accessFlag |= uint16_t(AccessFlags::Static);
@@ -31,11 +33,12 @@ vector<char> CodeGenerator::generateField(const string& className, const string 
 }
 
 vector<char>
-CodeGenerator::generateMethod(const string &className, const string &methodName, MethodTableItem methodTableItem) {
+CodeGenerator::generateMethod(const string &className, const string &methodName) {
 
     std::vector<char> bytes;
     std::vector<char> buffer;
 
+    MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(className, methodName);
     ConstTable constTable = ClassTable::Instance()->getClass(className).constTable;
 
     // флаги доступа

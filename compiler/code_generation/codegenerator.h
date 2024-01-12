@@ -11,8 +11,8 @@
 
 class CodeGenerator {
 private:
-    vector<char>generateField(const string& className, const string& fieldName, FieldTableItem fieldTableItem);
-    vector<char>generateMethod(const string& className, const string& fieldName, MethodTableItem methodTableItem);
+    vector<char>generateField(const string& className, const string& fieldName);
+    vector<char>generateMethod(const string& className, const string& fieldName);
 };
 
 
