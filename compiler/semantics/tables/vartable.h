@@ -43,7 +43,7 @@ public:
     int getVarNumber(const string& varName, const ExprNode* blockExpr);
     VarTableItem getVar(int varNum);
     static const string SELF_PARAM;
-
+    size_t size() const;
 };
 
 

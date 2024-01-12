@@ -46,6 +46,26 @@ bool MethodTableItem::isEqualsDeclaration(const MethodTableItem &other) {
     return res;
 }
 
+vector<DataType> MethodTableItem::getParamDataTypes() {
+
+    vector<DataType> paramsTypes;
+    bool isAddingParam = this->isStatic;
+    for(auto & param : this->paramTable.items){
+        if(isAddingParam){
+            paramsTypes.push_back(param.dataType);
+        }
+        isAddingParam = true;
+    }
+
+    return paramsTypes;
+}
+
+string MethodTableItem::paramsToConstTableFormat() {
+    auto params = this->getParamDataTypes();
+
+    return ConstTable::MethodParam(params, returnDataType);
+}
+
 string MethodTable::toString() {
     string res = "";
 

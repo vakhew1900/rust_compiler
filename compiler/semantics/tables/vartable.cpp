@@ -146,3 +146,7 @@ int VarTable::getVarNumber(const string &varName, const ExprNode *blockExpr) {
     }
     return -1;
 }
+
+size_t VarTable::size() const {
+    return items.size();
+}
