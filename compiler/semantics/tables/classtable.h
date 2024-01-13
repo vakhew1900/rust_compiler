@@ -49,7 +49,7 @@ public:
     static const string RTLClassName;
 
     static ClassTable* Instance();
-    void addMethod(string className, string methodName, MethodTableItem methodTableItem);
+    void addMethod(const string& className, const string& methodName, MethodTableItem methodTableItem);
     void updateMethod(string className, string methodName, MethodTableItem methodTableItem);
     void addField(string className, string fieldName, FieldTableItem fieldTableItem);
     void updateField(string className, string fieldName, FieldTableItem fieldTableItem);
@@ -102,6 +102,7 @@ public:
     static void isCorrectTraitImpl(const std::string &childName, const std::string &parentName);
 
     static  bool  isEnum(const string& className);
+    static  map<string, ClassTableItem> getItems();
 
 };
 

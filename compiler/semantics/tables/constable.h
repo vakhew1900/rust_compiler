@@ -91,6 +91,11 @@ public:
     ConstTable();
 
     vector<char> toBytes();
+    static string formatClassName(const string& className);
+
+    inline static const string moduleClassName = "moduleClass";
+    inline static const string globalClassName = "src";
+    inline static const string RTLClassName = "RTL";
 };
 
 

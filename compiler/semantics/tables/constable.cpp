@@ -146,10 +146,10 @@ vector<char> ConstTableItem::toBytes() {
         {
             bytes.push_back((char) ConstTableItem::CONSTANT_UTF8);
 
-            char const *str = utf8.c_str();
+            char const *str =  ConstTable::formatClassName(utf8).c_str();
             buffer = IntToBytes(strlen(str));
-            bytes.insert(bytes.begin(), u2(buffer));
-            bytes.insert(bytes.begin(), str, str + strlen(str));
+            bytes.insert(bytes.end(), u2(buffer));
+            bytes.insert(bytes.end(), str, str + strlen(str));
         }
             break;
 
@@ -344,7 +344,7 @@ int ConstTable::MethodRef(const string &className, const string &method, const v
 
 ConstTable::ConstTable() {
 
-        ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "trash");
+        ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "java/lang/Object");
         items.push_back(item);
         item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "Code");
         items.push_back(item);
@@ -352,12 +352,26 @@ ConstTable::ConstTable() {
 
 vector<char> ConstTable::toBytes() {
     vector<char> bytes;
-
+    int cnt = 0;
     for(auto& constant : this->items){
-        vector<char> buffer = constant.toBytes();
-        bytes.insert(bytes.end(), all(buffer));
+        if (cnt) {
+            vector<char> buffer = constant.toBytes();
+            bytes.insert(bytes.end(), all(buffer));
+        }
+        cnt++;
     }
 
     return bytes;
+}
+
+
+string ConstTable::formatClassName(const string&  className){
+    if(className == ConstTable::RTLClassName) {
+        return RTLClassName;
+    }
+    else {
+        int size = ConstTable::globalClassName.size() + 1;
+        return className.substr(size);
+    }
 }
 
