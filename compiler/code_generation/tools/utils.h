@@ -6,7 +6,6 @@
 #define COMPILER_UTILS_H
 #include <cstdint>
 #include "byte_convert.h"
-#define u2(x)  x.begin() + 2, x.end()
 
 enum class AccessFlags : uint16_t
 {
@@ -31,4 +30,5 @@ enum class ArrayType : uint8_t
     Long = 11
 };
 
+void merge(std::vector<char> &bytes, const std::vector<char> &buffer);
 #endif //COMPILER_UTILS_H

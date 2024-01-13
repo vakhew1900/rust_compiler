@@ -280,9 +280,10 @@ public:
     StmtNode(Type type, ExprNode *expr_node, ItemNode *decl_node, LetStmtNode *let_node);
     StmtNode(Type type, StmtNode *stmt);
     static StmtNode* ConstStmtToStmt(ConstStmtNode *node);
-    void transform(bool isConvertedToConst = true) override;
-
     void toDot(string &dot);
+
+    void transform(bool isConvertedToConst = true) override;
+    vector<char> generate() override;
 };
 
 class StmtListNode : public Node {

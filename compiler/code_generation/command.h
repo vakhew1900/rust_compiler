@@ -6,6 +6,7 @@
 #define COMPILER_COMMAND_H
 
 #include <cstdint>
+#include "tools/utils.h"
 
 enum class Command : uint8_t {
     nop 				= 0x00,
@@ -212,5 +213,6 @@ enum class Command : uint8_t {
     jsr_w 				= 0xc9
 };
 
+std::vector<char> commandToBytes(Command command);
 
 #endif //COMPILER_COMMAND_H
