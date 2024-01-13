@@ -9,6 +9,7 @@
 #include "semantics/tools/datatype.h"
 #include "vartable.h"
 #include <map>
+#include "constable.h"
 
 using namespace std;
 
@@ -31,6 +32,8 @@ public:
     MethodTableItem(DataType returnDataType, VarTable paramTable,VarTable localVarTable, bool isStatic = true);
     string toString();
     bool isEqualsDeclaration(const MethodTableItem& other);
+    vector<DataType> getParamDataTypes();
+    string paramsToConstTableFormat();
 };
 
 

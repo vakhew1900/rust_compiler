@@ -5,6 +5,8 @@
 #include <string>
 #include "constable.h"
 #include "semantics/tools/tools.h"
+#include "code_generation/tools/byte_convert.h"
+
 
 ConstTableItem::ConstTableItem(ConstTableItem::ConstTableType constTableType, string utf8) {
     this->constTableType = constTableType;
@@ -80,7 +82,87 @@ string ConstTableItem::toString(int index) {
 }
 
 vector<char> ConstTableItem::toBytes() {
-    return vector<char>();
+
+    vector<char> bytes;
+    std::vector<char> buffer;
+
+    switch(this->constTableType){
+
+        case CONSTANT_INTEGER:
+            bytes.push_back((char) ConstTableItem::CONSTANT_INTEGER);
+            buffer = IntToBytes(val1);
+            bytes.insert(bytes.end(), all(buffer));
+            break;
+
+        case CONSTANT_DOUBLE:
+            bytes.push_back((char) ConstTableItem::CONSTANT_DOUBLE);
+            buffer = DoubleToBytes(this->floatVal);
+            bytes.insert(bytes.end(), all(buffer));
+            break;
+
+        case CONSTANT_CLASS:
+            bytes.push_back((char) ConstTableItem::CONSTANT_CLASS);
+            buffer = IntToBytes(this->val1);
+            bytes.insert(bytes.end(), u2(buffer));
+            break;
+
+        case CONSTANT_FIELD_REF:
+            bytes.push_back((char) ConstTableItem::CONSTANT_FIELD_REF);
+
+            buffer = IntToBytes(this->val1);
+            bytes.insert(bytes.end(), u2(buffer));
+
+            buffer = IntToBytes(this->val2);
+            bytes.insert(bytes.end(), u2(buffer));
+            break;
+
+        case CONSTANT_METHOD_REF:
+            bytes.push_back((char) ConstTableItem::CONSTANT_METHOD_REF);
+
+            buffer = IntToBytes(this->val1);
+            bytes.insert(bytes.end(), u2(buffer));
+
+            buffer = IntToBytes(this->val2);
+            bytes.insert(bytes.end(), u2(buffer));
+            break;
+
+        case CONSTANT_STRING:
+            bytes.push_back((char) ConstTableItem::CONSTANT_STRING);
+            buffer = IntToBytes(this->val1);
+            bytes.insert(bytes.end(), u2(buffer));
+            break;
+
+        case CONSTANT_NAME_AND_TYPE:
+            bytes.push_back((char) ConstTableItem::CONSTANT_NAME_AND_TYPE);
+
+            buffer = IntToBytes(this->val1);
+            bytes.insert(bytes.end(), u2(buffer));
+
+            buffer = IntToBytes(this->val2);
+            bytes.insert(bytes.end(), u2(buffer));
+            break;
+
+        case CONSTANT_UTF8:
+        {
+            bytes.push_back((char) ConstTableItem::CONSTANT_UTF8);
+
+            char const *str =  ConstTable::formatClassName(utf8).c_str();
+            buffer = IntToBytes(strlen(str));
+            bytes.insert(bytes.end(), u2(buffer));
+            bytes.insert(bytes.end(), str, str + strlen(str));
+        }
+            break;
+
+        case CONSTANT_METHOD_HANDLE:
+        case CONSTANT_METHOD_TYPE:
+        case CONSTANT_INVOKE_DYNAMIC:
+        case CONSTANT_LONG:
+        case CONSTANT_FLOAT:
+        case CONSTANT_INTERFACE_METHOD_REF:
+            break;
+    }
+
+    return bytes;
 }
 
 string ConstTable::toCSV() {
@@ -262,13 +344,34 @@ int ConstTable::MethodRef(const string &className, const string &method, const v
 
 ConstTable::ConstTable() {
 
-        ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "trash");
+        ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "java/lang/Object");
         items.push_back(item);
         item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "Code");
         items.push_back(item);
 }
 
 vector<char> ConstTable::toBytes() {
-    return vector<char>();
+    vector<char> bytes;
+    int cnt = 0;
+    for(auto& constant : this->items){
+        if (cnt) {
+            vector<char> buffer = constant.toBytes();
+            bytes.insert(bytes.end(), all(buffer));
+        }
+        cnt++;
+    }
+
+    return bytes;
+}
+
+
+string ConstTable::formatClassName(const string&  className){
+    if(className == ConstTable::RTLClassName) {
+        return RTLClassName;
+    }
+    else {
+        int size = ConstTable::globalClassName.size() + 1;
+        return className.substr(size);
+    }
 }
 

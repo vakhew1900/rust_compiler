@@ -9,12 +9,13 @@
 #include <map>
 #include <vector>
 #include "semantics/tools/datatype.h"
+#include "code_generation/tools/utils.h"
 
 using namespace std;
 
 class ConstTableItem {
 public:
-    enum ConstTableType {
+    enum ConstTableType : uint8_t {
         CONSTANT_CLASS = 7,
         CONSTANT_FIELD_REF = 9,
         CONSTANT_METHOD_REF = 10,
@@ -37,11 +38,17 @@ public:
     int val1 = -1, val2 = -1;
 
     ConstTableItem();
+
     ConstTableItem(ConstTableType constTableType, string utf8);
+
     ConstTableItem(ConstTableType constTableType, int val1);
+
     ConstTableItem(ConstTableType constTableType, int val1, int val2);
-    ConstTableItem(ConstTableType constTableType, double  floatVal);
+
+    ConstTableItem(ConstTableType constTableType, double floatVal);
+
     string toString(int index);
+
     vector<char> toBytes();
 };
 
@@ -51,22 +58,44 @@ public:
     std::vector<ConstTableItem> items;
 
     string toString();
+
     string toCSV();
-    int Class(const string& className);
+
+    int Class(const string &className);
+
     int Int(int val);
+
     int Double(double val);
-    int String(const string& str);
-    int UTF8(const string& str);
+
+    int String(const string &str);
+
+    int UTF8(const string &str);
+
     int Val(ConstTableItem::ConstTableType constTableType, int val);
+
     int Val(ConstTableItem::ConstTableType constTableType, int val1, int val2);
-    string MethodParam(const vector<DataType> &params, const DataType &returnType);
-    int Method(const string& method, const vector<DataType> &params,const DataType &returnType);
-    int Field(const string& field, const DataType& dataType);
-    int MethodRef(const string& className, const string& method, const vector<DataType> &params,const DataType &returnType);
-    int FieldRef(const string& className, const string& field, const DataType& dataType);
+
+    int Method(const string &method, const vector<DataType> &params, const DataType &returnType);
+
+    int Field(const string &field, const DataType &dataType);
+
+    int MethodRef(const string &className, const string &method, const vector<DataType> &params,
+                  const DataType &returnType);
+
+    int FieldRef(const string &className, const string &field, const DataType &dataType);
+
     int add(ConstTableItem constTableItem);
+
+    static string MethodParam(const vector<DataType> &params, const DataType &returnType);
+
     ConstTable();
+
     vector<char> toBytes();
+    static string formatClassName(const string& className);
+
+    inline static const string moduleClassName = "moduleClass";
+    inline static const string globalClassName = "src";
+    inline static const string RTLClassName = "RTL";
 };
 
 

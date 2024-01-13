@@ -49,7 +49,7 @@ public:
     static const string RTLClassName;
 
     static ClassTable* Instance();
-    void addMethod(string className, string methodName, MethodTableItem methodTableItem);
+    void addMethod(const string& className, const string& methodName, MethodTableItem methodTableItem);
     void updateMethod(string className, string methodName, MethodTableItem methodTableItem);
     void addField(string className, string fieldName, FieldTableItem fieldTableItem);
     void updateField(string className, string fieldName, FieldTableItem fieldTableItem);
@@ -88,6 +88,7 @@ public:
     static int addClassToConstTable(const string& className, const string& addingClassName);
     static int addMethodRefToConstTable(const string& className, const string& addingClassName, const string& method, const vector<DataType> &params,const DataType &returnType);
     static int addFieldRefToConstTable(const string& className, const string& addingClassName, const string& field, const DataType& dataType);
+    static int addUTF8ToConstTable(const string& className, const string& utf8);
 
     static int getStructFieldCount(const string& className);
     static void isMainFunctionExist();
@@ -101,6 +102,7 @@ public:
     static void isCorrectTraitImpl(const std::string &childName, const std::string &parentName);
 
     static  bool  isEnum(const string& className);
+    static  map<string, ClassTableItem> getItems();
 
 };
 

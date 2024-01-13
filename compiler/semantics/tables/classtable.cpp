@@ -81,7 +81,7 @@ ClassTable::ClassTable() {
 
 }
 
-void ClassTable::addMethod(string className, string methodName, MethodTableItem methodTableItem) {
+void ClassTable::addMethod(const string& className, const string& methodName, MethodTableItem methodTableItem) {
     if (ClassTable::Instance()->isMethodExist(className, methodName)) {
         throw Exception(Exception::DEFINED_MULTIPLE, methodName + "DEFINED_MULTIPLE in namespace");
     }
@@ -138,9 +138,10 @@ ClassTableItem ClassTable::getClass(const string &className) {
     return this->items[className];
 }
 
-const string ClassTable::moduleClassName = "moduleClass";
-const string ClassTable::globalClassName = "src";
-const string ClassTable::RTLClassName = "RTL";
+const string ClassTable::moduleClassName = ConstTable::moduleClassName;
+const string ClassTable::globalClassName = ConstTable::globalClassName;
+const string ClassTable::RTLClassName = ConstTable::RTLClassName;
+
 
 string ClassTable::getDirectory(string className) {
     vector<string> classPath = split(className, '/');
@@ -469,6 +470,12 @@ int ClassTable::addFieldRefToConstTable(const string &className, const string &a
     return _instanse->items[className].constTable.FieldRef(addingClassName, field, dataType);
 }
 
+int ClassTable::addUTF8ToConstTable(const string &className, const string &utf8) {
+    Instance();
+    return _instanse->items[className].constTable.UTF8(utf8);
+}
+
+
 void ClassTable::isMainFunctionExist() {
     if (ClassTable::Instance()->isMethodExist(globalClassName + "/" + moduleClassName, "main")) {
         MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(globalClassName + "/" + moduleClassName,
@@ -601,4 +608,6 @@ bool ClassTable::isEnum(const string &className) {
     return ClassTable::Instance()->getClass(className).classType == ClassTableItem::enum_;
 }
 
-
+map<string, ClassTableItem> ClassTable::getItems() {
+    return ClassTable::Instance()->items;
+}
