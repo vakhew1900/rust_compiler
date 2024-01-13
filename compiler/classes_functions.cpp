@@ -3476,14 +3476,13 @@ void ExprNode::transform(bool isConvertedToConst) {
                     this->dataType = last_stmt->expr->dataType;
                     this->body = last_stmt->expr;
                     this->stmt_list->stmts->pop_back();
-                } else {
-                    this->dataType = DataType(DataType::void_);
                 }
+            } else if (this->body != NULL) {
+                addMetaInfo(body);
+                this->body->transform(isConvertedToConst);
             }
 
             if (this->body != NULL) {
-                addMetaInfo(body);
-                this->body->transform(isConvertedToConst);
                 this->dataType = this->body->dataType;
             } else {
                 this->dataType = DataType(DataType::void_);
@@ -4187,7 +4186,8 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
             throw Exception(Exception::PARAM_ERROR,
                             "Param Error expected: " +
                             to_string(this->methodTableItem.paramTable.items.size())
-                            + " param count result:" + to_string(this->expr_list->exprs->size()) + " param count", this->line);
+                            + " param count result:" + to_string(this->expr_list->exprs->size()) + " param count",
+                            this->line);
         }
 
         int i = 0;
