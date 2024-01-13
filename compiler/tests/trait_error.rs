@@ -39,7 +39,7 @@ mod ID {
 			if ( 10 == var) {
 				return "false";	
 			}
-			
+			//1
 			"dffasdsfd"
 		}
 		
@@ -116,9 +116,12 @@ fn main() {
 	
 	let enumVar = Enum::Bar;
 	
+	let checkStr = if false { "true"} else if false {"bebebe"} else { "fff"};
+	
 	if enumVar == Enum::Bar
 	{
-		println_int("fsaddfs {}", "yes");
+		let string = "fff";
+		println_int("{}", 10);
 	}
 	
 }

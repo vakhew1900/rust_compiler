@@ -2953,7 +2953,7 @@ int main(int argc, char** argv) {
 
     string dot;
     global_program->toDot(dot);
-    std::cout << dot << "\n";
+   // std::cout << dot << "\n";
     std::ofstream out("dot-tree.txt");
 
     global_program->makeAllConversions();
@@ -2962,7 +2962,7 @@ int main(int argc, char** argv) {
 
     string res = ClassTable::Instance()->toString();
     out << updatedDot << "\n";
-    cout << ClassTable::Instance()->toString() << "\n";
+//    cout << ClassTable::Instance()->toString() << "\n";
 
     std::ofstream tableout("tables.txt");
     tableout << ClassTable::Instance()->toString() << "\n";

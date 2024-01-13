@@ -96,6 +96,8 @@ public:
     inline static const string moduleClassName = "moduleClass";
     inline static const string globalClassName = "src";
     inline static const string RTLClassName = "RTL";
+    inline static const string constructorName = "<init>";
+    inline static const string objectClassName = "java/lang/Object";
 };
 
 

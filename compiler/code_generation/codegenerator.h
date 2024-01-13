@@ -16,8 +16,9 @@ private:
 
     static const path codeGenDir;
 
-    vector<char>generateField(const string& className, const string& fieldName);
-    vector<char>generateMethod(const string& className, const string& fieldName);
+    static vector<char>generateField(const string& className, const string& fieldName);
+    static vector<char>generateMethod(const string& className, const string& fieldName);
+    static vector<char> generateConstructor(const string& className);
     void generateClass(const string& className);
 
 public:
