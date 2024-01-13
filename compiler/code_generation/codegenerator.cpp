@@ -94,7 +94,13 @@ CodeGenerator::generateMethod(const string &className, const string &methodName)
     codeAttributeBytes.insert(codeAttributeBytes.end(), u2(buffer));
 
     // длина собственно байт-кода
-    vector<char> bodyCodeBytes = methodTableItem.body->generate();
+    vector<char> bodyCodeBytes;
+    if (methodName == ConstTable::constructorName) {
+        bodyCodeBytes = generateConstructor(className); // конструктор
+    } else {
+        bodyCodeBytes = methodTableItem.body->generate(); // не конструктор
+    }
+
     buffer = IntToBytes(bodyCodeBytes.size());
     codeAttributeBytes.insert(codeAttributeBytes.end(), buffer.begin(), buffer.end());
 
@@ -116,7 +122,6 @@ CodeGenerator::generateMethod(const string &className, const string &methodName)
 
     // собственно добавление самого атрибута
     bytes.insert(bytes.end(), codeAttributeBytes.begin(), codeAttributeBytes.end());
-
     return bytes;
 }
 
@@ -158,8 +163,8 @@ void CodeGenerator::generateClass(const string &className) {
     bytes.insert(bytes.end(), u2(buffer));
 
     // класс-родитель
-    string parentName = "java/lang/Object";
-    if(ClassTable::isHaveParent(className)){
+    string parentName = ConstTable::objectClassName;
+    if (ClassTable::isHaveParent(className)) {
         parentName = classTableItem.parentName;
     }
 
@@ -168,10 +173,11 @@ void CodeGenerator::generateClass(const string &className) {
     bytes.insert(bytes.end(), u2(buffer));
 
 
-
-    bytes.push_back((char)0x00); bytes.push_back((char)0x00);  // таблица интерфейсов
+    bytes.push_back((char) 0x00);
+    bytes.push_back((char) 0x00);  // таблица интерфейсов
 
     auto fieldTable = classTableItem.fieldTable.items;
+    auto methodTable = classTableItem.methodTable.items;
 
     // количество полей
     int fieldSize = fieldTable.size();
@@ -179,12 +185,30 @@ void CodeGenerator::generateClass(const string &className) {
     bytes.insert(bytes.end(), u2(buffer));
 
     // добавление полей
-    for(auto &field : fieldTable){
+    for (auto &field: fieldTable) {
         vector<char> fieldElement = generateField(className, field.first);
         bytes.insert(bytes.end(), all(fieldElement));
     }
 
+    // количество методов c учетом конструктора
+    int methodSize = methodTable.size() + 1;
+    buffer = IntToBytes(methodSize);
+    bytes.insert(bytes.end(), u2(buffer));
 
+
+    buffer = generateMethod(className, ConstTable::constructorName);
+    bytes.insert(bytes.end(), u2(buffer));
+
+    for (auto &method: methodTable) {
+        buffer = generateMethod(className, method.first);
+        bytes.insert(bytes.end(), u2(buffer));
+    }
+
+    // атрибуты
+    bytes.push_back((char) 0x00);
+    bytes.push_back((char) 0x00);
+
+    outfile.write(bytes.data(), bytes.size());
 }
 
 void CodeGenerator::generate() {
@@ -201,4 +225,20 @@ void CodeGenerator::generate() {
 
         generateClass(className);
     }
+
+}
+
+vector<char> CodeGenerator::generateConstructor(const string &className) {
+    std::vector<char> bytes;
+    bytes.push_back(char(Command::aload));
+    bytes.push_back(char(0));
+
+    bytes.push_back(char(Command::invokespecial));
+    auto methodRefId = IntToBytes(
+            ClassTable::addMethodRefToConstTable(className, ConstTable::objectClassName, ConstTable::constructorName,
+                                                 vector<DataType>(), DataType(DataType::void_)));
+    bytes.insert(bytes.end(), u2(methodRefId));
+
+    bytes.push_back(char(Command::return_));
+    return bytes;
 }

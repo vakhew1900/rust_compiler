@@ -2962,7 +2962,7 @@ int main(int argc, char** argv) {
 
     string res = ClassTable::Instance()->toString();
     out << updatedDot << "\n";
-    cout << ClassTable::Instance()->toString() << "\n";
+//    cout << ClassTable::Instance()->toString() << "\n";
 
     std::ofstream tableout("tables.txt");
     tableout << ClassTable::Instance()->toString() << "\n";

@@ -237,7 +237,7 @@ int ConstTable::String(const string &str) {
 
 int ConstTable::UTF8(const string &str) {
 
-    for (int i = 0; i < this->items.size(); i++) {
+    for (int i = 1; i < this->items.size(); i++) {
         if (items[i].constTableType == ConstTableItem::CONSTANT_UTF8 && items[i].utf8 == str) {
             return i;
         }
@@ -347,6 +347,7 @@ ConstTable::ConstTable() {
         ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "java/lang/Object");
         items.push_back(item);
         item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "Code");
+        this->MethodRef("java/lang/Object", "<init>", vector<DataType>(), DataType(DataType::void_));
         items.push_back(item);
 }
 
