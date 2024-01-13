@@ -32,17 +32,19 @@ vector<char> StmtNode::generate() {
 
                     case DataType::int_:
                     case DataType::bool_:
+                    case DataType::char_:
                         buffer = commandToBytes(Command::istore);
+                        merge(bytes, buffer);
                         break;
                     case DataType::float_:
-                        break;
-                    case DataType::char_:
+                        buffer = commandToBytes(Command::dstore);
+                        merge(bytes, buffer);
                         break;
                     case DataType::string_:
-                        break;
                     case DataType::class_:
-                        break;
                     case DataType::array_:
+                        buffer = commandToBytes(Command::astore);
+                        merge(bytes, buffer);
                         break;
 
                     case DataType::undefined_:
@@ -52,11 +54,13 @@ vector<char> StmtNode::generate() {
             }
 
             break;
-
         case semicolon:
         case expression:
             break;
     }
 
+    // добаление номера перемнной
+    buffer = IntToBytes(this->localVarNum);
+    buffer.push_back(buffer.back());
     return bytes;
 }

@@ -84,6 +84,8 @@ public:
     virtual vector<char> generate();
     void addMetaInfo(Node *node);
     static int getVarNumber(vector<ExprNode*> &blockExprList,const string& className,const string& methodName,const string& varName);
+    static int getVarNumber(ExprNode* blockExpr, const string& className,const string& methodName,const string& varName);
+
     //virtual void addDataType(const string &className);
     void convertEnumValue();
     void setLine(Node* node);
