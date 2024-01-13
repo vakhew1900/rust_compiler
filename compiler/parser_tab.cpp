@@ -2659,4 +2659,5 @@ yyerrhandle:
 void yyerror(char const *s)
 {
     printf("%s\n",s);
+    cerr << "line " << LineNum::getLineNum() << ": " << s << "\n";
 }

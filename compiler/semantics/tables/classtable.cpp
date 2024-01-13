@@ -312,7 +312,7 @@ void ClassTable::addLocalParam(string className, string methodName, VarTableItem
 
     if (ClassTable::Instance()->isLocalVarExist(className, methodName, varTableItem.id, varTableItem.blockExpr)) {
         throw Exception(Exception::VAR_ALREADY_EXISTS,
-                        "var with this name " + varTableItem.id + "in method " + methodName + " " + className +
+                        "var with this name " + varTableItem.id + " in method " + methodName + " " + className +
                         " is already exists");
     }
 

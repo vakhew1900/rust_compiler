@@ -2953,7 +2953,7 @@ int main(int argc, char** argv) {
 
     string dot;
     global_program->toDot(dot);
-    std::cout << dot << "\n";
+   // std::cout << dot << "\n";
     std::ofstream out("dot-tree.txt");
 
     global_program->makeAllConversions();
