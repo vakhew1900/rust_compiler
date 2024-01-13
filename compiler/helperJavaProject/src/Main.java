@@ -2,10 +2,11 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
-        Two.static_test();
-//        char x = 'c';
-//        double d = 1e12;
-//        System.out.print("Message");
+        //Two.static_test();
+        int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, r, s, t, q, u, x, y, z = 10;
+        double d1 = 1e12;
+        char x1 = 'c';
+        System.out.print("Message");
 //        One o1 = new One();
 //        Two t2 = new Two();
 //        Three t3 = new Three();
