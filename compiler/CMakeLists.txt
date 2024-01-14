@@ -33,4 +33,6 @@ add_executable(compiler "lex.yy.cpp"
         code_generation/codegenerator.cpp
         code_generation/codegenerator.h
         code_generation/generate.cpp
+        code_generation/tools/utils.cpp
+        code_generation/command.cpp
 )

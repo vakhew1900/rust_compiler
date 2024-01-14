@@ -22,3 +22,17 @@ std::vector<char> DoubleToBytes(double value) {
         arrayOfByte[doubleSize - 1 - i] = ((char*)&value)[i];
     return arrayOfByte;
 }
+
+std::vector<char> Int16ToBytes(uint16_t value) {
+    std::vector<char> bytes = IntToBytes(value);
+    bytes = std::vector<char>(u2(bytes));
+    return bytes;
+}
+
+std::vector<char> FloatToBytes(float value) {
+    std::vector<char> arrayOfByte(4);
+
+    for (int i = 0; i < sizeof(float); ++i)
+        arrayOfByte[3 - i] = ((char*)&value)[i];
+    return arrayOfByte;
+}

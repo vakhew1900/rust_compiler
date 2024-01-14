@@ -233,7 +233,7 @@ string DataType::toConstTableFormat() const {
             res = "C";
             break;
         case bool_:
-            res = "Z";
+            res = "I";
             break;
         case string_:
             res = "Ljava/lang/String;";

@@ -2626,7 +2626,6 @@ void StmtNode::transform(bool isConvertedToConst) {
                 }
                 varTableItem.id = *this->name;
                 varTableItem.blockExpr = blockExprList.back();
-
                 {
                     DataType arrDataType = DataType();
 
@@ -2656,6 +2655,7 @@ void StmtNode::transform(bool isConvertedToConst) {
 
                 this->convertEnumValue();
                 ClassTable::Instance()->addLocalParam(curClassName, curMethodName, this->varTableItem);
+                this->localVarNum = Node::getVarNumber(blockExprList.back(), curClassName, curMethodName, *this->name);
                 break;
             case const_:
                 this->varTableItem = VarTableItem();
@@ -2680,6 +2680,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                 varTableItem.blockExpr = blockExprList.back();
                 this->convertEnumValue();
                 ClassTable::Instance()->addLocalParam(curClassName, curMethodName, this->varTableItem);
+                this->localVarNum = Node::getVarNumber(blockExprList.back(), curClassName, curMethodName, *this->name);
                 break;
             case semicolon:
             case expression:
@@ -4398,6 +4399,11 @@ void Node::setLine(Node *node) {
     } else if (!this->line) {
         this->line = LineNum::getLineNum();
     }
+}
+
+int Node::getVarNumber(ExprNode *blockExpr, const string &className, const string &methodName, const string &varName) {
+    return ClassTable::Instance()->getMethod(className, methodName).localVarTable.getVarNumber(varName,
+                                                                                               blockExpr);
 }
 
 

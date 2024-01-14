@@ -84,6 +84,8 @@ public:
     virtual vector<char> generate();
     void addMetaInfo(Node *node);
     static int getVarNumber(vector<ExprNode*> &blockExprList,const string& className,const string& methodName,const string& varName);
+    static int getVarNumber(ExprNode* blockExpr, const string& className,const string& methodName,const string& varName);
+
     //virtual void addDataType(const string &className);
     void convertEnumValue();
     void setLine(Node* node);
@@ -228,18 +230,23 @@ public:
 
     void toDot(string &dot, const string &pos = "");
 
-    void transformPathCallExpr(string className, ExprNode::Type type, bool isType);
+
     void transform(bool isConvertedToConst = true) override;
     void transformConst();
+    void transformPathCallExpr(string className, ExprNode::Type type, bool isType);
+
     bool isLiteral();
-    void checkMethodParam(const string& className, const string& methodName);
     bool isRefExpr();
     bool isVar();
+    bool isSimpleType();
+
+    void checkMethodParam(const string& className, const string& methodName);
     void checkCancelExprNode(ExprNode * exprNode, bool isBreakCanceled = true);
 
     void checkStructExpr(bool isConvertedTransform = true);
 
-    bool isSimpleType();
+    vector<char> generate() override
+
 };
 
 class ExprListNode : public Node {
@@ -280,9 +287,10 @@ public:
     StmtNode(Type type, ExprNode *expr_node, ItemNode *decl_node, LetStmtNode *let_node);
     StmtNode(Type type, StmtNode *stmt);
     static StmtNode* ConstStmtToStmt(ConstStmtNode *node);
-    void transform(bool isConvertedToConst = true) override;
-
     void toDot(string &dot);
+
+    void transform(bool isConvertedToConst = true) override;
+    vector<char> generate() override;
 };
 
 class StmtListNode : public Node {
