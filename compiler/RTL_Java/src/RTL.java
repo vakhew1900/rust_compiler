@@ -4,7 +4,7 @@ public class RTL {
             if (!str.contains("{}")) {
                 throw new IllegalArgumentException("Format string is not contains {}");
             }
-            System.out.println(str.replace("{}", val);
+            System.out.println(str.replace("{}", val));
         }
 
     public static void println_int(String str, int value) {
