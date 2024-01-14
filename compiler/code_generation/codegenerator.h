@@ -19,6 +19,7 @@ private:
     static vector<char>generateField(const string& className, const string& fieldName);
     static vector<char>generateMethod(const string& className, const string& fieldName);
     static vector<char> generateConstructor(const string& className);
+    static vector<char> generateClassBody(const string& className);
     void generateClass(const string& className);
 
 public:

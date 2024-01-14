@@ -45,9 +45,8 @@ CodeGenerator::generateMethod(const string &className, const string &methodName)
     std::vector<char> buffer;
 
     MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(className, methodName);
-    ConstTable constTable = ClassTable::Instance()->getClass(className).constTable;
 
-    // флаги доступа
+    // флаги доступаConstTable
     unsigned int accessFlags = uint16_t(AccessFlags::Public);
 
     if (methodTableItem.isStatic) {
@@ -59,13 +58,13 @@ CodeGenerator::generateMethod(const string &className, const string &methodName)
 
     // имя метода
     if (!methodName.empty()) {
-        buffer = IntToBytes(constTable.UTF8(methodName));
+        buffer = IntToBytes(ClassTable::addUTF8ToConstTable(className, methodName));
         bytes.insert(bytes.end(), u2(bytes));
     }
 
     string decscriptor = methodTableItem.paramsToConstTableFormat();
     // количество атрибутов метода
-    buffer = IntToBytes(constTable.UTF8(decscriptor));
+    buffer = IntToBytes(ClassTable::addUTF8ToConstTable(className,decscriptor));
     bytes.insert(bytes.end(), u2(bytes));
 
     // количество атрибутов метода
@@ -79,7 +78,7 @@ CodeGenerator::generateMethod(const string &className, const string &methodName)
     bytes.push_back((char) 0x01);
 
     // имя атрибута Code
-    buffer = IntToBytes(constTable.UTF8("Code"));
+    buffer = IntToBytes(ClassTable::addUTF8ToConstTable(className, "Code"));
     bytes.insert(bytes.end(), u2(buffer));
 
     std::vector<char> codeAttributeBytes;
@@ -145,12 +144,55 @@ void CodeGenerator::generateClass(const string &className) {
 
     bytes.insert(bytes.end(), u2(buffer));
 
+    vector<char> classBody = generateClassBody(className);
     vector<char> constants = ClassTable::Instance()->getClass(className).constTable.toBytes(); // consttable
 
     buffer = IntToBytes(constants.size() + 1);
 
     bytes.insert(bytes.end(), u2(buffer)); // размер constable
-    bytes.insert(bytes.end(), u2(constants)); // размер constable
+    merge(bytes, constants);
+    merge(bytes, classBody);
+
+    outfile.write(bytes.data(), bytes.size());
+}
+
+void CodeGenerator::generate() {
+
+
+    if (exists(CodeGenerator::codeGenDir)) {
+        filesystem::remove_all(codeGenDir);
+    }
+
+    filesystem::create_directory(codeGenDir);
+    for (auto &[className, classTableItem]: ClassTable::getItems()) {
+
+        if (className == ClassTable::RTLClassName) continue;
+
+        generateClass(className);
+    }
+
+}
+
+vector<char> CodeGenerator::generateConstructor(const string &className) {
+    std::vector<char> bytes;
+    bytes.push_back(char(Command::aload));
+    bytes.push_back(char(0));
+
+    bytes.push_back(char(Command::invokespecial));
+    auto methodRefId = IntToBytes(
+            ClassTable::addMethodRefToConstTable(className, ConstTable::objectClassName, ConstTable::constructorName,
+                                                 vector<DataType>(), DataType(DataType::void_)));
+    bytes.insert(bytes.end(), u2(methodRefId));
+
+    bytes.push_back(char(Command::return_));
+    return bytes;
+}
+
+vector<char> CodeGenerator::generateClassBody(const string &className) {
+    vector<char> bytes;
+    vector<char> buffer;
+
+    ClassTableItem classTableItem = ClassTableItem();
 
     // Добавление флагов
     unsigned int accessFlags = uint16_t(AccessFlags::Public) | uint16_t(AccessFlags::Super);
@@ -208,37 +250,5 @@ void CodeGenerator::generateClass(const string &className) {
     bytes.push_back((char) 0x00);
     bytes.push_back((char) 0x00);
 
-    outfile.write(bytes.data(), bytes.size());
-}
-
-void CodeGenerator::generate() {
-
-
-    if (exists(CodeGenerator::codeGenDir)) {
-        filesystem::remove_all(codeGenDir);
-    }
-
-    filesystem::create_directory(codeGenDir);
-    for (auto &[className, classTableItem]: ClassTable::getItems()) {
-
-        if (className == ClassTable::RTLClassName) continue;
-
-        generateClass(className);
-    }
-
-}
-
-vector<char> CodeGenerator::generateConstructor(const string &className) {
-    std::vector<char> bytes;
-    bytes.push_back(char(Command::aload));
-    bytes.push_back(char(0));
-
-    bytes.push_back(char(Command::invokespecial));
-    auto methodRefId = IntToBytes(
-            ClassTable::addMethodRefToConstTable(className, ConstTable::objectClassName, ConstTable::constructorName,
-                                                 vector<DataType>(), DataType(DataType::void_)));
-    bytes.insert(bytes.end(), u2(methodRefId));
-
-    bytes.push_back(char(Command::return_));
     return bytes;
 }

@@ -245,7 +245,7 @@ public:
 
     void checkStructExpr(bool isConvertedTransform = true);
 
-    vector<char> generate() override
+    vector<char> generate() override;
 
 };
 
