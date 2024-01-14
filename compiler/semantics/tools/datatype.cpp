@@ -261,3 +261,27 @@ bool DataType::isClass() {
 bool DataType::isSimple() {
     return this->type != array_ && this->type != class_ && this->type != string_;
 }
+
+bool DataType::isInt() {
+    return this->type == int_;
+}
+
+bool DataType::isFloat() {
+    return this->type == float_;
+}
+
+bool DataType::isVoid() {
+    return this->type == void_;
+}
+
+bool DataType::isString() {
+    return this->type == string_;
+}
+
+bool DataType::isChar() {
+    return this->type == char_;
+}
+
+bool DataType::isArray() {
+    return this->type == array_;
+}

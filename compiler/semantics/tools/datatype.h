@@ -44,6 +44,12 @@ public:
     bool isSimple();
 
     bool isClass();
+    bool isInt();
+    bool isFloat();
+    bool isVoid();
+    bool isArray();
+    bool isChar();
+    bool isString();
 };
 
 

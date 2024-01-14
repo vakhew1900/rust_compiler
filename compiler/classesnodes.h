@@ -247,6 +247,7 @@ public:
 
     vector<char> generate() override;
 
+    vector<char> generateInt(int value);
 };
 
 class ExprListNode : public Node {

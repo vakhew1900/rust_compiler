@@ -69,40 +69,114 @@ vector<char> ExprNode::generate() {
 
     vector<char> bytes;
     vector<char> buffer;
+    int index = -1;
 
     switch(this->type){
 
         case int_lit:
+            bytes = generateInt(this->Int);
             break;
         case float_lit:
+            buffer = commandToBytes(Command::ldc_w);
+            merge(bytes, buffer);
+            index = ClassTable::addFloatToConstTable(curClassName, this->Float);
+            buffer = Int16ToBytes(index);
+            merge(bytes, buffer);
             break;
         case char_lit:
+            buffer = commandToBytes(Command::bipush);
+            merge(bytes, buffer);
+            buffer = IntToBytes(this->Char);
+            bytes.push_back(buffer.back()); // нужен как раз последний байт
             break;
         case string_lit:
-            break;
         case raw_string_lit:
+            buffer = commandToBytes(Command::ldc_w);
+            merge(bytes, buffer);
+            index = ClassTable::addStringToConstTable(curClassName, *this->String);
+            buffer = Int16ToBytes(index);
+            merge(bytes, buffer);
             break;
         case bool_lit:
+            if(this->Bool){
+                bytes = commandToBytes(Command::iconst_1);
+            }
+            else {
+                bytes = commandToBytes(Command::iconst_0);
+            }
             break;
 
         case plus:
+            merge(bytes, this->expr_left->generate());
+            merge(bytes, this->expr_right->generate());
+
+            if(this->dataType.isInt()){
+                merge(bytes, commandToBytes(Command::iadd));
+            }
+            else {
+                merge(bytes, commandToBytes(Command::dadd));
+            }
             break;
         case minus:
+            merge(bytes, this->expr_left->generate());
+            merge(bytes, this->expr_right->generate());
+
+            if(this->dataType.isInt()){
+                merge(bytes, commandToBytes(Command::isub));
+            }
+            else {
+                merge(bytes, commandToBytes(Command::dsub));
+            }
             break;
         case mul_expr:
+            merge(bytes, this->expr_left->generate());
+            merge(bytes, this->expr_right->generate());
+
+            if(this->dataType.isInt()){
+                merge(bytes, commandToBytes(Command::imul));
+            }
+            else {
+                merge(bytes, commandToBytes(Command::dmul));
+            }
+
             break;
         case div_expr:
+            merge(bytes, this->expr_left->generate());
+            merge(bytes, this->expr_right->generate());
+
+            if(this->dataType.isInt()){
+                merge(bytes, commandToBytes(Command::idiv));
+            }
+            else {
+                merge(bytes, commandToBytes(Command::ddiv));
+            }
             break;
         case mod:
+            merge(bytes, this->expr_left->generate());
+            merge(bytes, this->expr_right->generate());
+            merge(bytes, commandToBytes(Command::irem));
+            break;
+        case uminus:
+            merge(bytes, this->expr_left->generate());
+            if(this->dataType.isInt()){
+                merge(bytes, commandToBytes(Command::ineg));
+            }
+            else {
+                merge(bytes, commandToBytes(Command::dneg));
+            }
             break;
 
-
+        case negotation:
+            break;
         case or_:
             break;
         case and_:
             break;
+
+
         case asign:
             break;
+
         case equal:
             break;
         case not_equal:
@@ -115,13 +189,8 @@ vector<char> ExprNode::generate() {
             break;
         case less_equal:
             break;
-        case uminus:
-            break;
 
-        case negotation:
-            break;
         case link:
-            break;
         case mut_link:
             break;
 
@@ -215,3 +284,24 @@ vector<char> ExprNode::generate() {
     return bytes;
 }
 
+
+vector<char> ExprNode::generateInt(int value){
+    vector<char> bytes;
+    vector<char> buffer;
+
+    if(value <= INT16_MAX && value >= INT16_MIN){
+        buffer = commandToBytes(Command::sipush);
+        merge(bytes, buffer);
+        buffer = Int16ToBytes(value);
+        merge(bytes, buffer);
+    }
+    else{
+        buffer = commandToBytes(Command::ldc_w);
+        merge(bytes, buffer);
+        int index = ClassTable::addIntToConstTable(curClassName, value);
+        buffer = Int16ToBytes(index);
+        merge(bytes, buffer);
+    }
+
+    return bytes;
+}
