@@ -84,12 +84,10 @@ public class RTL {
      * Сравнение первой и второй строки
      * @param s1 - первая строка
      * @param s2 - вторая строка
-     * @return true если первая строка совпадает со второй, false если не совпадает второй
+     * @return true если первая строка лексикографически равна со второй, false если лексикографически не равна второй
      */
     public static boolean isEqual(String s1, String s2){
-        boolean isStringsEqual = false;
-
-        return isStringsEqual;
+        return s1.compareTo(s2) == 0;
     }
 }
 
