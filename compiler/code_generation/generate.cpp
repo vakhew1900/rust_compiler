@@ -8,14 +8,14 @@
 #include "tools/utils.h"
 
 vector<char> Node::generate() {
-    throw Exception(Exception::UNEXPECTED,"generate not realized method for id" + to_string(this->id));
+    throw Exception(Exception::UNEXPECTED, "generate not realized method for id" + to_string(this->id));
 }
 
 vector<char> StmtNode::generate() {
     vector<char> bytes;
     vector<char> buffer;
 
-    switch(this->type){
+    switch (this->type) {
 
         case exprstmt:
 
@@ -24,11 +24,11 @@ vector<char> StmtNode::generate() {
         case let:
         case const_:
 
-            if(this->expr != NULL){
+            if (this->expr != NULL) {
                 buffer = this->expr->generate();
                 merge(bytes, buffer);
 
-                switch(expr->dataType.type){
+                switch (expr->dataType.type) {
 
                     case DataType::int_:
                     case DataType::bool_:
@@ -71,7 +71,11 @@ vector<char> ExprNode::generate() {
     vector<char> buffer;
     int index = -1;
 
-    switch(this->type){
+    const int gotoCommandSize = 3;
+    const int binaryCommandSize = 2;
+    const int unaryCommandSize = 1;
+
+    switch (this->type) {
 
         case int_lit:
             bytes = generateInt(this->Int);
@@ -98,10 +102,9 @@ vector<char> ExprNode::generate() {
             merge(bytes, buffer);
             break;
         case bool_lit:
-            if(this->Bool){
+            if (this->Bool) {
                 bytes = commandToBytes(Command::iconst_1);
-            }
-            else {
+            } else {
                 bytes = commandToBytes(Command::iconst_0);
             }
             break;
@@ -110,10 +113,9 @@ vector<char> ExprNode::generate() {
             merge(bytes, this->expr_left->generate());
             merge(bytes, this->expr_right->generate());
 
-            if(this->dataType.isInt()){
+            if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::iadd));
-            }
-            else {
+            } else {
                 merge(bytes, commandToBytes(Command::dadd));
             }
             break;
@@ -121,10 +123,9 @@ vector<char> ExprNode::generate() {
             merge(bytes, this->expr_left->generate());
             merge(bytes, this->expr_right->generate());
 
-            if(this->dataType.isInt()){
+            if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::isub));
-            }
-            else {
+            } else {
                 merge(bytes, commandToBytes(Command::dsub));
             }
             break;
@@ -132,10 +133,9 @@ vector<char> ExprNode::generate() {
             merge(bytes, this->expr_left->generate());
             merge(bytes, this->expr_right->generate());
 
-            if(this->dataType.isInt()){
+            if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::imul));
-            }
-            else {
+            } else {
                 merge(bytes, commandToBytes(Command::dmul));
             }
 
@@ -144,10 +144,9 @@ vector<char> ExprNode::generate() {
             merge(bytes, this->expr_left->generate());
             merge(bytes, this->expr_right->generate());
 
-            if(this->dataType.isInt()){
+            if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::idiv));
-            }
-            else {
+            } else {
                 merge(bytes, commandToBytes(Command::ddiv));
             }
             break;
@@ -158,23 +157,110 @@ vector<char> ExprNode::generate() {
             break;
         case uminus:
             merge(bytes, this->expr_left->generate());
-            if(this->dataType.isInt()){
+            if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::ineg));
-            }
-            else {
+            } else {
                 merge(bytes, commandToBytes(Command::dneg));
             }
             break;
 
         case negotation:
+            merge(bytes, this->expr_left->generate());
+            merge(bytes, commandToBytes(Command::iconst_0));
+            merge(bytes, commandToBytes(Command::iand));
             break;
-        case or_:
+
+        case or_: {
+            vector<char> left = this->expr_left->generate();
+            vector<char> right = this->expr_left->generate();
+
+            merge(bytes, left);
+            merge(bytes, commandToBytes(Command::iconst_1));
+            merge(bytes, commandToBytes(Command::ifne)); // 1
+            int sz = gotoCommandSize + gotoCommandSize; // размер
+            merge(bytes, Int16ToBytes(sz)); //
+
+            sz = gotoCommandSize + right.size() + unaryCommandSize + gotoCommandSize; // = 8;
+            merge(bytes, commandToBytes(Command::goto_)); // 4
+            merge(bytes, Int16ToBytes(sz));
+
+            merge(bytes, right); // 7
+            merge(bytes, commandToBytes(Command::iconst_1)); // 8
+            merge(bytes, commandToBytes(Command::ifne)); //  9
+            merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize  + unaryCommandSize));
+
+            merge(bytes, commandToBytes(Command::iconst_1)); // 12
+            merge(bytes, commandToBytes(Command::goto_)); // 13
+
+            merge(bytes, Int16ToBytes(unaryCommandSize + gotoCommandSize));
+
+            merge(bytes, commandToBytes(Command::iconst_0)); // 16
+            merge(bytes, commandToBytes(Command::dup)); // сделал, чтобы был переход на следующую команду 17
+            merge(bytes, commandToBytes(Command::pop));
+
+        }
             break;
-        case and_:
+
+        case and_:  {
+            vector<char> left = this->expr_left->generate();
+            vector<char> right = this->expr_left->generate();
+
+            merge(bytes, left);
+            merge(bytes, commandToBytes(Command::iconst_0));
+            merge(bytes, commandToBytes(Command::ifne)); // 1
+            int sz = gotoCommandSize + gotoCommandSize; // размер
+            merge(bytes, Int16ToBytes(sz)); //
+
+            sz = gotoCommandSize + right.size() + unaryCommandSize + gotoCommandSize; // = 8;
+            merge(bytes, commandToBytes(Command::goto_)); // 4
+            merge(bytes, Int16ToBytes(sz));
+
+            merge(bytes, right); // 7
+            merge(bytes, commandToBytes(Command::iconst_0)); // 8
+            merge(bytes, commandToBytes(Command::ifne)); //  9
+            merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize  + unaryCommandSize));
+
+            merge(bytes, commandToBytes(Command::iconst_0)); // 12
+            merge(bytes, commandToBytes(Command::goto_)); // 13
+
+            merge(bytes, Int16ToBytes(unaryCommandSize + gotoCommandSize));
+
+            merge(bytes, commandToBytes(Command::iconst_1)); // 16
+            merge(bytes, commandToBytes(Command::dup)); // сделал, чтобы был переход на следующую команду 17
+            merge(bytes, commandToBytes(Command::pop));
+
+        }
             break;
 
 
         case asign:
+        {
+            buffer = expr_left->generate();
+
+            switch (expr_left->dataType.type) {
+
+                case DataType::int_:
+                    break;
+                case DataType::float_:
+                    break;
+                case DataType::char_:
+                    break;
+                case DataType::bool_:
+                    break;
+                case DataType::string_:
+                    break;
+                case DataType::class_:
+                    break;
+                case DataType::array_:
+                    break;
+                case DataType::void_:
+                    break;
+            }
+        }
+            break;
+        case arr_asign:
+            break;
+        case point_assign:
             break;
 
         case equal:
@@ -219,9 +305,7 @@ vector<char> ExprNode::generate() {
 
 
         case range_right:
-            break;
         case range_left:
-            break;
         case range_expr:
             break;
 
@@ -264,13 +348,6 @@ vector<char> ExprNode::generate() {
         case as:
             break;
 
-
-
-        case arr_asign:
-            break;
-        case point_assign:
-            break;
-
         case del_object:
             break;
 
@@ -285,17 +362,16 @@ vector<char> ExprNode::generate() {
 }
 
 
-vector<char> ExprNode::generateInt(int value){
+vector<char> ExprNode::generateInt(int value) {
     vector<char> bytes;
     vector<char> buffer;
 
-    if(value <= INT16_MAX && value >= INT16_MIN){
+    if (value <= INT16_MAX && value >= INT16_MIN) {
         buffer = commandToBytes(Command::sipush);
         merge(bytes, buffer);
         buffer = Int16ToBytes(value);
         merge(bytes, buffer);
-    }
-    else{
+    } else {
         buffer = commandToBytes(Command::ldc_w);
         merge(bytes, buffer);
         int index = ClassTable::addIntToConstTable(curClassName, value);

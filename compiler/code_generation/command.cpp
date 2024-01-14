@@ -5,5 +5,6 @@
 #include "command.h"
 
 std::vector<char> commandToBytes(Command command){
-    return Int16ToBytes(uint16_t(command));
+    std::vector<char> bytes = {Int16ToBytes(uint16_t(command)).back()};
+    return bytes;
 }
