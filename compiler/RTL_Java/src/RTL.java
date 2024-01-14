@@ -60,5 +60,13 @@ public class RTL {
         return s.charAt(index);
     }
 
+    public static boolean isBigger(String s1, String s2){
+            boolean isFirstStringBigger = false;
+
+            return isFirstStringBigger;
+    }
+
+
+
 }
 
