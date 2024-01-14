@@ -3258,6 +3258,11 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->type = range_expr;
             break;
         case return_expr:
+
+            if(this->expr_left == NULL){
+                returnTypes.push_back( DataType(DataType::void_));
+            }
+
             addMetaInfo(expr_left);
             checkCancelExprNode(expr_left);
             this->expr_left->transform(isConvertedToConst);

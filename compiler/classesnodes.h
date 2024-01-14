@@ -248,6 +248,7 @@ public:
     vector<char> generate() override;
 
     vector<char> generateInt(int value);
+    vector<char> generateReturn(ExprNode* exprNode);
 };
 
 class ExprListNode : public Node {

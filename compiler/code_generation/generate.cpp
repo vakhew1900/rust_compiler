@@ -7,6 +7,9 @@
 #include "tools/byte_convert.h"
 #include "tools/utils.h"
 
+vector<bool> breakVec;
+vector<bool> continueVec;
+
 vector<char> Node::generate() {
     throw Exception(Exception::UNEXPECTED, "generate not realized method for id" + to_string(this->id));
 }
@@ -187,7 +190,7 @@ vector<char> ExprNode::generate() {
             merge(bytes, right); // 7
             merge(bytes, commandToBytes(Command::iconst_1)); // 8
             merge(bytes, commandToBytes(Command::ifne)); //  9
-            merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize  + unaryCommandSize));
+            merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize + unaryCommandSize));
 
             merge(bytes, commandToBytes(Command::iconst_1)); // 12
             merge(bytes, commandToBytes(Command::goto_)); // 13
@@ -201,7 +204,7 @@ vector<char> ExprNode::generate() {
         }
             break;
 
-        case and_:  {
+        case and_: {
             vector<char> left = this->expr_left->generate();
             vector<char> right = this->expr_left->generate();
 
@@ -218,7 +221,7 @@ vector<char> ExprNode::generate() {
             merge(bytes, right); // 7
             merge(bytes, commandToBytes(Command::iconst_0)); // 8
             merge(bytes, commandToBytes(Command::ifne)); //  9
-            merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize  + unaryCommandSize));
+            merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize + unaryCommandSize));
 
             merge(bytes, commandToBytes(Command::iconst_0)); // 12
             merge(bytes, commandToBytes(Command::goto_)); // 13
@@ -233,8 +236,7 @@ vector<char> ExprNode::generate() {
             break;
 
 
-        case asign:
-        {
+        case asign: {
             bytes = this->expr_left->generate();
 
             switch (expr_left->dataType.type) {
@@ -263,8 +265,7 @@ vector<char> ExprNode::generate() {
             merge(bytes, Int16ToBytes(this->expr_left->localVarNum));
         }
             break;
-        case arr_asign:
-        {
+        case arr_asign: {
             vector<char> left = this->expr_left->generate();
             vector<char> right = this->expr_right->generate();
             vector<char> index = this->expr_middle->generate();
@@ -300,7 +301,8 @@ vector<char> ExprNode::generate() {
             vector<char> right = this->expr_right->generate();
             string field = *this->expr_middle->Name;
             DataType fieldDatatype = ClassTable::Instance()->getField(this->expr_left->dataType.id, field).dataType;
-            int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id, field, dataType);
+            int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id, field,
+                                                                    dataType);
 
             merge(bytes, left);
             merge(bytes, right);
@@ -314,8 +316,7 @@ vector<char> ExprNode::generate() {
             bytes = this->expr_left->generate();
             break;
 
-        case equal:
-        {
+        case equal: {
             vector<char> left = this->expr_left->generate();
             vector<char> right = this->expr_right->generate();
 
@@ -395,9 +396,7 @@ vector<char> ExprNode::generate() {
             }
             break;
         }
-        case greater:
-
-        {
+        case greater: {
 
             vector<char> left = this->expr_left->generate();
             vector<char> right = this->expr_right->generate();
@@ -438,8 +437,7 @@ vector<char> ExprNode::generate() {
             break;
         }
 
-        case less:
-        {
+        case less: {
 
             vector<char> left = this->expr_left->generate();
             vector<char> right = this->expr_right->generate();
@@ -480,8 +478,7 @@ vector<char> ExprNode::generate() {
             break;
         }
 
-        case greater_equal:
-        {
+        case greater_equal: {
 
             vector<char> left = this->expr_left->generate();
             vector<char> right = this->expr_right->generate();
@@ -521,8 +518,7 @@ vector<char> ExprNode::generate() {
             }
             break;
         }
-        case less_equal:
-        {
+        case less_equal: {
 
             vector<char> left = this->expr_left->generate();
             vector<char> right = this->expr_right->generate();
@@ -562,14 +558,48 @@ vector<char> ExprNode::generate() {
             }
             break;
         }
+
+
+        case return_expr:
+            bytes = generateReturn(this->expr_left);
             break;
 
 
-        case array_expr:
+        case continue_expr:
+            merge(bytes, commandToBytes(Command::goto_));
+            continueVec.push_back(bytes.size() - 1);
+            merge(bytes, Int16ToBytes(3));
             break;
-        case array_expr_auto_fill:
+        case break_expr:
+            merge(bytes, commandToBytes(Command::goto_));
+            breakVec.push_back(bytes.size() - 1);
+            merge(bytes, Int16ToBytes(3));
+            break;
+        case break_with_val_expr:
+            merge(bytes, this->expr_left->generate());
+            merge(bytes, commandToBytes(Command::goto_));
+            breakVec.push_back(bytes.size() - 1);
+            merge(bytes, Int16ToBytes(3)); // заглушка;
             break;
 
+
+        case block_expr: {
+
+            if(this->stmt_list != NULL && this->stmt_list->stmts != NULL){
+                for(auto stmt : *this->stmt_list->stmts){
+                    merge(bytes, stmt->generate());
+                }
+                if(this->body != NULL){
+                    merge(bytes, this->body->generate());
+                }
+            }
+
+            if(ClassTable::Instance()->getMethod(curClassName, curMethodName).body == this){
+                merge(bytes,generateReturn(this->expr_left));
+            }
+
+            break;
+        }
 
         case index_expr:
             break;
@@ -580,23 +610,9 @@ vector<char> ExprNode::generate() {
         case method_expr:
             break;
 
-
-        case continue_expr:
-            break;
-        case break_expr:
-            break;
-        case break_with_val_expr:
+        case array_expr:
             break;
 
-
-        case range_right:
-        case range_left:
-        case range_expr:
-            break;
-
-
-        case return_expr:
-            break;
 
         case id_:
             break;
@@ -614,9 +630,6 @@ vector<char> ExprNode::generate() {
         case loop_while:
             break;
         case loop_for:
-            break;
-
-        case block_expr:
             break;
 
         case struct_expr:
@@ -637,6 +650,9 @@ vector<char> ExprNode::generate() {
             break;
 
         case crate_expr:
+        case range_right:
+        case range_left:
+        case range_expr:
             break;
 
         default:
@@ -662,6 +678,45 @@ vector<char> ExprNode::generateInt(int value) {
         int index = ClassTable::addIntToConstTable(curClassName, value);
         buffer = Int16ToBytes(index);
         merge(bytes, buffer);
+    }
+
+    return bytes;
+}
+
+
+vector<char> ExprNode::generateReturn(ExprNode *exprNode) {
+
+    vector<char> bytes;
+
+    if(exprNode == NULL){
+        bytes = commandToBytes(Command::return_);
+    }
+    else {
+
+        switch (exprNode->dataType.type) {
+
+            case DataType::int_:
+            case DataType::char_:
+            case DataType::bool_:
+                bytes = commandToBytes(Command::ireturn);
+                break;
+
+            case DataType::float_:
+                bytes = commandToBytes(Command::dreturn);
+                break;
+
+            case DataType::string_:
+            case DataType::class_:
+            case DataType::array_:
+                bytes = commandToBytes(Command::areturn);
+                break;
+
+            case DataType::void_:
+                bytes = commandToBytes(Command::return_);
+                break;
+            case DataType::undefined_:
+                break;
+        }
     }
 
     return bytes;
