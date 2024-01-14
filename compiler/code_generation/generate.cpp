@@ -605,8 +605,6 @@ vector<char> ExprNode::generate() {
             break;
         case field_access_expr:
             break;
-        case call_expr:
-            break;
         case method_expr:
             break;
 
@@ -632,15 +630,16 @@ vector<char> ExprNode::generate() {
         case loop_for:
             break;
 
-        case struct_expr:
-            break;
-        case struct_field_expr:
-            break;
+
         case static_method:
             break;
         case path_call_expr:
             break;
+
+
         case struct_creation:
+            break;
+        case struct_field_expr:
             break;
 
         case as:
