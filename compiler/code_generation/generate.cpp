@@ -633,6 +633,23 @@ vector<char> ExprNode::generate() {
         case method_expr:
             break;
 
+        case as:
+            break;
+
+        case static_method:
+            break;
+        case path_call_expr:
+            break;
+
+
+        case struct_creation:
+            break;
+        case struct_field_expr:
+            break;
+
+        case del_object:
+            break;
+
         case array_expr:
             break;
 
@@ -650,23 +667,6 @@ vector<char> ExprNode::generate() {
         case loop_for:
             break;
 
-
-        case static_method:
-            break;
-        case path_call_expr:
-            break;
-
-
-        case struct_creation:
-            break;
-        case struct_field_expr:
-            break;
-
-        case as:
-            break;
-
-        case del_object:
-            break;
 
         case crate_expr:
         case range_right:
