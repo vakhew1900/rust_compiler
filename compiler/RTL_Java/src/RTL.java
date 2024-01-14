@@ -77,9 +77,7 @@ public class RTL {
      * @return true если первая строка лексиграфически меньше второй, false если равна или лексиграфически больше второй
      */
     public static boolean isLower(String s1, String s2){
-        boolean isFirstStringLower = false;
-
-        return isFirstStringLower;
+        return s1.compareTo(s2) > 0;
     }
 
     /***
