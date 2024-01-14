@@ -601,6 +601,11 @@ vector<char> ExprNode::generate() {
             break;
         }
 
+        case id_:
+        case self_expr:
+            merge(bytes, Int16ToBytes(localVarNum));
+            break;
+
         case index_expr:
             break;
         case field_access_expr:
@@ -611,11 +616,6 @@ vector<char> ExprNode::generate() {
         case array_expr:
             break;
 
-
-        case id_:
-            break;
-        case self_expr:
-            break;
 
         case if_expr_list:
             break;
