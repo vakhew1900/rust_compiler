@@ -1,4 +1,4 @@
-public class Std_IO {
+public class RTL {
 
     public static void println_int(String str, String val) {
             if (!str.contains("{}")) {
