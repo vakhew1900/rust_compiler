@@ -94,7 +94,7 @@ CodeGenerator::generateMethod(const string &className, const string &methodName)
 
     // длина собственно байт-кода
     vector<char> bodyCodeBytes;
-    if (methodName == ConstTable::constructorName) {
+    if (methodName == ConstTable::init) {
         bodyCodeBytes = generateConstructor(className); // конструктор
     } else {
         bodyCodeBytes = methodTableItem.body->generate(); // не конструктор
@@ -180,7 +180,7 @@ vector<char> CodeGenerator::generateConstructor(const string &className) {
 
     bytes.push_back(char(Command::invokespecial));
     auto methodRefId = IntToBytes(
-            ClassTable::addMethodRefToConstTable(className, ConstTable::objectClassName, ConstTable::constructorName,
+            ClassTable::addMethodRefToConstTable(className, ConstTable::objectClassName, ConstTable::init,
                                                  vector<DataType>(), DataType(DataType::void_)));
     bytes.insert(bytes.end(), u2(methodRefId));
 
@@ -238,7 +238,7 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
     bytes.insert(bytes.end(), u2(buffer));
 
 
-    buffer = generateMethod(className, ConstTable::constructorName);
+    buffer = generateMethod(className, ConstTable::init);
     bytes.insert(bytes.end(), u2(buffer));
 
     for (auto &method: methodTable) {

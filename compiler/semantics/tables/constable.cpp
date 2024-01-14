@@ -347,7 +347,7 @@ ConstTable::ConstTable() {
         ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "java/lang/Object");
         items.push_back(item);
         item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "Code");
-        this->MethodRef("java/lang/Object", "<init>", vector<DataType>(), DataType(DataType::void_));
+        this->MethodRef("java/lang/Object", ConstTable::init, vector<DataType>(), DataType(DataType::void_));
         items.push_back(item);
 }
 
