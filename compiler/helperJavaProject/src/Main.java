@@ -4,7 +4,7 @@ public class Main {
     public static void main(String[] args) {
         boolean x = true;
         x = true;
-        boolean y = false;
+        boolean y = !x;
 
 //        int x = 10;
 //        int y = 2;
