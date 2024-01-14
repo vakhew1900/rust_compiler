@@ -2,8 +2,12 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
-           Car.ride();
-           Bus.ride();
+        int x = 11;
+
+        if (x > 10)
+            System.out.println(x);
+//           Car.ride();
+//           Bus.ride();
 //        Two.static_test();
 //        int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, r, s, t, q, u, x, y, z = 10;
 //        double d1 = 1e12;
