@@ -2,9 +2,17 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
-        String str = "ABCDEF";
-        char ch = RTL.charAt(str,3);
+        String str1 = "ABCDEF";
+        String str2 = "ABCDEF";
+        String str3 = "ABCDEFG";
+        char ch = RTL.charAt(str1,3);
         System.out.println(ch);
+
+        boolean b1t = RTL.isEqual(str1, str2);
+        boolean b2f = RTL.isEqual(str1, str3);
+        boolean b3t = RTL.isBigger(str3, str1);
+        boolean b4t = RTL.isLower(str1, str3);
+        System.out.println(b1t + " " + b2f + " " + b3t + " " + b4t);
 //        int x = 11;
 //
 //        if (x > 10)

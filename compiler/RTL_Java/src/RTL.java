@@ -60,23 +60,40 @@ public class RTL {
         return s.charAt(index);
     }
 
+    /***
+     * Сравнение первой и второй строки
+     * @param s1 - первая строка
+     * @param s2 - вторая строка
+     * @return true если первая строка лексиграфически больше второй, false если равна или лексиграфически меньше второй
+     */
     public static boolean isBigger(String s1, String s2){
-            boolean isFirstStringBigger = false;
+        boolean isFirstStringBigger = false;
 
-            return isFirstStringBigger;
+        return isFirstStringBigger;
     }
 
+    /***
+     * Сравнение первой и второй строки
+     * @param s1 - первая строка
+     * @param s2 - вторая строка
+     * @return true если первая строка лексиграфически меньше второй, false если равна или лексиграфически больше второй
+     */
     public static boolean isLower(String s1, String s2){
-            boolean isFirstStringLower = false;
+        boolean isFirstStringLower = false;
 
-            return isFirstStringLower;
+        return isFirstStringLower;
     }
 
+    /***
+     * Сравнение первой и второй строки
+     * @param s1 - первая строка
+     * @param s2 - вторая строка
+     * @return true если первая строка совпадает со второй, false если не совпадает второй
+     */
     public static boolean isEqual(String s1, String s2){
-            boolean isStringsEqual = false;
+        boolean isStringsEqual = false;
 
-            return isStringsEqual;
+        return isStringsEqual;
     }
-
 }
 
