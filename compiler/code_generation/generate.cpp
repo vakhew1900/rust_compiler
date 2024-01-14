@@ -235,50 +235,335 @@ vector<char> ExprNode::generate() {
 
         case asign:
         {
-            buffer = expr_left->generate();
+            bytes = this->expr_left->generate();
 
             switch (expr_left->dataType.type) {
 
                 case DataType::int_:
+                case DataType::char_:
+                case DataType::bool_:
+                    merge(bytes, commandToBytes(Command::istore));
                     break;
                 case DataType::float_:
+                    merge(bytes, commandToBytes(Command::dstore));
                     break;
-                case DataType::char_:
-                    break;
-                case DataType::bool_:
-                    break;
+
                 case DataType::string_:
-                    break;
                 case DataType::class_:
-                    break;
                 case DataType::array_:
+                    merge(bytes, commandToBytes(Command::astore));
                     break;
+
                 case DataType::void_:
+                case DataType::undefined_:
+                    throw Exception(Exception::UNEXPECTED, "Ты как в генерацию проскачила гадина???", this->line);
                     break;
             }
+
+            merge(bytes, Int16ToBytes(this->expr_left->localVarNum));
         }
             break;
         case arr_asign:
-            break;
-        case point_assign:
-            break;
+        {
+            vector<char> left = this->expr_left->generate();
+            vector<char> right = this->expr_right->generate();
+            vector<char> index = this->expr_middle->generate();
 
-        case equal:
+            merge(bytes, left);
+            merge(bytes, index);
+            merge(bytes, right);
+
+            switch (this->expr_left->dataType.type) {
+
+
+                case DataType::int_:
+                case DataType::char_:
+                case DataType::bool_:
+                    merge(bytes, commandToBytes(Command::iastore));
+                    break;
+                case DataType::float_:
+                    merge(bytes, commandToBytes(Command::dastore));
+                    break;
+
+                case DataType::string_:
+                case DataType::class_:
+                case DataType::array_:
+                    merge(bytes, commandToBytes(Command::aastore));
+                    break;
+            }
+
+        }
             break;
-        case not_equal:
+        case point_assign: {
+
+            vector<char> left = this->expr_left->generate();
+            vector<char> right = this->expr_right->generate();
+            string field = *this->expr_middle->Name;
+            DataType fieldDatatype = ClassTable::Instance()->getField(this->expr_left->dataType.id, field).dataType;
+            int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id, field, dataType);
+
+            merge(bytes, left);
+            merge(bytes, right);
+            merge(bytes, commandToBytes(Command::putfield));
+            merge(bytes, Int16ToBytes(fieldPosition));
             break;
-        case greater:
-            break;
-        case less:
-            break;
-        case greater_equal:
-            break;
-        case less_equal:
-            break;
+        }
 
         case link:
         case mut_link:
+            bytes = this->expr_left->generate();
             break;
+
+        case equal:
+        {
+            vector<char> left = this->expr_left->generate();
+            vector<char> right = this->expr_right->generate();
+
+            switch (this->expr_left->dataType.type) {
+
+                case DataType::int_:
+                case DataType::char_:
+                case DataType::bool_:
+
+                    merge(bytes, commandToBytes(Command::if_icmpne)); // 1
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_1)); // 4
+                    merge(bytes, commandToBytes(Command::goto_)); // 5
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_0)); // 8
+                    break;
+
+                case DataType::float_: ///TODO получше присмотреться к этой ерунде
+                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::ifne)); // 2
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_1)); // 5
+                    merge(bytes, commandToBytes(Command::goto_)); // 6
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_0)); // 9
+                    break;
+
+                case DataType::string_:
+                case DataType::class_:
+                case DataType::array_:
+                    break;
+
+                case DataType::undefined_:
+                case DataType::void_:
+                    break;
+            }
+
+            break;
+        }
+        case not_equal: {
+
+            vector<char> left = this->expr_left->generate();
+            vector<char> right = this->expr_right->generate();
+
+            switch (this->expr_left->dataType.type) {
+
+                case DataType::int_:
+                case DataType::char_:
+                case DataType::bool_:
+
+                    merge(bytes, commandToBytes(Command::if_icmpeq)); // 1
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_1)); // 4
+                    merge(bytes, commandToBytes(Command::goto_)); // 5
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_0)); // 8
+                    break;
+
+                case DataType::float_: ///TODO получше присмотреться к этой ерунде
+                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::ifeq)); // 2
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_1)); // 5
+                    merge(bytes, commandToBytes(Command::goto_)); // 6
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_0)); // 9
+                    break;
+
+                case DataType::string_:
+                case DataType::class_:
+                case DataType::array_:
+                    break;
+
+                case DataType::undefined_:
+                case DataType::void_:
+                    break;
+            }
+            break;
+        }
+        case greater:
+
+        {
+
+            vector<char> left = this->expr_left->generate();
+            vector<char> right = this->expr_right->generate();
+
+            switch (this->expr_left->dataType.type) {
+
+                case DataType::int_:
+                case DataType::char_:
+                case DataType::bool_:
+
+                    merge(bytes, commandToBytes(Command::if_icmple)); // 1
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_1)); // 4
+                    merge(bytes, commandToBytes(Command::goto_)); // 5
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_0)); // 8
+                    break;
+
+                case DataType::float_: ///TODO получше присмотреться к этой ерунде
+                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::ifle)); // 2
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_1)); // 5
+                    merge(bytes, commandToBytes(Command::goto_)); // 6
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_0)); // 9
+                    break;
+
+                case DataType::string_:
+                case DataType::class_:
+                case DataType::array_:
+                    break;
+
+                case DataType::undefined_:
+                case DataType::void_:
+                    break;
+            }
+            break;
+        }
+
+        case less:
+        {
+
+            vector<char> left = this->expr_left->generate();
+            vector<char> right = this->expr_right->generate();
+
+            switch (this->expr_left->dataType.type) {
+
+                case DataType::int_:
+                case DataType::char_:
+                case DataType::bool_:
+
+                    merge(bytes, commandToBytes(Command::if_icmpge)); // 1
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_1)); // 4
+                    merge(bytes, commandToBytes(Command::goto_)); // 5
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_0)); // 8
+                    break;
+
+                case DataType::float_: ///TODO получше присмотреться к этой ерунде
+                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::ifge)); // 2
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_1)); // 5
+                    merge(bytes, commandToBytes(Command::goto_)); // 6
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_0)); // 9
+                    break;
+
+                case DataType::string_:
+                case DataType::class_:
+                case DataType::array_:
+                    break;
+
+                case DataType::undefined_:
+                case DataType::void_:
+                    break;
+            }
+            break;
+        }
+
+        case greater_equal:
+        {
+
+            vector<char> left = this->expr_left->generate();
+            vector<char> right = this->expr_right->generate();
+
+            switch (this->expr_left->dataType.type) {
+
+                case DataType::int_:
+                case DataType::char_:
+                case DataType::bool_:
+
+                    merge(bytes, commandToBytes(Command::if_icmple)); // 1
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_1)); // 4
+                    merge(bytes, commandToBytes(Command::goto_)); // 5
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_0)); // 8
+                    break;
+
+                case DataType::float_: ///TODO получше присмотреться к этой ерунде
+                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::iflt)); // 2
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_1)); // 5
+                    merge(bytes, commandToBytes(Command::goto_)); // 6
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_0)); // 9
+                    break;
+
+                case DataType::string_:
+                case DataType::class_:
+                case DataType::array_:
+                    break;
+
+                case DataType::undefined_:
+                case DataType::void_:
+                    break;
+            }
+            break;
+        }
+        case less_equal:
+        {
+
+            vector<char> left = this->expr_left->generate();
+            vector<char> right = this->expr_right->generate();
+
+            switch (this->expr_left->dataType.type) {
+
+                case DataType::int_:
+                case DataType::char_:
+                case DataType::bool_:
+
+                    merge(bytes, commandToBytes(Command::if_icmpgt)); // 1
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_1)); // 4
+                    merge(bytes, commandToBytes(Command::goto_)); // 5
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_0)); // 8
+                    break;
+
+                case DataType::float_: ///TODO получше присмотреться к этой ерунде
+                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::ifgt)); // 2
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_1)); // 5
+                    merge(bytes, commandToBytes(Command::goto_)); // 6
+                    merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize));
+                    merge(bytes, commandToBytes(Command::iconst_0)); // 9
+                    break;
+
+                case DataType::string_:
+                case DataType::class_:
+                case DataType::array_:
+                    break;
+
+                case DataType::undefined_:
+                case DataType::void_:
+                    break;
+            }
+            break;
+        }
+            break;
+
 
         case array_expr:
             break;
