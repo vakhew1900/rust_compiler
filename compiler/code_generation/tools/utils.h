@@ -31,4 +31,5 @@ enum class ArrayType : uint8_t
 };
 
 void merge(std::vector<char> &bytes, const std::vector<char> &buffer);
+void merge(std::vector<bool> &bytes, const std::vector<bool> &buffer);
 #endif //COMPILER_UTILS_H
