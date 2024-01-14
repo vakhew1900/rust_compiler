@@ -53,6 +53,10 @@ CodeGenerator::generateMethod(const string &className, const string &methodName)
         accessFlags |= uint16_t(AccessFlags::Static);
     }
 
+    if(methodTableItem.body == NULL){
+        accessFlags |= uint16_t(AccessFlags::Abstract);
+    }
+
     buffer = IntToBytes(accessFlags);
     bytes.insert(bytes.end(), u2(buffer));
 
@@ -196,6 +200,9 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
 
     // Добавление флагов
     unsigned int accessFlags = uint16_t(AccessFlags::Public) | uint16_t(AccessFlags::Super);
+    if(classTableItem.classType == ClassTableItem::trait_) {
+        accessFlags |= uint16_t(AccessFlags::Abstract);
+    }
     buffer = IntToBytes(accessFlags);
     bytes.insert(bytes.end(), u2(buffer));
 

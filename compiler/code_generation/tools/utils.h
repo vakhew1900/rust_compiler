@@ -14,7 +14,8 @@ enum class AccessFlags : uint16_t
     Private = 0x0002,
     Static = 0x0008,
     Final = 0x0010,
-    Super = 0x0020
+    Super = 0x0020,
+    Abstract = 0x0400,
 };
 
 
