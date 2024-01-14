@@ -2,17 +2,24 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
-        String str1 = "abc";
-        String str2 = "abc";
-        String str3 = "de";
-        char ch = RTL.charAt(str1,2);
-        System.out.println(ch);
+        int x = 10;
+        int y = 2;
+        int z = x % y;
+        int w = -x;
 
-        boolean b1t = RTL.isEqual(str1, str2);
-        boolean b2f = RTL.isEqual(str1, str3);
-        boolean b3t = RTL.isBigger(str1, str3);
-        boolean b4t = RTL.isLower(str3, str1);
-        System.out.println(b1t + " " + b2f + " " + b3t + " " + b4t);
+        System.out.println(x + " " + y + " " + " " + z + " " + w);
+
+//        String str1 = "abc";
+//        String str2 = "abc";
+//        String str3 = "de";
+//        char ch = RTL.charAt(str1,2);
+//        System.out.println(ch);
+//
+//        boolean b1t = RTL.isEqual(str1, str2);
+//        boolean b2f = RTL.isEqual(str1, str3);
+//        boolean b3t = RTL.isBigger(str1, str3);
+//        boolean b4t = RTL.isLower(str3, str1);
+//        System.out.println(b1t + " " + b2f + " " + b3t + " " + b4t);
 //        int x = 11;
 //
 //        if (x > 10)
