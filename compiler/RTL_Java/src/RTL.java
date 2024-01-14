@@ -72,5 +72,11 @@ public class RTL {
             return isFirstStringLower;
     }
 
+    public static boolean isEqual(String s1, String s2){
+            boolean isStringsEqual = false;
+
+            return isStringsEqual;
+    }
+
 }
 
