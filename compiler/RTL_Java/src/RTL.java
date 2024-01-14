@@ -66,7 +66,11 @@ public class RTL {
             return isFirstStringBigger;
     }
 
+    public static boolean isLower(String s1, String s2){
+            boolean isFirstStringLower = false;
 
+            return isFirstStringLower;
+    }
 
 }
 
