@@ -1,0 +1,104 @@
+Classfile /d:/Studying/4.1/Compile/lr2/Compiler_repo/rust_compiler/compiler/helperJavaProject/out/production/ModuleTest/Car.class
+  Last modified 14 ���. 2024 �.; size 546 bytes
+  SHA-256 checksum 7090d2ef73cc8f84a0e25b9008a7a36439693e849c9a776a5dc587b75499f4e1
+  Compiled from "Car.java"
+public class Car
+  minor version: 0
+  major version: 61
+  flags: (0x0021) ACC_PUBLIC, ACC_SUPER
+  this_class: #14                         // Car
+  super_class: #2                         // java/lang/Object
+  interfaces: 0, fields: 2, methods: 3, attributes: 1
+Constant pool:
+   #1 = Methodref          #2.#3          // java/lang/Object."<init>":()V
+   #2 = Class              #4             // java/lang/Object
+   #3 = NameAndType        #5:#6          // "<init>":()V
+   #4 = Utf8               java/lang/Object
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = Fieldref           #8.#9          // java/lang/System.out:Ljava/io/PrintStream;
+   #8 = Class              #10            // java/lang/System
+   #9 = NameAndType        #11:#12        // out:Ljava/io/PrintStream;
+  #10 = Utf8               java/lang/System
+  #11 = Utf8               out
+  #12 = Utf8               Ljava/io/PrintStream;
+  #13 = Fieldref           #14.#15        // Car.speed:I
+  #14 = Class              #16            // Car
+  #15 = NameAndType        #17:#18        // speed:I
+  #16 = Utf8               Car
+  #17 = Utf8               speed
+  #18 = Utf8               I
+  #19 = Methodref          #20.#21        // java/io/PrintStream.println:(I)V
+  #20 = Class              #22            // java/io/PrintStream
+  #21 = NameAndType        #23:#24        // println:(I)V
+  #22 = Utf8               java/io/PrintStream
+  #23 = Utf8               println
+  #24 = Utf8               (I)V
+  #25 = Fieldref           #14.#26        // Car.probeg:I
+  #26 = NameAndType        #27:#18        // probeg:I
+  #27 = Utf8               probeg
+  #28 = Integer            100000
+  #29 = Utf8               Code
+  #30 = Utf8               LineNumberTable
+  #31 = Utf8               LocalVariableTable
+  #32 = Utf8               this
+  #33 = Utf8               LCar;
+  #34 = Utf8               ride
+  #35 = Utf8               <clinit>
+  #36 = Utf8               SourceFile
+  #37 = Utf8               Car.java
+{
+  static int speed;
+    descriptor: I
+    flags: (0x0008) ACC_STATIC
+
+  static int probeg;
+    descriptor: I
+    flags: (0x0008) ACC_STATIC
+
+  public Car();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+      LineNumberTable:
+        line 1: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   LCar;
+
+  public static void ride();
+    descriptor: ()V
+    flags: (0x0009) ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack=2, locals=0, args_size=0
+         0: getstatic     #7                  // Field java/lang/System.out:Ljava/io/PrintStream;
+         3: getstatic     #13                 // Field speed:I
+         6: invokevirtual #19                 // Method java/io/PrintStream.println:(I)V
+         9: getstatic     #7                  // Field java/lang/System.out:Ljava/io/PrintStream;
+        12: getstatic     #25                 // Field probeg:I
+        15: invokevirtual #19                 // Method java/io/PrintStream.println:(I)V
+        18: return
+      LineNumberTable:
+        line 5: 0
+        line 6: 9
+        line 7: 18
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=1, locals=0, args_size=0
+         0: bipush        100
+         2: putstatic     #13                 // Field speed:I
+         5: ldc           #28                 // int 100000
+         7: putstatic     #25                 // Field probeg:I
+        10: return
+      LineNumberTable:
+        line 2: 0
+        line 3: 5
+}
+SourceFile: "Car.java"
