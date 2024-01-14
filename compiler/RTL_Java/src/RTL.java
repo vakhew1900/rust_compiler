@@ -1,11 +1,11 @@
 public class RTL {
 
     public static void println_int(String str, String val) {
-            if (!str.contains("{}")) {
-                throw new IllegalArgumentException("Format string is not contains {}");
-            }
-            System.out.println(str.replace("{}", val));
+        if (!str.contains("{}")) {
+            throw new IllegalArgumentException("Format string is not contains {}");
         }
+        System.out.println(str.replace("{}", val));
+    }
 
     public static void println_int(String str, int value) {
         if (!str.contains("{}")) {
@@ -56,4 +56,9 @@ public class RTL {
         return in.next().charAt(0);
     }
 
+    public static char charAt(String s, int index){
+        return 'x';
+    }
+
 }
+
