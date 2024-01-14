@@ -2,10 +2,13 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
-        int x = 11;
-
-        if (x > 10)
-            System.out.println(x);
+        String str = "ABCDEF";
+        char ch = RTL.charAt(str,3);
+        System.out.println(ch);
+//        int x = 11;
+//
+//        if (x > 10)
+//            System.out.println(x);
 //           Car.ride();
 //           Bus.ride();
 //        Two.static_test();

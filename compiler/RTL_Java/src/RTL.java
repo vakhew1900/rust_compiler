@@ -57,7 +57,7 @@ public class RTL {
     }
 
     public static char charAt(String s, int index){
-        return 'x';
+        return s.charAt(index);
     }
 
 }
