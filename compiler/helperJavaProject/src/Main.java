@@ -2,12 +2,16 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
-        int x = 10;
-        int y = 2;
-        int z = x % y;
-        int w = -x;
+        boolean x = true;
+        x = true;
+        boolean y = false;
 
-        System.out.println(x + " " + y + " " + " " + z + " " + w);
+//        int x = 10;
+//        int y = 2;
+//        int z = x % y;
+//        int w = -x;
+//
+//        System.out.println(x + " " + y + " " + " " + z + " " + w);
 
 //        String str1 = "abc";
 //        String str2 = "abc";
