@@ -603,7 +603,27 @@ vector<char> ExprNode::generate() {
 
         case id_:
         case self_expr:
-            merge(bytes, Int16ToBytes(localVarNum));
+            switch (this->dataType.type) {
+
+                case DataType::int_:
+                case DataType::char_:
+                case DataType::bool_:
+                    merge(bytes, commandToBytes(Command::iload));
+                    break;
+
+                case DataType::float_:
+                    merge(bytes, commandToBytes(Command::dload));
+                    break;
+
+                case DataType::string_:
+                case DataType::class_:
+                case DataType::array_:
+                    merge(bytes, commandToBytes(Command::aload));
+                    break;
+                case DataType::undefined_:
+                case DataType::void_:
+                    break;
+            }
             break;
 
         case index_expr:
