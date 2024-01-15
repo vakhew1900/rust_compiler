@@ -198,8 +198,6 @@ vector<char> ExprNode::generate() {
             merge(bytes, Int16ToBytes(unaryCommandSize + gotoCommandSize));
 
             merge(bytes, commandToBytes(Command::iconst_0)); // 16
-            merge(bytes, commandToBytes(Command::dup)); // сделал, чтобы был переход на следующую команду 17
-            merge(bytes, commandToBytes(Command::pop));
 
         }
             break;
@@ -229,9 +227,6 @@ vector<char> ExprNode::generate() {
             merge(bytes, Int16ToBytes(unaryCommandSize + gotoCommandSize));
 
             merge(bytes, commandToBytes(Command::iconst_1)); // 16
-            merge(bytes, commandToBytes(Command::dup)); // сделал, чтобы был переход на следующую команду 17
-            merge(bytes, commandToBytes(Command::pop));
-
         }
             break;
 
@@ -278,9 +273,11 @@ vector<char> ExprNode::generate() {
 
 
                 case DataType::int_:
-                case DataType::char_:
                 case DataType::bool_:
                     merge(bytes, commandToBytes(Command::iastore));
+                    break;
+                case DataType::char_:
+                    merge(bytes, commandToBytes(Command::castore));
                     break;
                 case DataType::float_:
                     merge(bytes, commandToBytes(Command::dastore));
@@ -585,17 +582,17 @@ vector<char> ExprNode::generate() {
 
         case block_expr: {
 
-            if(this->stmt_list != NULL && this->stmt_list->stmts != NULL){
-                for(auto stmt : *this->stmt_list->stmts){
+            if (this->stmt_list != NULL && this->stmt_list->stmts != NULL) {
+                for (auto stmt: *this->stmt_list->stmts) {
                     merge(bytes, stmt->generate());
                 }
-                if(this->body != NULL){
+                if (this->body != NULL) {
                     merge(bytes, this->body->generate());
                 }
             }
 
-            if(ClassTable::Instance()->getMethod(curClassName, curMethodName).body == this){
-                merge(bytes,generateReturn(this->expr_left));
+            if (ClassTable::Instance()->getMethod(curClassName, curMethodName).body == this) {
+                merge(bytes, generateReturn(this->expr_left));
             }
 
             break;
@@ -626,21 +623,90 @@ vector<char> ExprNode::generate() {
             }
             break;
 
-        case index_expr:
+        case index_expr: {
+            vector<char> array = this->expr_left->generate();
+            vector<char> index = this->expr_right->generate();
+
+            merge(bytes, array);
+            merge(bytes, index);
+
+            switch (this->dataType.type) {
+
+                case DataType::int_:
+                case DataType::char_:
+                case DataType::bool_:
+                    merge(bytes, commandToBytes(Command::iaload));
+                    break;
+                case DataType::float_:
+                    merge(bytes, commandToBytes(Command::daload));
+                    break;
+                case DataType::string_:
+                case DataType::class_:
+                case DataType::array_:
+                    merge(bytes, commandToBytes(Command::aaload));
+                    break;
+                case DataType::undefined_:
+                case DataType::void_:
+                    break;
+            }
             break;
-        case field_access_expr:
+        }
+
+        case field_access_expr: {
+            vector<char> object = this->expr_left->generate();
+            string fieldName = *this->Name;
+            int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id,
+                                                                    fieldName,
+                                                                    dataType);
+            merge(bytes, object);
+            merge(bytes, commandToBytes(Command::getfield));
+            merge(bytes, Int16ToBytes(fieldPosition));
             break;
-        case method_expr:
+        }
+        case method_expr: {
+            merge(bytes, this->expr_left->generate());
+            string methodName = *this->Name;
+            vector<DataType> params;
+            string className = this->expr_left->dataType.id;
+            DataType returnDataType = ClassTable::getMethodDeep(className, methodName).returnDataType;
+            if (this->expr_list != NULL) {
+                for (auto &elem: *this->expr_list->exprs) {
+                    params.push_back(elem->dataType);
+                    merge(bytes, elem->generate());
+                }
+            }
+
+            int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params, returnDataType);
+            merge(bytes, commandToBytes(Command::invokevirtual));
+            merge(bytes, Int16ToBytes(methodPosition));
+            break;
+        }
+
+        case static_method: {
+            string className = this->expr_left->className;
+            string methodName = *this->expr_middle->Name;
+
+            vector<DataType> params;
+            DataType returnDataType = ClassTable::getMethodDeep(className, methodName).returnDataType;
+
+            if (this->expr_list != NULL) {
+                for (auto &elem: *this->expr_list->exprs) {
+                    params.push_back(elem->dataType);
+                    merge(bytes, elem->generate());
+                }
+            }
+
+            int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params, returnDataType);
+            merge(bytes, commandToBytes(Command::invokestatic));
+            merge(bytes, Int16ToBytes(methodPosition));
+            break;
+        }
+
+        case path_call_expr:
             break;
 
         case as:
             break;
-
-        case static_method:
-            break;
-        case path_call_expr:
-            break;
-
 
         case struct_creation:
             break;
@@ -707,10 +773,9 @@ vector<char> ExprNode::generateReturn(ExprNode *exprNode) {
 
     vector<char> bytes;
 
-    if(exprNode == NULL){
+    if (exprNode == NULL) {
         bytes = commandToBytes(Command::return_);
-    }
-    else {
+    } else {
 
         switch (exprNode->dataType.type) {
 
