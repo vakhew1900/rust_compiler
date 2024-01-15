@@ -626,10 +626,45 @@ vector<char> ExprNode::generate() {
             }
             break;
 
-        case index_expr:
+        case index_expr: {
+            vector<char> array = this->expr_left->generate();
+            vector<char> index = this->expr_right->generate();
+
+            merge(bytes, array);
+            merge(bytes, index);
+
+            switch (this->dataType.type) {
+
+                case DataType::int_:
+                case DataType::char_:
+                case DataType::bool_:
+                    merge(bytes, commandToBytes(Command::iaload));
+                    break;
+                case DataType::float_:
+                    merge(bytes, commandToBytes(Command::daload));
+                    break;
+                case DataType::string_:
+                case DataType::class_:
+                case DataType::array_:
+                    merge(bytes, commandToBytes(Command::aaload));
+                    break;
+                case DataType::undefined_:
+                case DataType::void_:
+                    break;
+            }
             break;
-        case field_access_expr:
+        }
+
+        case field_access_expr: {
+            vector<char> object = this->expr_left->generate();
+            string fieldName = *this->Name;
+            int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id, fieldName,
+                                                                    dataType);
+            merge(bytes, object);
+            merge(bytes, commandToBytes(Command::getfield));
+            merge(bytes, Int16ToBytes(fieldPosition));
             break;
+        }
         case method_expr:
             break;
 
