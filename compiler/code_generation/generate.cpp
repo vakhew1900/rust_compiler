@@ -273,9 +273,11 @@ vector<char> ExprNode::generate() {
 
 
                 case DataType::int_:
-                case DataType::char_:
                 case DataType::bool_:
                     merge(bytes, commandToBytes(Command::iastore));
+                    break;
+                case DataType::char_:
+                    merge(bytes, commandToBytes(Command::castore));
                     break;
                 case DataType::float_:
                     merge(bytes, commandToBytes(Command::dastore));
@@ -674,16 +676,32 @@ vector<char> ExprNode::generate() {
                 }
             }
 
-            int methodPositin = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params, returnDataType);
+            int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params, returnDataType);
             merge(bytes, commandToBytes(Command::invokevirtual));
-            merge(bytes, Int16ToBytes(methodPositin));
+            merge(bytes, Int16ToBytes(methodPosition));
             break;
         }
 
         case static_method: {
+            string className = this->expr_left->className;
+            string methodName = *this->expr_middle->Name;
 
+            vector<DataType> params;
+            DataType returnDataType = ClassTable::getMethodDeep(className, methodName).returnDataType;
+
+            if (this->expr_list != NULL) {
+                for (auto &elem: *this->expr_list->exprs) {
+                    params.push_back(elem->dataType);
+                    merge(bytes, elem->generate());
+                }
+            }
+
+            int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params, returnDataType);
+            merge(bytes, commandToBytes(Command::invokestatic));
+            merge(bytes, Int16ToBytes(methodPosition));
             break;
         }
+
         case path_call_expr:
             break;
 
