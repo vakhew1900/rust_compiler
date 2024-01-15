@@ -2,13 +2,19 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
-        double x = 10.1;
-        double y = 10.2 ;
-        boolean z = x > y;
-        boolean z1 = x < y;
-        boolean z2 = x >= y;
-        boolean z3 = x <= y;
-        boolean z4 = x != y;
+        int arr[] = new int[6];
+
+        for (int i = 0; i < 5; i++){
+            arr[i] = i;
+        }
+
+//        double x = 10.1;
+//        double y = 10.2 ;
+//        boolean z = x > y;
+//        boolean z1 = x < y;
+//        boolean z2 = x >= y;
+//        boolean z3 = x <= y;
+//        boolean z4 = x != y;
 
 //        Car c = new Car();
 //        c = null;
