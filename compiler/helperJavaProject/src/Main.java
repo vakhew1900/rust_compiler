@@ -8,6 +8,8 @@ public class Main {
             arr[i] = 's';
         }
 
+        char ch = arr[0];
+
 //        double x = 10.1;
 //        double y = 10.2 ;
 //        boolean z = x > y;
