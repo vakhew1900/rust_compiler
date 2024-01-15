@@ -702,10 +702,48 @@ vector<char> ExprNode::generate() {
             break;
         }
 
-        case path_call_expr:
-            break;
+        case path_call_expr: {
+            string className = this->expr_left->className;
+            string fieldName = *this->expr_middle->Name;
+            DataType dataType = this->dataType;
 
-        case as:
+            int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id,
+                                                                    fieldName,
+                                                                    dataType);
+            merge(bytes,commandToBytes(Command:: getstatic));
+            merge(bytes, Int16ToBytes(fieldPosition));
+            break;
+        }
+        case as:{
+            merge(bytes, this->expr_left->generate());
+            if(!this->expr_left->dataType.isEquals(this->dataType)) {
+                switch (this->expr_left->dataType.type) {
+
+                    case DataType::int_:
+                        if(this->dataType.isChar()){
+                            merge(bytes, commandToBytes(Command::i2c));
+                        }
+                        if(this->dataType.isFloat()){
+                            merge(bytes, commandToBytes(Command::i2d));
+                        }
+                        break;
+                    case DataType::float_:
+                        if(this->dataType.isInt()){
+                            merge(bytes, commandToBytes(Command::d2i));
+                        }
+                        break;
+
+                    case DataType::char_:
+                    case DataType::bool_:
+                    case DataType::string_:
+                    case DataType::class_:
+                    case DataType::array_:
+                    case DataType::undefined_:
+                    case DataType::void_:
+                        break;
+                }
+            }
+        }
             break;
 
         case struct_creation:
