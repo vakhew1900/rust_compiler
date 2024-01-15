@@ -2,9 +2,12 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
-        boolean x = true;
-        x = true;
-        boolean y = !x;
+        Car c = new Car();
+        c = null;
+
+//        boolean x = true;
+//        x = true;
+//        boolean y = !x;
 
 //        int x = 10;
 //        int y = 2;
