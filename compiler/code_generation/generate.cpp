@@ -198,8 +198,6 @@ vector<char> ExprNode::generate() {
             merge(bytes, Int16ToBytes(unaryCommandSize + gotoCommandSize));
 
             merge(bytes, commandToBytes(Command::iconst_0)); // 16
-            merge(bytes, commandToBytes(Command::dup)); // сделал, чтобы был переход на следующую команду 17
-            merge(bytes, commandToBytes(Command::pop));
 
         }
             break;
@@ -229,9 +227,6 @@ vector<char> ExprNode::generate() {
             merge(bytes, Int16ToBytes(unaryCommandSize + gotoCommandSize));
 
             merge(bytes, commandToBytes(Command::iconst_1)); // 16
-            merge(bytes, commandToBytes(Command::dup)); // сделал, чтобы был переход на следующую команду 17
-            merge(bytes, commandToBytes(Command::pop));
-
         }
             break;
 
@@ -680,17 +675,20 @@ vector<char> ExprNode::generate() {
             }
 
             int methodPositin = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params, returnDataType);
+            merge(bytes, commandToBytes(Command::invokevirtual));
             merge(bytes, Int16ToBytes(methodPositin));
             break;
         }
-        case as:
-            break;
 
-        case static_method:
+        case static_method: {
+
             break;
+        }
         case path_call_expr:
             break;
 
+        case as:
+            break;
 
         case struct_creation:
             break;
