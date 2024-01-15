@@ -2,17 +2,22 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
+
+        int x = 97;
+        char ch = (char) x;
+        char other = ch;
+
 //        char arr[] = new char[5];
 //
 //        for (int i = 0; i < 5; i++){
 //            arr[i] = 's';
 //        }
 
-        char ch = 'a';
-        char ch2 = 'b';
-
-        if (ch > ch2)
-            System.out.println(ch + " " + ch2);
+//        char ch = 'a';
+//        char ch2 = 'b';
+//
+//        if (ch > ch2)
+//            System.out.println(ch + " " + ch2);
 
 //        double x = 10.1;
 //        double y = 10.2 ;
