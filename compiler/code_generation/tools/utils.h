@@ -14,7 +14,8 @@ enum class AccessFlags : uint16_t
     Private = 0x0002,
     Static = 0x0008,
     Final = 0x0010,
-    Super = 0x0020
+    Super = 0x0020,
+    Abstract = 0x0400,
 };
 
 
@@ -31,4 +32,5 @@ enum class ArrayType : uint8_t
 };
 
 void merge(std::vector<char> &bytes, const std::vector<char> &buffer);
+void merge(std::vector<bool> &bytes, const std::vector<bool> &buffer);
 #endif //COMPILER_UTILS_H
