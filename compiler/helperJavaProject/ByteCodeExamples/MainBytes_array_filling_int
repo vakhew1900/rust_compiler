@@ -1,0 +1,91 @@
+Classfile /d:/Studying/4.1/Compile/lr2/Compiler_repo/rust_compiler/compiler/helperJavaProject/out/production/ModuleTest/Main.class
+  Last modified 15 ���. 2024 �.; size 469 bytes
+  SHA-256 checksum 34a8f989a86e8e1d5a94ce85dc42c56b6e611490774783d0dde2c67d31aae7c2
+  Compiled from "Main.java"
+public class Main
+  minor version: 0
+  major version: 61
+  flags: (0x0021) ACC_PUBLIC, ACC_SUPER
+  this_class: #7                          // Main
+  super_class: #2                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 2, attributes: 1
+Constant pool:
+   #1 = Methodref          #2.#3          // java/lang/Object."<init>":()V
+   #2 = Class              #4             // java/lang/Object
+   #3 = NameAndType        #5:#6          // "<init>":()V
+   #4 = Utf8               java/lang/Object
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = Class              #8             // Main
+   #8 = Utf8               Main
+   #9 = Utf8               Code
+  #10 = Utf8               LineNumberTable
+  #11 = Utf8               LocalVariableTable
+  #12 = Utf8               this
+  #13 = Utf8               LMain;
+  #14 = Utf8               main
+  #15 = Utf8               ([Ljava/lang/String;)V
+  #16 = Utf8               i
+  #17 = Utf8               I
+  #18 = Utf8               args
+  #19 = Utf8               [Ljava/lang/String;
+  #20 = Utf8               arr
+  #21 = Utf8               [I
+  #22 = Utf8               StackMapTable
+  #23 = Class              #21            // "[I"
+  #24 = Utf8               SourceFile
+  #25 = Utf8               Main.java
+{
+  public Main();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+      LineNumberTable:
+        line 3: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   LMain;
+
+  public static void main(java.lang.String[]);
+    descriptor: ([Ljava/lang/String;)V
+    flags: (0x0009) ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack=3, locals=3, args_size=1
+         0: bipush        6
+         2: newarray       int
+         4: astore_1
+         5: iconst_0
+         6: istore_2
+         7: iload_2
+         8: iconst_5
+         9: if_icmpge     22
+        12: aload_1
+        13: iload_2
+        14: iload_2
+        15: iastore
+        16: iinc          2, 1
+        19: goto          7
+        22: return
+      LineNumberTable:
+        line 5: 0
+        line 7: 5
+        line 8: 12
+        line 7: 16
+        line 76: 22
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            7      15     2     i   I
+            0      23     0  args   [Ljava/lang/String;
+            5      18     1   arr   [I
+      StackMapTable: number_of_entries = 2
+        frame_type = 253 /* append */
+          offset_delta = 7
+          locals = [ class "[I", int ]
+        frame_type = 250 /* chop */
+          offset_delta = 14
+}
+SourceFile: "Main.java"

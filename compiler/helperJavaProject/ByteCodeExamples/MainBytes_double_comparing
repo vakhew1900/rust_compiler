@@ -1,0 +1,319 @@
+Classfile /d:/Studying/4.1/Compile/lr2/Compiler_repo/rust_compiler/compiler/helperJavaProject/out/production/ModuleTest/Main.class
+  Last modified 15 ���. 2024 �.; size 639 bytes
+  SHA-256 checksum c3292b2719720edf0fe43c41350abf7efd7aa1912eb156b071e2bbfa04ef9078
+  Compiled from "Main.java"
+public class Main
+  minor version: 0
+  major version: 61
+  flags: (0x0021) ACC_PUBLIC, ACC_SUPER
+  this_class: #11                         // Main
+  super_class: #2                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 2, attributes: 1
+Constant pool:
+   #1 = Methodref          #2.#3          // java/lang/Object."<init>":()V
+   #2 = Class              #4             // java/lang/Object
+   #3 = NameAndType        #5:#6          // "<init>":()V
+   #4 = Utf8               java/lang/Object
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = Double             10.1d
+   #9 = Double             10.2d
+  #11 = Class              #12            // Main
+  #12 = Utf8               Main
+  #13 = Utf8               Code
+  #14 = Utf8               LineNumberTable
+  #15 = Utf8               LocalVariableTable
+  #16 = Utf8               this
+  #17 = Utf8               LMain;
+  #18 = Utf8               main
+  #19 = Utf8               ([Ljava/lang/String;)V
+  #20 = Utf8               args
+  #21 = Utf8               [Ljava/lang/String;
+  #22 = Utf8               x
+  #23 = Utf8               D
+  #24 = Utf8               y
+  #25 = Utf8               z
+  #26 = Utf8               Z
+  #27 = Utf8               z1
+  #28 = Utf8               z2
+  #29 = Utf8               z3
+  #30 = Utf8               z4
+  #31 = Utf8               StackMapTable
+  #32 = Utf8               SourceFile
+  #33 = Utf8               Main.java
+{
+  public Main();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+      LineNumberTable:
+        line 3: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   LMain;
+
+  public static void main(java.lang.String[]);
+    descriptor: ([Ljava/lang/String;)V
+    flags: (0x0009) ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack=4, locals=10, args_size=1
+         0: ldc2_w        #7                  // double 10.1d
+         3: dstore_1
+         4: ldc2_w        #9                  // double 10.2d
+         7: dstore_3
+         8: dload_1
+         9: dload_3
+        10: dcmpl
+        11: ifle          18
+        14: iconst_1
+        15: goto          19
+        18: iconst_0
+        19: istore        5
+        21: dload_1
+        22: dload_3
+        23: dcmpg
+        24: ifge          31
+        27: iconst_1
+        28: goto          32
+        31: iconst_0
+        32: istore        6
+        34: dload_1
+        35: dload_3
+        36: dcmpl
+        37: iflt          44
+        40: iconst_1
+        41: goto          45
+        44: iconst_0
+        45: istore        7
+        47: dload_1
+        48: dload_3
+        49: dcmpg
+        50: ifgt          57
+        53: iconst_1
+        54: goto          58
+        57: iconst_0
+        58: istore        8
+        60: dload_1
+        61: dload_3
+        62: dcmpl
+        63: ifeq          70
+        66: iconst_1
+        67: goto          71
+        70: iconst_0
+        71: istore        9
+        73: return
+      LineNumberTable:
+        line 5: 0
+        line 6: 4
+        line 7: 8
+        line 8: 21
+        line 9: 34
+        line 10: 47
+        line 11: 60
+        line 70: 73
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      74     0  args   [Ljava/lang/String;
+            4      70     1     x   D
+            8      66     3     y   D
+           21      53     5     z   Z
+           34      40     6    z1   Z
+           47      27     7    z2   Z
+           60      14     8    z3   Z
+           73       1     9    z4   Z
+      StackMapTable: number_of_entries = 10
+        frame_type = 253 /* append */
+          offset_delta = 18
+          locals = [ double, double ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 252 /* append */
+          offset_delta = 11
+          locals = [ int ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 252 /* append */
+          offset_delta = 11
+          locals = [ int ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 252 /* append */
+          offset_delta = 11
+          locals = [ int ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 252 /* append */
+          offset_delta = 11
+          locals = [ int ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+}
+SourceFile: "Main.java"
+        18: iconst_0
+        19: istore        5
+        21: dload_1
+        22: dload_3
+        23: dcmpg
+        24: ifge          31
+        27: iconst_1
+        28: goto          32
+        31: iconst_0
+        32: istore        6
+        34: dload_1
+        35: dload_3
+        36: dcmpl
+        37: iflt          44
+        40: iconst_1
+        41: goto          45
+        44: iconst_0
+        45: istore        7
+        47: dload_1
+        48: dload_3
+        49: dcmpg
+        50: ifgt          57
+        53: iconst_1
+        54: goto          58
+        57: iconst_0
+        58: istore        8
+        60: dload_1
+        61: dload_3
+        62: dcmpl
+        63: ifeq          70
+        66: iconst_1
+        67: goto          71
+        70: iconst_0
+        71: istore        9
+        73: return
+      LineNumberTable:
+        line 5: 0
+        line 6: 4
+        line 7: 8
+        line 8: 21
+        line 9: 34
+        line 10: 47
+        line 11: 60
+        line 70: 73
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      74     0  args   [Ljava/lang/String;
+            4      70     1     x   D
+            8      66     3     y   D
+           21      53     5     z   Z
+           34      40     6    z1   Z
+           47      27     7    z2   Z
+           60      14     8    z3   Z
+           73       1     9    z4   Z
+      StackMapTable: number_of_entries = 10
+        frame_type = 253 /* append */
+          offset_delta = 18
+          locals = [ double, double ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 252 /* append */
+          offset_delta = 11
+          locals = [ int ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 252 /* append */
+          offset_delta = 11
+          locals = [ int ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 252 /* append */
+          offset_delta = 11
+          locals = [ int ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 252 /* append */
+          offset_delta = 11
+          locals = [ int ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+}
+SourceFile: "Main.java"
+        18: iconst_0
+        19: istore        5
+        21: dload_1
+        22: dload_3
+        23: dcmpg
+        24: ifge          31
+        27: iconst_1
+        28: goto          32
+        31: iconst_0
+        32: istore        6
+        34: dload_1
+        35: dload_3
+        36: dcmpl
+        37: iflt          44
+        40: iconst_1
+        41: goto          45
+        44: iconst_0
+        45: istore        7
+        47: dload_1
+        48: dload_3
+        49: dcmpg
+        50: ifgt          57
+        53: iconst_1
+        54: goto          58
+        57: iconst_0
+        58: istore        8
+        60: dload_1
+        61: dload_3
+        62: dcmpl
+        63: ifeq          70
+        66: iconst_1
+        67: goto          71
+        70: iconst_0
+        71: istore        9
+        73: return
+      LineNumberTable:
+        line 5: 0
+        line 6: 4
+        line 7: 8
+        line 8: 21
+        line 9: 34
+        line 10: 47
+        line 11: 60
+        line 70: 73
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      74     0  args   [Ljava/lang/String;
+            4      70     1     x   D
+            8      66     3     y   D
+           21      53     5     z   Z
+           34      40     6    z1   Z
+           47      27     7    z2   Z
+           60      14     8    z3   Z
+           73       1     9    z4   Z
+      StackMapTable: number_of_entries = 10
+        frame_type = 253 /* append */
+          offset_delta = 18
+          locals = [ double, double ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 252 /* append */
+          offset_delta = 11
+          locals = [ int ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 252 /* append */
+          offset_delta = 11
+          locals = [ int ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 252 /* append */
+          offset_delta = 11
+          locals = [ int ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 252 /* append */
+          offset_delta = 11
+          locals = [ int ]
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+}
+SourceFile: "Main.java"
