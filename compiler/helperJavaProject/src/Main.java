@@ -3,11 +3,11 @@ import dir.*;
 public class Main {
     public static void main(String[] args) {
 
-        int x = 97;
-        char ch = (char) x;
-        char other = ch;
+//        int x = 97;
+//        char ch = (char) x;
+//        char other = ch;
 
-//        char arr[] = new char[5];
+          int arr[] = {1, 2, 3, 4, 5};
 //
 //        for (int i = 0; i < 5; i++){
 //            arr[i] = 's';
