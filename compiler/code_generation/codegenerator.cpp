@@ -51,7 +51,7 @@ CodeGenerator::generateMethod(const string &className, const string &methodName)
         accessFlags |= uint16_t(AccessFlags::Static);
     }
 
-    if (methodTableItem.body == NULL) {
+    if (methodTableItem.body == NULL && methodName != ConstTable::init && methodName != ConstTable::clinit) {
         accessFlags |= uint16_t(AccessFlags::Abstract);
     }
 
@@ -61,16 +61,16 @@ CodeGenerator::generateMethod(const string &className, const string &methodName)
     // имя метода
     if (!methodName.empty()) {
         buffer = IntToBytes(ClassTable::addUTF8ToConstTable(className, methodName));
-        bytes.insert(bytes.end(), u2(bytes));
+        bytes.insert(bytes.end(), u2(buffer));
     }
 
     string decscriptor = methodTableItem.paramsToConstTableFormat();
     // количество атрибутов метода
     buffer = IntToBytes(ClassTable::addUTF8ToConstTable(className, decscriptor));
-    bytes.insert(bytes.end(), u2(bytes));
+    bytes.insert(bytes.end(), u2(buffer));
 
     // количество атрибутов метода
-    if (methodTableItem.body == NULL) {
+    if (methodTableItem.body == NULL && methodName != ConstTable::init && methodName != ConstTable::clinit) {
         bytes.push_back((char) 0x00);
         bytes.push_back((char) 0x00);
         return bytes;
@@ -132,11 +132,11 @@ void CodeGenerator::generateClass(const string &className) {
 
     // создание файла
     string fileName = className + ".class";
-   // path filepath = codeGenDir / fileName;
-   // create_directory(filepath.parent_path());
+    path filepath = codeGenDir / fileName;
+    create_directory(filepath.parent_path());
 
     std::ofstream outfile;
-    outfile.open(fileName, std::ios_base::binary | std::ios_base::out | std::ios_base::trunc);
+    outfile.open(filepath, std::ios_base::binary | std::ios_base::out | std::ios_base::trunc);
 
 
     ClassTableItem classTableItem = ClassTableItem();
@@ -146,12 +146,12 @@ void CodeGenerator::generateClass(const string &className) {
     vector<char> buffer = {(char) 0x00, (char) 0x00, (char) 0x00,
                            (char) 0x3E}; // // JAVA 8 (version 52.0 (0x34)) ///TODO заменить
 
-    bytes.insert(bytes.end(), u2(buffer));
+    merge(bytes, buffer);
 
     vector<char> classBody = generateClassBody(className);
     vector<char> constants = ClassTable::Instance()->getClass(className).constTable.toBytes(); // consttable
 
-    buffer = IntToBytes(constants.size() + 1);
+    buffer = IntToBytes(ClassTable::Instance()->getClass(className).constTable.items.size());
 
     bytes.insert(bytes.end(), u2(buffer)); // размер constable
     merge(bytes, constants);
@@ -196,7 +196,7 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
     vector<char> bytes;
     vector<char> buffer;
 
-    ClassTableItem classTableItem = ClassTableItem();
+    ClassTableItem classTableItem = ClassTable::Instance()->getClass(className);
 
     // Добавление флагов
     unsigned int accessFlags = uint16_t(AccessFlags::Public) | uint16_t(AccessFlags::Super);
@@ -217,6 +217,7 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
         parentName = classTableItem.parentName;
     }
 
+    ConstTable constTable = classTableItem.constTable;
     int parentNameNum = ClassTable::addUTF8ToConstTable(className, parentName);
     buffer = IntToBytes(parentNameNum);
     bytes.insert(bytes.end(), u2(buffer));
@@ -252,12 +253,9 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
     bytes.insert(bytes.end(), u2(buffer));
 
 
-    buffer = generateMethod(className, ConstTable::init);
-    bytes.insert(bytes.end(), u2(buffer));
-
     for (auto &method: methodTable) {
         buffer = generateMethod(className, method.first);
-        bytes.insert(bytes.end(), u2(buffer));
+        merge(bytes, buffer);
     }
 
     // атрибуты

@@ -146,7 +146,7 @@ vector<char> ConstTableItem::toBytes() {
         {
             bytes.push_back((char) ConstTableItem::CONSTANT_UTF8);
 
-            char const *str =  ConstTable::formatClassName(utf8).c_str();
+            char const *str =  utf8.c_str();
             buffer = IntToBytes(strlen(str));
             bytes.insert(bytes.end(), u2(buffer));
             bytes.insert(bytes.end(), str, str + strlen(str));
@@ -185,7 +185,7 @@ string ConstTable::toString() {
 
 int ConstTable::Class(const string &className) {
 
-    int utf8Val = UTF8(className);
+    int utf8Val = UTF8(ConstTable::formatClassName(className));
     int res = Val(ConstTableItem::CONSTANT_CLASS, utf8Val);
 
     if(res <= 0){
@@ -347,8 +347,8 @@ ConstTable::ConstTable() {
         ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "java/lang/Object");
         items.push_back(item);
         item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "Code");
-        this->MethodRef("java/lang/Object", ConstTable::init, vector<DataType>(), DataType(DataType::void_));
         items.push_back(item);
+        this->MethodRef("java/lang/Object", ConstTable::init, vector<DataType>(), DataType(DataType::void_));
 }
 
 vector<char> ConstTable::toBytes() {

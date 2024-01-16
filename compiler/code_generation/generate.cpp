@@ -288,6 +288,9 @@ vector<char> ExprNode::generate() {
                 case DataType::array_:
                     merge(bytes, commandToBytes(Command::aastore));
                     break;
+                case DataType::void_:
+                case DataType::undefined_:
+                    break;
             }
 
         }
