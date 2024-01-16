@@ -144,7 +144,7 @@ void CodeGenerator::generateClass(const string &className) {
     // заполнение файла
     vector<char> bytes = {(char) 0xCA, (char) 0xFE, (char) 0xBA, (char) 0xBE}; // CAFEBABE
     vector<char> buffer = {(char) 0x00, (char) 0x00, (char) 0x00,
-                           (char) 0x3E}; // // JAVA 8 (version 52.0 (0x34)) ///TODO заменить
+                           (char) 0x3D}; // // JAVA 8 (version 52.0 (0x34)) ///TODO заменить
 
     merge(bytes, buffer);
 
