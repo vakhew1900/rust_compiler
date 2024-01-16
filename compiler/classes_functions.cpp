@@ -1645,6 +1645,7 @@ void ProgramNode::getAllItems(std::string className) {
 
         ClassTable::isCorrectTraitsImpl();
         ClassTable::isMainFunctionExist();
+        ClassTable:: makeMainForJavaFormat();
     }
     catch (Exception e) {
         cerr << e.getMessage() << "\n";

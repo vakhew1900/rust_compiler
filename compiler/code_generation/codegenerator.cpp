@@ -207,7 +207,7 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
     bytes.insert(bytes.end(), u2(buffer));
 
     // текущий класс
-    int classNameNum = ClassTable::addUTF8ToConstTable(className, className);
+    int classNameNum = ClassTable::addClassToConstTable(className, className);
     buffer = IntToBytes(classNameNum);
     bytes.insert(bytes.end(), u2(buffer));
 
@@ -218,7 +218,7 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
     }
 
     ConstTable constTable = classTableItem.constTable;
-    int parentNameNum = ClassTable::addUTF8ToConstTable(className, parentName);
+    int parentNameNum = ClassTable::addClassToConstTable(className, parentName);
     buffer = IntToBytes(parentNameNum);
     bytes.insert(bytes.end(), u2(buffer));
 

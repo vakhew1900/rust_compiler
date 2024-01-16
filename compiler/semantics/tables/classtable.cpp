@@ -612,3 +612,14 @@ bool ClassTable::isEnum(const string &className) {
 map<string, ClassTableItem> ClassTable::getItems() {
     return ClassTable::Instance()->items;
 }
+
+void ClassTable::makeMainForJavaFormat() {
+    string mainClass = ConstTable::globalClassName + "/" + ConstTable::moduleClassName;
+    string main = "main";
+    MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(mainClass, main);
+    VarTableItem varTableItem = VarTableItem();
+    varTableItem.id = "args";
+    varTableItem.dataType = DataType::ArrayDataType(DataType::string_, 1, {1});
+    methodTableItem.paramTable.items.push_back(varTableItem);
+    ClassTable::Instance()->updateMethod(mainClass, main, methodTableItem);
+}

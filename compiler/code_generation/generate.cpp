@@ -64,7 +64,7 @@ vector<char> StmtNode::generate() {
 
     // добаление номера перемнной
     buffer = IntToBytes(this->localVarNum);
-    buffer.push_back(buffer.back());
+    bytes.push_back(buffer.back());
     return bytes;
 }
 

@@ -103,6 +103,7 @@ public:
 
     static  bool  isEnum(const string& className);
     static  map<string, ClassTableItem> getItems();
+    static void makeMainForJavaFormat();
 
 };
 
