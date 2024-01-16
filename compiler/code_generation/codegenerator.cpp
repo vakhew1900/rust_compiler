@@ -5,8 +5,6 @@
 #include "codegenerator.h"
 #include "fstream"
 
-using namespace std::filesystem;
-
 const path CodeGenerator::codeGenDir = "./code_generation/";
 
 vector<char> CodeGenerator::generateField(const string &className, const string &fieldName) {
@@ -134,11 +132,11 @@ void CodeGenerator::generateClass(const string &className) {
 
     // создание файла
     string fileName = className + ".class";
-    path filepath = codeGenDir / fileName;
-    create_directory(filepath.parent_path());
+   // path filepath = codeGenDir / fileName;
+   // create_directory(filepath.parent_path());
 
     std::ofstream outfile;
-    outfile.open(filepath, std::ios_base::binary | std::ios_base::out | std::ios_base::trunc);
+    outfile.open(fileName, std::ios_base::binary | std::ios_base::out | std::ios_base::trunc);
 
 
     ClassTableItem classTableItem = ClassTableItem();
