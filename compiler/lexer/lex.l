@@ -1,6 +1,7 @@
 %{
 // #include "_tab.h"
 #include "parser_tab.cpp"
+#include "code_generation/codegenerator.cpp"
 extern int yyparse();
 %}
 
@@ -563,21 +564,24 @@ int main(int argc, char** argv) {
     yyparse();
     fclose(file);
 
+    if(global_program == NULL){
+        return 1;
+    }
+
     string dot;
     global_program->toDot(dot);
-    std::cout << dot << "\n";
-    std::ofstream out("dot-tree.txt");
 
+    std::ofstream out("dot-tree.txt");
     global_program->makeAllConversions();
     string updatedDot;
     global_program->toDot(updatedDot);
 
     string res = ClassTable::Instance()->toString();
     out << updatedDot << "\n";
-    cout << ClassTable::Instance()->toString() << "\n";
+
+    std::ofstream tableout("tables.txt");
+    tableout << ClassTable::Instance()->toString() << "\n";
 
     ClassTable::createConstTableCSV();
     return 0;
 }
-
-

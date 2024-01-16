@@ -17,6 +17,7 @@ vector<string> split(const string &str, char separator);
 class Exception{
 private:
     string message;
+     static int counter;
 public:
     enum ExceptionType {
         STRUCT_WITH_TWO_TRAIT,
