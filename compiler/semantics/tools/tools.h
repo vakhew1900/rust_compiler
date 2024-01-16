@@ -17,7 +17,6 @@ vector<string> split(const string &str, char separator);
 class Exception{
 private:
     string message;
-     static int counter;
 public:
     enum ExceptionType {
         STRUCT_WITH_TWO_TRAIT,
@@ -53,6 +52,7 @@ public:
         LOOP_ERROR,
     };
 
+    static int counter;
     ExceptionType exceptionType;
     string getMessage();
     Exception(ExceptionType exceptionType, const string& message);
