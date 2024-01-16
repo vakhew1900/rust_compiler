@@ -53,7 +53,7 @@ CodeGenerator::generateMethod(const string &className, const string &methodName)
         accessFlags |= uint16_t(AccessFlags::Static);
     }
 
-    if(methodTableItem.body == NULL){
+    if (methodTableItem.body == NULL) {
         accessFlags |= uint16_t(AccessFlags::Abstract);
     }
 
@@ -68,7 +68,7 @@ CodeGenerator::generateMethod(const string &className, const string &methodName)
 
     string decscriptor = methodTableItem.paramsToConstTableFormat();
     // количество атрибутов метода
-    buffer = IntToBytes(ClassTable::addUTF8ToConstTable(className,decscriptor));
+    buffer = IntToBytes(ClassTable::addUTF8ToConstTable(className, decscriptor));
     bytes.insert(bytes.end(), u2(bytes));
 
     // количество атрибутов метода
@@ -100,6 +100,8 @@ CodeGenerator::generateMethod(const string &className, const string &methodName)
     vector<char> bodyCodeBytes;
     if (methodName == ConstTable::init) {
         bodyCodeBytes = generateConstructor(className); // конструктор
+    } else if (methodName == ConstTable::clinit) {
+        bodyCodeBytes = generateStaticConstructor(className);
     } else {
         bodyCodeBytes = methodTableItem.body->generate(); // не конструктор
     }
@@ -200,7 +202,7 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
 
     // Добавление флагов
     unsigned int accessFlags = uint16_t(AccessFlags::Public) | uint16_t(AccessFlags::Super);
-    if(classTableItem.classType == ClassTableItem::trait_) {
+    if (classTableItem.classType == ClassTableItem::trait_) {
         accessFlags |= uint16_t(AccessFlags::Abstract);
     }
     buffer = IntToBytes(accessFlags);
@@ -234,12 +236,19 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
     bytes.insert(bytes.end(), u2(buffer));
 
     // добавление полей
+    bool isConst = false;
     for (auto &field: fieldTable) {
         vector<char> fieldElement = generateField(className, field.first);
         bytes.insert(bytes.end(), all(fieldElement));
+        isConst = isConst || field.second.isConst;
     }
 
     // количество методов c учетом конструктора
+
+    if (isConst) {
+        methodTable[ConstTable::clinit] = MethodTableItem::clinitMethod();
+    }
+
     int methodSize = methodTable.size();
     buffer = IntToBytes(methodSize);
     bytes.insert(bytes.end(), u2(buffer));
@@ -257,5 +266,27 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
     bytes.push_back((char) 0x00);
     bytes.push_back((char) 0x00);
 
+    return bytes;
+}
+
+vector<char> CodeGenerator::generateStaticConstructor(const string &className) {
+
+    vector<char> bytes;
+    ClassTableItem classTableItem = ClassTable::Instance()->getClass(className);
+
+    for(auto &[fieldName, field] : classTableItem.fieldTable.items){
+        if(!field.isConst){
+            continue;
+        }
+
+        merge(bytes,field.value->generate());
+        merge(bytes, commandToBytes(Command::putstatic));
+        int fieldPosition = ClassTable::addFieldRefToConstTable(className, className,
+                                                                fieldName,
+                                                                field.dataType);
+        merge(bytes, Int16ToBytes(fieldPosition));
+    }
+
+    merge(bytes, commandToBytes(Command::return_));
     return bytes;
 }
