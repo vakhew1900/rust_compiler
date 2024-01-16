@@ -676,7 +676,8 @@ vector<char> ExprNode::generate() {
                 }
             }
 
-            int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params, returnDataType);
+            int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params,
+                                                                      returnDataType);
             merge(bytes, commandToBytes(Command::invokevirtual));
             merge(bytes, Int16ToBytes(methodPosition));
             break;
@@ -696,7 +697,8 @@ vector<char> ExprNode::generate() {
                 }
             }
 
-            int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params, returnDataType);
+            int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params,
+                                                                      returnDataType);
             merge(bytes, commandToBytes(Command::invokestatic));
             merge(bytes, Int16ToBytes(methodPosition));
             break;
@@ -710,25 +712,25 @@ vector<char> ExprNode::generate() {
             int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id,
                                                                     fieldName,
                                                                     dataType);
-            merge(bytes,commandToBytes(Command:: getstatic));
+            merge(bytes, commandToBytes(Command::getstatic));
             merge(bytes, Int16ToBytes(fieldPosition));
             break;
         }
-        case as:{
+        case as: {
             merge(bytes, this->expr_left->generate());
-            if(!this->expr_left->dataType.isEquals(this->dataType)) {
+            if (!this->expr_left->dataType.isEquals(this->dataType)) {
                 switch (this->expr_left->dataType.type) {
 
                     case DataType::int_:
-                        if(this->dataType.isChar()){
+                        if (this->dataType.isChar()) {
                             merge(bytes, commandToBytes(Command::i2c));
                         }
-                        if(this->dataType.isFloat()){
+                        if (this->dataType.isFloat()) {
                             merge(bytes, commandToBytes(Command::i2d));
                         }
                         break;
                     case DataType::float_:
-                        if(this->dataType.isInt()){
+                        if (this->dataType.isInt()) {
                             merge(bytes, commandToBytes(Command::d2i));
                         }
                         break;
@@ -746,18 +748,46 @@ vector<char> ExprNode::generate() {
         }
             break;
 
-        case struct_creation:
-            
-            break;
-        case struct_field_expr:
-            break;
+        case struct_creation: {
+            string className = this->expr_left->className;
+            int classPosition = ClassTable::addClassToConstTable(curClassName, className);
 
-        case del_object:
+            merge(bytes, commandToBytes(Command::new_));
+            merge(bytes, Int16ToBytes(classPosition));
+            merge(bytes, commandToBytes(Command::dup));
+
+            int initPosition = ClassTable::addMethodRefToConstTable(curClassName, className,
+                                                                    ConstTable::init,
+                                                                    vector<DataType>(),
+                                                                    DataType(DataType::void_));
+            merge(bytes, commandToBytes(Command::invokespecial));
+            merge(bytes, Int16ToBytes(initPosition));
+
+            for (auto elem: *this->field_list->exprs) {
+                elem->className = className;
+                merge(bytes, elem->generate());
+            }
+
+            merge(bytes, commandToBytes(Command::pop));
             break;
+        }
+        case struct_field_expr: {
+            string fieldName = *this->Name;
+            int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, this->className, fieldName,
+                                                                    this->expr_left->dataType);
+
+            merge(bytes, commandToBytes(Command::dup));
+            merge(bytes, this->expr_left->generate());
+            merge(bytes, commandToBytes(Command::putfield));
+            merge(bytes, Int16ToBytes(fieldPosition));
+            break;
+        }
 
         case array_expr:
             break;
 
+        case del_object:
+            break;
 
         case if_expr_list:
             break;
