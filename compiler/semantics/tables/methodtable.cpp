@@ -69,6 +69,7 @@ string MethodTableItem::paramsToConstTableFormat() {
 MethodTableItem MethodTableItem::initMethod() {
     MethodTableItem methodTableItem = MethodTableItem();
     methodTableItem.returnDataType = DataType(DataType::void_);
+    methodTableItem.isStatic = false;
     return methodTableItem;
 }
 

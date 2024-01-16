@@ -14,6 +14,8 @@ using namespace std;
 
 vector<string> split(const string &str, char separator);
 
+[[maybe_unused]] bool isStartWith(const string &str, const string& substr);
+
 class Exception{
 private:
     string message;

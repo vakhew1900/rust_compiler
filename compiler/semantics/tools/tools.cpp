@@ -24,6 +24,10 @@ vector<string> split(const string &str, char separator) {
     return strings;
 }
 
+bool isStartWith(const string &str, const string &substr) {
+    return str.find(substr) == 0;
+}
+
 string Exception::getMessage() {
     return message;
 }

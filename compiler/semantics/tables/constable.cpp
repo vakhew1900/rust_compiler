@@ -368,11 +368,15 @@ vector<char> ConstTable::toBytes() {
 
 string ConstTable::formatClassName(const string&  className){
     if(className == ConstTable::RTLClassName) {
-        return RTLClassName;
+        return className;
     }
-    else {
-        int size = ConstTable::globalClassName.size() + 1;
-        return className.substr(size);
+
+    if(!isStartWith(className, ConstTable::globalClassName)){
+        return className;
     }
+
+    int size = ConstTable::globalClassName.size() + 1;
+    return className.substr(size);
+
 }
 
