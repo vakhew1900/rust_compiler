@@ -21,7 +21,7 @@ vector<char> StmtNode::generate() {
     switch (this->type) {
 
         case exprstmt:
-
+            merge(bytes,this->expr->generate());
             break;
 
         case let:
@@ -54,17 +54,20 @@ vector<char> StmtNode::generate() {
                     case DataType::void_:
                         break;
                 }
+
+
             }
 
+            // добаление номера перемнной
+            buffer = IntToBytes(this->localVarNum);
+            bytes.push_back(buffer.back());
             break;
         case semicolon:
         case expression:
             break;
     }
 
-    // добаление номера перемнной
-    buffer = IntToBytes(this->localVarNum);
-    bytes.push_back(buffer.back());
+
     return bytes;
 }
 
@@ -624,6 +627,8 @@ vector<char> ExprNode::generate() {
                 case DataType::void_:
                     break;
             }
+
+            bytes.push_back(IntToBytes(this->localVarNum).back());
             break;
 
         case index_expr: {
