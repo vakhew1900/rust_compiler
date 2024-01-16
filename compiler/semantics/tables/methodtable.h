@@ -35,7 +35,7 @@ public:
     vector<DataType> getParamDataTypes();
     string paramsToConstTableFormat();
     static MethodTableItem initMethod();
-    static MethodTableItem clinitMethod():
+    static MethodTableItem clinitMethod();
 };
 
 

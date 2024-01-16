@@ -747,6 +747,7 @@ vector<char> ExprNode::generate() {
             break;
 
         case struct_creation:
+            
             break;
         case struct_field_expr:
             break;
