@@ -240,7 +240,7 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
     }
 
     // количество методов c учетом конструктора
-    int methodSize = methodTable.size() + 1;
+    int methodSize = methodTable.size();
     buffer = IntToBytes(methodSize);
     bytes.insert(bytes.end(), u2(buffer));
 

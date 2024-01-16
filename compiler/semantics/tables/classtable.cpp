@@ -6,7 +6,8 @@
 #include <fstream>
 
 ClassTableItem::ClassTableItem() {
-
+    MethodTableItem methodTableItem =  MethodTableItem::initMethod();
+    this->methodTable.items[ConstTable::init] = methodTableItem;
 }
 
 ClassTableItem::ClassTableItem(FieldTable fieldTable, MethodTable methodTable, string parentName) {

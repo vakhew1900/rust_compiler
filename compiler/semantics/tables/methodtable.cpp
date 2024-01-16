@@ -66,6 +66,19 @@ string MethodTableItem::paramsToConstTableFormat() {
     return ConstTable::MethodParam(params, returnDataType);
 }
 
+MethodTableItem MethodTableItem::initMethod() {
+    MethodTableItem methodTableItem = MethodTableItem();
+    methodTableItem.returnDataType = DataType(DataType::void_);
+    return methodTableItem;
+}
+
+MethodTableItem MethodTableItem::clinitMethod() {
+    MethodTableItem methodTableItem = MethodTableItem();
+    methodTableItem.returnDataType = DataType(DataType::void_);
+    methodTableItem.isStatic = true;
+    return methodTableItem;
+}
+
 string MethodTable::toString() {
     string res = "";
 

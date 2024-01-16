@@ -34,6 +34,8 @@ public:
     bool isEqualsDeclaration(const MethodTableItem& other);
     vector<DataType> getParamDataTypes();
     string paramsToConstTableFormat();
+    static MethodTableItem initMethod();
+    static MethodTableItem clinitMethod():
 };
 
 
