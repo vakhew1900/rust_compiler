@@ -783,8 +783,38 @@ vector<char> ExprNode::generate() {
             break;
         }
 
-        case array_expr:
+        case array_expr: {
+            int length = this->dataType.arrLength.back();
+            merge(bytes, generateInt(length));
+            merge(bytes, commandToBytes(Command::newarray));
+            int cur = 0;
+            for(auto elem : *this->expr_list->exprs){
+                merge(bytes, commandToBytes(Command::dup));
+                merge(bytes, generateInt(cur));
+                switch (elem->dataType.type) {
+                    case DataType::int_:
+                    case DataType::bool_:
+                        merge(bytes, commandToBytes(Command::iastore));
+                        break;
+
+                    case DataType::char_:
+                        merge(bytes, commandToBytes(Command::castore));
+                        break;
+
+                    case DataType::float_:
+                        merge(bytes, commandToBytes(Command::dastore));
+                        break;
+
+                    case DataType::string_:
+                    case DataType::class_:
+                    case DataType::array_:
+                        merge(bytes, commandToBytes(Command::aastore));
+                        break;
+                }
+                cur++;
+            }
             break;
+        }
 
         case del_object:
             break;
