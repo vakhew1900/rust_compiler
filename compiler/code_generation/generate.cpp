@@ -257,7 +257,7 @@ vector<char> ExprNode::generate() {
                     break;
             }
 
-            merge(bytes, Int16ToBytes(this->expr_left->localVarNum));
+            bytes.push_back(Int16ToBytes(this->expr_left->localVarNum).back());
         }
             break;
         case arr_asign: {
@@ -817,6 +817,11 @@ vector<char> ExprNode::generate() {
         }
 
         case del_object:
+            if(!this->expr_left->dataType.isSimple() && this->expr_left->isVar()){
+                merge(bytes, commandToBytes(Command::aconst_null));
+                merge(bytes, commandToBytes(Command::astore));
+                bytes.push_back(Int16ToBytes(this->expr_left->localVarNum).back());
+            }
             break;
 
         case if_expr_list:
