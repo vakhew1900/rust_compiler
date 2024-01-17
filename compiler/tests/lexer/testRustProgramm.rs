@@ -454,7 +454,7 @@ static let x = 0xff;
 static let y = 0xffi32;
 static let z = 0x_1fi32;
 
-// Double
+// Float
 static let x = 1234.0f64;
 static let y = 125.0;
 static let z = 1.5E+5;

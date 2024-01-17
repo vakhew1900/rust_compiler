@@ -17,7 +17,7 @@ Constant pool:
    #5 = Utf8               <init>
    #6 = Utf8               ()V
    #7 = Double             10.1d
-   #9 = Double             10.2d
+   #9 = Float             10.2d
   #11 = Class              #12            // Main
   #12 = Utf8               Main
   #13 = Utf8               Code

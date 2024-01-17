@@ -24,20 +24,25 @@ vector<string> split(const string &str, char separator) {
     return strings;
 }
 
+bool isStartWith(const string &str, const string &substr) {
+    return str.find(substr) == 0;
+}
+
 string Exception::getMessage() {
     return message;
 }
 
 Exception::Exception(ExceptionType exceptionType, const string& message) {
+    Exception::counter++;
     this->exceptionType = exceptionType;
     this->message = message;
 }
 
 Exception::Exception(Exception::ExceptionType exceptionType, const string& message, int line) {
+    Exception::counter++;
     this->exceptionType = exceptionType;
     string tmp =  "line " + to_string(line) + ": ";
     if(!line) tmp = "";
-
     this->message = tmp + message;
 }
 
@@ -50,3 +55,5 @@ void LineNum::setLineNum(int line) {
 int LineNum::getLineNum() {
     return LineNum::lineNum;
 }
+
+int Exception::counter = 0;

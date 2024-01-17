@@ -21,7 +21,7 @@ vector<char> StmtNode::generate() {
     switch (this->type) {
 
         case exprstmt:
-
+            merge(bytes,this->expr->generate());
             break;
 
         case let:
@@ -40,7 +40,7 @@ vector<char> StmtNode::generate() {
                         merge(bytes, buffer);
                         break;
                     case DataType::float_:
-                        buffer = commandToBytes(Command::dstore);
+                        buffer = commandToBytes(Command::fstore);
                         merge(bytes, buffer);
                         break;
                     case DataType::string_:
@@ -54,17 +54,20 @@ vector<char> StmtNode::generate() {
                     case DataType::void_:
                         break;
                 }
+
+
             }
 
+            // добаление номера перемнной
+            buffer = IntToBytes(this->localVarNum);
+            bytes.push_back(buffer.back());
             break;
         case semicolon:
         case expression:
             break;
     }
 
-    // добаление номера перемнной
-    buffer = IntToBytes(this->localVarNum);
-    buffer.push_back(buffer.back());
+
     return bytes;
 }
 
@@ -119,7 +122,7 @@ vector<char> ExprNode::generate() {
             if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::iadd));
             } else {
-                merge(bytes, commandToBytes(Command::dadd));
+                merge(bytes, commandToBytes(Command::fadd));
             }
             break;
         case minus:
@@ -129,7 +132,7 @@ vector<char> ExprNode::generate() {
             if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::isub));
             } else {
-                merge(bytes, commandToBytes(Command::dsub));
+                merge(bytes, commandToBytes(Command::fsub));
             }
             break;
         case mul_expr:
@@ -139,7 +142,7 @@ vector<char> ExprNode::generate() {
             if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::imul));
             } else {
-                merge(bytes, commandToBytes(Command::dmul));
+                merge(bytes, commandToBytes(Command::fmul));
             }
 
             break;
@@ -150,7 +153,7 @@ vector<char> ExprNode::generate() {
             if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::idiv));
             } else {
-                merge(bytes, commandToBytes(Command::ddiv));
+                merge(bytes, commandToBytes(Command::fdiv));
             }
             break;
         case mod:
@@ -163,7 +166,7 @@ vector<char> ExprNode::generate() {
             if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::ineg));
             } else {
-                merge(bytes, commandToBytes(Command::dneg));
+                merge(bytes, commandToBytes(Command::fneg));
             }
             break;
 
@@ -242,7 +245,7 @@ vector<char> ExprNode::generate() {
                     merge(bytes, commandToBytes(Command::istore));
                     break;
                 case DataType::float_:
-                    merge(bytes, commandToBytes(Command::dstore));
+                    merge(bytes, commandToBytes(Command::fstore));
                     break;
 
                 case DataType::string_:
@@ -257,7 +260,7 @@ vector<char> ExprNode::generate() {
                     break;
             }
 
-            merge(bytes, Int16ToBytes(this->expr_left->localVarNum));
+            bytes.push_back(Int16ToBytes(this->expr_left->localVarNum).back());
         }
             break;
         case arr_asign: {
@@ -280,13 +283,16 @@ vector<char> ExprNode::generate() {
                     merge(bytes, commandToBytes(Command::castore));
                     break;
                 case DataType::float_:
-                    merge(bytes, commandToBytes(Command::dastore));
+                    merge(bytes, commandToBytes(Command::fastore));
                     break;
 
                 case DataType::string_:
                 case DataType::class_:
                 case DataType::array_:
                     merge(bytes, commandToBytes(Command::aastore));
+                    break;
+                case DataType::void_:
+                case DataType::undefined_:
                     break;
             }
 
@@ -332,7 +338,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_: ///TODO получше присмотреться к этой ерунде
-                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::fcmpg)); // 1
                     merge(bytes, commandToBytes(Command::ifne)); // 2
                     merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
                     merge(bytes, commandToBytes(Command::iconst_1)); // 5
@@ -373,7 +379,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_: ///TODO получше присмотреться к этой ерунде
-                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::fcmpg)); // 1
                     merge(bytes, commandToBytes(Command::ifeq)); // 2
                     merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
                     merge(bytes, commandToBytes(Command::iconst_1)); // 5
@@ -413,7 +419,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_: ///TODO получше присмотреться к этой ерунде
-                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::fcmpg)); // 1
                     merge(bytes, commandToBytes(Command::ifle)); // 2
                     merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
                     merge(bytes, commandToBytes(Command::iconst_1)); // 5
@@ -454,7 +460,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_: ///TODO получше присмотреться к этой ерунде
-                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::fcmpg)); // 1
                     merge(bytes, commandToBytes(Command::ifge)); // 2
                     merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
                     merge(bytes, commandToBytes(Command::iconst_1)); // 5
@@ -495,7 +501,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_: ///TODO получше присмотреться к этой ерунде
-                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::fcmpg)); // 1
                     merge(bytes, commandToBytes(Command::iflt)); // 2
                     merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
                     merge(bytes, commandToBytes(Command::iconst_1)); // 5
@@ -535,7 +541,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_: ///TODO получше присмотреться к этой ерунде
-                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::fcmpg)); // 1
                     merge(bytes, commandToBytes(Command::ifgt)); // 2
                     merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
                     merge(bytes, commandToBytes(Command::iconst_1)); // 5
@@ -609,7 +615,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_:
-                    merge(bytes, commandToBytes(Command::dload));
+                    merge(bytes, commandToBytes(Command::fload));
                     break;
 
                 case DataType::string_:
@@ -621,6 +627,8 @@ vector<char> ExprNode::generate() {
                 case DataType::void_:
                     break;
             }
+
+            bytes.push_back(IntToBytes(this->localVarNum).back());
             break;
 
         case index_expr: {
@@ -638,7 +646,7 @@ vector<char> ExprNode::generate() {
                     merge(bytes, commandToBytes(Command::iaload));
                     break;
                 case DataType::float_:
-                    merge(bytes, commandToBytes(Command::daload));
+                    merge(bytes, commandToBytes(Command::faload));
                     break;
                 case DataType::string_:
                 case DataType::class_:
@@ -676,7 +684,8 @@ vector<char> ExprNode::generate() {
                 }
             }
 
-            int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params, returnDataType);
+            int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params,
+                                                                      returnDataType);
             merge(bytes, commandToBytes(Command::invokevirtual));
             merge(bytes, Int16ToBytes(methodPosition));
             break;
@@ -696,29 +705,169 @@ vector<char> ExprNode::generate() {
                 }
             }
 
-            int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params, returnDataType);
+            int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName, params,
+                                                                      returnDataType);
             merge(bytes, commandToBytes(Command::invokestatic));
             merge(bytes, Int16ToBytes(methodPosition));
             break;
         }
 
-        case path_call_expr:
+        case path_call_expr: {
+            string className = this->expr_left->className;
+            string fieldName = *this->expr_middle->Name;
+            DataType dataType = this->dataType;
+
+            int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id,
+                                                                    fieldName,
+                                                                    dataType);
+            merge(bytes, commandToBytes(Command::getstatic));
+            merge(bytes, Int16ToBytes(fieldPosition));
+            break;
+        }
+        case as: {
+            merge(bytes, this->expr_left->generate());
+            if (!this->expr_left->dataType.isEquals(this->dataType)) {
+                switch (this->expr_left->dataType.type) {
+
+                    case DataType::int_:
+                        if (this->dataType.isChar()) {
+                            merge(bytes, commandToBytes(Command::i2c));
+                        }
+                        if (this->dataType.isFloat()) {
+                            merge(bytes, commandToBytes(Command::i2f));
+                        }
+                        break;
+                    case DataType::float_:
+                        if (this->dataType.isInt()) {
+                            merge(bytes, commandToBytes(Command::f2i));
+                        }
+                        break;
+
+                    case DataType::char_:
+                    case DataType::bool_:
+                    case DataType::string_:
+                    case DataType::class_:
+                    case DataType::array_:
+                    case DataType::undefined_:
+                    case DataType::void_:
+                        break;
+                }
+            }
+        }
             break;
 
-        case as:
-            break;
+        case struct_creation: {
+            string className = this->expr_left->className;
+            int classPosition = ClassTable::addClassToConstTable(curClassName, className);
 
-        case struct_creation:
+            merge(bytes, commandToBytes(Command::new_));
+            merge(bytes, Int16ToBytes(classPosition));
+            merge(bytes, commandToBytes(Command::dup));
+
+            int initPosition = ClassTable::addMethodRefToConstTable(curClassName, className,
+                                                                    ConstTable::init,
+                                                                    vector<DataType>(),
+                                                                    DataType(DataType::void_));
+            merge(bytes, commandToBytes(Command::invokespecial));
+            merge(bytes, Int16ToBytes(initPosition));
+
+            for (auto elem: *this->field_list->exprs) {
+                elem->className = className;
+                merge(bytes, elem->generate());
+            }
+
+            merge(bytes, commandToBytes(Command::pop));
             break;
-        case struct_field_expr:
+        }
+        case struct_field_expr: {
+            string fieldName = *this->Name;
+            int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, this->className, fieldName,
+                                                                    this->expr_left->dataType);
+
+            merge(bytes, commandToBytes(Command::dup));
+            merge(bytes, this->expr_left->generate());
+            merge(bytes, commandToBytes(Command::putfield));
+            merge(bytes, Int16ToBytes(fieldPosition));
             break;
+        }
+
+        case array_expr: {
+            int length = this->dataType.arrLength.back();
+            merge(bytes, generateInt(length));
+            DataType arrDataType = this->dataType.getArrDataType();
+
+            switch(arrDataType.type){
+
+                case DataType::int_:
+                case DataType::bool_:
+                    merge(bytes, commandToBytes(Command::newarray));
+                    bytes.push_back((char)ArrayType::Int);
+                    break;
+                case DataType::float_:
+                    merge(bytes, commandToBytes(Command::newarray));
+                    bytes.push_back((char)ArrayType::Float);
+                    break;
+
+                case DataType::char_:
+                    merge(bytes, commandToBytes(Command::newarray));
+                    bytes.push_back((char)ArrayType::Char);
+                    break;
+
+                case DataType::string_:
+                    merge(bytes, commandToBytes(Command::anewarray));
+                    ///TODO добавить тут константу
+
+                case DataType::class_:
+                    merge(bytes, commandToBytes(Command::anewarray));
+                    ///TODO добавить тут константу
+
+                case DataType::array_:
+                    merge(bytes, commandToBytes(Command::anewarray));
+                    ///TODO добавить тут константу
+                    break;
+                case DataType::undefined_:
+                case DataType::void_:
+                    break;
+            }
+
+
+            int cur = 0;
+            for(auto elem : *this->expr_list->exprs){
+                merge(bytes, commandToBytes(Command::dup));
+                merge(bytes, generateInt(cur));
+                merge(bytes, elem->generate());
+                switch (elem->dataType.type) {
+                    case DataType::int_:
+                    case DataType::bool_:
+                        merge(bytes, commandToBytes(Command::iastore));
+                        break;
+
+                    case DataType::char_:
+                        merge(bytes, commandToBytes(Command::castore));
+                        break;
+
+                    case DataType::float_:
+                        merge(bytes, commandToBytes(Command::fastore));
+                        break;
+
+                    case DataType::string_:
+                    case DataType::class_:
+                    case DataType::array_:
+                        merge(bytes, commandToBytes(Command::aastore));
+                        break;
+                }
+                cur++;
+            }
+            break;
+        }
 
         case del_object:
+            if(!this->expr_left->dataType.isSimple() && this->expr_left->isVar()){
+                merge(bytes, commandToBytes(Command::aconst_null));
+                merge(bytes, commandToBytes(Command::astore));
+                bytes.push_back(Int16ToBytes(this->expr_left->localVarNum).back());
+            }
             break;
-
-        case array_expr:
-            break;
-
 
         case if_expr_list:
             break;
@@ -786,7 +935,7 @@ vector<char> ExprNode::generateReturn(ExprNode *exprNode) {
                 break;
 
             case DataType::float_:
-                bytes = commandToBytes(Command::dreturn);
+                bytes = commandToBytes(Command::freturn);
                 break;
 
             case DataType::string_:

@@ -14,13 +14,20 @@ std::vector<char> IntToBytes(int value) {
 }
 
 
-std::vector<char> DoubleToBytes(double value) {
-    int  doubleSize = 8;
-    std::vector<char> arrayOfByte(doubleSize);
+union Double {
+    double num;
+    char bytes[8];
+};
 
-    for (int i = 0; i < sizeof(double); ++i)
-        arrayOfByte[doubleSize - 1 - i] = ((char*)&value)[i];
-    return arrayOfByte;
+std::vector<char> DoubleToBytes(double value) {
+    Double d;
+    d.num = value;
+    std::vector<char> bytes(8);
+    for(int i = 0; i < 8; i++){
+        bytes[i] = d.bytes[i];
+    }
+    std::reverse(bytes.begin(), bytes.end());
+    return bytes;
 }
 
 std::vector<char> Int16ToBytes(uint16_t value) {

@@ -24,7 +24,7 @@ ConstTableItem::ConstTableItem(ConstTableItem::ConstTableType constTableType, in
     this->val2 = val2;
 }
 
-ConstTableItem::ConstTableItem(ConstTableItem::ConstTableType constTableType, double floatVal) {
+ConstTableItem::ConstTableItem(ConstTableType constTableType, float floatVal) {
     this->constTableType = constTableType;
     this->floatVal = floatVal;
 }
@@ -100,6 +100,11 @@ vector<char> ConstTableItem::toBytes() {
             bytes.insert(bytes.end(), all(buffer));
             break;
 
+        case CONSTANT_FLOAT:
+            bytes.push_back((char) ConstTableItem::CONSTANT_FLOAT);
+            buffer = FloatToBytes(this->floatVal);
+            bytes.insert(bytes.end(), all(buffer));
+            break;
         case CONSTANT_CLASS:
             bytes.push_back((char) ConstTableItem::CONSTANT_CLASS);
             buffer = IntToBytes(this->val1);
@@ -146,18 +151,18 @@ vector<char> ConstTableItem::toBytes() {
         {
             bytes.push_back((char) ConstTableItem::CONSTANT_UTF8);
 
-            char const *str =  ConstTable::formatClassName(utf8).c_str();
+            char const *str =  utf8.c_str();
             buffer = IntToBytes(strlen(str));
             bytes.insert(bytes.end(), u2(buffer));
             bytes.insert(bytes.end(), str, str + strlen(str));
         }
             break;
 
+
         case CONSTANT_METHOD_HANDLE:
         case CONSTANT_METHOD_TYPE:
         case CONSTANT_INVOKE_DYNAMIC:
         case CONSTANT_LONG:
-        case CONSTANT_FLOAT:
         case CONSTANT_INTERFACE_METHOD_REF:
             break;
     }
@@ -185,7 +190,7 @@ string ConstTable::toString() {
 
 int ConstTable::Class(const string &className) {
 
-    int utf8Val = UTF8(className);
+    int utf8Val = UTF8(ConstTable::formatClassName(className));
     int res = Val(ConstTableItem::CONSTANT_CLASS, utf8Val);
 
     if(res <= 0){
@@ -207,14 +212,14 @@ int ConstTable::Int(int val) {
     return add(constTableItem);
 }
 
-int ConstTable::Double(double val) {
+int ConstTable::Float(float val) {
 
     for (int i = 0; i < this->items.size(); i++) {
-        if (items[i].constTableType == ConstTableItem::CONSTANT_DOUBLE && items[i].floatVal == val) {
+        if (items[i].constTableType == ConstTableItem::CONSTANT_FLOAT && items[i].floatVal == val) {
             return i;
         }
     }
-    ConstTableItem constTableItem = ConstTableItem(ConstTableItem::CONSTANT_DOUBLE, val);
+    ConstTableItem constTableItem = ConstTableItem(ConstTableItem::CONSTANT_FLOAT, val);
     return add(constTableItem);
 }
 
@@ -347,8 +352,8 @@ ConstTable::ConstTable() {
         ConstTableItem item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "java/lang/Object");
         items.push_back(item);
         item = ConstTableItem(ConstTableItem::CONSTANT_UTF8, "Code");
-        this->MethodRef("java/lang/Object", ConstTable::init, vector<DataType>(), DataType(DataType::void_));
         items.push_back(item);
+        this->MethodRef("java/lang/Object", ConstTable::init, vector<DataType>(), DataType(DataType::void_));
 }
 
 vector<char> ConstTable::toBytes() {
@@ -368,11 +373,15 @@ vector<char> ConstTable::toBytes() {
 
 string ConstTable::formatClassName(const string&  className){
     if(className == ConstTable::RTLClassName) {
-        return RTLClassName;
+        return className;
     }
-    else {
-        int size = ConstTable::globalClassName.size() + 1;
-        return className.substr(size);
+
+    if(!isStartWith(className, ConstTable::globalClassName)){
+        return className;
     }
+
+    int size = ConstTable::globalClassName.size() + 1;
+    return className.substr(size);
+
 }
 

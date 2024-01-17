@@ -6,7 +6,8 @@
 #include <fstream>
 
 ClassTableItem::ClassTableItem() {
-
+    MethodTableItem methodTableItem =  MethodTableItem::initMethod();
+    this->methodTable.items[ConstTable::init] = methodTableItem;
 }
 
 ClassTableItem::ClassTableItem(FieldTable fieldTable, MethodTable methodTable, string parentName) {
@@ -443,9 +444,9 @@ int ClassTable::addIntToConstTable(const string &className, int val) {
     return _instanse->items[className].constTable.Int(val);
 }
 
-int ClassTable::addFloatToConstTable(const string &className, double val) {
+int ClassTable::addFloatToConstTable(const string &className, float val) {
     Instance();
-    return _instanse->items[className].constTable.Double(val);
+    return _instanse->items[className].constTable.Float(val);
 }
 
 int ClassTable::addStringToConstTable(const string &className, const string &str) {
@@ -610,4 +611,15 @@ bool ClassTable::isEnum(const string &className) {
 
 map<string, ClassTableItem> ClassTable::getItems() {
     return ClassTable::Instance()->items;
+}
+
+void ClassTable::makeMainForJavaFormat() {
+    string mainClass = ConstTable::globalClassName + "/" + ConstTable::moduleClassName;
+    string main = "main";
+    MethodTableItem methodTableItem = ClassTable::Instance()->getMethod(mainClass, main);
+    VarTableItem varTableItem = VarTableItem();
+    varTableItem.id = "args";
+    varTableItem.dataType = DataType::ArrayDataType(DataType::string_, 1, {1});
+    methodTableItem.paramTable.items.push_back(varTableItem);
+    ClassTable::Instance()->updateMethod(mainClass, main, methodTableItem);
 }

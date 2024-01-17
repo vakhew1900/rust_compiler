@@ -1,6 +1,7 @@
 %{
 // #include "_tab.h"
 #include "parser_tab.cpp"
+#include "code_generation/codegenerator.h"
 extern int yyparse();
 %}
 
@@ -175,7 +176,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); return CHAR;}
 "/*" { strcpy(str,""); BEGIN(ML_COMMENT); }
  <ML_COMMENT>[^*\n]* { strcat(str,yytext); }
  <ML_COMMENT>\n { lineNumber++; }
- <ML_COMMENT>"*"+[^/]* { strcat(str,yytext); }
+ <ML_COMMENT>"*"+[^/\n]? { strcat(str,yytext); }
  <ML_COMMENT>"*"+"/" { printf("Found ML_COMMENT: %s\n", str);  BEGIN(INITIAL); }
  <ML_COMMENT><<EOF>> { printf("ML_COMMENT Error in line %d: comment are not closed\n", lineNumber); BEGIN(INITIAL);}
 
@@ -563,21 +564,29 @@ int main(int argc, char** argv) {
     yyparse();
     fclose(file);
 
+    if(global_program == NULL){
+        return 1;
+    }
+
     string dot;
     global_program->toDot(dot);
-    std::cout << dot << "\n";
-    std::ofstream out("dot-tree.txt");
 
+    std::ofstream out("dot-tree.txt");
     global_program->makeAllConversions();
     string updatedDot;
     global_program->toDot(updatedDot);
 
     string res = ClassTable::Instance()->toString();
     out << updatedDot << "\n";
-    cout << ClassTable::Instance()->toString() << "\n";
+
+    std::ofstream tableout("tables.txt");
+    tableout << ClassTable::Instance()->toString() << "\n";
 
     ClassTable::createConstTableCSV();
+
+    if (Exception::counter == 0) {
+        CodeGenerator codegen = CodeGenerator();
+        codegen.generate();
+    }
     return 0;
 }
-
-

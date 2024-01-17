@@ -1,6 +1,6 @@
 public class RTL {
 
-    public static void println_int(String str, String val) {
+    public static void println(String str, String val) {
         if (!str.contains("{}")) {
             throw new IllegalArgumentException("Format string is not contains {}");
         }
