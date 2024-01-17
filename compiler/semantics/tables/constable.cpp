@@ -100,6 +100,11 @@ vector<char> ConstTableItem::toBytes() {
             bytes.insert(bytes.end(), all(buffer));
             break;
 
+        case CONSTANT_FLOAT:
+            bytes.push_back((char) ConstTableItem::CONSTANT_FLOAT);
+            buffer = DoubleToBytes(this->floatVal);
+            bytes.insert(bytes.end(), all(buffer));
+
         case CONSTANT_CLASS:
             bytes.push_back((char) ConstTableItem::CONSTANT_CLASS);
             buffer = IntToBytes(this->val1);
@@ -153,11 +158,11 @@ vector<char> ConstTableItem::toBytes() {
         }
             break;
 
+
         case CONSTANT_METHOD_HANDLE:
         case CONSTANT_METHOD_TYPE:
         case CONSTANT_INVOKE_DYNAMIC:
         case CONSTANT_LONG:
-        case CONSTANT_FLOAT:
         case CONSTANT_INTERFACE_METHOD_REF:
             break;
     }
