@@ -2,7 +2,7 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
-        Car arr[] = {new Car(), new Bus()};
+        int arr[][] = new int[2][5];
 
 //        int x = 97;
 //        char ch = (char) x;
