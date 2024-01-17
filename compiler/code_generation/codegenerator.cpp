@@ -198,6 +198,8 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
 
     ClassTableItem classTableItem = ClassTable::Instance()->getClass(className);
 
+    ClassTable::addClassToConstTable(className, className);
+
     // Добавление флагов
     unsigned int accessFlags = uint16_t(AccessFlags::Public) | uint16_t(AccessFlags::Super);
     if (classTableItem.classType == ClassTableItem::trait_) {
@@ -237,6 +239,9 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
     // добавление полей
     bool isConst = false;
     for (auto &field: fieldTable) {
+        ClassTable::addFieldRefToConstTable(className, className, field.first,
+                                            field.second.dataType);
+
         vector<char> fieldElement = generateField(className, field.first);
         bytes.insert(bytes.end(), all(fieldElement));
         isConst = isConst || field.second.isConst;
@@ -254,6 +259,8 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
 
 
     for (auto &method: methodTable) {
+        ClassTable::addMethodRefToConstTable(className, className, method.first,
+                                            method.second.getParamDataTypes(), method.second.returnDataType);
         buffer = generateMethod(className, method.first);
         merge(bytes, buffer);
     }
@@ -270,12 +277,12 @@ vector<char> CodeGenerator::generateStaticConstructor(const string &className) {
     vector<char> bytes;
     ClassTableItem classTableItem = ClassTable::Instance()->getClass(className);
 
-    for(auto &[fieldName, field] : classTableItem.fieldTable.items){
-        if(!field.isConst){
+    for (auto &[fieldName, field]: classTableItem.fieldTable.items) {
+        if (!field.isConst) {
             continue;
         }
 
-        merge(bytes,field.value->generate());
+        merge(bytes, field.value->generate());
         merge(bytes, commandToBytes(Command::putstatic));
         int fieldPosition = ClassTable::addFieldRefToConstTable(className, className,
                                                                 fieldName,

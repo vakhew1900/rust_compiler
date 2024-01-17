@@ -2362,7 +2362,7 @@ void ProgramNode::transform(bool isConvertedToConst) {
 
     string tmp = ClassTable::globalClassName + "/" + ClassTable::moduleClassName;
     this->curClassName = tmp;
-    ClassTable::addClassToConstTable(tmp, tmp);
+//    ClassTable::addClassToConstTable(tmp, tmp);
     if (this->item_list != NULL) {
         for (auto item: *this->item_list->items) {
             try {
@@ -2420,9 +2420,9 @@ void ItemNode::transform(bool isConvertedToConst) {
                     paramTypes.size()) {
                     paramTypes.erase(paramTypes.begin());
                 }
-                ClassTable::addMethodRefToConstTable(curClassName, curClassName, *this->name, paramTypes,
-                                                     ClassTable::Instance()->getMethod(this->curClassName,
-                                                                                       *this->name).returnDataType);
+//                ClassTable::addMethodRefToConstTable(curClassName, curClassName, *this->name, paramTypes,
+//                                                     ClassTable::Instance()->getMethod(this->curClassName,
+//                                                                                       *this->name).returnDataType);
 
                 blockExprList.push_back(body);
                 if (this->body != NULL) {
@@ -2502,9 +2502,9 @@ void ItemNode::transform(bool isConvertedToConst) {
                 }
 
 
-                ClassTable::addFieldRefToConstTable(curClassName, curClassName, *this->name,
-                                                    ClassTable::Instance()->getField(curClassName,
-                                                                                     *this->name).dataType);
+//                ClassTable::addFieldRefToConstTable(curClassName, curClassName, *this->name,
+//                                                    ClassTable::Instance()->getField(curClassName,
+//                                                                                     *this->name).dataType);
                 break;
             case trait_:
             case impl_:
@@ -2539,22 +2539,22 @@ void ItemNode::transform(bool isConvertedToConst) {
                     }
 
                     params.push_back(elem->dataType);
-                    ClassTable::addFieldRefToConstTable(curClassName, curClassName, *elem->name, elem->dataType);
+//                    ClassTable::addFieldRefToConstTable(curClassName, curClassName, *elem->name, elem->dataType);
 
                 }
 
-                ClassTable::addMethodRefToConstTable(curClassName, curClassName, ConstTable::init, vector<DataType>(),
-                                                     DataType(DataType::void_));
+//                ClassTable::addMethodRefToConstTable(curClassName, curClassName, ConstTable::init, vector<DataType>(),
+//                                                     DataType(DataType::void_));
 
-                ClassTable::addMethodRefToConstTable(curClassName, curClassName, ConstTable::clinit, vector<DataType>(),
-                                                     DataType(DataType::void_));
+//                ClassTable::addMethodRefToConstTable(curClassName, curClassName, ConstTable::clinit, vector<DataType>(),
+//                                                     DataType(DataType::void_));
 
                 break;
             }
             case enum_:
 
                 for (auto elem: *this->enumItems->items) {
-                    ClassTable::addFieldRefToConstTable(curClassName, curClassName, *elem->name, elem->dataType);
+                  //  ClassTable::addFieldRefToConstTable(curClassName, curClassName, *elem->name, elem->dataType);
                     elem->expr->transform();
                 }
 
@@ -3152,9 +3152,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                                     this->line);
                 }
 
-                ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id, *this->Name,
-                                                    ClassTable::Instance()->getField(this->expr_left->dataType.id,
-                                                                                     *this->Name).dataType);
+//                ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id, *this->Name,
+//                                                    ClassTable::Instance()->getField(this->expr_left->dataType.id,
+//                                                                                     *this->Name).dataType);
             }
             catch (Exception e) {
                 throw e;
@@ -3204,8 +3204,8 @@ void ExprNode::transform(bool isConvertedToConst) {
                 if (methodItem.isStatic == false) {
                     params.erase(params.begin());
                 }
-                ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->dataType.id, *this->Name, params,
-                                                     methodItem.returnDataType);
+//                ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->dataType.id, *this->Name, params,
+//                                                     methodItem.returnDataType);
             }
             catch (Exception e) {
                 throw e;
@@ -3545,9 +3545,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                     params.push_back(elem.dataType);
                 }
 
-                ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, *this->expr_middle->Name,
-                                                     params,
-                                                     methodTableItem.returnDataType);
+//                ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, *this->expr_middle->Name,
+//                                                     params,
+//                                                     methodTableItem.returnDataType);
             }
             break;
         case path_call_expr:
@@ -3567,9 +3567,9 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
             {
-                ClassTable::addFieldRefToConstTable(curClassName, this->className, *this->expr_middle->Name,
-                                                    ClassTable::Instance()->getFieldDeep(this->className,
-                                                                                         *this->expr_middle->Name).dataType);
+//                ClassTable::addFieldRefToConstTable(curClassName, this->className, *this->expr_middle->Name,
+//                                                    ClassTable::Instance()->getFieldDeep(this->className,
+//                                                                                         *this->expr_middle->Name).dataType);
 
             }
 
@@ -3634,13 +3634,13 @@ void ExprNode::transform(bool isConvertedToConst) {
         case int_lit:
             this->dataType = DataType(DataType::int_);
             if (this->Int < INT16_MIN || this->Int > INT16_MAX) {
-                ClassTable::addIntToConstTable(curClassName, this->Int);
+//                ClassTable::addIntToConstTable(curClassName, this->Int);
             }
             this->isConst = true;
             break;
         case float_lit:
             this->dataType = DataType(DataType::float_);
-            ClassTable::addFloatToConstTable(curClassName, this->Float);
+//            ClassTable::addFloatToConstTable(curClassName, this->Float);
             this->isConst = true;
             break;
         case char_lit:
@@ -3649,12 +3649,12 @@ void ExprNode::transform(bool isConvertedToConst) {
             break;
         case string_lit:
             this->dataType = DataType(DataType::string_);
-            ClassTable::addStringToConstTable(curClassName, *this->String);
+//            ClassTable::addStringToConstTable(curClassName, *this->String);
             this->isConst = true;
             break;
         case raw_string_lit:
             this->dataType = DataType(DataType::string_);
-            ClassTable::addStringToConstTable(curClassName, *this->String);
+//            ClassTable::addStringToConstTable(curClassName, *this->String);
             this->isConst = true;
             break;
         case bool_lit:
@@ -4341,9 +4341,9 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
             }
         }
 
-
-        ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, "<init>", vector<DataType>(),
-                                             DataType(DataType::void_));
+//
+//        ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, "<init>", vector<DataType>(),
+//                                             DataType(DataType::void_));
 
         this->dataType = DataType::StructDataType(this->className);
 
