@@ -924,11 +924,36 @@ vector<char> ExprNode::generate() {
             fillContinues(body, breakVec);
 
             breakVec = tempBreakVec;
-            continueVec = breakVec;
+            continueVec = tempContinueVec;
+
+            bytes = body;
             break;
         }
-        case loop_while:
-            break;
+        case loop_while:{
+            auto tempBreakVec = breakVec;
+            auto tempContinueVec = continueVec;
+            breakVec.clear(); continueVec.clear();
+            vector<char> condition = this->expr_left->generate();
+            vector<char> body = this->body->generate();
+
+            merge(condition, commandToBytes(Command::ifeq));
+            int sz = gotoCommandSize +  body.size() + gotoCommandSize;
+            merge(condition, Int16ToBytes(sz));
+
+            merge(body, commandToBytes(Command::goto_));
+            sz = condition.size() + body.size() - 1;
+            vector<char> position = IntToBytes(-sz);
+            body.insert(body.end(), u2(position)); ///TODO если не получится то придумать другую функцию
+
+            merge(bytes, condition);
+            merge(bytes, body);
+
+            fillBreaks(body, breakVec);
+            fillContinues(body, breakVec);
+
+            breakVec = tempBreakVec;
+            continueVec = tempContinueVec;
+        }
         case loop_for:
             break;
 
