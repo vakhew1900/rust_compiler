@@ -2,6 +2,7 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
+        Car arr[] = {new Car(), new Bus()};
 
 //        int x = 97;
 //        char ch = (char) x;
@@ -55,8 +56,8 @@ public class Main {
 //
 //        if (x > 10)
 //            System.out.println(x);
-           Car.ride();
-           Bus.ride();
+//           Car.ride();
+//           Bus.ride();
 //        Two.static_test();
 //        int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, r, s, t, q, u, x, y, z = 10;
 //        double d1 = 1e12;
