@@ -792,9 +792,14 @@ vector<char> ExprNode::generate() {
         }
 
         case array_expr: {
-            int length = this->dataType.arrLength.back();
-            merge(bytes, generateInt(length));
+
             DataType arrDataType = this->dataType.getArrDataType();
+
+            //вывод всего размера массива
+            for(int i = this->dataType.arrLength.size() - 1; i >= 0; i--){
+                int length = this->dataType.arrLength[i];
+                merge(bytes, this->generateInt(length));
+            }
 
             switch(arrDataType.type){
 
@@ -813,18 +818,26 @@ vector<char> ExprNode::generate() {
                     bytes.push_back((char)ArrayType::Char);
                     break;
 
-                case DataType::string_:
+                case DataType::string_: {
                     merge(bytes, commandToBytes(Command::anewarray));
-                    ///TODO добавить тут константу
-
-                case DataType::class_:
-                    merge(bytes, commandToBytes(Command::anewarray));
-                    ///TODO добавить тут константу
-
-                case DataType::array_:
-                    merge(bytes, commandToBytes(Command::anewarray));
-                    ///TODO добавить тут константу
+                    int position = ClassTable::addClassToConstTable(curClassName, ConstTable::stringClassName);
+                    merge(bytes, Int16ToBytes(position));
                     break;
+                }
+
+                case DataType::class_: {
+                    merge(bytes, commandToBytes(Command::anewarray));
+                    int position = ClassTable::addClassToConstTable(curClassName, arrDataType.id);
+                    merge(bytes, Int16ToBytes(position));
+                    break;
+                }
+                case DataType::array_: {
+                    merge(bytes, commandToBytes(Command::multianewarray));
+                    int position = ClassTable::addClassToConstTable(curClassName, this->dataType.toConstTableFormat());
+                    merge(bytes, Int16ToBytes(position));
+                    bytes.push_back(IntToBytes(this->arrDataType.arrDeep).back());
+                    break;
+                }
                 case DataType::undefined_:
                 case DataType::void_:
                     break;
