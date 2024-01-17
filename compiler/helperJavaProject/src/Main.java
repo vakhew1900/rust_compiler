@@ -2,7 +2,10 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
-        Car arr[][] = new Car[2][5];
+        int arr[] = {1, 2, 3, 4, 5};
+        for (int a : arr) {
+            System.out.println(a);
+        }
 
 //        int x = 97;
 //        char ch = (char) x;
