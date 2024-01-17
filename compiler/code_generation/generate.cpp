@@ -794,11 +794,48 @@ vector<char> ExprNode::generate() {
         case array_expr: {
             int length = this->dataType.arrLength.back();
             merge(bytes, generateInt(length));
-            merge(bytes, commandToBytes(Command::newarray));
+            DataType arrDataType = this->dataType.getArrDataType();
+
+            switch(arrDataType.type){
+
+                case DataType::int_:
+                case DataType::bool_:
+                    merge(bytes, commandToBytes(Command::newarray));
+                    bytes.push_back((char)ArrayType::Int);
+                    break;
+                case DataType::float_:
+                    merge(bytes, commandToBytes(Command::newarray));
+                    bytes.push_back((char)ArrayType::Float);
+                    break;
+
+                case DataType::char_:
+                    merge(bytes, commandToBytes(Command::newarray));
+                    bytes.push_back((char)ArrayType::Char);
+                    break;
+
+                case DataType::string_:
+                    merge(bytes, commandToBytes(Command::anewarray));
+                    ///TODO добавить тут константу
+
+                case DataType::class_:
+                    merge(bytes, commandToBytes(Command::anewarray));
+                    ///TODO добавить тут константу
+
+                case DataType::array_:
+                    merge(bytes, commandToBytes(Command::anewarray));
+                    ///TODO добавить тут константу
+                    break;
+                case DataType::undefined_:
+                case DataType::void_:
+                    break;
+            }
+
+
             int cur = 0;
             for(auto elem : *this->expr_list->exprs){
                 merge(bytes, commandToBytes(Command::dup));
                 merge(bytes, generateInt(cur));
+                merge(bytes, elem->generate());
                 switch (elem->dataType.type) {
                     case DataType::int_:
                     case DataType::bool_:
