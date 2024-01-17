@@ -227,7 +227,7 @@ string DataType::toConstTableFormat() const {
             res = "I";
             break;
         case float_:
-            res = "D";
+            res = "F";
             break;
         case char_:
             res = "C";

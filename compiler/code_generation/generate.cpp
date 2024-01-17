@@ -40,7 +40,7 @@ vector<char> StmtNode::generate() {
                         merge(bytes, buffer);
                         break;
                     case DataType::float_:
-                        buffer = commandToBytes(Command::dstore);
+                        buffer = commandToBytes(Command::fstore);
                         merge(bytes, buffer);
                         break;
                     case DataType::string_:
@@ -122,7 +122,7 @@ vector<char> ExprNode::generate() {
             if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::iadd));
             } else {
-                merge(bytes, commandToBytes(Command::dadd));
+                merge(bytes, commandToBytes(Command::fadd));
             }
             break;
         case minus:
@@ -132,7 +132,7 @@ vector<char> ExprNode::generate() {
             if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::isub));
             } else {
-                merge(bytes, commandToBytes(Command::dsub));
+                merge(bytes, commandToBytes(Command::fsub));
             }
             break;
         case mul_expr:
@@ -142,7 +142,7 @@ vector<char> ExprNode::generate() {
             if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::imul));
             } else {
-                merge(bytes, commandToBytes(Command::dmul));
+                merge(bytes, commandToBytes(Command::fmul));
             }
 
             break;
@@ -153,7 +153,7 @@ vector<char> ExprNode::generate() {
             if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::idiv));
             } else {
-                merge(bytes, commandToBytes(Command::ddiv));
+                merge(bytes, commandToBytes(Command::fdiv));
             }
             break;
         case mod:
@@ -166,7 +166,7 @@ vector<char> ExprNode::generate() {
             if (this->dataType.isInt()) {
                 merge(bytes, commandToBytes(Command::ineg));
             } else {
-                merge(bytes, commandToBytes(Command::dneg));
+                merge(bytes, commandToBytes(Command::fneg));
             }
             break;
 
@@ -245,7 +245,7 @@ vector<char> ExprNode::generate() {
                     merge(bytes, commandToBytes(Command::istore));
                     break;
                 case DataType::float_:
-                    merge(bytes, commandToBytes(Command::dstore));
+                    merge(bytes, commandToBytes(Command::fstore));
                     break;
 
                 case DataType::string_:
@@ -283,7 +283,7 @@ vector<char> ExprNode::generate() {
                     merge(bytes, commandToBytes(Command::castore));
                     break;
                 case DataType::float_:
-                    merge(bytes, commandToBytes(Command::dastore));
+                    merge(bytes, commandToBytes(Command::fastore));
                     break;
 
                 case DataType::string_:
@@ -338,7 +338,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_: ///TODO получше присмотреться к этой ерунде
-                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::fcmpg)); // 1
                     merge(bytes, commandToBytes(Command::ifne)); // 2
                     merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
                     merge(bytes, commandToBytes(Command::iconst_1)); // 5
@@ -379,7 +379,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_: ///TODO получше присмотреться к этой ерунде
-                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::fcmpg)); // 1
                     merge(bytes, commandToBytes(Command::ifeq)); // 2
                     merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
                     merge(bytes, commandToBytes(Command::iconst_1)); // 5
@@ -419,7 +419,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_: ///TODO получше присмотреться к этой ерунде
-                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::fcmpg)); // 1
                     merge(bytes, commandToBytes(Command::ifle)); // 2
                     merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
                     merge(bytes, commandToBytes(Command::iconst_1)); // 5
@@ -460,7 +460,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_: ///TODO получше присмотреться к этой ерунде
-                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::fcmpg)); // 1
                     merge(bytes, commandToBytes(Command::ifge)); // 2
                     merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
                     merge(bytes, commandToBytes(Command::iconst_1)); // 5
@@ -501,7 +501,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_: ///TODO получше присмотреться к этой ерунде
-                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::fcmpg)); // 1
                     merge(bytes, commandToBytes(Command::iflt)); // 2
                     merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
                     merge(bytes, commandToBytes(Command::iconst_1)); // 5
@@ -541,7 +541,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_: ///TODO получше присмотреться к этой ерунде
-                    merge(bytes, commandToBytes(Command::dcmpg)); // 1
+                    merge(bytes, commandToBytes(Command::fcmpg)); // 1
                     merge(bytes, commandToBytes(Command::ifgt)); // 2
                     merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
                     merge(bytes, commandToBytes(Command::iconst_1)); // 5
@@ -615,7 +615,7 @@ vector<char> ExprNode::generate() {
                     break;
 
                 case DataType::float_:
-                    merge(bytes, commandToBytes(Command::dload));
+                    merge(bytes, commandToBytes(Command::fload));
                     break;
 
                 case DataType::string_:
@@ -646,7 +646,7 @@ vector<char> ExprNode::generate() {
                     merge(bytes, commandToBytes(Command::iaload));
                     break;
                 case DataType::float_:
-                    merge(bytes, commandToBytes(Command::daload));
+                    merge(bytes, commandToBytes(Command::faload));
                     break;
                 case DataType::string_:
                 case DataType::class_:
@@ -734,12 +734,12 @@ vector<char> ExprNode::generate() {
                             merge(bytes, commandToBytes(Command::i2c));
                         }
                         if (this->dataType.isFloat()) {
-                            merge(bytes, commandToBytes(Command::i2d));
+                            merge(bytes, commandToBytes(Command::i2f));
                         }
                         break;
                     case DataType::float_:
                         if (this->dataType.isInt()) {
-                            merge(bytes, commandToBytes(Command::d2i));
+                            merge(bytes, commandToBytes(Command::f2i));
                         }
                         break;
 
@@ -847,7 +847,7 @@ vector<char> ExprNode::generate() {
                         break;
 
                     case DataType::float_:
-                        merge(bytes, commandToBytes(Command::dastore));
+                        merge(bytes, commandToBytes(Command::fastore));
                         break;
 
                     case DataType::string_:
@@ -935,7 +935,7 @@ vector<char> ExprNode::generateReturn(ExprNode *exprNode) {
                 break;
 
             case DataType::float_:
-                bytes = commandToBytes(Command::dreturn);
+                bytes = commandToBytes(Command::freturn);
                 break;
 
             case DataType::string_:

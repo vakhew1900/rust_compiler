@@ -444,9 +444,9 @@ int ClassTable::addIntToConstTable(const string &className, int val) {
     return _instanse->items[className].constTable.Int(val);
 }
 
-int ClassTable::addFloatToConstTable(const string &className, double val) {
+int ClassTable::addFloatToConstTable(const string &className, float val) {
     Instance();
-    return _instanse->items[className].constTable.Double(val);
+    return _instanse->items[className].constTable.Float(val);
 }
 
 int ClassTable::addStringToConstTable(const string &className, const string &str) {

@@ -34,7 +34,7 @@ public:
 
     ConstTableType constTableType;
     string utf8;
-    double floatVal = -1;
+    float floatVal = -1;
     int val1 = -1, val2 = -1;
 
     ConstTableItem();
@@ -45,7 +45,7 @@ public:
 
     ConstTableItem(ConstTableType constTableType, int val1, int val2);
 
-    ConstTableItem(ConstTableType constTableType, double floatVal);
+    ConstTableItem(ConstTableType constTableType, float floatVal);
 
     string toString(int index);
 
@@ -65,7 +65,7 @@ public:
 
     int Int(int val);
 
-    int Double(double val);
+    int Float(float val);
 
     int String(const string &str);
 

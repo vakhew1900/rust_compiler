@@ -24,7 +24,7 @@ ConstTableItem::ConstTableItem(ConstTableItem::ConstTableType constTableType, in
     this->val2 = val2;
 }
 
-ConstTableItem::ConstTableItem(ConstTableItem::ConstTableType constTableType, double floatVal) {
+ConstTableItem::ConstTableItem(ConstTableType constTableType, float floatVal) {
     this->constTableType = constTableType;
     this->floatVal = floatVal;
 }
@@ -102,9 +102,9 @@ vector<char> ConstTableItem::toBytes() {
 
         case CONSTANT_FLOAT:
             bytes.push_back((char) ConstTableItem::CONSTANT_FLOAT);
-            buffer = DoubleToBytes(this->floatVal);
+            buffer = FloatToBytes(this->floatVal);
             bytes.insert(bytes.end(), all(buffer));
-
+            break;
         case CONSTANT_CLASS:
             bytes.push_back((char) ConstTableItem::CONSTANT_CLASS);
             buffer = IntToBytes(this->val1);
@@ -212,14 +212,14 @@ int ConstTable::Int(int val) {
     return add(constTableItem);
 }
 
-int ConstTable::Double(double val) {
+int ConstTable::Float(float val) {
 
     for (int i = 0; i < this->items.size(); i++) {
-        if (items[i].constTableType == ConstTableItem::CONSTANT_DOUBLE && items[i].floatVal == val) {
+        if (items[i].constTableType == ConstTableItem::CONSTANT_FLOAT && items[i].floatVal == val) {
             return i;
         }
     }
-    ConstTableItem constTableItem = ConstTableItem(ConstTableItem::CONSTANT_DOUBLE, val);
+    ConstTableItem constTableItem = ConstTableItem(ConstTableItem::CONSTANT_FLOAT, val);
     return add(constTableItem);
 }
 

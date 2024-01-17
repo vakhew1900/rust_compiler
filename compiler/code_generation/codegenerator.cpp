@@ -150,8 +150,8 @@ void CodeGenerator::generateClass(const string &className) {
 
     vector<char> classBody = generateClassBody(className);
     vector<char> constants = ClassTable::Instance()->getClass(className).constTable.toBytes(); // consttable
-
-    buffer = IntToBytes(ClassTable::Instance()->getClass(className).constTable.items.size());
+    auto constantTable = ClassTable::Instance()->getClass(className).constTable.items;
+    buffer = IntToBytes(constantTable.size());
 
     bytes.insert(bytes.end(), u2(buffer)); // размер constable
     merge(bytes, constants);
