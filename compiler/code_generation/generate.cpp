@@ -7,8 +7,8 @@
 #include "tools/byte_convert.h"
 #include "tools/utils.h"
 
-vector<bool> breakVec;
-vector<bool> continueVec;
+vector<int> breakVec;
+vector<int> continueVec;
 
 vector<char> Node::generate() {
     throw Exception(Exception::UNEXPECTED, "generate not realized method for id" + to_string(this->id));
@@ -882,12 +882,35 @@ vector<char> ExprNode::generate() {
             }
             break;
 
-        case if_expr_list:
-            break;
-        case if_expr:
-            break;
+        case if_expr_list:{
 
+            if(this->else_body != NULL){
+                buffer = else_body->generate();
+            }
 
+            vector<char> secondBuffer;
+            for(auto it = ifList->rbegin(); it != ifList->rend(); it++){
+                auto elem = *it;
+                vector<char> condition = elem->expr_left->generate();
+                vector<char> body = elem->body->generate();
+
+                if(buffer.size()){
+                    merge(body, commandToBytes(Command::ifeq));
+                    int sz = buffer.size() + gotoCommandSize;
+                    merge(body, Int16ToBytes(sz));
+                }
+
+                merge(secondBuffer, condition);// 1
+                merge(secondBuffer, commandToBytes(Command::ifeq));// 1
+                int sz = body.size() + gotoCommandSize;
+                merge(secondBuffer, Int16ToBytes(sz));
+                merge(secondBuffer, body);
+                merge(secondBuffer, buffer);
+                buffer = secondBuffer;
+            }
+            bytes = buffer;
+            break;
+        }
         case loop_expr:
             break;
         case loop_while:
