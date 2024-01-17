@@ -2,7 +2,7 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
-        int arr[][] = new int[2][5];
+        int arr[][][] = new int[2][5][7];
 
 //        int x = 97;
 //        char ch = (char) x;
