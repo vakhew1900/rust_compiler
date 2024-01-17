@@ -249,6 +249,8 @@ public:
 
     vector<char> generateInt(int value);
     vector<char> generateReturn(ExprNode* exprNode);
+    void  fillBreaks(vector<char> &body, vector<int> breakVec);
+    void  fillContinues(vector<char> &body, vector<int> continueVec);
 };
 
 class ExprListNode : public Node {

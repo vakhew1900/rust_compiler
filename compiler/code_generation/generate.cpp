@@ -911,8 +911,22 @@ vector<char> ExprNode::generate() {
             bytes = buffer;
             break;
         }
-        case loop_expr:
+        case loop_expr: {
+            auto tempBreakVec = breakVec;
+            auto tempContinueVec = continueVec;
+            breakVec.clear(); continueVec.clear();
+            vector<char> body = this->body->generate();
+            merge(body, commandToBytes(Command::goto_));
+            vector<char> position = IntToBytes(-body.size());
+            body.insert(body.end(), u2(position)); ///TODO если не получится то придумать другую функцию
+
+            fillBreaks(body, breakVec);
+            fillContinues(body, breakVec);
+
+            breakVec = tempBreakVec;
+            continueVec = breakVec;
             break;
+        }
         case loop_while:
             break;
         case loop_for:
@@ -989,4 +1003,25 @@ vector<char> ExprNode::generateReturn(ExprNode *exprNode) {
     }
 
     return bytes;
+}
+
+
+void ExprNode::fillBreaks(vector<char> &body, vector<int> breakVec) {
+
+    for(auto elem: breakVec){
+        int exitPosition = body.size() -  elem;
+        vector<char> position  = Int16ToBytes(exitPosition);
+        body[elem + 1] = position[0];
+        body[elem + 2] = position[2];
+    }
+}
+
+void ExprNode:: fillContinues(vector<char> &body, vector<int> continueVec){
+
+    for(auto elem: continueVec){
+        int exitPosition = body.size() - 3 -  elem; //TODO проверить на то ли значение сдвигается
+        vector<char> position  = Int16ToBytes(exitPosition);
+        body[elem + 1] = position[0];
+        body[elem + 2] = position[2];
+    }
 }
