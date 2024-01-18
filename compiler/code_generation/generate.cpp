@@ -21,7 +21,7 @@ vector<char> StmtNode::generate() {
     switch (this->type) {
 
         case exprstmt:
-            merge(bytes,this->expr->generate());
+            merge(bytes, this->expr->generate());
             break;
 
         case let:
@@ -796,26 +796,26 @@ vector<char> ExprNode::generate() {
             DataType arrDataType = this->dataType.getArrDataType();
 
             //вывод всего размера массива
-            for(int i = this->dataType.arrLength.size() - 1; i >= 0; i--){
+            for (int i = this->dataType.arrLength.size() - 1; i >= 0; i--) {
                 int length = this->dataType.arrLength[i];
                 merge(bytes, this->generateInt(length));
             }
 
-            switch(arrDataType.type){
+            switch (arrDataType.type) {
 
                 case DataType::int_:
                 case DataType::bool_:
                     merge(bytes, commandToBytes(Command::newarray));
-                    bytes.push_back((char)ArrayType::Int);
+                    bytes.push_back((char) ArrayType::Int);
                     break;
                 case DataType::float_:
                     merge(bytes, commandToBytes(Command::newarray));
-                    bytes.push_back((char)ArrayType::Float);
+                    bytes.push_back((char) ArrayType::Float);
                     break;
 
                 case DataType::char_:
                     merge(bytes, commandToBytes(Command::newarray));
-                    bytes.push_back((char)ArrayType::Char);
+                    bytes.push_back((char) ArrayType::Char);
                     break;
 
                 case DataType::string_: {
@@ -845,7 +845,7 @@ vector<char> ExprNode::generate() {
 
 
             int cur = 0;
-            for(auto elem : *this->expr_list->exprs){
+            for (auto elem: *this->expr_list->exprs) {
                 merge(bytes, commandToBytes(Command::dup));
                 merge(bytes, generateInt(cur));
                 merge(bytes, elem->generate());
@@ -875,26 +875,26 @@ vector<char> ExprNode::generate() {
         }
 
         case del_object:
-            if(!this->expr_left->dataType.isSimple() && this->expr_left->isVar()){
+            if (!this->expr_left->dataType.isSimple() && this->expr_left->isVar()) {
                 merge(bytes, commandToBytes(Command::aconst_null));
                 merge(bytes, commandToBytes(Command::astore));
                 bytes.push_back(Int16ToBytes(this->expr_left->localVarNum).back());
             }
             break;
 
-        case if_expr_list:{
+        case if_expr_list: {
 
-            if(this->else_body != NULL){
+            if (this->else_body != NULL) {
                 buffer = else_body->generate();
             }
 
             vector<char> secondBuffer;
-            for(auto it = ifList->rbegin(); it != ifList->rend(); it++){
+            for (auto it = ifList->rbegin(); it != ifList->rend(); it++) {
                 auto elem = *it;
                 vector<char> condition = elem->expr_left->generate();
                 vector<char> body = elem->body->generate();
 
-                if(buffer.size()){
+                if (buffer.size()) {
                     merge(body, commandToBytes(Command::ifeq));
                     int sz = buffer.size() + gotoCommandSize;
                     merge(body, Int16ToBytes(sz));
@@ -914,7 +914,8 @@ vector<char> ExprNode::generate() {
         case loop_expr: {
             auto tempBreakVec = breakVec;
             auto tempContinueVec = continueVec;
-            breakVec.clear(); continueVec.clear();
+            breakVec.clear();
+            continueVec.clear();
             vector<char> body = this->body->generate();
             merge(body, commandToBytes(Command::goto_));
             vector<char> position = IntToBytes(-body.size());
@@ -929,15 +930,16 @@ vector<char> ExprNode::generate() {
             bytes = body;
             break;
         }
-        case loop_while:{
+        case loop_while: {
             auto tempBreakVec = breakVec;
             auto tempContinueVec = continueVec;
-            breakVec.clear(); continueVec.clear();
+            breakVec.clear();
+            continueVec.clear();
             vector<char> condition = this->expr_left->generate();
             vector<char> body = this->body->generate();
 
             merge(condition, commandToBytes(Command::ifeq));
-            int sz = gotoCommandSize +  body.size() + gotoCommandSize;
+            int sz = gotoCommandSize + body.size() + gotoCommandSize;
             merge(condition, Int16ToBytes(sz));
 
             merge(body, commandToBytes(Command::goto_));
@@ -954,8 +956,22 @@ vector<char> ExprNode::generate() {
             breakVec = tempBreakVec;
             continueVec = tempContinueVec;
         }
-        case loop_for:
+        case loop_for: {
+            auto tempBreakVec = breakVec;
+            auto tempContinueVec = continueVec;
+            breakVec.clear();
+            continueVec.clear();
+
+            if (this->expr_left->type == range_expr) {
+                bytes = generateFor();
+            } else {
+                bytes = generateForEach();
+            }
+
+            breakVec = tempBreakVec;
+            continueVec = tempContinueVec;
             break;
+        }
 
 
         case crate_expr:
@@ -1031,22 +1047,134 @@ vector<char> ExprNode::generateReturn(ExprNode *exprNode) {
 }
 
 
-void ExprNode::fillBreaks(vector<char> &body, vector<int> breakVec) {
+void ExprNode::fillBreaks(vector<char> &body, vector<int> breakVec, int shift) {
 
-    for(auto elem: breakVec){
-        int exitPosition = body.size() -  elem;
-        vector<char> position  = Int16ToBytes(exitPosition);
+    for (auto elem: breakVec) {
+        int exitPosition = body.size() - elem + shift;
+        vector<char> position = Int16ToBytes(exitPosition);
         body[elem + 1] = position[0];
         body[elem + 2] = position[2];
     }
 }
 
-void ExprNode:: fillContinues(vector<char> &body, vector<int> continueVec){
+void ExprNode::fillContinues(vector<char> &body, vector<int> continueVec, int shift) {
 
-    for(auto elem: continueVec){
-        int exitPosition = body.size() - 3 -  elem; //TODO проверить на то ли значение сдвигается
-        vector<char> position  = Int16ToBytes(exitPosition);
+    for (auto elem: continueVec) {
+        int exitPosition = body.size() - 3 - elem + shift; //TODO проверить на то ли значение сдвигается
+        vector<char> position = Int16ToBytes(exitPosition);
         body[elem + 1] = position[0];
         body[elem + 2] = position[2];
     }
+}
+
+vector<char> ExprNode::generateFor() {
+
+    vector<char> bytes;
+
+    vector<char> initValue = this->expr_left->expr_left->generate();
+    vector<char> endValue = this->expr_left->expr_right->generate();
+    int valueNum = Node::getVarNumber(this->body, curClassName, curMethodName, *this->Name);
+
+    // Первая инициализация
+    merge(bytes, initValue);
+    merge(bytes, commandToBytes(Command::istore));
+    bytes.push_back(IntToBytes(valueNum).back());
+
+    // body
+    vector<char> body = this->body->generate();
+    merge(body, commandToBytes(Command::iinc));
+    body.push_back(IntToBytes(valueNum).back());
+    body.push_back(IntToBytes(1).back());
+
+    // условие
+    vector<char> condition = commandToBytes(Command::iload);
+    bytes.push_back(IntToBytes(valueNum).back());
+    merge(condition, endValue);
+    merge(condition, commandToBytes(Command::if_icmpne));
+    int sz = body.size() + 3;
+    merge(condition, Int16ToBytes(sz));
+
+    merge(body, commandToBytes(Command:: goto_));
+    sz =  condition.size() + body.size() - 1;
+    vector<char> position = IntToBytes(- sz);
+    body.insert(body.end(), u2(position));
+
+    fillBreaks(body, breakVec);
+    fillContinues(body, continueVec, -3);
+
+    merge(bytes, condition);
+    merge(bytes, body);
+
+    return bytes;
+}
+
+vector<char> ExprNode::generateForEach() {
+
+    vector<char> bytes;
+
+    vector<char> initValue = Int16ToBytes(0);
+    vector<char> endValue = this->expr_left->generate();
+    merge(endValue, commandToBytes(Command::arraylength));
+
+    int valueNum = Node::getVarNumber(this->body, curClassName, curMethodName, *this->Name);
+
+    // Первая инициализация
+    merge(bytes, initValue);
+    merge(bytes, commandToBytes(Command::istore));
+
+
+
+    // body
+    /// первоначальная инициализация переменной
+    DataType arrDataType = this->expr_left->dataType.getArrDataType();
+    vector<char> body;
+    merge(body, this->expr_left->generate());
+    merge(body, commandToBytes(Command::iload));
+    bytes.push_back(IntToBytes(loopCounterVar).back());
+
+    switch (arrDataType.type) {
+
+        case DataType::int_:
+        case DataType::char_:
+        case DataType::bool_:
+            merge(bytes, commandToBytes(Command::iaload));
+            break;
+        case DataType::float_:
+            merge(bytes, commandToBytes(Command::faload));
+            break;
+        case DataType::string_:
+        case DataType::class_:
+        case DataType::array_:
+            merge(bytes, commandToBytes(Command::aaload));
+            break;
+        case DataType::undefined_:
+        case DataType::void_:
+            break;
+    }
+
+    merge(body, this->body->generate());
+    merge(body, commandToBytes(Command::iinc));
+    body.push_back(IntToBytes(valueNum).back());
+    body.push_back(IntToBytes(1).back());
+
+    // условие
+    vector<char> condition = commandToBytes(Command::iload);
+    bytes.push_back(IntToBytes(localVarNum).back());
+    merge(condition, endValue);
+    merge(condition, commandToBytes(Command::if_icmpne));
+    int sz = body.size() + 3;
+    merge(condition, Int16ToBytes(sz));
+
+    merge(body, commandToBytes(Command:: goto_));
+    sz =  condition.size() + body.size() - 1;
+    vector<char> position = IntToBytes(- sz);
+    body.insert(body.end(), u2(position));
+
+    fillBreaks(body, breakVec);
+    fillContinues(body, continueVec, -3);
+
+    merge(bytes, condition);
+    merge(bytes, body);
+
+    return bytes;
 }

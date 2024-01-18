@@ -57,6 +57,8 @@ public:
     void addParent(string childName, string parentName);
     void addLocalParam(string className,string methodName, VarTableItem varTableItem);
     void addFuncParam(string className,string methodName, VarTableItem varTableItem);
+    static int addLoopCounterVar(string className,string methodName);
+
 
     bool isClassExist(const string& className);
     bool isMethodExist(const string& className, const string& methodName);
@@ -104,7 +106,6 @@ public:
     static  bool  isEnum(const string& className);
     static  map<string, ClassTableItem> getItems();
     static void makeMainForJavaFormat();
-
 };
 
 

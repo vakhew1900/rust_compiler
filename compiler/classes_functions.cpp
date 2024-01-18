@@ -1645,7 +1645,7 @@ void ProgramNode::getAllItems(std::string className) {
 
         ClassTable::isCorrectTraitsImpl();
         ClassTable::isMainFunctionExist();
-        ClassTable:: makeMainForJavaFormat();
+        ClassTable::makeMainForJavaFormat();
     }
     catch (Exception e) {
         cerr << e.getMessage() << "\n";
@@ -2554,7 +2554,7 @@ void ItemNode::transform(bool isConvertedToConst) {
             case enum_:
 
                 for (auto elem: *this->enumItems->items) {
-                  //  ClassTable::addFieldRefToConstTable(curClassName, curClassName, *elem->name, elem->dataType);
+                    //  ClassTable::addFieldRefToConstTable(curClassName, curClassName, *elem->name, elem->dataType);
                     elem->expr->transform();
                 }
 
@@ -3260,8 +3260,8 @@ void ExprNode::transform(bool isConvertedToConst) {
             break;
         case return_expr:
 
-            if(this->expr_left == NULL){
-                returnTypes.push_back( DataType(DataType::void_));
+            if (this->expr_left == NULL) {
+                returnTypes.push_back(DataType(DataType::void_));
             }
 
             addMetaInfo(expr_left);
@@ -3396,9 +3396,10 @@ void ExprNode::transform(bool isConvertedToConst) {
                 }
 
                 VarTableItem varItem = VarTableItem(*this->Name, dataType,
-                                                    this->expr_left->isMut && this->expr_left->isRefExpr(), false, true,
-                                                    false,
-                                                    body);
+                                                    this->expr_left->isMut && this->expr_left->isRefExpr(),
+                                                    false, true, false, body);
+
+                this->loopCounterVar = ClassTable::addLoopCounterVar(curClassName, curMethodName);
                 ClassTable::Instance()->addLocalParam(curClassName, curMethodName, varItem);
             }
 
@@ -4414,6 +4415,4 @@ int Node::getVarNumber(ExprNode *blockExpr, const string &className, const strin
     return ClassTable::Instance()->getMethod(className, methodName).localVarTable.getVarNumber(varName,
                                                                                                blockExpr);
 }
-
-
 

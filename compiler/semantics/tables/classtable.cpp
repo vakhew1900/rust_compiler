@@ -623,3 +623,11 @@ void ClassTable::makeMainForJavaFormat() {
     methodTableItem.paramTable.items.push_back(varTableItem);
     ClassTable::Instance()->updateMethod(mainClass, main, methodTableItem);
 }
+
+int ClassTable::addLoopCounterVar(string className, string methodName) {
+    VarTableItem varTableItem = VarTableItem();
+    varTableItem.id = "$$"; // спецсимвол
+    varTableItem.dataType = DataType(DataType::int_);
+    ClassTable::Instance()->items[className].methodTable.items[methodName].localVarTable.items.push_back(varTableItem);
+    return  ClassTable::Instance()->items[className].methodTable.items[methodName].localVarTable.items.size() - 1;
+}

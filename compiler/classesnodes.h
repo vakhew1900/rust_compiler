@@ -175,6 +175,7 @@ public:
 
     TypeNode *typeNode = NULL;
 
+    int loopCounterVar = -1;
     //ф-ии
     static ExprNode *OperatorExpr(Type type, ExprNode *left, ExprNode *right);
 
@@ -249,8 +250,10 @@ public:
 
     vector<char> generateInt(int value);
     vector<char> generateReturn(ExprNode* exprNode);
-    void  fillBreaks(vector<char> &body, vector<int> breakVec);
-    void  fillContinues(vector<char> &body, vector<int> continueVec);
+    void  fillBreaks(vector<char> &body, vector<int> breakVec, int shift = 0);
+    void  fillContinues(vector<char> &body, vector<int> continueVec, int shift = 0);
+    vector<char> generateFor();
+    vector<char> generateForEach();
 };
 
 class ExprListNode : public Node {
