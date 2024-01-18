@@ -6,6 +6,7 @@
 #define COMPILER_BYTE_CONVERTATION_H
 
 #include <vector>
+#include <cstdint>
 #define u2(x)  x.begin() + 2, x.end()
 
 std::vector<char> IntToBytes(int value);

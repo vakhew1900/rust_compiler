@@ -3,6 +3,7 @@
 //
 
 #include <string>
+#include <cstring>
 #include "constable.h"
 #include "semantics/tools/tools.h"
 #include "code_generation/tools/byte_convert.h"

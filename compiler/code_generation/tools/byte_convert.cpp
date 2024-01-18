@@ -3,6 +3,7 @@
 //
 
 #include "byte_convert.h"
+#include <algorithm>
 #include <vector>
 
 std::vector<char> IntToBytes(int value) {
