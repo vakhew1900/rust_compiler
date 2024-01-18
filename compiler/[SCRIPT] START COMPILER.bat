@@ -18,13 +18,19 @@ set "compiler_folder=.\cmake-build-visual-studio"
 set "destination_folder=.\cmake-build-visual-studio\code_generation\src"
 
 rem Запуск compiler.exe с передачей файла в аргументах
-%compiler_folder%\compiler.exe %source_folder%\%filename%
+cd %compiler_folder%
+compiler.exe ..\%source_folder%\%filename%
+
+cd ..\
 
 rem Копирование файла RTL.class в целевую папку
 copy .\Rust_RTL\RTL.class %destination_folder%
 
 rem Переход в целевую папку и запуск
 cd %destination_folder%
+echo.
+echo ===OUTPUT===
+echo.
 java -classpath . ModuleClass
 
 endlocal
