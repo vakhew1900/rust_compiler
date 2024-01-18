@@ -28,7 +28,8 @@ public class RTL {
         System.out.println(str.replace("{}", String.valueOf(ch)));
     }
 
-    public static void println_bool(String str, boolean b) {
+    public static void println_bool(String str, int b_int) {
+        boolean b = b_int > 0;
         if (!str.contains("{}")) {
             throw new IllegalArgumentException("Format string is not contains {}");
         }

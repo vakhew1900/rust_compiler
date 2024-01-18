@@ -2925,7 +2925,7 @@ int translateNumberByBase(char *input_string) {
 }
 
 
-//#define release
+#define release
 
 int main(int argc, char** argv) {
 
@@ -2938,7 +2938,8 @@ int main(int argc, char** argv) {
 
     const char *filename = argv[1];
 #else
-    const char *filename = "../tests/hello_world.rs";
+        //const char *filename = *argv;
+//    const char *filename = "../tests/hello_world.rs";
 //    const char *filename = "../tests/bubble_sort_rust.rs";
 //    const char *filename = "../tests/check_cycle_break_continue_rust.rs";
 #endif
