@@ -14,4 +14,12 @@ fn main() {
     let b1 = !bool_val;
     println_bool("boolean is {}", bool_val);
     println_bool("boolean is {}", b1);
+
+    let ri = read_int();
+    println_int("\nentered int: {}", ri);
+
+    println_float("\nentered float: {}", read_float());
+
+    println("\nentered string: {}", read());
+    println_char("\nentered char: {}", read_char());
 }
