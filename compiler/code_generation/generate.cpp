@@ -1088,6 +1088,7 @@ vector<char> ExprNode::generateFor() {
 
     // условие
     vector<char> condition = commandToBytes(Command::iload);
+    bytes.push_back(IntToBytes(valueNum).back());
     merge(condition, endValue);
     merge(condition, commandToBytes(Command::if_icmpne));
     int sz = body.size() + 3;
@@ -1108,5 +1109,72 @@ vector<char> ExprNode::generateFor() {
 }
 
 vector<char> ExprNode::generateForEach() {
-    return vector<char>();
+
+    vector<char> bytes;
+
+    vector<char> initValue = Int16ToBytes(0);
+    vector<char> endValue = this->expr_left->generate();
+    merge(endValue, commandToBytes(Command::arraylength));
+
+    int valueNum = Node::getVarNumber(this->body, curClassName, curMethodName, *this->Name);
+
+    // Первая инициализация
+    merge(bytes, initValue);
+    merge(bytes, commandToBytes(Command::istore));
+
+
+
+    // body
+    /// первоначальная инициализация переменной
+    DataType arrDataType = this->expr_left->dataType.getArrDataType();
+    vector<char> body;
+    merge(body, this->expr_left->generate());
+    merge(body, commandToBytes(Command::iload));
+    bytes.push_back(IntToBytes(loopCounterVar).back());
+
+    switch (arrDataType.type) {
+
+        case DataType::int_:
+        case DataType::char_:
+        case DataType::bool_:
+            merge(bytes, commandToBytes(Command::iaload));
+            break;
+        case DataType::float_:
+            merge(bytes, commandToBytes(Command::faload));
+            break;
+        case DataType::string_:
+        case DataType::class_:
+        case DataType::array_:
+            merge(bytes, commandToBytes(Command::aaload));
+            break;
+        case DataType::undefined_:
+        case DataType::void_:
+            break;
+    }
+
+    merge(body, this->body->generate());
+    merge(body, commandToBytes(Command::iinc));
+    body.push_back(IntToBytes(valueNum).back());
+    body.push_back(IntToBytes(1).back());
+
+    // условие
+    vector<char> condition = commandToBytes(Command::iload);
+    bytes.push_back(IntToBytes(localVarNum).back());
+    merge(condition, endValue);
+    merge(condition, commandToBytes(Command::if_icmpne));
+    int sz = body.size() + 3;
+    merge(condition, Int16ToBytes(sz));
+
+    merge(body, commandToBytes(Command:: goto_));
+    sz =  condition.size() + body.size() - 1;
+    vector<char> position = IntToBytes(- sz);
+    body.insert(body.end(), u2(position));
+
+    fillBreaks(body, breakVec);
+    fillContinues(body, continueVec, -3);
+
+    merge(bytes, condition);
+    merge(bytes, body);
+
+    return bytes;
 }

@@ -175,6 +175,7 @@ public:
 
     TypeNode *typeNode = NULL;
 
+    int loopCounterVar = -1;
     //ф-ии
     static ExprNode *OperatorExpr(Type type, ExprNode *left, ExprNode *right);
 
