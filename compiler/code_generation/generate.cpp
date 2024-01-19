@@ -235,8 +235,7 @@ vector<char> ExprNode::generate() {
 
 
         case asign: {
-            bytes = this->expr_left->generate();
-
+            bytes = this->expr_right->generate();
             switch (expr_left->dataType.type) {
 
                 case DataType::int_:
@@ -322,6 +321,8 @@ vector<char> ExprNode::generate() {
         case equal: {
             vector<char> left = this->expr_left->generate();
             vector<char> right = this->expr_right->generate();
+            merge(bytes, left);
+            merge(bytes, right);
 
             switch (this->expr_left->dataType.type) {
 
@@ -364,6 +365,9 @@ vector<char> ExprNode::generate() {
             vector<char> left = this->expr_left->generate();
             vector<char> right = this->expr_right->generate();
 
+            merge(bytes, left);
+            merge(bytes, right);
+
             switch (this->expr_left->dataType.type) {
 
                 case DataType::int_:
@@ -403,6 +407,9 @@ vector<char> ExprNode::generate() {
 
             vector<char> left = this->expr_left->generate();
             vector<char> right = this->expr_right->generate();
+
+            merge(bytes, left);
+            merge(bytes, right);
 
             switch (this->expr_left->dataType.type) {
 
@@ -445,6 +452,9 @@ vector<char> ExprNode::generate() {
             vector<char> left = this->expr_left->generate();
             vector<char> right = this->expr_right->generate();
 
+            merge(bytes, left);
+            merge(bytes, right);
+
             switch (this->expr_left->dataType.type) {
 
                 case DataType::int_:
@@ -486,6 +496,9 @@ vector<char> ExprNode::generate() {
             vector<char> left = this->expr_left->generate();
             vector<char> right = this->expr_right->generate();
 
+            merge(bytes, left);
+            merge(bytes, right);
+
             switch (this->expr_left->dataType.type) {
 
                 case DataType::int_:
@@ -525,6 +538,9 @@ vector<char> ExprNode::generate() {
 
             vector<char> left = this->expr_left->generate();
             vector<char> right = this->expr_right->generate();
+
+            merge(bytes, left);
+            merge(bytes, right);
 
             switch (this->expr_left->dataType.type) {
 
@@ -598,7 +614,7 @@ vector<char> ExprNode::generate() {
             }
 
             if (ClassTable::Instance()->getMethod(curClassName, curMethodName).body == this) {
-                merge(bytes, generateReturn(this->expr_left));
+                merge(bytes, generateReturn(this->body)); ///TODO изменил, походу ошибка. Если что Арсений откатывай)
             }
 
             break;
@@ -871,6 +887,7 @@ vector<char> ExprNode::generate() {
                 }
                 cur++;
             }
+
             break;
         }
 

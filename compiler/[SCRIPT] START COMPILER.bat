@@ -31,7 +31,7 @@ cd %destination_folder%
 echo.
 echo ===OUTPUT===
 echo.
-java -classpath . ModuleClass
+java -noverify -classpath . ModuleClass
 
 endlocal
 pause
