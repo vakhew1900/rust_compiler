@@ -942,7 +942,8 @@ vector<char> ExprNode::generate() {
             continueVec.clear();
             vector<char> body = this->body->generate();
             merge(body, commandToBytes(Command::goto_));
-            vector<char> position = IntToBytes(-body.size());
+            int sz = body.size() - 1;
+            vector<char> position = IntToBytes(-sz);
             body.insert(body.end(), u2(position)); ///TODO если не получится то придумать другую функцию
 
             fillBreaks(body, breakVec);
