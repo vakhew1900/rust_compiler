@@ -999,8 +999,7 @@ vector<char> ExprNode::generate() {
             break;
     }
 
-    breakVec.push_back(isBreak);
-    continueVec.push_back(isContinue);
+
     return bytes;
 }
 
@@ -1120,10 +1119,10 @@ vector<char> ExprNode::generateFor() {
 
     // условие
     vector<char> condition = commandToBytes(Command::iload);
-    bytes.push_back(IntToBytes(valueNum).back());
+    condition.push_back(IntToBytes(valueNum).back());
     merge(condition, endValue);
-    merge(condition, commandToBytes(Command::if_icmpne));
-    int sz = body.size() + 3;
+    merge(condition, commandToBytes(Command::if_icmpeq));
+    int sz = body.size() + 3 + 3;
     merge(condition, Int16ToBytes(sz));
 
     merge(body, commandToBytes(Command:: goto_));
@@ -1191,10 +1190,10 @@ vector<char> ExprNode::generateForEach() {
 
     // условие
     vector<char> condition = commandToBytes(Command::iload);
-    bytes.push_back(IntToBytes(localVarNum).back());
+    condition.push_back(IntToBytes(localVarNum).back());
     merge(condition, endValue);
-    merge(condition, commandToBytes(Command::if_icmpne));
-    int sz = body.size() + 3;
+    merge(condition, commandToBytes(Command::if_icmpeq));
+    int sz = body.size() + 3 + 3;
     merge(condition, Int16ToBytes(sz));
 
     merge(body, commandToBytes(Command:: goto_));

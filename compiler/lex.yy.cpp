@@ -2940,8 +2940,9 @@ int main(int argc, char** argv) {
 #else
         //const char *filename = *argv;
 //        const char *filename = "../tests/exam_tests/loop/loop.rs";
-        const char *filename = "../tests/exam_tests/while/simple_while.rs";
+//        const char *filename = "../tests/exam_tests/while/simple_while.rs";
 //        const char *filename = "../tests/exam_tests/loop/simple_loop.rs";
+        const char *filename = "../tests/exam_tests/for/simple_for.rs";
 
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";
