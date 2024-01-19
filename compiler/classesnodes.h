@@ -250,8 +250,8 @@ public:
 
     vector<char> generateInt(int value);
     vector<char> generateReturn(ExprNode* exprNode);
-    void  fillBreaks(vector<char> &body, vector<bool> breakVec, int shift = 0);
-    void  fillContinues(vector<char> &body, vector<bool> continueVec, int shift = 0);
+    void  fillBreaks(vector<char> &body, int shift = 0);
+    void  fillContinues(vector<char> &body, int shift = 0);
     vector<char> generateFor();
     vector<char> generateForEach();
 };

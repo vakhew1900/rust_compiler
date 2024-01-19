@@ -946,8 +946,8 @@ vector<char> ExprNode::generate() {
             vector<char> position = IntToBytes(-sz);
             body.insert(body.end(), u2(position)); ///TODO если не получится то придумать другую функцию
 
-            fillBreaks(body, breakVec);
-            fillContinues(body, breakVec);
+            fillBreaks(body);
+            fillContinues(body);
 
             breakVec = tempBreakVec;
             continueVec = tempContinueVec;
@@ -973,8 +973,8 @@ vector<char> ExprNode::generate() {
             body.insert(body.end(), u2(position)); ///TODO если не получится то придумать другую функцию
 
 
-            fillBreaks(body, breakVec);
-            fillContinues(body, breakVec);
+            fillBreaks(body);
+            fillContinues(body);
 
             merge(bytes, condition);
             merge(bytes, body);
@@ -1077,27 +1077,36 @@ vector<char> ExprNode::generateReturn(ExprNode *exprNode) {
 
 void ExprNode::fillBreaks(vector<char> &body, int shift) {
 
-    for(int i = 0; i < breakVec.size(); i++){
-        if(breakVec[i]) {
-            cout << i << " = i  body.size = " << body.size() << " ";
+    int i = 0;
+    while(i < body.size()){
+
+        Command command = static_cast<Command>( body[i]);
+        if(command == Command::goto_ && body[i + 1] == 0 && body[i + 2] == 3){
             int exitPosition = body.size() - i + shift;
             vector<char> position = Int16ToBytes(exitPosition);
             body[i + 1] = position[0];
             body[i + 2] = position[1];
+
+            cout << "break  = " << i << " body.size = " << body.size() << "\n";
         }
+        i += commandSize(command);
     }
 }
 
-void ExprNode::fillContinues(vector<char> &body, vector<bool> continueVec, int shift) {
+void ExprNode::fillContinues(vector<char> &body, int shift) {
 
-    for(int i = 0; i < continueVec.size(); i++){
+    int i = 0;
+    while(i < body.size()){
 
-        if(continueVec[i]) {
-            int exitPosition = body.size() - i + shift;
+        Command command = static_cast<Command>( body[i]);
+
+        if(command == Command::goto_ && body[i + 1] == 0 && body[i + 2] == 3){
+            int exitPosition = body.size() - i + shift - 3;
             vector<char> position = Int16ToBytes(exitPosition);
             body[i + 1] = position[0];
             body[i + 2] = position[1];
         }
+        i += commandSize(command);
     }
 }
 
@@ -1133,8 +1142,8 @@ vector<char> ExprNode::generateFor() {
     vector<char> position = IntToBytes(- sz);
     body.insert(body.end(), u2(position));
 
-    fillBreaks(body, breakVec);
-    fillContinues(body, continueVec, -3);
+    fillBreaks(body);
+    fillContinues(body, -3);
 
     merge(bytes, condition);
     merge(bytes, body);
@@ -1204,8 +1213,8 @@ vector<char> ExprNode::generateForEach() {
     vector<char> position = IntToBytes(- sz);
     body.insert(body.end(), u2(position));
 
-    fillBreaks(body, breakVec);
-    fillContinues(body, continueVec, -3);
+    fillBreaks(body);
+    fillContinues(body, - 3);
 
     merge(bytes, condition);
     merge(bytes, body);
