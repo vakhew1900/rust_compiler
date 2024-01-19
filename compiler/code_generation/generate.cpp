@@ -608,13 +608,14 @@ vector<char> ExprNode::generate() {
                 for (auto stmt: *this->stmt_list->stmts) {
                     merge(bytes, stmt->generate());
                 }
-                if (this->body != NULL) {
-                    merge(bytes, this->body->generate());
-                }
             }
+
 
             if (ClassTable::Instance()->getMethod(curClassName, curMethodName).body == this) {
                 merge(bytes, generateReturn(this->body)); ///TODO изменил, походу ошибка. Если что Арсений откатывай)
+            }
+            else  if (this->body != NULL) {
+                merge(bytes, this->body->generate());
             }
 
             break;
