@@ -7,8 +7,8 @@
 #include "tools/byte_convert.h"
 #include "tools/utils.h"
 
-vector<int> breakVec;
-vector<int> continueVec;
+vector<bool> breakVec;
+vector<bool> continueVec;
 
 vector<char> Node::generate() {
     throw Exception(Exception::UNEXPECTED, "generate not realized method for id" + to_string(this->id));
@@ -80,6 +80,10 @@ vector<char> ExprNode::generate() {
     const int gotoCommandSize = 3;
     const int binaryCommandSize = 2;
     const int unaryCommandSize = 1;
+
+    bool isContinue = false;
+    bool isBreak = false;
+
 
     switch (this->type) {
 
@@ -586,19 +590,19 @@ vector<char> ExprNode::generate() {
 
         case continue_expr:
             merge(bytes, commandToBytes(Command::goto_));
-            continueVec.push_back(bytes.size() - 1);
+            isContinue = true;
             merge(bytes, Int16ToBytes(3));
             break;
         case break_expr:
             merge(bytes, commandToBytes(Command::goto_));
-            breakVec.push_back(bytes.size() - 1);
             merge(bytes, Int16ToBytes(3));
+            isBreak = true;
             break;
         case break_with_val_expr:
             merge(bytes, this->expr_left->generate());
             merge(bytes, commandToBytes(Command::goto_));
-            breakVec.push_back(bytes.size() - 1);
             merge(bytes, Int16ToBytes(3)); // заглушка;
+            isBreak = true;
             break;
 
 
@@ -1004,6 +1008,8 @@ vector<char> ExprNode::generate() {
             break;
     }
 
+    breakVec.push_back(isBreak);
+    continueVec.push_back(isContinue);
     return bytes;
 }
 
@@ -1067,7 +1073,7 @@ vector<char> ExprNode::generateReturn(ExprNode *exprNode) {
 }
 
 
-void ExprNode::fillBreaks(vector<char> &body, vector<int> breakVec, int shift) {
+void ExprNode::fillBreaks(vector<char> &body, vector<bool> breakVec, int shift) {
 
     for (auto elem: breakVec) {
         int exitPosition = body.size() - elem + shift;
@@ -1077,7 +1083,7 @@ void ExprNode::fillBreaks(vector<char> &body, vector<int> breakVec, int shift) {
     }
 }
 
-void ExprNode::fillContinues(vector<char> &body, vector<int> continueVec, int shift) {
+void ExprNode::fillContinues(vector<char> &body, vector<bool> continueVec, int shift) {
 
     for (auto elem: continueVec) {
         int exitPosition = body.size() - 3 - elem + shift; //TODO проверить на то ли значение сдвигается
