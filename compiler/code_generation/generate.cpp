@@ -591,7 +591,7 @@ vector<char> ExprNode::generate() {
         case continue_expr:
             merge(bytes, commandToBytes(Command::goto_));
             isContinue = true;
-            merge(bytes, Int16ToBytes(3));
+            merge(bytes, Int16ToBytes(2));
             break;
         case break_expr:
             merge(bytes, commandToBytes(Command::goto_));
@@ -1100,7 +1100,7 @@ void ExprNode::fillContinues(vector<char> &body, int shift) {
 
         Command command = static_cast<Command>( body[i]);
 
-        if(command == Command::goto_ && body[i + 1] == 0 && body[i + 2] == 3){
+        if(command == Command::goto_ && body[i + 1] == 0 && body[i + 2] == 2){
             int exitPosition = body.size() - i + shift - 3;
             vector<char> position = Int16ToBytes(exitPosition);
             body[i + 1] = position[0];
