@@ -925,7 +925,9 @@ vector<char> ExprNode::generate() {
                 merge(secondBuffer, body);
                 merge(secondBuffer, buffer);
                 buffer = secondBuffer;
+                secondBuffer.clear();
             }
+
             bytes = buffer;
             break;
         }
