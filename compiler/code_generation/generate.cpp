@@ -972,11 +972,12 @@ vector<char> ExprNode::generate() {
             vector<char> position = IntToBytes(-sz);
             body.insert(body.end(), u2(position)); ///TODO если не получится то придумать другую функцию
 
-            merge(bytes, condition);
-            merge(bytes, body);
 
             fillBreaks(body, breakVec);
             fillContinues(body, breakVec);
+
+            merge(bytes, condition);
+            merge(bytes, body);
 
             breakVec = tempBreakVec;
             continueVec = tempContinueVec;
@@ -1022,8 +1023,8 @@ vector<char> ExprNode::generateInt(int value) {
     if (value <= INT16_MAX && value >= INT16_MIN) {
         buffer = commandToBytes(Command::sipush);
         merge(bytes, buffer);
-        buffer = Int16ToBytes(value);
-        merge(bytes, buffer);
+        buffer = IntToBytes(value);
+        bytes.insert(bytes.end(), u2(buffer));
     } else {
         buffer = commandToBytes(Command::ldc_w);
         merge(bytes, buffer);
@@ -1074,10 +1075,11 @@ vector<char> ExprNode::generateReturn(ExprNode *exprNode) {
 }
 
 
-void ExprNode::fillBreaks(vector<char> &body, vector<bool> breakVec, int shift) {
+void ExprNode::fillBreaks(vector<char> &body, int shift) {
 
     for(int i = 0; i < breakVec.size(); i++){
         if(breakVec[i]) {
+            cout << i << " = i  body.size = " << body.size() << " ";
             int exitPosition = body.size() - i + shift;
             vector<char> position = Int16ToBytes(exitPosition);
             body[i + 1] = position[0];

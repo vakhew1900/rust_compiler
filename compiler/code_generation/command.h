@@ -214,5 +214,5 @@ enum class Command : uint8_t {
 };
 
 std::vector<char> commandToBytes(Command command);
-
+int commandSize(Command command);
 #endif //COMPILER_COMMAND_H
