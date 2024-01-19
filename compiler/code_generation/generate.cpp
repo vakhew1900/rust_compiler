@@ -912,7 +912,7 @@ vector<char> ExprNode::generate() {
                 vector<char> body = elem->body->generate();
 
                 if (buffer.size()) {
-                    merge(body, commandToBytes(Command::ifeq));
+                    merge(body, commandToBytes(Command::goto_));
                     int sz = buffer.size() + gotoCommandSize;
                     merge(body, Int16ToBytes(sz));
                 }
