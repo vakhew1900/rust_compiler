@@ -1034,27 +1034,27 @@ vector<char> ExprNode::generateReturn(ExprNode *exprNode) {
     if (exprNode == NULL) {
         bytes = commandToBytes(Command::return_);
     } else {
-
+        merge(bytes, exprNode->generate());
         switch (exprNode->dataType.type) {
 
             case DataType::int_:
             case DataType::char_:
             case DataType::bool_:
-                bytes = commandToBytes(Command::ireturn);
+                merge(bytes, commandToBytes(Command::ireturn));
                 break;
 
             case DataType::float_:
-                bytes = commandToBytes(Command::freturn);
+                merge(bytes, commandToBytes(Command::freturn));
                 break;
 
             case DataType::string_:
             case DataType::class_:
             case DataType::array_:
-                bytes = commandToBytes(Command::areturn);
+                merge(bytes, commandToBytes(Command::areturn));
                 break;
 
             case DataType::void_:
-                bytes = commandToBytes(Command::return_);
+                merge(bytes, commandToBytes(Command::return_));
                 break;
             case DataType::undefined_:
                 break;

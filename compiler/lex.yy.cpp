@@ -2939,7 +2939,7 @@ int main(int argc, char** argv) {
     const char *filename = argv[1];
 #else
         //const char *filename = *argv;
-      const char *filename = "../tests/exam_tests/if_expr/simple_if_else2.rs";
+    // const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";
 //    const char *filename = "../tests/bubble_sort_rust.rs";
 //    const char *filename = "../tests/check_cycle_break_continue_rust.rs";
 #endif
