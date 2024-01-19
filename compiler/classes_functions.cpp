@@ -3326,14 +3326,18 @@ void ExprNode::transform(bool isConvertedToConst) {
                 loopCnt++;
                 body->transform(isConvertedToConst);
                 if (breakTypes.empty()) {
-                    throw Exception(Exception::LOOP_ERROR, "loop should has break", this->line);
+                   // throw Exception(Exception::LOOP_ERROR, "loop should has break", this->line);
+                    this->dataType = DataType(DataType::void_);
                 }
-                if (!DataType::isEquals(breakTypes)) {
-                    throw Exception(Exception::TYPE_ERROR, "loop has different types", this->line);
+                else {
+                    if (!DataType::isEquals(breakTypes)) {
+                        throw Exception(Exception::TYPE_ERROR, "loop has different types", this->line);
+                    }
+                    this->dataType = breakTypes.front();
+                    breakTypes = breaks;
                 }
+
                 loopCnt--;
-                this->dataType = breakTypes.front();
-                breakTypes = breaks;
             }
 
 
