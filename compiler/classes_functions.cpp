@@ -51,7 +51,7 @@ TypeNode::TypeNode(Type type, ExprNode *pathCallExpr) {
 ExprNode *ExprNode::OperatorExpr(Type type, ExprNode *left, ExprNode *right) {
     auto *new_node = new ExprNode();
     new_node->id = ++globId;
-    new_node->line = left->line;
+    new_node->setLine(left);
     new_node->type = type;
     new_node->expr_left = left;
     new_node->expr_right = right;
