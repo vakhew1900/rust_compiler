@@ -1075,21 +1075,26 @@ vector<char> ExprNode::generateReturn(ExprNode *exprNode) {
 
 void ExprNode::fillBreaks(vector<char> &body, vector<bool> breakVec, int shift) {
 
-    for (auto elem: breakVec) {
-        int exitPosition = body.size() - elem + shift;
-        vector<char> position = Int16ToBytes(exitPosition);
-        body[elem + 1] = position[0];
-        body[elem + 2] = position[2];
+    for(int i = 0; i < breakVec.size(); i++){
+        if(breakVec[i]) {
+            int exitPosition = body.size() - i + shift;
+            vector<char> position = Int16ToBytes(exitPosition);
+            body[i + 1] = position[0];
+            body[i + 2] = position[1];
+        }
     }
 }
 
 void ExprNode::fillContinues(vector<char> &body, vector<bool> continueVec, int shift) {
 
-    for (auto elem: continueVec) {
-        int exitPosition = body.size() - 3 - elem + shift; //TODO проверить на то ли значение сдвигается
-        vector<char> position = Int16ToBytes(exitPosition);
-        body[elem + 1] = position[0];
-        body[elem + 2] = position[2];
+    for(int i = 0; i < continueVec.size(); i++){
+
+        if(continueVec[i]) {
+            int exitPosition = body.size() - i + shift;
+            vector<char> position = Int16ToBytes(exitPosition);
+            body[i + 1] = position[0];
+            body[i + 2] = position[1];
+        }
     }
 }
 
