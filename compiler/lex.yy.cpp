@@ -2925,7 +2925,7 @@ int translateNumberByBase(char *input_string) {
 }
 
 
-#define release
+//#define release
 
 int main(int argc, char** argv) {
 
@@ -2939,7 +2939,8 @@ int main(int argc, char** argv) {
     const char *filename = argv[1];
 #else
         //const char *filename = *argv;
-        const char *filename = "../tests/exam_tests/loop/loop.rs";
+//        const char *filename = "../tests/exam_tests/loop/loop.rs";
+        const char *filename = "../tests/exam_tests/while/simple_while.rs";
 //        const char *filename = "../tests/exam_tests/loop/simple_loop.rs";
 
 

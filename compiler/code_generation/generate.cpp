@@ -956,10 +956,7 @@ vector<char> ExprNode::generate() {
             break;
         }
         case loop_while: {
-            auto tempBreakVec = breakVec;
-            auto tempContinueVec = continueVec;
-            breakVec.clear();
-            continueVec.clear();
+
             vector<char> condition = this->expr_left->generate();
             vector<char> body = this->body->generate();
 
@@ -978,15 +975,9 @@ vector<char> ExprNode::generate() {
 
             merge(bytes, condition);
             merge(bytes, body);
-
-            breakVec = tempBreakVec;
-            continueVec = tempContinueVec;
         }
+        break;
         case loop_for: {
-            auto tempBreakVec = breakVec;
-            auto tempContinueVec = continueVec;
-            breakVec.clear();
-            continueVec.clear();
 
             if (this->expr_left->type == range_expr) {
                 bytes = generateFor();
@@ -994,8 +985,6 @@ vector<char> ExprNode::generate() {
                 bytes = generateForEach();
             }
 
-            breakVec = tempBreakVec;
-            continueVec = tempContinueVec;
             break;
         }
 
