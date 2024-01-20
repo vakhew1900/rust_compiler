@@ -509,7 +509,7 @@ vector<char> ExprNode::generate() {
                 case DataType::char_:
                 case DataType::bool_:
 
-                    merge(bytes, commandToBytes(Command::if_icmple)); // 1
+                    merge(bytes, commandToBytes(Command::if_icmplt)); // 1
                     merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
                     merge(bytes, commandToBytes(Command::iconst_1)); // 4
                     merge(bytes, commandToBytes(Command::goto_)); // 5
