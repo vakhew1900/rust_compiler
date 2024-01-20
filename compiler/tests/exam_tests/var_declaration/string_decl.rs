@@ -2,10 +2,7 @@ fn main() {
     // не работают
 //     let mut strg: String = r###"Это ##"raw"## строка с тройными кавычками"###;
 //     let raw = r"Это \0 \n \t \xFF строка с тройными кавычками";
-//     let multiline_string = "Это множественная
-// строка,
-// состоящая из нескольких строк."; //- ошибка вывода
-//     println("{}", multiline_string);
+
     // Жесткая ошибка - конец на терминальном нуле
 //     let escaped_string = "Это строка с символами:\n \\n (новая строка),\t \\t (табуляция)\0 \\0 (терминальный ноль)";
 //     println("{}", escaped_string);
@@ -17,4 +14,9 @@ fn main() {
     println("{}", quote_escape);
     println("{}", ascii_escape);
     println("{}", unicode_escape);
+
+        let multiline_string = "Это множественная
+    строка,
+    состоящая из нескольких строк."; //- ошибка вывода
+        println("{}", multiline_string);
 }

@@ -1547,7 +1547,7 @@ YY_RULE_SETUP
 case 100:
 YY_RULE_SETUP
 #line 187 "lex.l"
-{ lineNumber++; }
+{ lineNumber++; stdstr += "\n"; }
 	YY_BREAK
 case 101:
 YY_RULE_SETUP

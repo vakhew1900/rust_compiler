@@ -184,7 +184,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); return CHAR;}
 
 \" { stdstr = ""; BEGIN(STRING_EL); }
 <STRING_EL>[^\\\"\n]+ { stdstr += yytext; }
-<STRING_EL>\n  { lineNumber++; }
+<STRING_EL>\n  { lineNumber++; stdstr += "\n"; }
 <STRING_EL>\\n  { stdstr += "\n"; }
 <STRING_EL>\\r  { stdstr += "\r"; }
 <STRING_EL>\\t  { stdstr += "\t"; }
@@ -537,7 +537,7 @@ int translateNumberByBase(char *input_string) {
 }
 
 
-//#define release
+#define release
 
 int main(int argc, char** argv) {
 
@@ -550,7 +550,16 @@ int main(int argc, char** argv) {
 
     const char *filename = argv[1];
 #else
-    const char *filename = "../tests/trait_error.rs";
+        //const char *filename = *argv;
+//        const char *filename = "../tests/exam_tests/loop/loop.rs";
+//        const char *filename = "../tests/exam_tests/while/simple_while.rs";
+//        const char *filename = "../tests/exam_tests/loop/simple_loop.rs";
+//        const char *filename = "../tests/exam_tests/for/simple_for.rs";
+//        const char *filename = "../tests/exam_tests/logic/logic_combine.rs";
+//        const char *filename = "../tests/exam_tests/arithmetic/as_casting.rs";
+
+
+//      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";
 //    const char *filename = "../tests/bubble_sort_rust.rs";
 //    const char *filename = "../tests/check_cycle_break_continue_rust.rs";
 #endif
