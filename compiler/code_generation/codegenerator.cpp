@@ -19,7 +19,7 @@ vector<char> CodeGenerator::generateField(const string &className, const string 
     if (fieldTableItem.isConst) {
         accessFlag |= uint16_t(AccessFlags::Static);
     }
-    bytes = IntToBytes(accessFlag);
+    bytes = Int16ToBytes(accessFlag);
 
     // имя поля
     buffer = IntToBytes(ClassTable::addUTF8ToConstTable(className, fieldName));
@@ -250,7 +250,7 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
     // количество методов c учетом конструктора
 
     if (isConst) {
-        methodTable[ConstTable::clinit] = MethodTableItem::clinitMethod();
+        ClassTable::Instance()->addMethod(className, ConstTable::clinit,MethodTableItem::clinitMethod());
     }
 
     int methodSize = methodTable.size();

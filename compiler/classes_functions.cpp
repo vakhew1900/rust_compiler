@@ -1760,7 +1760,7 @@ void ItemNode::getAllItems(std::string className) {
                 if (this->visibility == pub) this->classTableItem.isPub = true;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
                 this->curClassName = className + "/" + *this->name;
-                if (this->structItems->items != NULL) {
+                if (this->structItems != NULL && this->structItems->items != NULL) {
                     for (auto elem: *this->structItems->items) {
                         elem->curClassName = className + "/" + *this->name;
                         elem->getAllItems(className + "/" + *this->name);
@@ -2117,8 +2117,10 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
             ClassTable::Instance()->updateField(className, *this->name, this->fieldTableItem);
             break;
         case struct_:
-            for (auto elem: *this->structItems->items) {
-                elem->addDataTypeToDeclaration(className + "/" + *this->name);
+            if(this->structItems != NULL) {
+                for (auto elem: *this->structItems->items) {
+                    elem->addDataTypeToDeclaration(className + "/" + *this->name);
+                }
             }
 
             this->curClassName = className + "/" + *this->name;
@@ -2521,6 +2523,9 @@ void ItemNode::transform(bool isConvertedToConst) {
             case struct_: {
                 vector<DataType> params;
 
+                if(this->structItems == NULL){
+                    return;
+                }
                 for (auto elem: *structItems->items) {
                     if (elem->dataType.isClass()) {
 
