@@ -2,8 +2,8 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
-        String s = "fsdfsd \0 fsf";
-        System.out.println(s);
+        RTL.print("ffs{}", "fsf");
+        RTL.print_float("sfsf {}", 1.2f);
 //        int arr[] = {1, 2, 3, 4, 5};
 //        for (int a : arr) {
 //            System.out.println(a);
