@@ -210,7 +210,13 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); return CHAR;}
     convertCharacterCodeToString(yytext, 2, string);
     stdstr += string;
 }
-<STRING_EL>\" { cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL); yylval.string_literal = new string(stdstr); return STRING_LITERAL;}
+<STRING_EL>\" {
+    cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL);
+    string * p_str = new string(stdstr);
+    p_str->resize(stdstr.size());
+    yylval.string_literal = p_str;
+    return STRING_LITERAL;
+}
 <STRING_EL><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 <STRING_EL>\\ { printf("STRING Error in line %d: slash\n", lineNumber); }
 
@@ -557,6 +563,7 @@ int main(int argc, char** argv) {
 //        const char *filename = "../tests/exam_tests/for/simple_for.rs";
 //        const char *filename = "../tests/exam_tests/logic/logic_combine.rs";
 //        const char *filename = "../tests/exam_tests/arithmetic/as_casting.rs";
+       const char *filename = "../tests/exam_tests/var_declaration/string_hard.rs";
 
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";
