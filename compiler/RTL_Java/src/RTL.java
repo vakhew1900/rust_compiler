@@ -1,4 +1,39 @@
 public class RTL {
+    public static void print(String str, String val) {
+        if (!str.contains("{}")) {
+            throw new IllegalArgumentException("Format string is not contains {}");
+        }
+        System.out.print(str.replace("{}", val));
+    }
+
+    public static void print_int(String str, int value) {
+        if (!str.contains("{}")) {
+            throw new IllegalArgumentException("Format string is not contains {}");
+        }
+        System.out.print(str.replace("{}", String.valueOf(value)));
+    }
+
+    public static void print_float(String str, float value) {
+        if (!str.contains("{}")) {
+            throw new IllegalArgumentException("Format string is not contains {}");
+        }
+        System.out.print(str.replace("{}", String.valueOf(value)));
+    }
+
+    public static void print_char(String str, char ch) {
+        if (!str.contains("{}")) {
+            throw new IllegalArgumentException("Format string is not contains {}");
+        }
+        System.out.print(str.replace("{}", String.valueOf(ch)));
+    }
+
+    public static void print_bool(String str, int b_int) {
+        boolean b = b_int > 0;
+        if (!str.contains("{}")) {
+            throw new IllegalArgumentException("Format string is not contains {}");
+        }
+        System.out.print(str.replace("{}", String.valueOf(b)));
+    }
 
     public static void println(String str, String val) {
         if (!str.contains("{}")) {
