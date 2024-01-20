@@ -2925,7 +2925,7 @@ int translateNumberByBase(char *input_string) {
 }
 
 
-#define release
+//#define release
 
 int main(int argc, char** argv) {
 
@@ -2945,6 +2945,7 @@ int main(int argc, char** argv) {
 //        const char *filename = "../tests/exam_tests/for/simple_for.rs";
 //        const char *filename = "../tests/exam_tests/logic/logic_combine.rs";
 //        const char *filename = "../tests/exam_tests/arithmetic/as_casting.rs";
+        const char *filename = "../tests/exam_tests/var_declar/as_casting.rs";
 
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";

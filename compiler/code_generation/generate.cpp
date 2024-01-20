@@ -177,7 +177,7 @@ vector<char> ExprNode::generate() {
         case negotation:
             merge(bytes, this->expr_left->generate());
             merge(bytes, commandToBytes(Command::iconst_0));
-            merge(bytes, commandToBytes(Command::iand));
+            merge(bytes, commandToBytes(Command::ixor));
             break;
 
         case or_: {
