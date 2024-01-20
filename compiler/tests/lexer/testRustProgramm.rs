@@ -239,7 +239,7 @@ fn main() {
 
     fn double(x: i32) -> i32 {
         x * 2
-        let x = 0o_;
+        let x = 0o_;//error
     }
     fn use_higher_order_function() {
         let result = apply_function(double, 5);
