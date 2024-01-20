@@ -4018,7 +4018,7 @@ void ExprNode::transformConst() {
                 this->Int = -this->expr_left->Int;
                 this->type = int_lit;
             } else if (this->expr_left->dataType.type == DataType::float_) {
-                this->Float = this->expr_left->Float <= this->expr_right->Float;
+                this->Float = -this->expr_left->Float;
                 this->type = float_lit;
             } else {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
