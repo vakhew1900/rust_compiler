@@ -266,10 +266,13 @@ return DOUBLEDOTS;}
  <ML_COMMENT>[^*\n]* { strcat(str,yytext); }
  <ML_COMMENT>\n { lineNumber++; }
  <ML_COMMENT>"*"+[^/\n]? { strcat(str,yytext); }
- <ML_COMMENT>"*"+"/" { printf("Found ML_COMMENT: %s\n", str);  BEGIN(INITIAL); }
- <ML_COMMENT><<EOF>> { printf("ML_COMMENT Error in line %d: comment are not closed\n", lineNumber); BEGIN(INITIAL);}
+ <ML_COMMENT>"*"+"/" { //printf("Found ML_COMMENT: %s\n", str);
+ BEGIN(INITIAL); }
+ <ML_COMMENT><<EOF>> { //printf("ML_COMMENT Error in line %d: comment are not closed\n", lineNumber);
+ BEGIN(INITIAL);}
 
- \/\/[^\n]* { printf("Found COMMENT: %s\n", yytext); }
+ \/\/[^\n]* { //printf("Found COMMENT: %s\n", yytext);
+ }
 
 \" { stdstr = ""; BEGIN(STRING_EL); }
 <STRING_EL>[^\\\"\n]+ { stdstr += yytext; }
@@ -301,14 +304,17 @@ return DOUBLEDOTS;}
     stdstr += string;
 }
 <STRING_EL>\" {
-    cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL);
+    //cout << "Found STRING: " << stdstr << endl;
+    BEGIN(INITIAL);
     string * p_str = new string(stdstr);
     p_str->resize(stdstr.size());
     yylval.string_literal = p_str;
     return STRING_LITERAL;
 }
-<STRING_EL><<EOF>> { printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
-<STRING_EL>\\ { printf("STRING Error in line %d: slash\n", lineNumber); }
+<STRING_EL><<EOF>> { //printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber);
+BEGIN(INITIAL);}
+<STRING_EL>\\ { //printf("STRING Error in line %d: slash\n", lineNumber);
+}
 
 r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING);}
 <SHIELD_STRING>[^\"\n]+ { stdstr += yytext; }
@@ -317,7 +323,8 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     int tmp  = strlen(yytext) - 1;
     if(tmp == octothorpeCount)
     {
-        cout << "Found RAW STRING: " << stdstr << endl; BEGIN(INITIAL);
+        //cout << "Found RAW STRING: " << stdstr << endl;
+        BEGIN(INITIAL);
         yylval.string_literal = new string(stdstr);
         return RAW_STRING_LITERAL;
     }
@@ -327,7 +334,8 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     }
 
 }
-<SHIELD_STRING><<EOF>> { printf("SHIELD_STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
+<SHIELD_STRING><<EOF>> { //printf("SHIELD_STRING Error in line %d: there is no closing quotation mark\n", lineNumber);
+BEGIN(INITIAL);}
 
 
 \' { stdstr = ""; BEGIN(CHAR_EL); }
@@ -361,7 +369,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 }
 <CHAR_EL>\' {
     if(stdstr.size() == 1) {
-        cout << "Found CHAR:  " << stdstr << endl;
+        //cout << "Found CHAR:  " << stdstr << endl;
         yylval.char_literal = stdstr[0];
         BEGIN(INITIAL);
         return CHAR_LITERAL;
@@ -448,7 +456,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 
     removeType(str, "i32");
     removeUnderline(str);
-    printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
+    //printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
     yylval.int_literal = atoi(str);
     return INT_LITERAL;
 }
@@ -459,7 +467,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     removeUnderline(str);
     if(strlen(str) > 2)
     {
-         printf("Found BIN_NUMBER: %d\n", strtol(str + 2, NULL, 2));
+         //printf("Found BIN_NUMBER: %d\n", strtol(str + 2, NULL, 2));
          yylval.int_literal = strtol(str + 2, NULL, 2);
          return INT_LITERAL;
     }
@@ -475,7 +483,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     removeUnderline(str);
     if(strlen(str) > 2)
     {
-         printf("Found OCTAL_NUMBER: %d\n", strtol(str + 2, NULL, 8));
+         //printf("Found OCTAL_NUMBER: %d\n", strtol(str + 2, NULL, 8));
          yylval.int_literal = strtol(str + 2, NULL, 8);
          return INT_LITERAL;
     }
@@ -491,7 +499,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
     removeUnderline(str);
     if(strlen(str) > 2)
     {
-        printf("Found HEXADECIMAL_NUMBER: %d\n", strtol(str + 2, NULL, 16));
+        //printf("Found HEXADECIMAL_NUMBER: %d\n", strtol(str + 2, NULL, 16));
         yylval.int_literal = strtol(str + 2, NULL, 16);
         return INT_LITERAL;
     }
@@ -508,7 +516,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 [0-9][_0-9]*\.([0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?)?(f64)? {
     removeType(str, "f64");
     removeUnderline(str);
-    printf("Found DOUBLE: %lf\n", atof(str), str);
+    //printf("Found DOUBLE: %lf\n", atof(str), str);
     yylval.float_literal = atof(str);
     return FLOAT_LITERAL;
 }
@@ -516,13 +524,15 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 [0-9][_0-9]*([eE][+-]?[0-9][_0-9]*)?(f64)? {
     removeType(str, "f64");
     removeUnderline(str);
-    printf("Found DOUBLE: %lf\n", atof(str));
+    //printf("Found DOUBLE: %lf\n", atof(str));
     yylval.float_literal = atof(str);
     return FLOAT_LITERAL;
 }
 
-[a-zA-Z_][a-zA-Z0-9_]* { printf("Found IDENTIFIER: %s\n", yytext); yylval.identifier = new string(yytext); return ID;}
-[a-zA-Z_][a-zA-Z0-9_]*! { printf("Found MACROS: %s\n", yytext);}
+[a-zA-Z_][a-zA-Z0-9_]* { //printf("Found IDENTIFIER: %s\n", yytext);
+yylval.identifier = new string(yytext); return ID;}
+[a-zA-Z_][a-zA-Z0-9_]*! { //printf("Found MACROS: %s\n", yytext);
+}
 [0-9]+[a-zA-Z_][a-zA-Z0-9_]* { printf("Error in line %d: incorrect IDENTIFIER\n", lineNumber); }
 . { printf("Error in line %d: incorrect character in code\n", lineNumber); }
 %%
@@ -567,7 +577,7 @@ int findSecondDot(const char *input_string) {
             if (first_dot == -1) {
                 first_dot = i;  // Нашли первую точку
             } else {
-                printf("Found TWO_DOTS: %.*s\n", i - first_dot + 1, input_string + first_dot);
+                //printf("Found TWO_DOTS: %.*s\n", i - first_dot + 1, input_string + first_dot);
                 return i;  // Нашли вторую точку, возвращаем её индекс
             }
         }
@@ -606,26 +616,26 @@ int translateNumberByBase(char *input_string) {
     int result = -1;
 
     if (len == 1 && (input_string[0] >= '0' && input_string[0] <= '9')) {
-        printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+        //printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
         result = atoi(input_string);
     } else if (len >= 2 && (input_string[0] >= '0' && input_string[0] <= '9') && (input_string[1] >= '0' && input_string[1] <= '9')) {
-        printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+        //printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
         result = atoi(input_string);
     }
 
 
     if (input_string[0] == '0' && (len > 2)){
         if (input_string[1] == 'x'){
-            printf("Found RANGE_HEXADECIMAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 16));
+            //printf("Found RANGE_HEXADECIMAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 16));
             result = strtol(input_string + 2, NULL, 16);
         } else if (input_string[1] == 'b') {
-            printf("Found RANGE_BIN_NUMBER: %ld\n", strtol(input_string + 2, NULL, 2));
+            //printf("Found RANGE_BIN_NUMBER: %ld\n", strtol(input_string + 2, NULL, 2));
             result = strtol(input_string + 2, NULL, 2);
         } else if (input_string[1] == 'o'){
-            printf("Found RANGE_OCTAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 8));
+            //printf("Found RANGE_OCTAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 8));
             result = strtol(input_string + 2, NULL, 8);
         } else {
-            printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+            //printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
             result = atoi(input_string);
         }
     }
