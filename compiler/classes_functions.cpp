@@ -823,7 +823,7 @@ void ExprNode::toDot(string &dot, const string &pos) {
 
         case raw_string_lit:
             type = "raw_string_lit";
-            value = *(this->RawString);
+            value = *(this->String);
             break;
 
         case bool_lit:
