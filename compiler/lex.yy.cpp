@@ -3090,11 +3090,12 @@ int main(int argc, char** argv) {
     std::ofstream tableout("tables.txt");
     tableout << ClassTable::Instance()->toString() << "\n";
 
-    ClassTable::createConstTableCSV();
 
     if (Exception::counter == 0) {
         CodeGenerator codegen = CodeGenerator();
         codegen.generate();
     }
+
+    ClassTable::createConstTableCSV();
     return 0;
 }
