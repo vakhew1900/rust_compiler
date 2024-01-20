@@ -186,7 +186,7 @@ vector<char> ExprNode::generate() {
 
             merge(bytes, left);
             merge(bytes, commandToBytes(Command::iconst_1));
-            merge(bytes, commandToBytes(Command::ifne)); // 1
+            merge(bytes, commandToBytes(Command::if_icmpne)); // 1
             int sz = gotoCommandSize + gotoCommandSize; // размер
             merge(bytes, Int16ToBytes(sz)); //
 
@@ -196,7 +196,7 @@ vector<char> ExprNode::generate() {
 
             merge(bytes, right); // 7
             merge(bytes, commandToBytes(Command::iconst_1)); // 8
-            merge(bytes, commandToBytes(Command::ifne)); //  9
+            merge(bytes, commandToBytes(Command::if_icmpne)); //  9
             merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
 
             merge(bytes, commandToBytes(Command::iconst_1)); // 12
@@ -214,7 +214,7 @@ vector<char> ExprNode::generate() {
 
             merge(bytes, left);
             merge(bytes, commandToBytes(Command::iconst_0));
-            merge(bytes, commandToBytes(Command::ifne)); // 1
+            merge(bytes, commandToBytes(Command::if_icmpne)); // 1
             int sz = gotoCommandSize + gotoCommandSize; // размер
             merge(bytes, Int16ToBytes(sz)); //
 
@@ -224,7 +224,7 @@ vector<char> ExprNode::generate() {
 
             merge(bytes, right); // 7
             merge(bytes, commandToBytes(Command::iconst_0)); // 8
-            merge(bytes, commandToBytes(Command::ifne)); //  9
+            merge(bytes, commandToBytes(Command::if_icmpne)); //  9
             merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
 
             merge(bytes, commandToBytes(Command::iconst_0)); // 12
