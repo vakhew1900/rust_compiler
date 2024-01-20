@@ -16,5 +16,5 @@ fn main(){
     integer1 = float2 as i32;
     println_int("{}", integer1);
 
-
+    println_float("{}", float2);
 }
