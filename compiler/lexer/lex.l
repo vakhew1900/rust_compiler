@@ -149,66 +149,117 @@ return TRUE;}
 false { //printf("Found KW_FALSE: %s\n", yytext); yylval.bool_literal = false;
 return FALSE;}
 
-bool { printf("Found TYPE_BOOL: %s\n", yytext); return BOOL;}
-i32 { printf("Found TYPE_I32: %s\n", yytext); return INT;}
-i64 { printf("Found TYPE_I64: %s\n", yytext); return INT;}
-f32 { printf("Found TYPE_F32: %s\n", yytext); return FLOAT;}
-f64 { printf("Found TYPE_F64: %s\n", yytext); return FLOAT;}
-String { printf("Found TYPE_STRING: %s\n", yytext); return STRING;}
-char { printf("Found TYPE_CHAR: %s\n", yytext); return CHAR;}
+bool { //printf("Found TYPE_BOOL: %s\n", yytext);
+return BOOL;}
+i32 { //printf("Found TYPE_I32: %s\n", yytext);
+return INT;}
+i64 { //printf("Found TYPE_I64: %s\n", yytext);
+return INT;}
+f32 { //printf("Found TYPE_F32: %s\n", yytext);
+return FLOAT;}
+f64 { //printf("Found TYPE_F64: %s\n", yytext);
+return FLOAT;}
+String { //printf("Found TYPE_STRING: %s\n", yytext);
+return STRING;}
+char { //printf("Found TYPE_CHAR: %s\n", yytext);
+return CHAR;}
 
 
-"+" { printf("Found OPERATOR_PLUS: %s\n", yytext); return '+';}
-"-" { printf("Found OPERATOR_MINUS: %s\n", yytext); return '-';}
-"*" { printf("Found OPERATOR_MUL: %s\n", yytext); return '*';}
-"/" { printf("Found OPERATOR_DIV: %s\n", yytext); return '/';}
-"%" { printf("Found OPERATOR_MOD: %s\n", yytext); return '%';}
+"+" { //printf("Found OPERATOR_PLUS: %s\n", yytext);
+return '+';}
+"-" { //printf("Found OPERATOR_MINUS: %s\n", yytext);
+return '-';}
+"*" { //printf("Found OPERATOR_MUL: %s\n", yytext);
+return '*';}
+"/" { //printf("Found OPERATOR_DIV: %s\n", yytext);
+return '/';}
+"%" { //printf("Found OPERATOR_MOD: %s\n", yytext);
+return '%';}
 
-"=" { printf("Found OPERATOR_ASSIGNMENT: %s\n", yytext); return '=';}
-"==" { printf("Found OPERATOR_EQUAL: %s\n", yytext); return EQUAL;}
-"!=" { printf("Found OPERATOR_NOT_EQUAL: %s\n", yytext); return NOT_EQUAL;}
-"<" { printf("Found OPERATOR_LESS: %s\n", yytext); return '<';}
-">" { printf("Found OPERATOR_MORE: %s\n", yytext); return '>';}
-"<=" { printf("Found OPERATOR_LESS_OR_EQUAL: %s\n", yytext); return LESS_EQUAL;}
-">=" { printf("Found OPERATOR_MORE_OR_EQUAL: %s\n", yytext); return GREATER_EQUAL;}
+"=" { //printf("Found OPERATOR_ASSIGNMENT: %s\n", yytext);
+return '=';}
+"==" { //printf("Found OPERATOR_EQUAL: %s\n", yytext);
+return EQUAL;}
+"!=" { //printf("Found OPERATOR_NOT_EQUAL: %s\n", yytext);
+return NOT_EQUAL;}
+"<" { //printf("Found OPERATOR_LESS: %s\n", yytext);
+return '<';}
+">" { //printf("Found OPERATOR_MORE: %s\n", yytext);
+return '>';}
+"<=" { //printf("Found OPERATOR_LESS_OR_EQUAL: %s\n", yytext);
+return LESS_EQUAL;}
+">=" { //printf("Found OPERATOR_MORE_OR_EQUAL: %s\n", yytext);
+return GREATER_EQUAL;}
 
-"&" { printf("Found OPERATOR_AMPERSAND: %s\n", yytext); return '&'; }
-"|" { printf("Found OPERATOR_BIT_OR: %s\n", yytext); return '|';}
-"!" { printf("Found OPERATOR_BIT_NOT: %s\n", yytext); return '!';}
-"^" { printf("Found OPERATOR_BIT_XOR: %s\n", yytext); }
-"<<" { printf("Found OPERATOR_BIT_LEFT_SHIFT: %s\n", yytext); }
-">>" { printf("Found OPERATOR_BIT_RIGHT_SHIFT: %s\n", yytext); }
+"&" { //printf("Found OPERATOR_AMPERSAND: %s\n", yytext);
+return '&'; }
+"|" { //printf("Found OPERATOR_BIT_OR: %s\n", yytext);
+return '|';}
+"!" { //printf("Found OPERATOR_BIT_NOT: %s\n", yytext);
+return '!';}
+"^" { //printf("Found OPERATOR_BIT_XOR: %s\n", yytext);
+}
+"<<" { //printf("Found OPERATOR_BIT_LEFT_SHIFT: %s\n", yytext);
+}
+">>" { //printf("Found OPERATOR_BIT_RIGHT_SHIFT: %s\n", yytext);
+}
 
-"&&" { printf("Found OPERATOR_AND: %s\n", yytext); return AND;}
-"||" { printf("Found OPERATOR_OR: %s\n", yytext); return OR;}
+"&&" { //printf("Found OPERATOR_AND: %s\n", yytext);
+return AND;}
+"||" { //printf("Found OPERATOR_OR: %s\n", yytext);
+return OR;}
 
-"+=" { printf("Found OPERATOR_PLUS_ASSIGNMENT: %s\n", yytext); }
-"-=" { printf("Found OPERATOR_MINUS_ASSIGNMENT: %s\n", yytext); }
-"*=" { printf("Found OPERATOR_MUL_ASSIGNMENT: %s\n", yytext); }
-"/=" { printf("Found OPERATOR_DIV_ASSIGNMENT: %s\n", yytext); }
-"%=" { printf("Found OPERATOR_MOD_ASSIGNMENT: %s\n", yytext); }
-"&=" { printf("Found OPERATOR_BIT_AND_ASSIGNMENT: %s\n", yytext); }
-"|=" { printf("Found OPERATOR_BIT_OR_ASSIGNMENT: %s\n", yytext); }
-"^=" { printf("Found OPERATOR_BIT_XOR_ASSIGNMENT: %s\n", yytext); }
-"<<=" { printf("Found OPERATOR_BIT_LEFT_SHIFT_ASSIGNMENT: %s\n", yytext); }
-">>=" { printf("Found OPERATOR_BIT_RIGHT_SHIFT_ASSIGNMENT: %s\n", yytext); }
+"+=" { //printf("Found OPERATOR_PLUS_ASSIGNMENT: %s\n", yytext);
+}
+"-=" { //printf("Found OPERATOR_MINUS_ASSIGNMENT: %s\n", yytext);
+}
+"*=" { //printf("Found OPERATOR_MUL_ASSIGNMENT: %s\n", yytext);
+}
+"/=" { //printf("Found OPERATOR_DIV_ASSIGNMENT: %s\n", yytext);
+}
+"%=" { //printf("Found OPERATOR_MOD_ASSIGNMENT: %s\n", yytext);
+}
+"&=" { //printf("Found OPERATOR_BIT_AND_ASSIGNMENT: %s\n", yytext);
+}
+"|=" { //printf("Found OPERATOR_BIT_OR_ASSIGNMENT: %s\n", yytext);
+}
+"^=" { //printf("Found OPERATOR_BIT_XOR_ASSIGNMENT: %s\n", yytext);
+}
+"<<=" { //printf("Found OPERATOR_BIT_LEFT_SHIFT_ASSIGNMENT: %s\n", yytext);
+}
+">>=" { //printf("Found OPERATOR_BIT_RIGHT_SHIFT_ASSIGNMENT: %s\n", yytext);
+}
 
-"." { printf("Found OPERATOR_POINT: %s\n", yytext); return '.';}
-".." { printf("Found OPERATOR_RANGE: %s\n", yytext); return RANGE;}
-"..=" { printf("Found OPERATOR_RANGE_ASSIGMENT: %s\n", yytext); }
-"->" { printf("Found OPERATOR_ARROW: %s\n", yytext); return RIGHT_ARROW;}
+"." { //printf("Found OPERATOR_POINT: %s\n", yytext);
+return '.';}
+".." { //printf("Found OPERATOR_RANGE: %s\n", yytext);
+return RANGE;}
+"..=" { //printf("Found OPERATOR_RANGE_ASSIGMENT: %s\n", yytext);
+}
+"->" { //printf("Found OPERATOR_ARROW: %s\n", yytext);
+return RIGHT_ARROW;}
 
-"(" { printf("Found LEFT_ROUND_BRACKET: %s\n", yytext); return '(';}
-")" { printf("Found RIGHT_ROUND_BRACKET: %s\n", yytext); return ')';}
-"[" { printf("Found LEFT_SQUARE_BRACKET: %s\n", yytext); return '[';}
-"]" { printf("Found RIGHT_SQUARE_BRACKET: %s\n", yytext); return ']';}
-"{" { printf("Found LEFT_FIGURE_BRACKET: %s\n", yytext);  return '{';}
-"}" { printf("Found RIGHT_FIGURE_BRACKET: %s\n", yytext); return '}';}
+"(" { //printf("Found LEFT_ROUND_BRACKET: %s\n", yytext);
+return '(';}
+")" { //printf("Found RIGHT_ROUND_BRACKET: %s\n", yytext);
+return ')';}
+"[" { //printf("Found LEFT_SQUARE_BRACKET: %s\n", yytext);
+return '[';}
+"]" { //printf("Found RIGHT_SQUARE_BRACKET: %s\n", yytext);
+return ']';}
+"{" { //printf("Found LEFT_FIGURE_BRACKET: %s\n", yytext);
+return '{';}
+"}" { //printf("Found RIGHT_FIGURE_BRACKET: %s\n", yytext);
+return '}';}
 
-"," { printf("Found COMMA: %s\n", yytext); return ',';}
-";" { printf("Found SEMICOLON: %s\n", yytext); return ';';}
-":" { printf("Found COLON: %s\n", yytext); return ':';}
-"::" { printf("Found TWO_COLON: %s\n", yytext); return DOUBLEDOTS;}
+"," { //printf("Found COMMA: %s\n", yytext);
+return ',';}
+";" { //printf("Found SEMICOLON: %s\n", yytext);
+return ';';}
+":" { //printf("Found COLON: %s\n", yytext);
+return ':';}
+"::" { //printf("Found TWO_COLON: %s\n", yytext);
+return DOUBLEDOTS;}
 
 
 "/*" { strcpy(str,""); BEGIN(ML_COMMENT); }
