@@ -2,10 +2,12 @@ import dir.*;
 
 public class Main {
     public static void main(String[] args) {
-        int arr[] = {1, 2, 3, 4, 5};
-        for (int a : arr) {
-            System.out.println(a);
-        }
+        String s = "fsdfsd \0 fsf";
+        System.out.println(s);
+//        int arr[] = {1, 2, 3, 4, 5};
+//        for (int a : arr) {
+//            System.out.println(a);
+//        }
 
 //        int x = 97;
 //        char ch = (char) x;
