@@ -192,6 +192,7 @@ char { printf("Found TYPE_CHAR: %s\n", yytext); return CHAR;}
 <STRING_EL>\\\\ { stdstr += "\\"; }
 <STRING_EL>\\\" { stdstr += "\""; }
 <STRING_EL>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
+    removeUnderline(str);
     int x = strtol(yytext + 3,NULL, 16); 
     if(x <= 127)
     {
