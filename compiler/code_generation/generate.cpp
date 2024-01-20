@@ -272,8 +272,8 @@ vector<char> ExprNode::generate() {
             merge(bytes, left);
             merge(bytes, index);
             merge(bytes, right);
-
-            switch (this->expr_left->dataType.type) {
+            DataType arrDataType = this->expr_left->dataType.getArrDataType();
+            switch (arrDataType.type) {
 
 
                 case DataType::int_:
@@ -854,7 +854,7 @@ vector<char> ExprNode::generate() {
                     merge(bytes, commandToBytes(Command::multianewarray));
                     int position = ClassTable::addClassToConstTable(curClassName, this->dataType.toConstTableFormat());
                     merge(bytes, Int16ToBytes(position));
-                    bytes.push_back(IntToBytes(this->arrDataType.arrDeep).back());
+                    bytes.push_back(IntToBytes(this->dataType.arrDeep).back());
                     break;
                 }
                 case DataType::undefined_:
