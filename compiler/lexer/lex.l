@@ -71,45 +71,83 @@ DIGIT [0-9]
 \n { lineNumber++;  LineNum::setLineNum(lineNumber);}
 [[:space:]] { }
 
-as { printf("Found KW_AS: %s\n", yytext); return AS; }
-break { printf("Found KW_BREAK: %s\n", yytext); return BREAK;}
-const { printf("Found KW_CONST: %s\n", yytext); return CONST;}
-continue { printf("Found KW_CONTINUE: %s\n", yytext); return CONTINUE;}
-crate { printf("Found KW_CRATE: %s\n", yytext);  return CRATE;}
-else { printf("Found KW_ELSE: %s\n", yytext); return ELSE;}
-enum { printf("Found KW_ENUM: %s\n", yytext); return ENUM;}
-extern { printf("Found KW_EXTERN: %s\n", yytext); }
-fn { printf("Found KW_FN: %s\n", yytext); return FN;}
-for { printf("Found KW_FOR: %s\n", yytext); return FOR;}
-if { printf("Found KW_IF: %s\n", yytext); return IF;}
-impl { printf("Found KW_IMPL: %s\n", yytext); return IMPL;}
-in { printf("Found KW_IN: %s\n", yytext); return IN;}
-let { printf("Found KW_LET: %s\n", yytext); return LET;}
-loop { printf("Found KW_LOOP: %s\n", yytext); return LOOP;}
-match { printf("Found KW_MATCH: %s\n", yytext); }
-mod { printf("Found KW_MOD: %s\n", yytext); return MOD; }
-move { printf("Found KW_MOVE: %s\n", yytext); }
-mut { printf("Found KW_MUT: %s\n", yytext); return MUT;}
-pub { printf("Found KW_PUB: %s\n", yytext); return PUB;}
-ref { printf("Found KW_REF: %s\n", yytext); }
-return { printf("Found KW_RETURN: %s\n", yytext); return RETURN;}
-self { printf("Found KW_SELFVALUE: %s\n", yytext); return SELF;}
-Self { printf("Found KW_SELFTYPE: %s\n", yytext); return BIG_SELF;}
-static { printf("Found KW_STATIC: %s\n", yytext); }
-struct { printf("Found KW_STRUCT: %s\n", yytext); return STRUCT;}
-super { printf("Found KW_SUPER: %s\n", yytext); return SUPER;}
-trait { printf("Found KW_TRAIT: %s\n", yytext); return TRAIT;}
-type { printf("Found KW_TYPE: %s\n", yytext); }
-unsafe { printf("Found KW_UNSAFE: %s\n", yytext); }
-use { printf("Found KW_USE: %s\n", yytext); }
-where { printf("Found KW_WHERE: %s\n", yytext); }
-while { printf("Found KW_WHILE: %s\n", yytext); return WHILE;}
-&mut { printf("Found KW_MUT_REF: %s\n", yytext); return MUT_REF;}
-&self { printf("Found KW_SELF_REF: %s\n", yytext); return SELF_REF;}
-&mut[[:space:]]+self { printf("Found KW_MUT_SELF_REF: %s\n", yytext); return MUT_SELF_REF;}
+as { //printf("Found KW_AS: %s\n", yytext);
+return AS; }
+break { //printf("Found KW_BREAK: %s\n", yytext);
+return BREAK;}
+const { //printf("Found KW_CONST: %s\n", yytext);
+return CONST;}
+continue { //printf("Found KW_CONTINUE: %s\n", yytext);
+return CONTINUE;}
+crate { //printf("Found KW_CRATE: %s\n", yytext);
+return CRATE;}
+else { //printf("Found KW_ELSE: %s\n", yytext);
+return ELSE;}
+enum { //printf("Found KW_ENUM: %s\n", yytext);
+return ENUM;}
+extern { //printf("Found KW_EXTERN: %s\n", yytext);
+}
+fn {//printf("Found KW_FN: %s\n", yytext);
+return FN;}
+for { //printf("Found KW_FOR: %s\n", yytext);
+return FOR;}
+if { //printf("Found KW_IF: %s\n", yytext);
+return IF;}
+impl { //printf("Found KW_IMPL: %s\n", yytext);
+return IMPL;}
+in { //printf("Found KW_IN: %s\n", yytext);
+return IN;}
+let { //printf("Found KW_LET: %s\n", yytext);
+return LET;}
+loop { //printf("Found KW_LOOP: %s\n", yytext);
+return LOOP;}
+match { //printf("Found KW_MATCH: %s\n", yytext);
+}
+mod { //printf("Found KW_MOD: %s\n", yytext);
+return MOD; }
+move { //printf("Found KW_MOVE: %s\n", yytext);
+}
+mut { //printf("Found KW_MUT: %s\n", yytext);
+return MUT;}
+pub { //printf("Found KW_PUB: %s\n", yytext);
+return PUB;}
+ref { //printf("Found KW_REF: %s\n", yytext);
+}
+return { //printf("Found KW_RETURN: %s\n", yytext);
+return RETURN;}
+self { //printf("Found KW_SELFVALUE: %s\n", yytext);
+return SELF;}
+Self { //printf("Found KW_SELFTYPE: %s\n", yytext);
+return BIG_SELF;}
+static { //printf("Found KW_STATIC: %s\n", yytext);
+}
+struct { //printf("Found KW_STRUCT: %s\n", yytext);
+return STRUCT;}
+super { //printf("Found KW_SUPER: %s\n", yytext);
+return SUPER;}
+trait { //printf("Found KW_TRAIT: %s\n", yytext);
+return TRAIT;}
+type { //printf("Found KW_TYPE: %s\n", yytext);
+}
+unsafe { //printf("Found KW_UNSAFE: %s\n", yytext);
+}
+use { //printf("Found KW_USE: %s\n", yytext);
+}
+where { //printf("Found KW_WHERE: %s\n", yytext);
+}
+while { //printf("Found KW_WHILE: %s\n", yytext);
+return WHILE;}
+&mut { //printf("Found KW_MUT_REF: %s\n", yytext);
+return MUT_REF;}
+&self { //printf("Found KW_SELF_REF: %s\n", yytext);
+return SELF_REF;}
+&mut[[:space:]]+self { //printf("Found KW_MUT_SELF_REF: %s\n", yytext);
+return MUT_SELF_REF;}
 
-true  { printf("Found KW_TRUE: %s\n", yytext); yylval.bool_literal = true; return TRUE;}
-false { printf("Found KW_FALSE: %s\n", yytext); yylval.bool_literal = false; return FALSE;}
+true  { //printf("Found KW_TRUE: %s\n", yytext); yylval.bool_literal = true;
+return TRUE;}
+false { //printf("Found KW_FALSE: %s\n", yytext); yylval.bool_literal = false;
+return FALSE;}
 
 bool { printf("Found TYPE_BOOL: %s\n", yytext); return BOOL;}
 i32 { printf("Found TYPE_I32: %s\n", yytext); return INT;}
