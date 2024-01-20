@@ -250,6 +250,7 @@ r(#*)\" {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING)
 <CHAR_EL>\\\' { stdstr += "\'"; }
 <CHAR_EL>\\\" { stdstr += "\""; }
 <CHAR_EL>\\u\{(([0-9A-Fa-f]){1}_*){4}\} {
+    removeUnderline(str);
     int x = strtol(yytext + 3,NULL, 16);
     if(x <= 127)
     {
@@ -563,7 +564,7 @@ int main(int argc, char** argv) {
 //        const char *filename = "../tests/exam_tests/for/simple_for.rs";
 //        const char *filename = "../tests/exam_tests/logic/logic_combine.rs";
 //        const char *filename = "../tests/exam_tests/arithmetic/as_casting.rs";
-       const char *filename = "../tests/exam_tests/var_declaration/string_hard.rs";
+       const char *filename = "../tests/a.rs";
 
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";

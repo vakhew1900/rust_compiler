@@ -1712,6 +1712,7 @@ case 124:
 YY_RULE_SETUP
 #line 252 "lex.l"
 {
+    removeUnderline(str);
     int x = strtol(yytext + 3,NULL, 16);
     if(x <= 127)
     {
@@ -1728,7 +1729,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
-#line 266 "lex.l"
+#line 267 "lex.l"
 {
     char string[2];
     convertCharacterCodeToString(yytext, 2, string);
@@ -1737,7 +1738,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 126:
 YY_RULE_SETUP
-#line 271 "lex.l"
+#line 272 "lex.l"
 {
     if(stdstr.size() == 1) {
         cout << "Found CHAR:  " << stdstr << endl;
@@ -1757,17 +1758,17 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case YY_STATE_EOF(CHAR_EL):
-#line 288 "lex.l"
+#line 289 "lex.l"
 { printf("CHAR Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
-#line 289 "lex.l"
+#line 290 "lex.l"
 { printf("CHAR Error in line %d: slash\n", lineNumber); }
 	YY_BREAK
 case 128:
 YY_RULE_SETUP
-#line 291 "lex.l"
+#line 292 "lex.l"
 {
 
     strcpy(str, yytext);
@@ -1787,7 +1788,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
-#line 308 "lex.l"
+#line 309 "lex.l"
 {
 
     strcpy(str, yytext);
@@ -1809,7 +1810,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
-#line 328 "lex.l"
+#line 329 "lex.l"
 {
 
     strcpy(str, yytext);
@@ -1840,7 +1841,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 131:
 YY_RULE_SETUP
-#line 356 "lex.l"
+#line 357 "lex.l"
 {
 
     removeType(str, "i32");
@@ -1852,7 +1853,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 132:
 YY_RULE_SETUP
-#line 365 "lex.l"
+#line 366 "lex.l"
 {
 
     removeType(str, "i32");
@@ -1871,7 +1872,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 133:
 YY_RULE_SETUP
-#line 381 "lex.l"
+#line 382 "lex.l"
 {
 
     removeType(str, "i32");
@@ -1890,7 +1891,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 134:
 YY_RULE_SETUP
-#line 397 "lex.l"
+#line 398 "lex.l"
 {
 
     removeType(str, "i32");
@@ -1909,14 +1910,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 135:
 YY_RULE_SETUP
-#line 413 "lex.l"
+#line 414 "lex.l"
 {
     printf("INCORRECT DOUBLE Error in line %d: float literals must have an integer part", lineNumber);
 }
 	YY_BREAK
 case 136:
 YY_RULE_SETUP
-#line 417 "lex.l"
+#line 418 "lex.l"
 {
     removeType(str, "f64");
     removeUnderline(str);
@@ -1927,7 +1928,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 137:
 YY_RULE_SETUP
-#line 425 "lex.l"
+#line 426 "lex.l"
 {
     removeType(str, "f64");
     removeUnderline(str);
@@ -1938,30 +1939,30 @@ YY_RULE_SETUP
 	YY_BREAK
 case 138:
 YY_RULE_SETUP
-#line 433 "lex.l"
+#line 434 "lex.l"
 { printf("Found IDENTIFIER: %s\n", yytext); yylval.identifier = new string(yytext); return ID;}
 	YY_BREAK
 case 139:
 YY_RULE_SETUP
-#line 434 "lex.l"
+#line 435 "lex.l"
 { printf("Found MACROS: %s\n", yytext);}
 	YY_BREAK
 case 140:
 YY_RULE_SETUP
-#line 435 "lex.l"
+#line 436 "lex.l"
 { printf("Error in line %d: incorrect IDENTIFIER\n", lineNumber); }
 	YY_BREAK
 case 141:
 YY_RULE_SETUP
-#line 436 "lex.l"
+#line 437 "lex.l"
 { printf("Error in line %d: incorrect character in code\n", lineNumber); }
 	YY_BREAK
 case 142:
 YY_RULE_SETUP
-#line 437 "lex.l"
+#line 438 "lex.l"
 ECHO;
 	YY_BREAK
-#line 1965 "lex.yy.c"
+#line 1966 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2821,7 +2822,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 437 "lex.l"
+#line 438 "lex.l"
 
 
 void convertCharacterCodeToString(char characterCode[], int startPosition, char *string)
@@ -2951,7 +2952,7 @@ int main(int argc, char** argv) {
 //        const char *filename = "../tests/exam_tests/for/simple_for.rs";
 //        const char *filename = "../tests/exam_tests/logic/logic_combine.rs";
 //        const char *filename = "../tests/exam_tests/arithmetic/as_casting.rs";
-       const char *filename = "../tests/exam_tests/var_declaration/string_hard.rs";
+       const char *filename = "../tests/a.rs";
 
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";
