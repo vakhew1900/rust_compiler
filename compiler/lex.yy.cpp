@@ -2925,7 +2925,7 @@ int translateNumberByBase(char *input_string) {
 }
 
 
-//#define release
+#define release
 
 int main(int argc, char** argv) {
 
