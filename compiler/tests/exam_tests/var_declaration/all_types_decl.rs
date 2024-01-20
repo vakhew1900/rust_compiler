@@ -4,6 +4,8 @@ fn main() {
     let mut f : f32 = 1.2;
     let mut b : bool = false;
     let mut strs : String = "Petya";
+    let x = 23___;
+    println_int("{}", x);
     //let mut s : &str = "vasya";
 
 }
