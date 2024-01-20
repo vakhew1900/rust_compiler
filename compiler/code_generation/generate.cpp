@@ -1183,7 +1183,7 @@ vector<char> ExprNode::generateForEach() {
 
     merge(body, this->body->generate());
     merge(body, commandToBytes(Command::iinc));
-    body.push_back(IntToBytes(valueNum).back());
+    body.push_back(IntToBytes(loopCounterVar).back());
     body.push_back(IntToBytes(1).back());
 
     // условие
