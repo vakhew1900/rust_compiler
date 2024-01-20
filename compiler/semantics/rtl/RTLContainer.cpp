@@ -21,10 +21,11 @@ void RTLContainer::addReadFunctions() {
 }
 
 void RTLContainer::addPrintFunctions() {
-    vector<string> methodName = {"println", "println_int", "println_float", "println_char", "println_bool"};
+    vector<string> methodName = {"print", "print_int", "print_float", "print_char", "print_bool", "println", "println_int", "println_float", "println_char", "println_bool"};
     DataType returnDataType = DataType(DataType::void_);
     vector<DataType> params = {DataType(DataType::string_), DataType(DataType::int_), DataType(DataType::float_),
-                                    DataType(DataType::char_), DataType(DataType::bool_)};
+                                    DataType(DataType::char_), DataType(DataType::bool_), DataType(DataType::string_), DataType(DataType::int_), DataType(DataType::float_),
+                               DataType(DataType::char_), DataType(DataType::bool_)};
 
 
     for (int i = 0; i < methodName.size(); i++) {

@@ -1058,531 +1058,624 @@ YY_RULE_SETUP
 case 3:
 YY_RULE_SETUP
 #line 74 "lex.l"
-{ printf("Found KW_AS: %s\n", yytext); return AS; }
+{ //printf("Found KW_AS: %s\n", yytext);
+return AS; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 75 "lex.l"
-{ printf("Found KW_BREAK: %s\n", yytext); return BREAK;}
+#line 76 "lex.l"
+{ //printf("Found KW_BREAK: %s\n", yytext);
+return BREAK;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 76 "lex.l"
-{ printf("Found KW_CONST: %s\n", yytext); return CONST;}
+#line 78 "lex.l"
+{ //printf("Found KW_CONST: %s\n", yytext);
+return CONST;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 77 "lex.l"
-{ printf("Found KW_CONTINUE: %s\n", yytext); return CONTINUE;}
+#line 80 "lex.l"
+{ //printf("Found KW_CONTINUE: %s\n", yytext);
+return CONTINUE;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 78 "lex.l"
-{ printf("Found KW_CRATE: %s\n", yytext);  return CRATE;}
+#line 82 "lex.l"
+{ //printf("Found KW_CRATE: %s\n", yytext);
+return CRATE;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 79 "lex.l"
-{ printf("Found KW_ELSE: %s\n", yytext); return ELSE;}
+#line 84 "lex.l"
+{ //printf("Found KW_ELSE: %s\n", yytext);
+return ELSE;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 80 "lex.l"
-{ printf("Found KW_ENUM: %s\n", yytext); return ENUM;}
+#line 86 "lex.l"
+{ //printf("Found KW_ENUM: %s\n", yytext);
+return ENUM;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 81 "lex.l"
-{ printf("Found KW_EXTERN: %s\n", yytext); }
+#line 88 "lex.l"
+{ //printf("Found KW_EXTERN: %s\n", yytext);
+}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 82 "lex.l"
-{ printf("Found KW_FN: %s\n", yytext); return FN;}
+#line 90 "lex.l"
+{//printf("Found KW_FN: %s\n", yytext);
+return FN;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 83 "lex.l"
-{ printf("Found KW_FOR: %s\n", yytext); return FOR;}
+#line 92 "lex.l"
+{ //printf("Found KW_FOR: %s\n", yytext);
+return FOR;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 84 "lex.l"
-{ printf("Found KW_IF: %s\n", yytext); return IF;}
+#line 94 "lex.l"
+{ //printf("Found KW_IF: %s\n", yytext);
+return IF;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 85 "lex.l"
-{ printf("Found KW_IMPL: %s\n", yytext); return IMPL;}
+#line 96 "lex.l"
+{ //printf("Found KW_IMPL: %s\n", yytext);
+return IMPL;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 86 "lex.l"
-{ printf("Found KW_IN: %s\n", yytext); return IN;}
+#line 98 "lex.l"
+{ //printf("Found KW_IN: %s\n", yytext);
+return IN;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 87 "lex.l"
-{ printf("Found KW_LET: %s\n", yytext); return LET;}
+#line 100 "lex.l"
+{ //printf("Found KW_LET: %s\n", yytext);
+return LET;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 88 "lex.l"
-{ printf("Found KW_LOOP: %s\n", yytext); return LOOP;}
+#line 102 "lex.l"
+{ //printf("Found KW_LOOP: %s\n", yytext);
+return LOOP;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 89 "lex.l"
-{ printf("Found KW_MATCH: %s\n", yytext); }
+#line 104 "lex.l"
+{ //printf("Found KW_MATCH: %s\n", yytext);
+}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 90 "lex.l"
-{ printf("Found KW_MOD: %s\n", yytext); return MOD; }
+#line 106 "lex.l"
+{ //printf("Found KW_MOD: %s\n", yytext);
+return MOD; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 91 "lex.l"
-{ printf("Found KW_MOVE: %s\n", yytext); }
+#line 108 "lex.l"
+{ //printf("Found KW_MOVE: %s\n", yytext);
+}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 92 "lex.l"
-{ printf("Found KW_MUT: %s\n", yytext); return MUT;}
+#line 110 "lex.l"
+{ //printf("Found KW_MUT: %s\n", yytext);
+return MUT;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 93 "lex.l"
-{ printf("Found KW_PUB: %s\n", yytext); return PUB;}
+#line 112 "lex.l"
+{ //printf("Found KW_PUB: %s\n", yytext);
+return PUB;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 94 "lex.l"
-{ printf("Found KW_REF: %s\n", yytext); }
+#line 114 "lex.l"
+{ //printf("Found KW_REF: %s\n", yytext);
+}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 95 "lex.l"
-{ printf("Found KW_RETURN: %s\n", yytext); return RETURN;}
+#line 116 "lex.l"
+{ //printf("Found KW_RETURN: %s\n", yytext);
+return RETURN;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 96 "lex.l"
-{ printf("Found KW_SELFVALUE: %s\n", yytext); return SELF;}
+#line 118 "lex.l"
+{ //printf("Found KW_SELFVALUE: %s\n", yytext);
+return SELF;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 97 "lex.l"
-{ printf("Found KW_SELFTYPE: %s\n", yytext); return BIG_SELF;}
+#line 120 "lex.l"
+{ //printf("Found KW_SELFTYPE: %s\n", yytext);
+return BIG_SELF;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 98 "lex.l"
-{ printf("Found KW_STATIC: %s\n", yytext); }
+#line 122 "lex.l"
+{ //printf("Found KW_STATIC: %s\n", yytext);
+}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 99 "lex.l"
-{ printf("Found KW_STRUCT: %s\n", yytext); return STRUCT;}
+#line 124 "lex.l"
+{ //printf("Found KW_STRUCT: %s\n", yytext);
+return STRUCT;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 100 "lex.l"
-{ printf("Found KW_SUPER: %s\n", yytext); return SUPER;}
+#line 126 "lex.l"
+{ //printf("Found KW_SUPER: %s\n", yytext);
+return SUPER;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 101 "lex.l"
-{ printf("Found KW_TRAIT: %s\n", yytext); return TRAIT;}
+#line 128 "lex.l"
+{ //printf("Found KW_TRAIT: %s\n", yytext);
+return TRAIT;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 102 "lex.l"
-{ printf("Found KW_TYPE: %s\n", yytext); }
+#line 130 "lex.l"
+{ //printf("Found KW_TYPE: %s\n", yytext);
+}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 103 "lex.l"
-{ printf("Found KW_UNSAFE: %s\n", yytext); }
+#line 132 "lex.l"
+{ //printf("Found KW_UNSAFE: %s\n", yytext);
+}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 104 "lex.l"
-{ printf("Found KW_USE: %s\n", yytext); }
+#line 134 "lex.l"
+{ //printf("Found KW_USE: %s\n", yytext);
+}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 105 "lex.l"
-{ printf("Found KW_WHERE: %s\n", yytext); }
+#line 136 "lex.l"
+{ //printf("Found KW_WHERE: %s\n", yytext);
+}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 106 "lex.l"
-{ printf("Found KW_WHILE: %s\n", yytext); return WHILE;}
+#line 138 "lex.l"
+{ //printf("Found KW_WHILE: %s\n", yytext);
+return WHILE;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 107 "lex.l"
-{ printf("Found KW_MUT_REF: %s\n", yytext); return MUT_REF;}
+#line 140 "lex.l"
+{ //printf("Found KW_MUT_REF: %s\n", yytext);
+return MUT_REF;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 108 "lex.l"
-{ printf("Found KW_SELF_REF: %s\n", yytext); return SELF_REF;}
+#line 142 "lex.l"
+{ //printf("Found KW_SELF_REF: %s\n", yytext);
+return SELF_REF;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 109 "lex.l"
-{ printf("Found KW_MUT_SELF_REF: %s\n", yytext); return MUT_SELF_REF;}
+#line 144 "lex.l"
+{ //printf("Found KW_MUT_SELF_REF: %s\n", yytext);
+return MUT_SELF_REF;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 111 "lex.l"
-{ printf("Found KW_TRUE: %s\n", yytext); yylval.bool_literal = true; return TRUE;}
+#line 147 "lex.l"
+{ //printf("Found KW_TRUE: %s\n", yytext); yylval.bool_literal = true;
+return TRUE;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 112 "lex.l"
-{ printf("Found KW_FALSE: %s\n", yytext); yylval.bool_literal = false; return FALSE;}
+#line 149 "lex.l"
+{ //printf("Found KW_FALSE: %s\n", yytext); yylval.bool_literal = false;
+return FALSE;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 114 "lex.l"
-{ printf("Found TYPE_BOOL: %s\n", yytext); return BOOL;}
+#line 152 "lex.l"
+{ //printf("Found TYPE_BOOL: %s\n", yytext);
+return BOOL;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 115 "lex.l"
-{ printf("Found TYPE_I32: %s\n", yytext); return INT;}
+#line 154 "lex.l"
+{ //printf("Found TYPE_I32: %s\n", yytext);
+return INT;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 116 "lex.l"
-{ printf("Found TYPE_I64: %s\n", yytext); return INT;}
+#line 156 "lex.l"
+{ //printf("Found TYPE_I64: %s\n", yytext);
+return INT;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 117 "lex.l"
-{ printf("Found TYPE_F32: %s\n", yytext); return FLOAT;}
+#line 158 "lex.l"
+{ //printf("Found TYPE_F32: %s\n", yytext);
+return FLOAT;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 118 "lex.l"
-{ printf("Found TYPE_F64: %s\n", yytext); return FLOAT;}
+#line 160 "lex.l"
+{ //printf("Found TYPE_F64: %s\n", yytext);
+return FLOAT;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 119 "lex.l"
-{ printf("Found TYPE_STRING: %s\n", yytext); return STRING;}
+#line 162 "lex.l"
+{ //printf("Found TYPE_STRING: %s\n", yytext);
+return STRING;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 120 "lex.l"
-{ printf("Found TYPE_CHAR: %s\n", yytext); return CHAR;}
+#line 164 "lex.l"
+{ //printf("Found TYPE_CHAR: %s\n", yytext);
+return CHAR;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 123 "lex.l"
-{ printf("Found OPERATOR_PLUS: %s\n", yytext); return '+';}
+#line 168 "lex.l"
+{ //printf("Found OPERATOR_PLUS: %s\n", yytext);
+return '+';}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 124 "lex.l"
-{ printf("Found OPERATOR_MINUS: %s\n", yytext); return '-';}
+#line 170 "lex.l"
+{ //printf("Found OPERATOR_MINUS: %s\n", yytext);
+return '-';}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 125 "lex.l"
-{ printf("Found OPERATOR_MUL: %s\n", yytext); return '*';}
+#line 172 "lex.l"
+{ //printf("Found OPERATOR_MUL: %s\n", yytext);
+return '*';}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 126 "lex.l"
-{ printf("Found OPERATOR_DIV: %s\n", yytext); return '/';}
+#line 174 "lex.l"
+{ //printf("Found OPERATOR_DIV: %s\n", yytext);
+return '/';}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 127 "lex.l"
-{ printf("Found OPERATOR_MOD: %s\n", yytext); return '%';}
+#line 176 "lex.l"
+{ //printf("Found OPERATOR_MOD: %s\n", yytext);
+return '%';}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 129 "lex.l"
-{ printf("Found OPERATOR_ASSIGNMENT: %s\n", yytext); return '=';}
+#line 179 "lex.l"
+{ //printf("Found OPERATOR_ASSIGNMENT: %s\n", yytext);
+return '=';}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 130 "lex.l"
-{ printf("Found OPERATOR_EQUAL: %s\n", yytext); return EQUAL;}
+#line 181 "lex.l"
+{ //printf("Found OPERATOR_EQUAL: %s\n", yytext);
+return EQUAL;}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 131 "lex.l"
-{ printf("Found OPERATOR_NOT_EQUAL: %s\n", yytext); return NOT_EQUAL;}
+#line 183 "lex.l"
+{ //printf("Found OPERATOR_NOT_EQUAL: %s\n", yytext);
+return NOT_EQUAL;}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 132 "lex.l"
-{ printf("Found OPERATOR_LESS: %s\n", yytext); return '<';}
+#line 185 "lex.l"
+{ //printf("Found OPERATOR_LESS: %s\n", yytext);
+return '<';}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 133 "lex.l"
-{ printf("Found OPERATOR_MORE: %s\n", yytext); return '>';}
+#line 187 "lex.l"
+{ //printf("Found OPERATOR_MORE: %s\n", yytext);
+return '>';}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 134 "lex.l"
-{ printf("Found OPERATOR_LESS_OR_EQUAL: %s\n", yytext); return LESS_EQUAL;}
+#line 189 "lex.l"
+{ //printf("Found OPERATOR_LESS_OR_EQUAL: %s\n", yytext);
+return LESS_EQUAL;}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 135 "lex.l"
-{ printf("Found OPERATOR_MORE_OR_EQUAL: %s\n", yytext); return GREATER_EQUAL;}
+#line 191 "lex.l"
+{ //printf("Found OPERATOR_MORE_OR_EQUAL: %s\n", yytext);
+return GREATER_EQUAL;}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 137 "lex.l"
-{ printf("Found OPERATOR_AMPERSAND: %s\n", yytext); return '&'; }
+#line 194 "lex.l"
+{ //printf("Found OPERATOR_AMPERSAND: %s\n", yytext);
+return '&'; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 138 "lex.l"
-{ printf("Found OPERATOR_BIT_OR: %s\n", yytext); return '|';}
+#line 196 "lex.l"
+{ //printf("Found OPERATOR_BIT_OR: %s\n", yytext);
+return '|';}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 139 "lex.l"
-{ printf("Found OPERATOR_BIT_NOT: %s\n", yytext); return '!';}
+#line 198 "lex.l"
+{ //printf("Found OPERATOR_BIT_NOT: %s\n", yytext);
+return '!';}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 140 "lex.l"
-{ printf("Found OPERATOR_BIT_XOR: %s\n", yytext); }
+#line 200 "lex.l"
+{ //printf("Found OPERATOR_BIT_XOR: %s\n", yytext);
+}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 141 "lex.l"
-{ printf("Found OPERATOR_BIT_LEFT_SHIFT: %s\n", yytext); }
+#line 202 "lex.l"
+{ //printf("Found OPERATOR_BIT_LEFT_SHIFT: %s\n", yytext);
+}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 142 "lex.l"
-{ printf("Found OPERATOR_BIT_RIGHT_SHIFT: %s\n", yytext); }
+#line 204 "lex.l"
+{ //printf("Found OPERATOR_BIT_RIGHT_SHIFT: %s\n", yytext);
+}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 144 "lex.l"
-{ printf("Found OPERATOR_AND: %s\n", yytext); return AND;}
+#line 207 "lex.l"
+{ //printf("Found OPERATOR_AND: %s\n", yytext);
+return AND;}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 145 "lex.l"
-{ printf("Found OPERATOR_OR: %s\n", yytext); return OR;}
+#line 209 "lex.l"
+{ //printf("Found OPERATOR_OR: %s\n", yytext);
+return OR;}
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 147 "lex.l"
-{ printf("Found OPERATOR_PLUS_ASSIGNMENT: %s\n", yytext); }
+#line 212 "lex.l"
+{ //printf("Found OPERATOR_PLUS_ASSIGNMENT: %s\n", yytext);
+}
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 148 "lex.l"
-{ printf("Found OPERATOR_MINUS_ASSIGNMENT: %s\n", yytext); }
+#line 214 "lex.l"
+{ //printf("Found OPERATOR_MINUS_ASSIGNMENT: %s\n", yytext);
+}
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 149 "lex.l"
-{ printf("Found OPERATOR_MUL_ASSIGNMENT: %s\n", yytext); }
+#line 216 "lex.l"
+{ //printf("Found OPERATOR_MUL_ASSIGNMENT: %s\n", yytext);
+}
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 150 "lex.l"
-{ printf("Found OPERATOR_DIV_ASSIGNMENT: %s\n", yytext); }
+#line 218 "lex.l"
+{ //printf("Found OPERATOR_DIV_ASSIGNMENT: %s\n", yytext);
+}
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 151 "lex.l"
-{ printf("Found OPERATOR_MOD_ASSIGNMENT: %s\n", yytext); }
+#line 220 "lex.l"
+{ //printf("Found OPERATOR_MOD_ASSIGNMENT: %s\n", yytext);
+}
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 152 "lex.l"
-{ printf("Found OPERATOR_BIT_AND_ASSIGNMENT: %s\n", yytext); }
+#line 222 "lex.l"
+{ //printf("Found OPERATOR_BIT_AND_ASSIGNMENT: %s\n", yytext);
+}
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 153 "lex.l"
-{ printf("Found OPERATOR_BIT_OR_ASSIGNMENT: %s\n", yytext); }
+#line 224 "lex.l"
+{ //printf("Found OPERATOR_BIT_OR_ASSIGNMENT: %s\n", yytext);
+}
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 154 "lex.l"
-{ printf("Found OPERATOR_BIT_XOR_ASSIGNMENT: %s\n", yytext); }
+#line 226 "lex.l"
+{ //printf("Found OPERATOR_BIT_XOR_ASSIGNMENT: %s\n", yytext);
+}
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 155 "lex.l"
-{ printf("Found OPERATOR_BIT_LEFT_SHIFT_ASSIGNMENT: %s\n", yytext); }
+#line 228 "lex.l"
+{ //printf("Found OPERATOR_BIT_LEFT_SHIFT_ASSIGNMENT: %s\n", yytext);
+}
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 156 "lex.l"
-{ printf("Found OPERATOR_BIT_RIGHT_SHIFT_ASSIGNMENT: %s\n", yytext); }
+#line 230 "lex.l"
+{ //printf("Found OPERATOR_BIT_RIGHT_SHIFT_ASSIGNMENT: %s\n", yytext);
+}
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 158 "lex.l"
-{ printf("Found OPERATOR_POINT: %s\n", yytext); return '.';}
+#line 233 "lex.l"
+{ //printf("Found OPERATOR_POINT: %s\n", yytext);
+return '.';}
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 159 "lex.l"
-{ printf("Found OPERATOR_RANGE: %s\n", yytext); return RANGE;}
+#line 235 "lex.l"
+{ //printf("Found OPERATOR_RANGE: %s\n", yytext);
+return RANGE;}
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 160 "lex.l"
-{ printf("Found OPERATOR_RANGE_ASSIGMENT: %s\n", yytext); }
+#line 237 "lex.l"
+{ //printf("Found OPERATOR_RANGE_ASSIGMENT: %s\n", yytext);
+}
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 161 "lex.l"
-{ printf("Found OPERATOR_ARROW: %s\n", yytext); return RIGHT_ARROW;}
+#line 239 "lex.l"
+{ //printf("Found OPERATOR_ARROW: %s\n", yytext);
+return RIGHT_ARROW;}
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 163 "lex.l"
-{ printf("Found LEFT_ROUND_BRACKET: %s\n", yytext); return '(';}
+#line 242 "lex.l"
+{ //printf("Found LEFT_ROUND_BRACKET: %s\n", yytext);
+return '(';}
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 164 "lex.l"
-{ printf("Found RIGHT_ROUND_BRACKET: %s\n", yytext); return ')';}
+#line 244 "lex.l"
+{ //printf("Found RIGHT_ROUND_BRACKET: %s\n", yytext);
+return ')';}
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 165 "lex.l"
-{ printf("Found LEFT_SQUARE_BRACKET: %s\n", yytext); return '[';}
+#line 246 "lex.l"
+{ //printf("Found LEFT_SQUARE_BRACKET: %s\n", yytext);
+return '[';}
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 166 "lex.l"
-{ printf("Found RIGHT_SQUARE_BRACKET: %s\n", yytext); return ']';}
+#line 248 "lex.l"
+{ //printf("Found RIGHT_SQUARE_BRACKET: %s\n", yytext);
+return ']';}
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 167 "lex.l"
-{ printf("Found LEFT_FIGURE_BRACKET: %s\n", yytext);  return '{';}
+#line 250 "lex.l"
+{ //printf("Found LEFT_FIGURE_BRACKET: %s\n", yytext);
+return '{';}
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 168 "lex.l"
-{ printf("Found RIGHT_FIGURE_BRACKET: %s\n", yytext); return '}';}
+#line 252 "lex.l"
+{ //printf("Found RIGHT_FIGURE_BRACKET: %s\n", yytext);
+return '}';}
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 170 "lex.l"
-{ printf("Found COMMA: %s\n", yytext); return ',';}
+#line 255 "lex.l"
+{ //printf("Found COMMA: %s\n", yytext);
+return ',';}
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 171 "lex.l"
-{ printf("Found SEMICOLON: %s\n", yytext); return ';';}
+#line 257 "lex.l"
+{ //printf("Found SEMICOLON: %s\n", yytext);
+return ';';}
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 172 "lex.l"
-{ printf("Found COLON: %s\n", yytext); return ':';}
+#line 259 "lex.l"
+{ //printf("Found COLON: %s\n", yytext);
+return ':';}
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 173 "lex.l"
-{ printf("Found TWO_COLON: %s\n", yytext); return DOUBLEDOTS;}
+#line 261 "lex.l"
+{ //printf("Found TWO_COLON: %s\n", yytext);
+return DOUBLEDOTS;}
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 176 "lex.l"
+#line 265 "lex.l"
 { strcpy(str,""); BEGIN(ML_COMMENT); }
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 177 "lex.l"
+#line 266 "lex.l"
 { strcat(str,yytext); }
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 178 "lex.l"
+#line 267 "lex.l"
 { lineNumber++; }
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 179 "lex.l"
+#line 268 "lex.l"
 { strcat(str,yytext); }
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 180 "lex.l"
-{ printf("Found ML_COMMENT: %s\n", str);  BEGIN(INITIAL); }
+#line 269 "lex.l"
+{ //printf("Found ML_COMMENT: %s\n", str);
+ BEGIN(INITIAL); }
 	YY_BREAK
 case YY_STATE_EOF(ML_COMMENT):
-#line 181 "lex.l"
-{ printf("ML_COMMENT Error in line %d: comment are not closed\n", lineNumber); BEGIN(INITIAL);}
+#line 271 "lex.l"
+{ //printf("ML_COMMENT Error in line %d: comment are not closed\n", lineNumber);
+ BEGIN(INITIAL);}
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 183 "lex.l"
-{ printf("Found COMMENT: %s\n", yytext); }
+#line 274 "lex.l"
+{ //printf("Found COMMENT: %s\n", yytext);
+ }
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 185 "lex.l"
+#line 277 "lex.l"
 { stdstr = ""; BEGIN(STRING_EL); }
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 186 "lex.l"
+#line 278 "lex.l"
 { stdstr += yytext; }
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 187 "lex.l"
+#line 279 "lex.l"
 { lineNumber++; stdstr += "\n"; }
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 188 "lex.l"
+#line 280 "lex.l"
 { stdstr += "\n"; }
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 189 "lex.l"
+#line 281 "lex.l"
 { stdstr += "\r"; }
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 190 "lex.l"
+#line 282 "lex.l"
 { stdstr += "\t"; }
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 191 "lex.l"
+#line 283 "lex.l"
 { stdstr.push_back('\0'); }
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 192 "lex.l"
+#line 284 "lex.l"
 { stdstr += "\\"; }
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 193 "lex.l"
+#line 285 "lex.l"
 { stdstr += "\""; }
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 194 "lex.l"
+#line 286 "lex.l"
 {
+    removeUnderline(str);
     int x = strtol(yytext + 3,NULL, 16); 
     if(x <= 127)
     {
@@ -1599,7 +1692,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 208 "lex.l"
+#line 301 "lex.l"
 {
     char string[2];
     convertCharacterCodeToString(yytext, 2, string);
@@ -1608,9 +1701,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 213 "lex.l"
+#line 306 "lex.l"
 {
-    cout << "Found STRING: " << stdstr << endl; BEGIN(INITIAL);
+    //cout << "Found STRING: " << stdstr << endl;
+    BEGIN(INITIAL);
     string * p_str = new string(stdstr);
     p_str->resize(stdstr.size());
     yylval.string_literal = p_str;
@@ -1618,37 +1712,40 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case YY_STATE_EOF(STRING_EL):
-#line 220 "lex.l"
-{ printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
+#line 314 "lex.l"
+{ //printf("STRING Error in line %d: there is no closing quotation mark\n", lineNumber);
+BEGIN(INITIAL);}
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 221 "lex.l"
-{ printf("STRING Error in line %d: slash\n", lineNumber); }
+#line 316 "lex.l"
+{ //printf("STRING Error in line %d: slash\n", lineNumber);
+}
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 223 "lex.l"
+#line 319 "lex.l"
 {stdstr = ""; octothorpeCount = strlen(yytext) - 2; BEGIN(SHIELD_STRING);}
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
-#line 224 "lex.l"
+#line 320 "lex.l"
 { stdstr += yytext; }
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 225 "lex.l"
+#line 321 "lex.l"
 { stdstr += "\n"; lineNumber++; }
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 226 "lex.l"
+#line 322 "lex.l"
 {
     int tmp  = strlen(yytext) - 1;
     if(tmp == octothorpeCount)
     {
-        cout << "Found RAW STRING: " << stdstr << endl; BEGIN(INITIAL);
+        //cout << "Found RAW STRING: " << stdstr << endl;
+        BEGIN(INITIAL);
         yylval.string_literal = new string(stdstr);
         return RAW_STRING_LITERAL;
     }
@@ -1660,58 +1757,60 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case YY_STATE_EOF(SHIELD_STRING):
-#line 240 "lex.l"
-{ printf("SHIELD_STRING Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
+#line 337 "lex.l"
+{ //printf("SHIELD_STRING Error in line %d: there is no closing quotation mark\n", lineNumber);
+BEGIN(INITIAL);}
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 243 "lex.l"
+#line 341 "lex.l"
 { stdstr = ""; BEGIN(CHAR_EL); }
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
-#line 244 "lex.l"
+#line 342 "lex.l"
 { stdstr += yytext; }
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
-#line 245 "lex.l"
+#line 343 "lex.l"
 { stdstr += "\n"; }
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
-#line 246 "lex.l"
+#line 344 "lex.l"
 { stdstr += "\r"; }
 	YY_BREAK
 case 119:
 YY_RULE_SETUP
-#line 247 "lex.l"
+#line 345 "lex.l"
 { stdstr += "\t"; }
 	YY_BREAK
 case 120:
 YY_RULE_SETUP
-#line 248 "lex.l"
+#line 346 "lex.l"
 { stdstr.push_back('\0'); }
 	YY_BREAK
 case 121:
 YY_RULE_SETUP
-#line 249 "lex.l"
+#line 347 "lex.l"
 { stdstr += "\\"; }
 	YY_BREAK
 case 122:
 YY_RULE_SETUP
-#line 250 "lex.l"
+#line 348 "lex.l"
 { stdstr += "\'"; }
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
-#line 251 "lex.l"
+#line 349 "lex.l"
 { stdstr += "\""; }
 	YY_BREAK
 case 124:
 YY_RULE_SETUP
-#line 252 "lex.l"
+#line 350 "lex.l"
 {
+    removeUnderline(str);
     int x = strtol(yytext + 3,NULL, 16);
     if(x <= 127)
     {
@@ -1728,7 +1827,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
-#line 266 "lex.l"
+#line 365 "lex.l"
 {
     char string[2];
     convertCharacterCodeToString(yytext, 2, string);
@@ -1737,10 +1836,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 126:
 YY_RULE_SETUP
-#line 271 "lex.l"
+#line 370 "lex.l"
 {
     if(stdstr.size() == 1) {
-        cout << "Found CHAR:  " << stdstr << endl;
+        //cout << "Found CHAR:  " << stdstr << endl;
         yylval.char_literal = stdstr[0];
         BEGIN(INITIAL);
         return CHAR_LITERAL;
@@ -1757,17 +1856,17 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case YY_STATE_EOF(CHAR_EL):
-#line 288 "lex.l"
+#line 387 "lex.l"
 { printf("CHAR Error in line %d: there is no closing quotation mark\n", lineNumber); BEGIN(INITIAL);}
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
-#line 289 "lex.l"
+#line 388 "lex.l"
 { printf("CHAR Error in line %d: slash\n", lineNumber); }
 	YY_BREAK
 case 128:
 YY_RULE_SETUP
-#line 291 "lex.l"
+#line 390 "lex.l"
 {
 
     strcpy(str, yytext);
@@ -1787,7 +1886,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
-#line 308 "lex.l"
+#line 407 "lex.l"
 {
 
     strcpy(str, yytext);
@@ -1809,7 +1908,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
-#line 328 "lex.l"
+#line 427 "lex.l"
 {
 
     strcpy(str, yytext);
@@ -1840,26 +1939,26 @@ YY_RULE_SETUP
 	YY_BREAK
 case 131:
 YY_RULE_SETUP
-#line 356 "lex.l"
+#line 455 "lex.l"
 {
 
     removeType(str, "i32");
     removeUnderline(str);
-    printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
+    //printf("Found DECIMAL_NUMBER: %d\n", atoi(str));
     yylval.int_literal = atoi(str);
     return INT_LITERAL;
 }
 	YY_BREAK
 case 132:
 YY_RULE_SETUP
-#line 365 "lex.l"
+#line 464 "lex.l"
 {
 
     removeType(str, "i32");
     removeUnderline(str);
     if(strlen(str) > 2)
     {
-         printf("Found BIN_NUMBER: %d\n", strtol(str + 2, NULL, 2));
+         //printf("Found BIN_NUMBER: %d\n", strtol(str + 2, NULL, 2));
          yylval.int_literal = strtol(str + 2, NULL, 2);
          return INT_LITERAL;
     }
@@ -1871,14 +1970,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 133:
 YY_RULE_SETUP
-#line 381 "lex.l"
+#line 480 "lex.l"
 {
 
     removeType(str, "i32");
     removeUnderline(str);
     if(strlen(str) > 2)
     {
-         printf("Found OCTAL_NUMBER: %d\n", strtol(str + 2, NULL, 8));
+         //printf("Found OCTAL_NUMBER: %d\n", strtol(str + 2, NULL, 8));
          yylval.int_literal = strtol(str + 2, NULL, 8);
          return INT_LITERAL;
     }
@@ -1890,14 +1989,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 134:
 YY_RULE_SETUP
-#line 397 "lex.l"
+#line 496 "lex.l"
 {
 
     removeType(str, "i32");
     removeUnderline(str);
     if(strlen(str) > 2)
     {
-        printf("Found HEXADECIMAL_NUMBER: %d\n", strtol(str + 2, NULL, 16));
+        //printf("Found HEXADECIMAL_NUMBER: %d\n", strtol(str + 2, NULL, 16));
         yylval.int_literal = strtol(str + 2, NULL, 16);
         return INT_LITERAL;
     }
@@ -1909,59 +2008,61 @@ YY_RULE_SETUP
 	YY_BREAK
 case 135:
 YY_RULE_SETUP
-#line 413 "lex.l"
+#line 512 "lex.l"
 {
     printf("INCORRECT DOUBLE Error in line %d: float literals must have an integer part", lineNumber);
 }
 	YY_BREAK
 case 136:
 YY_RULE_SETUP
-#line 417 "lex.l"
+#line 516 "lex.l"
 {
     removeType(str, "f64");
     removeUnderline(str);
-    printf("Found DOUBLE: %lf\n", atof(str), str);
+    //printf("Found DOUBLE: %lf\n", atof(str), str);
     yylval.float_literal = atof(str);
     return FLOAT_LITERAL;
 }
 	YY_BREAK
 case 137:
 YY_RULE_SETUP
-#line 425 "lex.l"
+#line 524 "lex.l"
 {
     removeType(str, "f64");
     removeUnderline(str);
-    printf("Found DOUBLE: %lf\n", atof(str));
+    //printf("Found DOUBLE: %lf\n", atof(str));
     yylval.float_literal = atof(str);
     return FLOAT_LITERAL;
 }
 	YY_BREAK
 case 138:
 YY_RULE_SETUP
-#line 433 "lex.l"
-{ printf("Found IDENTIFIER: %s\n", yytext); yylval.identifier = new string(yytext); return ID;}
+#line 532 "lex.l"
+{ //printf("Found IDENTIFIER: %s\n", yytext);
+yylval.identifier = new string(yytext); return ID;}
 	YY_BREAK
 case 139:
 YY_RULE_SETUP
-#line 434 "lex.l"
-{ printf("Found MACROS: %s\n", yytext);}
+#line 534 "lex.l"
+{ //printf("Found MACROS: %s\n", yytext);
+}
 	YY_BREAK
 case 140:
 YY_RULE_SETUP
-#line 435 "lex.l"
+#line 536 "lex.l"
 { printf("Error in line %d: incorrect IDENTIFIER\n", lineNumber); }
 	YY_BREAK
 case 141:
 YY_RULE_SETUP
-#line 436 "lex.l"
+#line 537 "lex.l"
 { printf("Error in line %d: incorrect character in code\n", lineNumber); }
 	YY_BREAK
 case 142:
 YY_RULE_SETUP
-#line 437 "lex.l"
+#line 538 "lex.l"
 ECHO;
 	YY_BREAK
-#line 1965 "lex.yy.c"
+#line 2066 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2821,7 +2922,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 437 "lex.l"
+#line 538 "lex.l"
 
 
 void convertCharacterCodeToString(char characterCode[], int startPosition, char *string)
@@ -2864,7 +2965,7 @@ int findSecondDot(const char *input_string) {
             if (first_dot == -1) {
                 first_dot = i;  // Нашли первую точку
             } else {
-                printf("Found TWO_DOTS: %.*s\n", i - first_dot + 1, input_string + first_dot);
+                //printf("Found TWO_DOTS: %.*s\n", i - first_dot + 1, input_string + first_dot);
                 return i;  // Нашли вторую точку, возвращаем её индекс
             }
         }
@@ -2903,26 +3004,26 @@ int translateNumberByBase(char *input_string) {
     int result = -1;
 
     if (len == 1 && (input_string[0] >= '0' && input_string[0] <= '9')) {
-        printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+        //printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
         result = atoi(input_string);
     } else if (len >= 2 && (input_string[0] >= '0' && input_string[0] <= '9') && (input_string[1] >= '0' && input_string[1] <= '9')) {
-        printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+        //printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
         result = atoi(input_string);
     }
 
 
     if (input_string[0] == '0' && (len > 2)){
         if (input_string[1] == 'x'){
-            printf("Found RANGE_HEXADECIMAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 16));
+            //printf("Found RANGE_HEXADECIMAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 16));
             result = strtol(input_string + 2, NULL, 16);
         } else if (input_string[1] == 'b') {
-            printf("Found RANGE_BIN_NUMBER: %ld\n", strtol(input_string + 2, NULL, 2));
+            //printf("Found RANGE_BIN_NUMBER: %ld\n", strtol(input_string + 2, NULL, 2));
             result = strtol(input_string + 2, NULL, 2);
         } else if (input_string[1] == 'o'){
-            printf("Found RANGE_OCTAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 8));
+            //printf("Found RANGE_OCTAL_NUMBER: %ld\n", strtol(input_string + 2, NULL, 8));
             result = strtol(input_string + 2, NULL, 8);
         } else {
-            printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
+            //printf("Found RANGE_DECIMAL_NUMBER: %d\n", atoi(input_string));
             result = atoi(input_string);
         }
     }
@@ -2951,8 +3052,7 @@ int main(int argc, char** argv) {
 //        const char *filename = "../tests/exam_tests/for/simple_for.rs";
 //        const char *filename = "../tests/exam_tests/logic/logic_combine.rs";
 //        const char *filename = "../tests/exam_tests/arithmetic/as_casting.rs";
-//       const char *filename = "../tests/exam_tests/var_declaration/string_hard.rs";
-       const char *filename = "../tests/exam_tests/array/foreach.rs";
+       const char *filename = "../tests/a.rs";
 
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";
