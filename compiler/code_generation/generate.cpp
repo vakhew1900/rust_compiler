@@ -1167,21 +1167,60 @@ vector<char> ExprNode::generateForEach() {
         case DataType::char_:
         case DataType::bool_:
             merge(body, commandToBytes(Command::iaload));
+            merge(body, commandToBytes(Command::istore));
             break;
         case DataType::float_:
             merge(body, commandToBytes(Command::faload));
+            merge(body, commandToBytes(Command::fstore));
             break;
         case DataType::string_:
         case DataType::class_:
         case DataType::array_:
             merge(body, commandToBytes(Command::aaload));
+            merge(body, commandToBytes(Command::astore));
             break;
         case DataType::undefined_:
         case DataType::void_:
             break;
     }
 
+    body.push_back(IntToBytes(valueNum).back());
+
     merge(body, this->body->generate());
+
+
+    merge(body, this->expr_left->generate());
+    merge(body, commandToBytes(Command::iload));
+    body.push_back(IntToBytes(loopCounterVar).back());
+
+
+    switch (arrDataType.type) {
+
+        case DataType::int_:
+        case DataType::char_:
+        case DataType::bool_:
+            merge(body, commandToBytes(Command::iload));
+            body.push_back(IntToBytes(valueNum).back());
+            merge(body, commandToBytes(Command::iastore));
+            break;
+        case DataType::float_:
+            merge(body, commandToBytes(Command::iload));
+            body.push_back(IntToBytes(valueNum).back());
+            merge(body, commandToBytes(Command::fastore));
+            break;
+        case DataType::string_:
+        case DataType::class_:
+        case DataType::array_:
+            merge(body, commandToBytes(Command::iload));
+            body.push_back(IntToBytes(valueNum).back());
+            merge(body, commandToBytes(Command::aastore));
+            break;
+        case DataType::undefined_:
+        case DataType::void_:
+            break;
+    }
+
+
     merge(body, commandToBytes(Command::iinc));
     body.push_back(IntToBytes(loopCounterVar).back());
     body.push_back(IntToBytes(1).back());
