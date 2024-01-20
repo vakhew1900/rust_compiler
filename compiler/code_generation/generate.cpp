@@ -890,7 +890,7 @@ vector<char> ExprNode::generate() {
                 }
                 cur++;
             }
-
+          //  if(cur) merge(bytes, commandToBytes(Command::pop));
             break;
         }
 
@@ -1141,7 +1141,7 @@ vector<char> ExprNode::generateForEach() {
 
     vector<char> bytes;
 
-    vector<char> initValue = Int16ToBytes(0);
+    vector<char> initValue = generateInt(0);
     vector<char> endValue = this->expr_left->generate();
     merge(endValue, commandToBytes(Command::arraylength));
 
@@ -1150,7 +1150,7 @@ vector<char> ExprNode::generateForEach() {
     // Первая инициализация
     merge(bytes, initValue);
     merge(bytes, commandToBytes(Command::istore));
-
+    bytes.push_back(IntToBytes(loopCounterVar).back());
 
 
     // body
@@ -1159,22 +1159,22 @@ vector<char> ExprNode::generateForEach() {
     vector<char> body;
     merge(body, this->expr_left->generate());
     merge(body, commandToBytes(Command::iload));
-    bytes.push_back(IntToBytes(loopCounterVar).back());
+    body.push_back(IntToBytes(loopCounterVar).back());
 
     switch (arrDataType.type) {
 
         case DataType::int_:
         case DataType::char_:
         case DataType::bool_:
-            merge(bytes, commandToBytes(Command::iaload));
+            merge(body, commandToBytes(Command::iaload));
             break;
         case DataType::float_:
-            merge(bytes, commandToBytes(Command::faload));
+            merge(body, commandToBytes(Command::faload));
             break;
         case DataType::string_:
         case DataType::class_:
         case DataType::array_:
-            merge(bytes, commandToBytes(Command::aaload));
+            merge(body, commandToBytes(Command::aaload));
             break;
         case DataType::undefined_:
         case DataType::void_:
@@ -1188,7 +1188,7 @@ vector<char> ExprNode::generateForEach() {
 
     // условие
     vector<char> condition = commandToBytes(Command::iload);
-    condition.push_back(IntToBytes(localVarNum).back());
+    condition.push_back(IntToBytes(loopCounterVar).back());
     merge(condition, endValue);
     merge(condition, commandToBytes(Command::if_icmpeq));
     int sz = body.size() + 3 + 3;

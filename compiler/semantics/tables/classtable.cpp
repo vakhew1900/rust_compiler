@@ -629,5 +629,6 @@ int ClassTable::addLoopCounterVar(string className, string methodName) {
     varTableItem.id = "$$"; // спецсимвол
     varTableItem.dataType = DataType(DataType::int_);
     ClassTable::Instance()->items[className].methodTable.items[methodName].localVarTable.items.push_back(varTableItem);
-    return  ClassTable::Instance()->items[className].methodTable.items[methodName].localVarTable.items.size() - 1;
+    int res = ClassTable::Instance()->items[className].methodTable.items[methodName].localVarTable.items.size() - 1;
+    return  res;
 }

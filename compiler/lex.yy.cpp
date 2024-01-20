@@ -2951,7 +2951,8 @@ int main(int argc, char** argv) {
 //        const char *filename = "../tests/exam_tests/for/simple_for.rs";
 //        const char *filename = "../tests/exam_tests/logic/logic_combine.rs";
 //        const char *filename = "../tests/exam_tests/arithmetic/as_casting.rs";
-       const char *filename = "../tests/exam_tests/var_declaration/string_hard.rs";
+//       const char *filename = "../tests/exam_tests/var_declaration/string_hard.rs";
+       const char *filename = "../tests/exam_tests/array/foreach.rs";
 
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";
