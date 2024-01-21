@@ -2633,6 +2633,16 @@ void StmtListNode::transform(bool isConvertedToConst) {
 void StmtNode::transform(bool isConvertedToConst) {
 
     try {
+
+        if (this->expr != NULL && this->expr->type == ExprNode::struct_creation){
+            this->expr->transformStructExpr();
+            if(this->expr->expr_middle != NULL){
+                auto expression =  this->expr->expr_middle;
+                this->expr->expr_middle = NULL;
+                this->expr = expression;
+            }
+        }
+
         switch (this->type) {
             case exprstmt:
                 this->expr->curClassName = curClassName;
@@ -2714,6 +2724,24 @@ void StmtNode::transform(bool isConvertedToConst) {
 
 void ExprNode::transform(bool isConvertedToConst) {
 
+    if(this->expr_left != NULL) {
+        this->expr_left->transformStructExpr();
+        if (this->expr_left->expr_middle != NULL) {
+            auto expr =  this->expr_left->expr_middle;
+            this->expr_left->expr_middle = NULL;
+            this->expr_left = expr;
+        }
+    }
+
+    if (this->expr_right != NULL) {
+        this->expr_right->transformStructExpr();
+        if (this->expr_right->expr_middle != NULL) {
+            auto expr =  this->expr_right->expr_middle;
+            this->expr_right->expr_middle = NULL;
+            this->expr_right = expr;
+        }
+    }
+
     switch (this->type) {
 
         case plus:
@@ -2725,19 +2753,6 @@ void ExprNode::transform(bool isConvertedToConst) {
             addMetaInfo(this->expr_right);
             checkCancelExprNode(this->expr_left);
             checkCancelExprNode(this->expr_right);
-
-            this->expr_left->transformStructExpr();
-            this->expr_right->transformStructExpr();
-
-            if(this->expr_left->expr_middle != NULL){
-                this->expr_left = this->expr_middle;
-                this->expr_middle = this->NULL;
-            }
-
-            if(this->expr_right->expr_middle != NULL){
-                this->expr_right = this->expr_middle;
-                this->expr_middle = this->NULL;
-            }
 
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
@@ -2918,12 +2933,15 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (!this->expr_left->isVar()) {
                 throw Exception(Exception::NOT_A_VAR, "left operand not a var", this->line);
             }
-
-            if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
-                throw Exception(Exception::NOT_EQUAL_DATA_TYPE,
-                                "NOT EQUAL DATA_TYPE in asign: " + this->expr_left->dataType.toString() +
-                                " and " +
-                                this->expr_right->dataType.toString(), this->line);
+            {
+                bool isClass = this->expr_left->dataType.isClass() && this->expr_right->dataType.isClass();
+                bool isParent = isClass && ClassTable::Instance()->isParent(this->expr_right->dataType.id, this->expr_left->dataType.id);
+                if (!this->expr_left->dataType.isEquals(expr_right->dataType) && !isParent) {
+                    throw Exception(Exception::NOT_EQUAL_DATA_TYPE,
+                                    "NOT EQUAL DATA_TYPE in asign: " + this->expr_left->dataType.toString() +
+                                    " and " +
+                                    this->expr_right->dataType.toString(), this->line);
+                }
             }
 
             //TODO добавить обработку констант
@@ -3051,11 +3069,6 @@ void ExprNode::transform(bool isConvertedToConst) {
             addMetaInfo(this->expr_right);
             checkCancelExprNode(this->expr_left);
             checkCancelExprNode(this->expr_right);
-
-
-            if(this->expr_left->type == struct_creation){
-                this->expr
-            }
 
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);

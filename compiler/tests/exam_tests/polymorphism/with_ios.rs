@@ -44,7 +44,7 @@ impl Shape for Circle {
 
 fn main() {
 
-	 let array: [Shape; 2] = [Circle{r:10.1}, Rectangle{x: 10.0, y:10.0} ];
+	 let mut array: [Shape; 2] = [Circle{r:10.1}, Rectangle{x: 10.0, y:10.0} ];
 
       println("{} ", "Введите 1, если хотите чтобы второй элемент был кругом");
       let x = read_int();
