@@ -3552,7 +3552,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 curClassName + " has not access to " + this->expr_left->className, this->line);
             }
 
-            if (ClassTable::Instance()->getClass(this->expr_left->className).classType == ClassTableItem::trait_){
+            if (ClassTable::Instance()->getClass(this->expr_left->className).classType == ClassTableItem::trait_ &&  curClassName != this->expr_left->className){
                 throw Exception(Exception::ACCESS_ERROR,
                                 this->expr_left->className + " is trait and you cannot call " + *this->expr_middle->Name, this->line);
             }
@@ -3594,7 +3594,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 " not exist", this->line);
             }
 
-            if (ClassTable::Instance()->getClass(this->expr_left->className).classType == ClassTableItem::trait_){
+            if (ClassTable::Instance()->getClass(this->expr_left->className).classType == ClassTableItem::trait_ && curClassName != this->expr_left->className){
                 throw Exception(Exception::ACCESS_ERROR,
                                 this->expr_left->className + " is trait and you cannot call " + *this->expr_middle->Name, this->line);
             }
