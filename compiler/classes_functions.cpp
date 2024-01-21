@@ -2349,7 +2349,7 @@ void ExprNode::transformPathCallExpr(string className, ExprNode::Type type, bool
     }
 
     if (!ClassTable::Instance()->isClassExist(res)) {
-        throw Exception(Exception::NOT_EXIST, res + "NOT_EXIST", this->line);
+        throw Exception(Exception::NOT_EXIST, res + " NOT_EXIST", this->line);
     }
 
     this->className = res;
@@ -3634,7 +3634,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 this->isConst = fieldItem.isConst;
                 this->dataType = fieldItem.dataType;
             } else {
-                throw Exception(Exception::NOT_EXIST, "var " + *this->Name + "not exist", this->line);
+                throw Exception(Exception::NOT_EXIST, "var " + *this->Name + " not exist", this->line);
             }
 
         }
