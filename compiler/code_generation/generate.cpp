@@ -625,29 +625,38 @@ vector<char> ExprNode::generate() {
 
         case id_:
         case self_expr:
-            switch (this->dataType.type) {
 
-                case DataType::int_:
-                case DataType::char_:
-                case DataType::bool_:
-                    merge(bytes, commandToBytes(Command::iload));
-                    break;
+            if(this->localVarNum != -1) {
+                switch (this->dataType.type) {
 
-                case DataType::float_:
-                    merge(bytes, commandToBytes(Command::fload));
-                    break;
+                    case DataType::int_:
+                    case DataType::char_:
+                    case DataType::bool_:
+                        merge(bytes, commandToBytes(Command::iload));
+                        break;
 
-                case DataType::string_:
-                case DataType::class_:
-                case DataType::array_:
-                    merge(bytes, commandToBytes(Command::aload));
-                    break;
-                case DataType::undefined_:
-                case DataType::void_:
-                    break;
+                    case DataType::float_:
+                        merge(bytes, commandToBytes(Command::fload));
+                        break;
+
+                    case DataType::string_:
+                    case DataType::class_:
+                    case DataType::array_:
+                        merge(bytes, commandToBytes(Command::aload));
+                        break;
+                    case DataType::undefined_:
+                    case DataType::void_:
+                        break;
+                }
+                bytes.push_back(IntToBytes(this->localVarNum).back());
             }
-
-            bytes.push_back(IntToBytes(this->localVarNum).back());
+            else {
+                int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, curClassName,
+                                                                        fieldName,
+                                                                        dataType);
+                merge(bytes, commandToBytes(Command::getstatic));
+                merge(bytes, Int16ToBytes(fieldPosition));
+            }
             break;
 
         case index_expr: {

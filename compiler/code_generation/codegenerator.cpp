@@ -229,7 +229,6 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
     bytes.push_back((char) 0x00);  // таблица интерфейсов
 
     auto fieldTable = classTableItem.fieldTable.items;
-    auto methodTable = classTableItem.methodTable.items;
 
     // количество полей
     int fieldSize = fieldTable.size();
@@ -253,6 +252,8 @@ vector<char> CodeGenerator::generateClassBody(const string &className) {
         ClassTable::Instance()->addMethod(className, ConstTable::clinit,MethodTableItem::clinitMethod());
     }
 
+    classTableItem =  ClassTable::Instance()->getClass(className);
+    auto methodTable = classTableItem.methodTable.items;
     int methodSize = methodTable.size();
     buffer = IntToBytes(methodSize);
     bytes.insert(bytes.end(), u2(buffer));
