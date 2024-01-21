@@ -795,7 +795,7 @@ vector<char> ExprNode::generate() {
                 merge(bytes, elem->generate());
             }
 
-            merge(bytes, commandToBytes(Command::pop));
+          //  merge(bytes, commandToBytes(Command::pop));
             break;
         }
         case struct_field_expr: {
