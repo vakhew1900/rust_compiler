@@ -2674,11 +2674,12 @@ void StmtNode::transform(bool isConvertedToConst) {
                         varTableItem.dataType = expr->dataType;
                     } else {
                         varTableItem.dataType = this->typeChild->convertToDataType(curClassName);
-                        if (!this->expr->dataType.isEquals(varTableItem.dataType)) {
+
+                        if (!isEqualDataType(this->expr->dataType, varTableItem.dataType)) {
                             throw Exception(Exception::INCORRECT_TYPE,
-                                            "incorrect let" + varTableItem.id + "datatype. Expected: " +
+                                            "incorrect let " + varTableItem.id + " datatype. Expected: " +
                                             varTableItem.dataType.toString() +
-                                            "result: " + this->expr->dataType.toString(), this->line);
+                                            " result: " + this->expr->dataType.toString(), this->line);
                         }
                     }
                 }
@@ -2703,7 +2704,7 @@ void StmtNode::transform(bool isConvertedToConst) {
                 this->expr->transform();
                 varTableItem.dataType = this->typeChild->convertToDataType(curClassName);
 
-                if (!this->expr->dataType.isEquals(varTableItem.dataType)) {
+                if (!isEqualDataType(this->expr->dataType, varTableItem.dataType)) {
                     throw Exception(Exception::INCORRECT_TYPE, "incorrect datatype", this->line);
                 }
 
@@ -4509,5 +4510,23 @@ void Node::setLine(Node *node) {
 int Node::getVarNumber(ExprNode *blockExpr, const string &className, const string &methodName, const string &varName) {
     return ClassTable::Instance()->getMethod(className, methodName).localVarTable.getVarNumber(varName,
                                                                                                blockExpr);
+}
+
+bool Node::isEqualDataType(DataType one, DataType other) {
+
+    bool isParent = true;
+
+    if (one.isClass() && other.isClass()){
+        isParent = ClassTable::Instance()->isParent(one.id, other.id);
+    }
+
+    if (one.isArray() && other.isArray())
+    {
+        DataType tmp = one;
+        tmp.id = other.id;
+        isParent = tmp.isEquals(other) && ClassTable::Instance()->isParent(one.id, other.id);
+    }
+
+    return isParent || one.isEquals(other);
 }
 

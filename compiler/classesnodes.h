@@ -87,6 +87,7 @@ public:
     static int getVarNumber(ExprNode* blockExpr, const string& className,const string& methodName,const string& varName);
 
     //virtual void addDataType(const string &className);
+    static bool isEqualDataType(DataType one, DataType other);
     void convertEnumValue();
     void setLine(Node* node);
 };
