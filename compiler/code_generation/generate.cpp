@@ -306,7 +306,7 @@ vector<char> ExprNode::generate() {
             string field = *this->expr_middle->Name;
             DataType fieldDatatype = ClassTable::Instance()->getField(this->expr_left->dataType.id, field).dataType;
             int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id, field,
-                                                                    dataType);
+                                                                    fieldDatatype);
 
             merge(bytes, left);
             merge(bytes, right);
