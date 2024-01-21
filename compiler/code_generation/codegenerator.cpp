@@ -133,7 +133,11 @@ void CodeGenerator::generateClass(const string &className) {
     // создание файла
     string fileName = className + ".class";
     path filepath = codeGenDir / fileName;
-    create_directory(filepath.parent_path());
+    path parentPath = filepath.parent_path();
+
+    if(!exists(filepath.parent_path())){
+        create_directories(filepath.parent_path());
+    }
 
     std::ofstream outfile;
     outfile.open(filepath, std::ios_base::binary | std::ios_base::out | std::ios_base::trunc);
