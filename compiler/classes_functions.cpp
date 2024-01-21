@@ -4314,7 +4314,7 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
 
     try {
         if (this->expr_left->type != path_call_expr && this->expr_left->type != id_) {
-            throw Exception(Exception::CONSTRUCTOR_ERROR, "expression should be paathCallExpr", this->line);
+            throw Exception(Exception::CONSTRUCTOR_ERROR, "expression should be pathCallExpr", this->line);
         }
 
 
