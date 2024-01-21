@@ -3060,7 +3060,8 @@ int main(int argc, char** argv) {
       //  const char *filename = "../tests/exam_tests/functions/gcd_algorythm.rs";
 //        const char *filename = "../tests/exam_tests/trait/simple.rs";
 //        const char *filename = "../tests/exam_tests/trait/trait_const.rs";
-        const char *filename = "../tests/exam_tests/trait/static_method.rs";
+     //   const char *filename = "../tests/exam_tests/trait/static_method.rs";
+        const char *filename = "../tests/exam_tests/trait/several_trait.rs";
 
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";
