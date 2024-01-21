@@ -244,7 +244,9 @@ public:
     void checkMethodParam(const string& className, const string& methodName);
     void checkCancelExprNode(ExprNode * exprNode, bool isBreakCanceled = true);
 
+    void transformStructExpr();
     void checkStructExpr(bool isConvertedTransform = true);
+    bool isPathCallExpr();
 
     vector<char> generate() override;
 

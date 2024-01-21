@@ -1858,8 +1858,8 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     throw Exception(Exception::NOT_EXIST, "Impl struct " + implClassName + " Not Exist", this->line);
                 }
 
-                if(ClassTable::Instance()->getClass(implClassName).classType != ClassTableItem::struct_){
-                    throw Exception(Exception::UNEXPECTED,   implClassName + " not struct in impl", this->line);
+                if (ClassTable::Instance()->getClass(implClassName).classType != ClassTableItem::struct_) {
+                    throw Exception(Exception::UNEXPECTED, implClassName + " not struct in impl", this->line);
                 }
 
                 if (this->impl_type == trait) {
@@ -2123,7 +2123,7 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
             ClassTable::Instance()->updateField(className, *this->name, this->fieldTableItem);
             break;
         case struct_:
-            if(this->structItems != NULL) {
+            if (this->structItems != NULL) {
                 for (auto elem: *this->structItems->items) {
                     elem->addDataTypeToDeclaration(className + "/" + *this->name);
                 }
@@ -2363,7 +2363,7 @@ bool ExprNode::isLiteral() {
 }
 
 bool ExprNode::isSimpleType() {
-    return  this->dataType.isInt() || this->dataType.isFloat() || this->dataType.isChar() || this->dataType.isBool();
+    return this->dataType.isInt() || this->dataType.isFloat() || this->dataType.isChar() || this->dataType.isBool();
 }
 
 void ProgramNode::transform(bool isConvertedToConst) {
@@ -2411,7 +2411,7 @@ void ItemNode::transform(bool isConvertedToConst) {
                     "ffff";
                 }
 
-                if(ClassTable::Instance()->isMethodExist(ConstTable::RTLClassName, *this->name)){
+                if (ClassTable::Instance()->isMethodExist(ConstTable::RTLClassName, *this->name)) {
                     throw Exception(Exception::NOT_SUPPORT,
                                     *this->name + " funtion is reserved by RTL", this->line);
                 }
@@ -2534,7 +2534,7 @@ void ItemNode::transform(bool isConvertedToConst) {
             case struct_: {
                 vector<DataType> params;
 
-                if(this->structItems == NULL){
+                if (this->structItems == NULL) {
                     return;
                 }
                 for (auto elem: *structItems->items) {
@@ -2725,6 +2725,19 @@ void ExprNode::transform(bool isConvertedToConst) {
             addMetaInfo(this->expr_right);
             checkCancelExprNode(this->expr_left);
             checkCancelExprNode(this->expr_right);
+
+            this->expr_left->transformStructExpr();
+            this->expr_right->transformStructExpr();
+
+            if(this->expr_left->expr_middle != NULL){
+                this->expr_left = this->expr_middle;
+                this->expr_middle = this->NULL;
+            }
+
+            if(this->expr_right->expr_middle != NULL){
+                this->expr_right = this->expr_middle;
+                this->expr_middle = this->NULL;
+            }
 
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
@@ -3039,6 +3052,11 @@ void ExprNode::transform(bool isConvertedToConst) {
             checkCancelExprNode(this->expr_left);
             checkCancelExprNode(this->expr_right);
 
+
+            if(this->expr_left->type == struct_creation){
+                this->expr
+            }
+
             this->expr_left->transform(isConvertedToConst);
             this->expr_right->transform(isConvertedToConst);
 
@@ -3342,10 +3360,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                 loopCnt++;
                 body->transform(isConvertedToConst);
                 if (breakTypes.empty()) {
-                   // throw Exception(Exception::LOOP_ERROR, "loop should has break", this->line);
+                    // throw Exception(Exception::LOOP_ERROR, "loop should has break", this->line);
                     this->dataType = DataType(DataType::void_);
-                }
-                else {
+                } else {
                     if (!DataType::isEquals(breakTypes)) {
                         throw Exception(Exception::TYPE_ERROR, "loop has different types", this->line);
                     }
@@ -3552,9 +3569,11 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 curClassName + " has not access to " + this->expr_left->className, this->line);
             }
 
-            if (ClassTable::Instance()->getClass(this->expr_left->className).classType == ClassTableItem::trait_ &&  curClassName != this->expr_left->className){
+            if (ClassTable::Instance()->getClass(this->expr_left->className).classType == ClassTableItem::trait_ &&
+                curClassName != this->expr_left->className) {
                 throw Exception(Exception::ACCESS_ERROR,
-                                this->expr_left->className + " is trait and you cannot call " + *this->expr_middle->Name, this->line);
+                                this->expr_left->className + " is trait and you cannot call " +
+                                *this->expr_middle->Name, this->line);
             }
 
             if (!ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->className,
@@ -3568,9 +3587,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                 MethodTableItem methodTableItem = ClassTable::getMethodDeep(this->expr_left->className,
                                                                             *this->expr_middle->Name);
 
-                if(methodTableItem.isStatic == false){
+                if (methodTableItem.isStatic == false) {
                     throw Exception(Exception::TYPE_ERROR,
-                                     *this->expr_middle->Name + " in class " +className + " is not static", this->line);
+                                    *this->expr_middle->Name + " in class " + className + " is not static", this->line);
                 }
 
 //                ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, *this->expr_middle->Name,
@@ -3594,9 +3613,11 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 " not exist", this->line);
             }
 
-            if (ClassTable::Instance()->getClass(this->expr_left->className).classType == ClassTableItem::trait_ && curClassName != this->expr_left->className){
+            if (ClassTable::Instance()->getClass(this->expr_left->className).classType == ClassTableItem::trait_ &&
+                curClassName != this->expr_left->className) {
                 throw Exception(Exception::ACCESS_ERROR,
-                                this->expr_left->className + " is trait and you cannot call " + *this->expr_middle->Name, this->line);
+                                this->expr_left->className + " is trait and you cannot call " +
+                                *this->expr_middle->Name, this->line);
             }
 
             break;
@@ -4377,6 +4398,42 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
     catch (Exception e) {
         throw e;
     }
+}
+
+void ExprNode::transformStructExpr() {
+
+    if(this->type != struct_creation){
+        return;
+    }
+
+    if(!this->expr_left->isPathCallExpr()){
+
+        if(this->expr_left->expr_right != NULL && this->expr_left->expr_right->isPathCallExpr()) {
+            auto left = this->expr_left;
+
+            auto pathCallExpr = this->expr_left->expr_right;
+            this->expr_left = pathCallExpr;
+            auto structCreation = this;
+            left->expr_right = structCreation;
+            this->expr_middle = left;
+            return;
+        }
+
+        if(this->expr_left->expr_left != NULL && this->expr_left->expr_left->isPathCallExpr()) {
+            auto left = this->expr_left;
+
+            auto pathCallExpr = this->expr_left->expr_left;
+            this->expr_left = pathCallExpr;
+            auto structCreation = this;
+            left->expr_left = structCreation;
+            this->expr_middle = left;
+            return;
+        }
+    }
+}
+
+bool ExprNode::isPathCallExpr() {
+    return this->type == path_call_expr || this->type == id_;
 }
 
 
