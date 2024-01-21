@@ -3064,7 +3064,8 @@ int main(int argc, char** argv) {
 //        const char *filename = "../tests/exam_tests/trait/several_trait.rs";
     //    const char *filename = "../tests/exam_tests/polymorphism/standard.rs";
 //        const char *filename = "../tests/exam_tests/polymorphism/with_ios.rs";
-        const char *filename = "../tests/exam_tests/polymorphism/ua.rs";
+        //const char *filename = "../tests/exam_tests/polymorphism/ua.rs";
+        const char *filename = "../tests/exam_tests/polymorphism/function_param.rs";
 
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";

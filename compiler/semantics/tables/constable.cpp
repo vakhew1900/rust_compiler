@@ -273,8 +273,15 @@ string ConstTable::MethodParam(const vector<DataType> &params, const DataType &r
 
     string res = "(";
 
-    for (int i = 0; i < params.size(); i++)
-        res += params[i].toConstTableFormat();
+    for (int i = 0; i < params.size(); i++){
+        auto param = params[i];
+        if(!param.id.empty()){
+            param.id = ConstTable::formatClassName(param.id);
+        }
+
+        res += param.toConstTableFormat();
+    }
+
 
 
     res += ")";

@@ -702,12 +702,12 @@ vector<char> ExprNode::generate() {
         case method_expr: {
             merge(bytes, this->expr_left->generate());
             string methodName = *this->Name;
-            vector<DataType> params;
             string className = this->expr_left->dataType.id;
+            vector<DataType> params = ClassTable::getMethodDeep(className, methodName).getParamDataTypes();
             DataType returnDataType = ClassTable::getMethodDeep(className, methodName).returnDataType;
             if (this->expr_list != NULL) {
                 for (auto &elem: *this->expr_list->exprs) {
-                    params.push_back(elem->dataType);
+                  //  params.push_back(elem->dataType);
                     merge(bytes, elem->generate());
                 }
             }
@@ -723,12 +723,12 @@ vector<char> ExprNode::generate() {
             string className = this->expr_left->className;
             string methodName = *this->expr_middle->Name;
 
-            vector<DataType> params;
+            vector<DataType> params = ClassTable::getMethodDeep(className, methodName).getParamDataTypes();
             DataType returnDataType = ClassTable::getMethodDeep(className, methodName).returnDataType;
 
             if (this->expr_list != NULL) {
                 for (auto &elem: *this->expr_list->exprs) {
-                    params.push_back(elem->dataType);
+                  //  params.push_back(elem->dataType);
                     merge(bytes, elem->generate());
                 }
             }

@@ -42,9 +42,16 @@ impl Shape for Circle {
         self.r * self.r * 3.14   }
 }
 
+// Принимаем что угодно, реализующее трейт Shape.
+fn areas_sum(shape1: impl Shape, shape2: impl Shape) -> f64 {
+    shape1.area() + shape2.area()
+}
+
+
 fn main() {
 
+	 let circle = Circle{r:10 as f64};
+	 let rectangle = Rectangle{x: 10.0, y:10.0};
 
-      let elem: Shape = Rectangle{x: 10.0, y:20.0};
-      println_float("area = {}", elem.area());
+     println_float("areas_sum = {}", areas_sum(circle, rectangle))
 }
