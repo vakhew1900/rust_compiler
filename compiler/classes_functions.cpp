@@ -3550,9 +3550,13 @@ void ExprNode::transform(bool isConvertedToConst) {
             {
                 vector<DataType> params;
                 MethodTableItem methodTableItem = ClassTable::getMethodDeep(this->expr_left->className,
+
+
                                                                             *this->expr_middle->Name);
-                for (auto elem: methodTableItem.paramTable.items) {
-                    params.push_back(elem.dataType);
+
+                if(methodTableItem.isStatic == false){
+                    throw Exception(Exception::TYPE_ERROR,
+                                     *this->expr_middle->Name + " in class " +className + "is not static", this->line);
                 }
 
 //                ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, *this->expr_middle->Name,
@@ -4328,6 +4332,7 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
         vector<DataType> params;
 
         for (auto elem: *this->field_list->exprs) {
+            addMetaInfo(elem);
             addMetaInfo(elem->expr_left);
             checkCancelExprNode(elem->expr_left);
             elem->expr_left->transform(isConvertedTransform);
