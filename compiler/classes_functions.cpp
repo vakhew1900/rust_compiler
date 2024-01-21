@@ -1858,6 +1858,10 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     throw Exception(Exception::NOT_EXIST, "Impl struct " + implClassName + " Not Exist", this->line);
                 }
 
+                if(ClassTable::Instance()->getClass(implClassName).classType != ClassTableItem::struct_){
+                    throw Exception(Exception::UNEXPECTED,   implClassName + " not struct in impl", this->line);
+                }
+
                 if (this->impl_type == trait) {
 
                     this->expr->transformPathCallExpr(className, ExprNode::undefined, true);
@@ -1868,7 +1872,9 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     }
 
                     ClassTable::Instance()->addParent(implClassName, traitClassName);
+                    ClassTable classTable = *(ClassTable::Instance());
                     this->checkImpl(implClassName, traitClassName);
+
 
                 }
 
@@ -2438,7 +2444,7 @@ void ItemNode::transform(bool isConvertedToConst) {
                                                                                         *this->name);
                     if (!this->body->dataType.isEquals(methodTableItem.returnDataType)) {
                         throw Exception(Exception::TYPE_ERROR,
-                                        *this->name + "should return " +
+                                        *this->name + " should return " +
                                         methodTableItem.returnDataType.toString() +
                                         " but result: " + body->dataType.toString(), this->line);
                     }
@@ -2446,7 +2452,7 @@ void ItemNode::transform(bool isConvertedToConst) {
                     returnTypes.push_back(methodTableItem.returnDataType);
                     if (!DataType::isEquals(returnTypes)) {
                         throw Exception(Exception::TYPE_ERROR,
-                                        *this->name + "should return  " +
+                                        *this->name + " should return  " +
                                         methodTableItem.returnDataType.toString() +
                                         " but result is not", this->line);
                     }
@@ -3546,6 +3552,11 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 curClassName + " has not access to " + this->expr_left->className, this->line);
             }
 
+            if (ClassTable::Instance()->getClass(this->expr_left->className).classType == ClassTableItem::trait_){
+                throw Exception(Exception::ACCESS_ERROR,
+                                this->expr_left->className + " is trait and you cannot call " + *this->expr_middle->Name, this->line);
+            }
+
             if (!ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->className,
                                                    *this->expr_middle->Name)) {
                 throw Exception(Exception::ACCESS_ERROR,
@@ -3583,13 +3594,10 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 " not exist", this->line);
             }
 
-            {
-//                ClassTable::addFieldRefToConstTable(curClassName, this->className, *this->expr_middle->Name,
-//                                                    ClassTable::Instance()->getFieldDeep(this->className,
-//                                                                                         *this->expr_middle->Name).dataType);
-
+            if (ClassTable::Instance()->getClass(this->expr_left->className).classType == ClassTableItem::trait_){
+                throw Exception(Exception::ACCESS_ERROR,
+                                this->expr_left->className + " is trait and you cannot call " + *this->expr_middle->Name, this->line);
             }
-
 
             break;
 
@@ -4229,7 +4237,7 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
             }
             VarTableItem varItem = paramTable.items[i];
             bool isElemRef = varItem.isRef == elem->isRefExpr();
-            bool isElemMut = !varItem.isMut || varItem.isMut == elem->isMut || (elem->isSimpleType() && !elem->isRefExpr());
+            bool isElemMut = !varItem.isMut || varItem.isMut == elem->isMut || (!elem->isRefExpr());
             bool isElemConst = !varItem.isConst || (!varItem.isMut && varItem.isConst == elem->isConst);
             bool checker = isElemMut && isElemRef && isElemConst;
             // bool checker = varItem.isRef == elem->isRefExpr() && varItem.isMut == elem->isMut && (varItem.isConst == elem->isConst || elem->isSimpleType());

@@ -741,11 +741,11 @@ vector<char> ExprNode::generate() {
         }
 
         case path_call_expr: {
-            string className = this->expr_left->className;
+            string className = this->className;
             string fieldName = *this->expr_middle->Name;
             DataType dataType = this->dataType;
 
-            int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, this->expr_left->dataType.id,
+            int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, className,
                                                                     fieldName,
                                                                     dataType);
             merge(bytes, commandToBytes(Command::getstatic));

@@ -53,7 +53,7 @@ string ClassTableItem::toString() {
 }
 
 bool ClassTableItem::isHaveParent() {
-    return !this->parentName.empty();
+    return !this->parentName.empty() && this->parentName != ConstTable::objectClassName;
 }
 
 
