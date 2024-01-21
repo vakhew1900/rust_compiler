@@ -3055,8 +3055,9 @@ int main(int argc, char** argv) {
        // const char *filename = "../tests/exam_tests/array/matrix.rs";
 //        const char *filename = "../tests/a.rs";
       //  const char *filename = "../tests/exam_tests/structs/simple_object_outer_main.rs";
-         const char *filename = "../tests/exam_tests/structs/const.rs";
+//         const char *filename = "../tests/exam_tests/structs/const.rs";
       //  const char *filename = "../tests/exam_tests/functions/gcd_algorythm.rs";
+        const char *filename = "../tests/exam_tests/trait/simple.rs";
 
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";

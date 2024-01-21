@@ -2405,6 +2405,11 @@ void ItemNode::transform(bool isConvertedToConst) {
                     "ffff";
                 }
 
+                if(ClassTable::Instance()->isMethodExist(ConstTable::RTLClassName, *this->name)){
+                    throw Exception(Exception::NOT_SUPPORT,
+                                    *this->name + " funtion is reserved by RTL", this->line);
+                }
+
                 vector<DataType> paramTypes;
                 for (auto elem: ClassTable::Instance()->getMethod(curClassName, *this->name).paramTable.items) {
                     elem.blockExpr = body;
@@ -3550,13 +3555,11 @@ void ExprNode::transform(bool isConvertedToConst) {
             {
                 vector<DataType> params;
                 MethodTableItem methodTableItem = ClassTable::getMethodDeep(this->expr_left->className,
-
-
                                                                             *this->expr_middle->Name);
 
                 if(methodTableItem.isStatic == false){
                     throw Exception(Exception::TYPE_ERROR,
-                                     *this->expr_middle->Name + " in class " +className + "is not static", this->line);
+                                     *this->expr_middle->Name + " in class " +className + " is not static", this->line);
                 }
 
 //                ClassTable::addMethodRefToConstTable(curClassName, this->expr_left->className, *this->expr_middle->Name,
