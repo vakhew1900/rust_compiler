@@ -285,3 +285,7 @@ bool DataType::isChar() {
 bool DataType::isArray() {
     return this->type == array_;
 }
+
+bool DataType::isBool() {
+    return this->type == bool_;
+}

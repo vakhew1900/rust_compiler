@@ -50,6 +50,7 @@ public:
     bool isArray();
     bool isChar();
     bool isString();
+    bool isBool();
 };
 
 

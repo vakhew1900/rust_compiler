@@ -2357,7 +2357,7 @@ bool ExprNode::isLiteral() {
 }
 
 bool ExprNode::isSimpleType() {
-    return isLiteral() && this->type != ExprNode::string_lit && this->type != ExprNode::raw_string_lit;
+    return  this->dataType.isInt() || this->dataType.isFloat() || this->dataType.isChar() || this->dataType.isBool();
 }
 
 void ProgramNode::transform(bool isConvertedToConst) {
@@ -4226,7 +4226,7 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
             }
             VarTableItem varItem = paramTable.items[i];
             bool isElemRef = varItem.isRef == elem->isRefExpr();
-            bool isElemMut = !varItem.isMut || varItem.isMut == elem->isMut || (elem->isSimpleType() && !isElemRef);
+            bool isElemMut = !varItem.isMut || varItem.isMut == elem->isMut || (elem->isSimpleType() && !elem->isRefExpr());
             bool isElemConst = !varItem.isConst || (!varItem.isMut && varItem.isConst == elem->isConst);
             bool checker = isElemMut && isElemRef && isElemConst;
             // bool checker = varItem.isRef == elem->isRefExpr() && varItem.isMut == elem->isMut && (varItem.isConst == elem->isConst || elem->isSimpleType());
