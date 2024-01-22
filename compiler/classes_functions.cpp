@@ -3581,6 +3581,10 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 *this->expr_middle->Name, this->line);
             }
 
+            if(curClassName == ConstTable::globalClassName + "/" + ConstTable::moduleClassName){
+                int x = 10 + 11;
+            }
+
             if (!ClassTable::isHaveAccessToMethtod(curClassName, this->expr_left->className,
                                                    *this->expr_middle->Name)) {
                 throw Exception(Exception::ACCESS_ERROR,

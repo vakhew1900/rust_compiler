@@ -3067,9 +3067,10 @@ int main(int argc, char** argv) {
         //const char *filename = "../tests/exam_tests/polymorphism/ua.rs";
    //     const char *filename = "../tests/exam_tests/polymorphism/function_param.rs";
 //        const char *filename = "../tests/exam_tests/mod/simple.rs";
+//        const char *filename = "../tests/exam_tests/mod/very_hard_mod_in_mod_and_not_pub_mod_in_mod.rs";
 //    const char *filename = "../tests/exam_tests/polymorphism/polymorph_foreach";
    // const char *filename = "../tests/exam_tests/const/error.rs";
-    const char *filename = "../tests/exam_tests/array/autofill.rs";
+//    const char *filename = "../tests/exam_tests/array/autofill.rs";
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";
 //    const char *filename = "../tests/bubble_sort_rust.rs";
