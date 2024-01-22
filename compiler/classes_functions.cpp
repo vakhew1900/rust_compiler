@@ -4202,7 +4202,7 @@ void ExprNode::transformConst() {
         case id_:
         case range_expr:
         case asign:
-            throw new Exception(Exception::NOT_LITERAL_OPERATION, "USED NOT LITERAL OPERATION");
+            throw Exception(Exception::NOT_LITERAL_OPERATION, "USED NOT LITERAL OPERATION");
             break;
 
         case int_lit:

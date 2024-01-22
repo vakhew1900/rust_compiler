@@ -3068,6 +3068,7 @@ int main(int argc, char** argv) {
    //     const char *filename = "../tests/exam_tests/polymorphism/function_param.rs";
 //        const char *filename = "../tests/exam_tests/mod/simple.rs";
 //    const char *filename = "../tests/exam_tests/polymorphism/polymorph_foreach";
+    const char *filename = "../tests/exam_tests/const/error.rs";
 
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";
