@@ -1858,8 +1858,9 @@ void ItemNode::addImpl(string className, bool isTrait) {
                     throw Exception(Exception::NOT_EXIST, "Impl struct " + implClassName + " Not Exist", this->line);
                 }
 
-                if (ClassTable::Instance()->getClass(implClassName).classType != ClassTableItem::struct_) {
-                    throw Exception(Exception::UNEXPECTED, implClassName + " not struct in impl", this->line);
+                if (ClassTable::Instance()->getClass(implClassName).classType != ClassTableItem::struct_ &&
+                    ClassTable::Instance()->getClass(implClassName).classType != ClassTableItem::enum_) {
+                    throw Exception(Exception::UNEXPECTED, implClassName + " not struct or enum in impl", this->line);
                 }
 
                 if (this->impl_type == trait) {
