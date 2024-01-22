@@ -125,5 +125,15 @@ public class RTL {
     public static boolean isEqual(String s1, String s2){
         return s1.compareTo(s2) == 0;
     }
+
+    /***
+     * Сравнение первой и второй строки
+     * @param s1 - первая строка
+     * @param s2 - вторая строка
+     * @return false если первая строка лексикографически равна со второй, true если лексикографически не равна второй
+     */
+    public static boolean isNotEqual(String s1, String s2){
+        return s1.compareTo(s2) != 0;
+    }
 }
 
