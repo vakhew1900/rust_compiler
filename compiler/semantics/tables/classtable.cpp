@@ -385,6 +385,8 @@ bool ClassTable::isHaveAccess(const string &requesterClass, const string &reques
         return true;
     }
 
+    ClassTable classTable = *ClassTable::Instance();
+
     res += "/"  + requested[counter];
     counter++;
 
@@ -392,15 +394,17 @@ bool ClassTable::isHaveAccess(const string &requesterClass, const string &reques
         return true;
     }
 
+    bool isSameLevel = true;
     for (int i = counter; i < requested.size(); i++) {
         if (!res.empty()) {
             res += "/";
         }
 
-        if (!ClassTable::Instance()->getClass(res + moduleClassName).isPub) {
+        if (!ClassTable::Instance()->getClass(res + moduleClassName).isPub && !isSameLevel) {
             return false;
         }
 
+        isSameLevel = false;
         res += requested[i];
     }
 
