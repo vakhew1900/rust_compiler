@@ -156,6 +156,15 @@ public class RTL {
         return s1.compareTo(s2) != 0;
     }
 
-    
+    /***
+     * Сравнение первой и второй строки
+     * @param s1 - первая строка
+     * @param s2 - вторая строка
+     * @return объединенные в одну строки
+     */
+    public static String push_str(String s1, String s2){
+        String resultString = s1 + s2;
+        return resultString;
+    }
 }
 
