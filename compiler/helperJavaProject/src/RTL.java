@@ -157,14 +157,24 @@ public class RTL {
     }
 
     /***
-     * Сравнение первой и второй строки
+     * Склейка первой и второй строки
      * @param s1 - первая строка
      * @param s2 - вторая строка
      * @return объединенные в одну строки
      */
-    public static String push_str(String s1, String s2){
-        String resultString = s1 + s2;
-        return resultString;
+    
+
+    /***
+     * Склейка строки с символом
+     * @param s - первая строка
+     * @param c- вторая строка
+     * @return объединенная с символом строка
+     */
+    public static String push_сhar(String s, char c) {
+        StringBuilder stringBuilder = new StringBuilder(s);
+        stringBuilder.append(c);
+        return stringBuilder.toString();
     }
+
 }
 
