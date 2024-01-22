@@ -103,7 +103,17 @@ public class RTL {
      * @return true если первая строка лексиграфически больше второй, false если равна или лексиграфически меньше второй
      */
     public static boolean isBigger(String s1, String s2){
-        return s1.compareTo(s2) < 0;
+        return s1.compareTo(s2) > 0;
+    }
+
+    /***
+     * Сравнение первой и второй строки
+     * @param s1 - первая строка
+     * @param s2 - вторая строка
+     * @return true если первая строка лексиграфически больше или равна второй, false если лексиграфически меньше второй
+     */
+    public static boolean isBiggerOrEqual(String s1, String s2){
+        return s1.compareTo(s2) >= 0;
     }
 
     /***
@@ -113,7 +123,7 @@ public class RTL {
      * @return true если первая строка лексиграфически меньше второй, false если равна или лексиграфически больше второй
      */
     public static boolean isLower(String s1, String s2){
-        return s1.compareTo(s2) > 0;
+        return s1.compareTo(s2) < 0;
     }
 
     /***
