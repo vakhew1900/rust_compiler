@@ -1,13 +1,14 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
 
+:input_filename
 rem Проверка наличия аргумента (имени файла)
 if "%1"=="" (
-    set /p filename=Enter filename: 
+    set /p filename=Enter filename:
     if not exist ".\tests\%filename%" (
         echo The specified file "%filename%" does not exist.
         pause
-        exit /b 1
+        goto input_filename
     )
 ) else (
     set "filename=%1"
@@ -35,3 +36,4 @@ java -noverify -classpath . ModuleClass
 
 endlocal
 pause
+goto input_filename
