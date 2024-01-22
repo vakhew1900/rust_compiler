@@ -23,11 +23,11 @@ cd %compiler_folder%
 compiler.exe ..\%source_folder%\%filename%
 
 rem Проверка кода возврата compiler.exe
-rem if %errorlevel% neq 0 (
-rem     echo Error: compiler.exe exited with non-zero status.
-rem     pause
-rem     goto end_script
-rem )
+if %errorlevel% neq 0 (
+    echo Error: compiler.exe exited with non-zero status.
+    pause
+    goto end_script
+)
 
 cd ..\
 
@@ -41,6 +41,7 @@ echo ===OUTPUT===
 echo.
 java -noverify -classpath . ModuleClass
 
+:end_script
+cd ..\
+goto :input_filename
 endlocal
-pause
-goto input_filename
