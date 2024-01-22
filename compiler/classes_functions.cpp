@@ -2635,10 +2635,10 @@ void StmtNode::transform(bool isConvertedToConst) {
 
     try {
 
-        if (this->expr != NULL && this->expr->type == ExprNode::struct_creation){
+        if (this->expr != NULL && this->expr->type == ExprNode::struct_creation) {
             this->expr->transformStructExpr();
-            if(this->expr->expr_middle != NULL){
-                auto expression =  this->expr->expr_middle;
+            if (this->expr->expr_middle != NULL) {
+                auto expression = this->expr->expr_middle;
                 this->expr->expr_middle = NULL;
                 this->expr = expression;
             }
@@ -2726,10 +2726,10 @@ void StmtNode::transform(bool isConvertedToConst) {
 
 void ExprNode::transform(bool isConvertedToConst) {
 
-    if(this->expr_left != NULL) {
+    if (this->expr_left != NULL) {
         this->expr_left->transformStructExpr();
         if (this->expr_left->expr_middle != NULL) {
-            auto expr =  this->expr_left->expr_middle;
+            auto expr = this->expr_left->expr_middle;
             this->expr_left->expr_middle = NULL;
             this->expr_left = expr;
         }
@@ -2738,7 +2738,7 @@ void ExprNode::transform(bool isConvertedToConst) {
     if (this->expr_right != NULL) {
         this->expr_right->transformStructExpr();
         if (this->expr_right->expr_middle != NULL) {
-            auto expr =  this->expr_right->expr_middle;
+            auto expr = this->expr_right->expr_middle;
             this->expr_right->expr_middle = NULL;
             this->expr_right = expr;
         }
@@ -2937,7 +2937,8 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
             {
                 bool isClass = this->expr_left->dataType.isClass() && this->expr_right->dataType.isClass();
-                bool isParent = isClass && ClassTable::Instance()->isParent(this->expr_right->dataType.id, this->expr_left->dataType.id);
+                bool isParent = isClass && ClassTable::Instance()->isParent(this->expr_right->dataType.id,
+                                                                            this->expr_left->dataType.id);
                 if (!this->expr_left->dataType.isEquals(expr_right->dataType) && !isParent) {
                     throw Exception(Exception::NOT_EQUAL_DATA_TYPE,
                                     "NOT EQUAL DATA_TYPE in asign: " + this->expr_left->dataType.toString() +
@@ -3581,7 +3582,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 *this->expr_middle->Name, this->line);
             }
 
-            if(curClassName == ConstTable::globalClassName + "/" + ConstTable::moduleClassName){
+            if (curClassName == ConstTable::globalClassName + "/" + ConstTable::moduleClassName) {
                 int x = 10 + 11;
             }
 
@@ -3969,6 +3970,8 @@ void ExprNode::transformConst() {
                 this->Bool = this->expr_left->Float == this->expr_right->Float;
             } else if (this->expr_left->dataType.type == DataType::char_) {
                 this->Bool = this->expr_left->Char == this->expr_right->Char;
+            } else if (this->expr_left->dataType.type == DataType::string_) {
+                this->Bool = *this->expr_left->String == *this->expr_right->String;
             } else {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
                                 this->line);
@@ -3987,6 +3990,8 @@ void ExprNode::transformConst() {
                 this->Bool = this->expr_left->Float != this->expr_right->Float;
             } else if (this->expr_left->dataType.type == DataType::char_) {
                 this->Bool = this->expr_left->Char != this->expr_right->Char;
+            } else if (this->expr_left->dataType.type == DataType::string_) {
+                this->Bool = *this->expr_left->String != *this->expr_right->String;
             } else {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
                                 this->line);
@@ -4003,7 +4008,8 @@ void ExprNode::transformConst() {
                 this->Bool = this->expr_left->Float > this->expr_right->Float;
             } else if (this->expr_left->dataType.type == DataType::char_) {
                 this->Bool = this->expr_left->Char > this->expr_right->Char;
-                this->type = bool_lit;
+            } else if (this->expr_left->dataType.type == DataType::string_) {
+                this->Bool = *this->expr_left->String > *this->expr_right->String;
             } else {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
                                 this->line);
@@ -4021,6 +4027,8 @@ void ExprNode::transformConst() {
                 this->Bool = this->expr_left->Float < this->expr_right->Float;
             } else if (this->expr_left->dataType.type == DataType::char_) {
                 this->Bool = this->expr_left->Char < this->expr_right->Char;
+            } else if (this->expr_left->dataType.type == DataType::string_) {
+                this->Bool = *this->expr_left->String < *this->expr_right->String;
             } else {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
                                 this->line);
@@ -4037,6 +4045,8 @@ void ExprNode::transformConst() {
                 this->Bool = this->expr_left->Float >= this->expr_right->Float;
             } else if (this->expr_left->dataType.type == DataType::char_) {
                 this->Bool = this->expr_left->Char >= this->expr_right->Char;
+            } else if (this->expr_left->dataType.type == DataType::string_) {
+                this->Bool = *this->expr_left->String >= *this->expr_right->String;
             } else {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
                                 this->line);
@@ -4054,7 +4064,8 @@ void ExprNode::transformConst() {
                 this->Bool = this->expr_left->Float <= this->expr_right->Float;
             } else if (this->expr_left->dataType.type == DataType::char_) {
                 this->Bool = this->expr_left->Char <= this->expr_right->Char;
-
+            } else if (this->expr_left->dataType.type == DataType::string_) {
+                this->Bool = *this->expr_left->String <= *this->expr_right->String;
             } else {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
                                 this->line);
@@ -4110,7 +4121,8 @@ void ExprNode::transformConst() {
                     case DataType::class_:
                     case DataType::array_:
                     case DataType::void_:
-                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other", this->line);
+                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other",
+                                        this->line);
                         break;
                     case DataType::int_:
                         break;
@@ -4129,7 +4141,8 @@ void ExprNode::transformConst() {
                     case DataType::class_:
                     case DataType::array_:
                     case DataType::void_:
-                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other", this->line);
+                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other",
+                                        this->line);
                         break;
                     case DataType::float_:
                         break;
@@ -4149,7 +4162,8 @@ void ExprNode::transformConst() {
                     case DataType::class_:
                     case DataType::array_:
                     case DataType::void_:
-                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other", this->line);
+                        throw Exception(Exception::CANNOT_CONVERTED, "Cannot convert one type to other",
+                                        this->line);
                         break;
                     case DataType::float_:
                         break;
@@ -4274,7 +4288,8 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
             if (!varItem.dataType.isEquals(elem->dataType) &&
                 !isParent(elem->dataType, varItem.dataType) || !checker) { //TODO проверить
 
-                VarTableItem resultVarItem = VarTableItem(varItem.id, elem->dataType, elem->isMut, isRefExpr(), true,
+                VarTableItem resultVarItem = VarTableItem(varItem.id, elem->dataType, elem->isMut, isRefExpr(),
+                                                          true,
                                                           elem->isConst);
                 throw Exception(Exception::TYPE_ERROR,
                                 varItem.id + " type expected: " + varItem.toString() + " result: " +
@@ -4352,7 +4367,8 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
         this->className = this->expr_left->className;
 
         if (ClassTable::Instance()->getClass(this->className).classType != ClassTableItem::struct_) {
-            throw Exception(Exception::TYPE_ERROR, "constructor error: " + className + " is not struct", this->line);
+            throw Exception(Exception::TYPE_ERROR, "constructor error: " + className + " is not struct",
+                            this->line);
         }
 
         int fieldSize = ClassTable::getStructFieldCount(className);
@@ -4365,7 +4381,8 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
         }
 
         if (!ClassTable::isHaveAccess(curClassName, this->className)) {
-            throw Exception(Exception::ACCESS_ERROR, curClassName + " has not access to " + this->expr_left->className,
+            throw Exception(Exception::ACCESS_ERROR,
+                            curClassName + " has not access to " + this->expr_left->className,
                             this->line);
         }
 
@@ -4393,7 +4410,8 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
                                     elem->expr_left->dataType.toString(), elem->line);
                 }
             } else {
-                throw Exception(Exception::CONSTRUCTOR_ERROR, *this->Name + " field not exist in struct " + className);
+                throw Exception(Exception::CONSTRUCTOR_ERROR,
+                                *this->Name + " field not exist in struct " + className);
             }
         }
 
@@ -4411,13 +4429,13 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
 
 void ExprNode::transformStructExpr() {
 
-    if(this->type != struct_creation){
+    if (this->type != struct_creation) {
         return;
     }
 
-    if(!this->expr_left->isPathCallExpr()){
+    if (!this->expr_left->isPathCallExpr()) {
 
-        if(this->expr_left->expr_right != NULL && this->expr_left->expr_right->isPathCallExpr()) {
+        if (this->expr_left->expr_right != NULL && this->expr_left->expr_right->isPathCallExpr()) {
             auto left = this->expr_left;
 
             auto pathCallExpr = this->expr_left->expr_right;
@@ -4428,7 +4446,7 @@ void ExprNode::transformStructExpr() {
             return;
         }
 
-        if(this->expr_left->expr_left != NULL && this->expr_left->expr_left->isPathCallExpr()) {
+        if (this->expr_left->expr_left != NULL && this->expr_left->expr_left->isPathCallExpr()) {
             auto left = this->expr_left;
 
             auto pathCallExpr = this->expr_left->expr_left;
@@ -4502,7 +4520,8 @@ void Node::setLine(Node *node) {
     }
 }
 
-int Node::getVarNumber(ExprNode *blockExpr, const string &className, const string &methodName, const string &varName) {
+int
+Node::getVarNumber(ExprNode *blockExpr, const string &className, const string &methodName, const string &varName) {
     return ClassTable::Instance()->getMethod(className, methodName).localVarTable.getVarNumber(varName,
                                                                                                blockExpr);
 }
@@ -4511,12 +4530,11 @@ bool Node::isEqualDataType(DataType one, DataType other) {
 
     bool isParent = true;
 
-    if (one.isClass() && other.isClass()){
+    if (one.isClass() && other.isClass()) {
         isParent = ClassTable::Instance()->isParent(one.id, other.id);
     }
 
-    if (one.isArray() && other.isArray())
-    {
+    if (one.isArray() && other.isArray()) {
         DataType tmp = one;
         tmp.id = other.id;
         isParent = tmp.isEquals(other) && ClassTable::Instance()->isParent(one.id, other.id);
