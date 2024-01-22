@@ -130,6 +130,16 @@ public class RTL {
      * Сравнение первой и второй строки
      * @param s1 - первая строка
      * @param s2 - вторая строка
+     * @return true если первая строка лексиграфически меньше или равна второй, false если лексиграфически больше второй
+     */
+    public static boolean isLowerOrEqual(String s1, String s2){
+        return s1.compareTo(s2) <= 0;
+    }
+
+    /***
+     * Сравнение первой и второй строки
+     * @param s1 - первая строка
+     * @param s2 - вторая строка
      * @return true если первая строка лексикографически равна со второй, false если лексикографически не равна второй
      */
     public static boolean isEqual(String s1, String s2){
@@ -145,5 +155,7 @@ public class RTL {
     public static boolean isNotEqual(String s1, String s2){
         return s1.compareTo(s2) != 0;
     }
+
+    
 }
 
