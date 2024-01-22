@@ -3083,7 +3083,10 @@ int main(int argc, char** argv) {
     }
 
     yyin = file;
-    yyparse();
+    int er = yyparse();
+    if (er!=0){
+        return 9;
+    }
     fclose(file);
 
     if(global_program == NULL){
@@ -3108,6 +3111,8 @@ int main(int argc, char** argv) {
     if (Exception::counter == 0) {
         CodeGenerator codegen = CodeGenerator();
         codegen.generate();
+    } else {
+        return 9;
     }
 
     ClassTable::createConstTableCSV();
