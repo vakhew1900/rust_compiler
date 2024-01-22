@@ -22,6 +22,13 @@ rem Запуск compiler.exe с передачей файла в аргумен
 cd %compiler_folder%
 compiler.exe ..\%source_folder%\%filename%
 
+rem Проверка кода возврата compiler.exe
+rem if %errorlevel% neq 0 (
+rem     echo Error: compiler.exe exited with non-zero status.
+rem     pause
+rem     goto end_script
+rem )
+
 cd ..\
 
 rem Копирование файла RTL.class в целевую папку
