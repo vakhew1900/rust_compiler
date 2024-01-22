@@ -1213,14 +1213,14 @@ vector<char> ExprNode::generateForEach() {
             merge(body, commandToBytes(Command::iastore));
             break;
         case DataType::float_:
-            merge(body, commandToBytes(Command::iload));
+            merge(body, commandToBytes(Command::fload));
             body.push_back(IntToBytes(valueNum).back());
             merge(body, commandToBytes(Command::fastore));
             break;
         case DataType::string_:
         case DataType::class_:
         case DataType::array_:
-            merge(body, commandToBytes(Command::iload));
+            merge(body, commandToBytes(Command::aload));
             body.push_back(IntToBytes(valueNum).back());
             merge(body, commandToBytes(Command::aastore));
             break;
