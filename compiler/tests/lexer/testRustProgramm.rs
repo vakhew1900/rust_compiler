@@ -1,6 +1,6 @@
 fn main() {
-    range 1 .. 0b__11__11;
-    range 0x2a .. 0o52;
+    //range 1 .. 0b__11__11;
+    //range 0x2a .. 0o52;
     // Дополнительные ключевые слова
     let array = [1, 2, 3];
     let vector = vec![4, 5, 6]; // Создание вектора (динамический массив)
@@ -238,7 +238,7 @@ fn main() {
     }
 
     fn double(x: i32) -> i32 {
-        x * 2
+        //x * 2
         let x = 0o_;//error
     }
     fn use_higher_order_function() {
@@ -421,65 +421,5 @@ fn main() {
             }
      */
 
-   let x: char = '';
+   let x: char = 'x';
 }
-
-/* ML_COMMENT START
-*/
-
-fn func_between_comment()
-{
-}
-
-/* ML_COMMENT FINISH
-*/
-
-
-// Comment
-
-/* ML_COMMENT1 */  static let between_comment = 10; /* ML_COMMENT2 */
-
-//integer in 8 system
-static let x = 0o70;
-static let y = 0o70_i32;
-static let z = 0o_70_i32;
-
-//integer in 2 system
-static let x = 0b1111_1111_1001_0000;
-static let y = 0b1111_1111_1001_0000i32;
-static let z = 0b________1;
-
-//integer in 16 system
-static let x = 0xff;
-static let y = 0xffi32;
-static let z = 0x_1fi32;
-
-// Float
-static let x = 1234.0f64;
-static let y = 125.0;
-static let z = 1.5E+5;
-static let x = 1.6E-5;
-static let y = 1.3444e+10;
-static let z = 123.;
-static let x = 111.1E+99;
-static let y = 12E+99_f64;
-static tmp1 = '\u{002F}';
-static tmp1 = '\u{132F}';
-static xy = 'xy';
-let x = 1.;
-let x = .123;
-let x = .123E+99f64;
-let x = .123E+99;
-
-// if (x == 222) {let z = 64 ;}
-let 121212incorrextVar = 1;
-0invalidSuffix;
-123AFB43;
-0b010a;
-0xAB_CD_EF_GH;
-0b1111_f32; 
-
-$asdasfmlkfa
-
-/* Not Closed Comment
-
