@@ -3081,18 +3081,8 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
 
             if (this->expr_left->type != int_lit) {
-                if (this->expr_left->isConst == false) {
+                if (this->expr_right->isConst == false) {
                     throw Exception(Exception::NOT_CONST, "array size must be constant", this->line);
-                }
-
-                if (this->expr_left->localVarNum != -1) {
-                    VarTableItem varTableItem = ClassTable::Instance()->getLocalVar(curClassName, curMethodName,
-                                                                                    this->expr_left->localVarNum);
-                    this->expr_right = varTableItem.value;
-                } else if (!this->expr_left->fieldName.empty()) {
-                    FieldTableItem fieldTableItem = ClassTable::Instance()->getField(curClassName,
-                                                                                     this->expr_left->fieldName);
-                    this->expr_right = fieldTableItem.value;
                 }
 
             }
