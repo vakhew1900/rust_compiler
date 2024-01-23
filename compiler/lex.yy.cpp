@@ -3032,7 +3032,7 @@ int translateNumberByBase(char *input_string) {
 }
 
 
-#define release
+//#define release
 
 int main(int argc, char** argv) {
 
@@ -3073,8 +3073,9 @@ int main(int argc, char** argv) {
 //    const char *filename = "../tests/exam_tests/array/autofill.rs";
 //    const char *filename = "../tests/exam_tests/string/const.rs";
    // const char *filename = "../tests/exam_tests/delete/for.rs";
-    const char *filename = "../tests/exam_tests/delete/function.rs";
+//    const char *filename = "../tests/exam_tests/delete/function.rs";
 //    const char *filename = "../tests/exam_tests/delete/link_for.rs";
+    const char *filename = "../tests/exam_tests/trait/chain_implementing.rs";
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";
 //    const char *filename = "../tests/bubble_sort_rust.rs";

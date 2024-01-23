@@ -27,6 +27,7 @@ public:
     FieldTable fieldTable;
     string parentName; // имя родителя
     bool isPub = false;
+    bool haveAbstract = false;
 
     ConstTable constTable;
 
@@ -34,6 +35,7 @@ public:
     ClassTableItem(FieldTable fieldTable, MethodTable methodTable, string parentName = "");
     string toString();
     bool isHaveParent();
+    bool isHaveAbstract();
 };
 
 class ClassTable {
@@ -53,6 +55,7 @@ public:
     void updateMethod(string className, string methodName, MethodTableItem methodTableItem);
     void addField(string className, string fieldName, FieldTableItem fieldTableItem);
     void updateField(string className, string fieldName, FieldTableItem fieldTableItem);
+    void updateClass(string  className, ClassTableItem classTableItem);
     void addClass(string  className, ClassTableItem classTableItem);
     void addParent(string childName, string parentName);
     void addLocalParam(string className,string methodName, VarTableItem varTableItem);
@@ -106,6 +109,8 @@ public:
     static  bool  isEnum(const string& className);
     static  map<string, ClassTableItem> getItems();
     static void makeMainForJavaFormat();
+    static void checkClassNames();
+    static void addAbstract(const string& className);
 };
 
 

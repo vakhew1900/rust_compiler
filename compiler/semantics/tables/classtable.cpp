@@ -56,6 +56,10 @@ bool ClassTableItem::isHaveParent() {
     return !this->parentName.empty() && this->parentName != ConstTable::objectClassName;
 }
 
+bool ClassTableItem::isHaveAbstract() {
+    return this->haveAbstract;
+}
+
 
 string ClassTable::toString() {
     string res;
@@ -100,7 +104,7 @@ void ClassTable::updateMethod(string className, string methodName, MethodTableIt
 
 void ClassTable::addField(string className, string fieldName, FieldTableItem fieldTableItem) {
     if (ClassTable::Instance()->isFieldExist(className, fieldName)) {
-        throw Exception(Exception::DEFINED_MULTIPLE, fieldName + " DEFINED_MULTIPLE in namespace");
+        throw Exception(Exception::DEFINED_MULTIPLE, fieldName + " DEFINED_MULTIPLE in namespace " + className);
     }
 
     this->items[className].fieldTable.items[fieldName] = fieldTableItem;
@@ -639,4 +643,22 @@ int ClassTable::addLoopCounterVar(string className, string methodName) {
     ClassTable::Instance()->items[className].methodTable.items[methodName].localVarTable.items.push_back(varTableItem);
     int res = ClassTable::Instance()->items[className].methodTable.items[methodName].localVarTable.items.size() - 1;
     return  res;
+}
+
+void ClassTable::checkClassNames() {
+
+    for(auto item : ClassTable::Instance()->items){
+        string className = split(item.first, '/').back();
+        if(!isupper(className[0])){
+            throw Exception(Exception::UNEXPECTED, item.first + " struct should start with upper alpha");
+        }
+    }
+}
+
+void ClassTable::updateClass(string className, ClassTableItem classTableItem) {
+    this->items[className] = classTableItem;
+}
+
+void ClassTable::addAbstract(const string &className) {
+    Instance()->items[className].haveAbstract = true;
 }

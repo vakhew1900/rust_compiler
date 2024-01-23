@@ -1647,6 +1647,7 @@ void ProgramNode::getAllItems(std::string className) {
         ClassTable::isCorrectTraitsImpl();
         ClassTable::isMainFunctionExist();
         ClassTable::makeMainForJavaFormat();
+        ClassTable:: checkClassNames();
     }
     catch (Exception e) {
         cerr << e.getMessage() << "\n";
@@ -1654,7 +1655,7 @@ void ProgramNode::getAllItems(std::string className) {
 }
 
 void ItemNode::getAllItems(std::string className) {
-
+    auto classTable = ClassTable::Instance();
     try {
         switch (item_type) {
             case function_:
@@ -1697,12 +1698,11 @@ void ItemNode::getAllItems(std::string className) {
                 fieldTableItem.isConst = true;
                 ClassTable::Instance()->addField(className, *this->name, this->fieldTableItem);
                 break;
-            case trait_:
+            case trait_: {
                 this->classTableItem = ClassTableItem();
                 classTableItem.classType = ClassTableItem::trait_;
                 if (this->visibility == pub) this->classTableItem.isPub = true;
                 ClassTable::Instance()->addClass(className + "/" + *this->name, classTableItem);
-
                 if (this->items != NULL) {
                     for (auto elem: *this->items->items) {
                         if (elem->visibility == pub) {
@@ -1713,6 +1713,15 @@ void ItemNode::getAllItems(std::string className) {
                         elem->visibility = pub;
                         elem->curClassName = className + "/" + *this->name;
                         elem->getAllItems(className + "/" + *this->name);
+
+                        if (elem->item_type == ItemNode::function_
+                            && elem->body == NULL) {
+                        }
+
+                        if (elem->item_type == ItemNode::constStmt_
+                            && elem->expr == NULL) {
+                            ClassTable::addAbstract(className + "/" + *this->name);
+                        }
                     }
                 }
                 if (this->isHaveParent()) {
@@ -1720,6 +1729,7 @@ void ItemNode::getAllItems(std::string className) {
                     not_completed.push_back(this);
                 }
 
+            }
                 break;
             case module_:
                 this->classTableItem = ClassTableItem();
@@ -2435,9 +2445,10 @@ void ItemNode::transform(bool isConvertedToConst) {
                     paramTypes.size()) {
                     paramTypes.erase(paramTypes.begin());
                 }
-//                ClassTable::addMethodRefToConstTable(curClassName, curClassName, *this->name, paramTypes,
-//                                                     ClassTable::Instance()->getMethod(this->curClassName,
-//                                                                                       *this->name).returnDataType);
+
+                if(*this->name == "main"){
+                    int x = 10 + 10;
+                }
 
                 blockExprList.push_back(body);
                 if (this->body != NULL) {
@@ -2595,8 +2606,9 @@ void ItemNode::checkImpl(const string &structName, const string &traitName) {
 
     while (ClassTable::isHaveParent(tmpTraitName)) {
         tmpTraitName = ClassTable::getParentClassName(tmpTraitName);
-        if (!impl_set[structName].count(tmpTraitName)) {
-            throw Exception(Exception::NOT_IMPLEMICATION, structName + " should have impl " + traitName, this->line);
+        if (!impl_set[structName].count(tmpTraitName)
+            && ClassTable::Instance()->getClass(tmpTraitName).isHaveAbstract()) {
+            throw Exception(Exception::NOT_IMPLEMICATION, structName + " should have impl " + tmpTraitName, this->line);
         }
     }
 }
@@ -4423,13 +4435,14 @@ void ExprNode::checkStructExpr(bool isConvertedTransform) {
 
                 if (!fieldItem.dataType.isEquals(elem->expr_left->dataType) &&
                     !isParent(elem->expr_left->dataType, fieldItem.dataType)) {
+
                     throw Exception(Exception::TYPE_ERROR,
-                                    *this->Name + "field type should be " + fieldItem.toString() + " " +
+                                    *elem->Name + "field type should be " + fieldItem.toString() + " " +
                                     elem->expr_left->dataType.toString(), elem->line);
                 }
             } else {
                 throw Exception(Exception::CONSTRUCTOR_ERROR,
-                                *this->Name + " field not exist in struct " + className);
+                                *elem->Name + " field not exist in struct " + className);
             }
         }
 

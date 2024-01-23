@@ -1160,7 +1160,6 @@ void ExprNode::fillBreaks(vector<char> &body, int shift) {
             body[i + 1] = position[0];
             body[i + 2] = position[1];
 
-            cout << "break  = " << i << " body.size = " << body.size() << "\n";
         }
         i += commandSize(command);
     }
