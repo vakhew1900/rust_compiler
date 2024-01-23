@@ -3744,7 +3744,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->localVarNum = this->expr_left->isVar();
             this->fieldName = this->expr_left->fieldName;
 
-            if (this->dataType.type != DataType::class_ && this->dataType.type != DataType::string_) {
+            if (this->dataType.isSimple()) {
                 throw Exception(Exception::NOT_SUPPORT, "operation mut_link not support with simple type", this->line);
             }
 
@@ -3769,7 +3769,7 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->fieldName = this->expr_left->fieldName;
             this->isMut = true;
 
-            if (this->dataType.type != DataType::class_ && this->dataType.type != DataType::string_) {
+            if (this->dataType.isSimple()) {
                 throw Exception(Exception::NOT_SUPPORT, "operation mut_link not support with simple type", this->line);
             }
             break;

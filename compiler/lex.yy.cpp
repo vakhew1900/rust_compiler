@@ -3073,6 +3073,7 @@ int main(int argc, char** argv) {
 //    const char *filename = "../tests/exam_tests/array/autofill.rs";
 //    const char *filename = "../tests/exam_tests/string/const.rs";
     const char *filename = "../tests/exam_tests/delete/for.rs";
+//    const char *filename = "../tests/exam_tests/delete/link_for.rs";
 
 //      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";
 //    const char *filename = "../tests/bubble_sort_rust.rs";
