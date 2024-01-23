@@ -781,6 +781,13 @@ vector<char> ExprNode::generate() {
                                                                       returnDataType);
             merge(bytes, commandToBytes(Command::invokevirtual));
             merge(bytes, Int16ToBytes(methodPosition));
+
+            if(this->deleteExprList != NULL){
+                for(auto elem : *this->deleteExprList->exprs){
+                    merge(bytes, elem->generate());
+                }
+            }
+
             break;
         }
 
@@ -802,6 +809,12 @@ vector<char> ExprNode::generate() {
                                                                       returnDataType);
             merge(bytes, commandToBytes(Command::invokestatic));
             merge(bytes, Int16ToBytes(methodPosition));
+
+            if(this->deleteExprList != NULL){
+                for(auto elem : *this->deleteExprList->exprs){
+                    merge(bytes, elem->generate());
+                }
+            }
             break;
         }
 
@@ -1317,6 +1330,12 @@ vector<char> ExprNode::generateForEach() {
 
     merge(bytes, condition);
     merge(bytes, body);
+
+    if(this->deleteExprList != NULL){
+        for(auto elem : *this->deleteExprList->exprs){
+            merge(bytes, elem->generate());
+        }
+    }
 
     return bytes;
 }
