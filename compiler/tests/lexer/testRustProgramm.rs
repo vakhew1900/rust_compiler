@@ -254,6 +254,15 @@ fn main() {
     //Ввод
     io::stdin().read_line(&mut input).expect("Не удалось прочитать строку");
 
+    // Создание строки для хранения введенных данных
+    let mut input = String::new();
+
+    // Считывание строки с консоли
+    io::stdin().read_line(&mut input).expect("Не удалось прочитать строку");
+
+    // Преобразование строки в целое число (может вызвать ошибку)
+    let number: Result<i32, _> = input.trim().parse();
+
     // struct, trait, impl
     // Определяем трейт Animal
     trait Animal {
