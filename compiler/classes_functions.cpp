@@ -4304,10 +4304,10 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
             }
             i++;
 
-            if(!elem->isRefExpr() == false && elem->isVar() && !elem->dataType.isSimple()) {
+            if(!elem->isRefExpr() && elem->isVar() && !elem->dataType.isSimple()) {
                 ExprNode *delExpr = ExprNode::DelObjectExpr(elem);
 
-                if(this->deleteExprList != NULL) {
+                if(this->deleteExprList == NULL) {
                     this->deleteExprList = new ExprListNode(delExpr);
                 }
                 else {
