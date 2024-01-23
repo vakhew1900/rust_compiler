@@ -345,6 +345,10 @@ bool ClassTable::isParent(const string &child, const string &parentName) {
         return false;
     }
 
+    if(child.empty() || parentName.empty()){
+        return false;
+    }
+
     if(ClassTable::Instance()->getClass(child).parentName == parentName){
         return true;
     }

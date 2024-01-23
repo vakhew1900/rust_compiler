@@ -1628,6 +1628,7 @@ void ProgramNode::getAllItems(std::string className) {
             }
         }
 
+
         for (auto elem: not_completed) {
             elem->modifyInheritence();
         }
@@ -2633,6 +2634,8 @@ void StmtListNode::transform(bool isConvertedToConst) {
 
 void StmtNode::transform(bool isConvertedToConst) {
 
+    auto classTable = ClassTable::Instance();
+
     try {
 
         if (this->expr != NULL && this->expr->type == ExprNode::struct_creation) {
@@ -2726,6 +2729,7 @@ void StmtNode::transform(bool isConvertedToConst) {
 
 void ExprNode::transform(bool isConvertedToConst) {
 
+    auto classTable = ClassTable::Instance();
     if (this->expr_left != NULL) {
         this->expr_left->transformStructExpr();
         if (this->expr_left->expr_middle != NULL) {
@@ -3446,16 +3450,19 @@ void ExprNode::transform(bool isConvertedToConst) {
                 ClassTable::Instance()->addLocalParam(curClassName, curMethodName, varItem);
             }
 
-            if (this->expr_left->isRefExpr() == false && this->isVar()) {
+            {
+                auto classTable = *ClassTable::Instance();
+            }
+            if (this->expr_left->isRefExpr() == false && this->expr_left->isVar()) {
                 ExprNode *delExpr = ExprNode::DelObjectExpr(this->expr_left);
                 this->deleteExprList = new ExprListNode(delExpr);
             }
 
-            if (this->expr_left->isRefExpr() && this->expr_left->dataType.type == DataType::array_ &&
-                this->expr_left->dataType.arrDeep == 1 && this->expr_left->dataType.getArrDataType().isSimple()) {
-                throw Exception(Exception::NOT_SUPPORT,
-                                this->expr_left->dataType.toString() + " not support link operation", this->line);
-            }
+//            if (this->expr_left->isRefExpr() && this->expr_left->dataType.type == DataType::array_ &&
+//                this->expr_left->dataType.arrDeep == 1 && this->expr_left->dataType.getArrDataType().isSimple()) {
+//                throw Exception(Exception::NOT_SUPPORT,
+//                                this->expr_left->dataType.toString() + " not support link operation", this->line);
+//            }
 
             {
                 addMetaInfo(body);
@@ -4296,6 +4303,17 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
                                 resultVarItem.toString() + " ", this->line);
             }
             i++;
+
+            if(!elem->isRefExpr() == false && elem->isVar() && !elem->dataType.isSimple()) {
+                ExprNode *delExpr = ExprNode::DelObjectExpr(elem);
+
+                if(this->deleteExprList != NULL) {
+                    this->deleteExprList = new ExprListNode(delExpr);
+                }
+                else {
+                    ExprListNode::Append(this->deleteExprList, delExpr);
+                }
+            }
         }
     }
     catch (Exception e) {
@@ -4520,8 +4538,7 @@ void Node::setLine(Node *node) {
     }
 }
 
-int
-Node::getVarNumber(ExprNode *blockExpr, const string &className, const string &methodName, const string &varName) {
+int Node::getVarNumber(ExprNode *blockExpr, const string &className, const string &methodName, const string &varName) {
     return ClassTable::Instance()->getMethod(className, methodName).localVarTable.getVarNumber(varName,
                                                                                                blockExpr);
 }
