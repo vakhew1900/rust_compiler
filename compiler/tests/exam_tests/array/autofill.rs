@@ -1,11 +1,12 @@
 fn main(){
-     let mut matrix = [ [1;3] ; 3];
+    let c = read_int();
+    let mut matrix = [ [c + 12 * 13 % 46; 3] ; 3];
 
-     for array in matrix {
-         for x in array {
+    for array in matrix {
+        for x in array {
             print_int("{} ", x);
-         }
-         println("{}", "");
-     }
+        }
+        println("{}", "");
+    }
 
 }
