@@ -102,8 +102,9 @@ public class RTL {
      * @param s2 - вторая строка
      * @return true если первая строка лексикографически больше второй, false если равна или лексикографически меньше второй
      */
-    public static boolean isBigger(String s1, String s2){
-        return s1.compareTo(s2) > 0;
+    public static int isBigger(String s1, String s2){
+        int res = (s1.compareTo(s2) > 0)? 1 : 0;
+        return res;
     }
 
     /***
@@ -112,8 +113,9 @@ public class RTL {
      * @param s2 - вторая строка
      * @return true если первая строка лексикографически больше или равна второй, false если лексикографически меньше второй
      */
-    public static boolean isBiggerOrEqual(String s1, String s2){
-        return s1.compareTo(s2) >= 0;
+    public static int isBiggerOrEqual(String s1, String s2){
+        int res = (s1.compareTo(s2) >= 0)? 1 : 0;
+        return res;
     }
 
     /***
@@ -122,8 +124,9 @@ public class RTL {
      * @param s2 - вторая строка
      * @return true если первая строка лексикографически меньше второй, false если равна или лексикографически больше второй
      */
-    public static boolean isLower(String s1, String s2){
-        return s1.compareTo(s2) < 0;
+    public static int isLower(String s1, String s2){
+        int res = (s1.compareTo(s2) < 0)? 1 : 0;
+        return res;
     }
 
     /***
@@ -132,8 +135,9 @@ public class RTL {
      * @param s2 - вторая строка
      * @return true если первая строка лексикографически меньше или равна второй, false если лексикографически больше второй
      */
-    public static boolean isLowerOrEqual(String s1, String s2){
-        return s1.compareTo(s2) <= 0;
+    public static int isLowerOrEqual(String s1, String s2){
+        int res = (s1.compareTo(s2) <= 0)? 1 : 0;
+        return res;
     }
 
     /***
@@ -142,8 +146,9 @@ public class RTL {
      * @param s2 - вторая строка
      * @return true если первая строка лексикографически равна со второй, false если лексикографически не равна второй
      */
-    public static boolean isEqual(String s1, String s2){
-        return s1.compareTo(s2) == 0;
+    public static int isEqual(String s1, String s2){
+        int res = (s1.compareTo(s2) == 0)? 1 : 0;
+        return res;
     }
 
     /***
@@ -152,8 +157,9 @@ public class RTL {
      * @param s2 - вторая строка
      * @return false если первая строка лексикографически равна со второй, true если лексикографически не равна второй
      */
-    public static boolean isNotEqual(String s1, String s2){
-        return s1.compareTo(s2) != 0;
+    public static int isNotEqual(String s1, String s2){
+        int res = (s1.compareTo(s2) != 0)? 1 : 0;
+        return res;
     }
 
     /***

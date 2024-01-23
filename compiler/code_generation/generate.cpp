@@ -350,7 +350,19 @@ vector<char> ExprNode::generate() {
                     merge(bytes, commandToBytes(Command::iconst_0)); // 9
                     break;
 
-                case DataType::string_:
+                case DataType::string_: {
+                    DataType returnDataType = DataType(DataType::bool_);
+                    vector<DataType> params = {DataType(DataType::string_), DataType(DataType::string_)};
+                    merge(bytes, commandToBytes(Command::invokestatic));
+                    string className = ConstTable::RTLClassName;
+                    string methodName = "isEqual";
+                    int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName,
+                                                                              params,
+                                                                              returnDataType);
+                    merge(bytes, Int16ToBytes(methodPosition));
+                }
+                    break;
+
                 case DataType::class_:
                 case DataType::array_:
                     break;
@@ -394,7 +406,19 @@ vector<char> ExprNode::generate() {
                     merge(bytes, commandToBytes(Command::iconst_0)); // 9
                     break;
 
-                case DataType::string_:
+                case DataType::string_: {
+                    DataType returnDataType = DataType(DataType::bool_);
+                    vector<DataType> params = {DataType(DataType::string_), DataType(DataType::string_)};
+                    merge(bytes, commandToBytes(Command::invokestatic));
+                    string className = ConstTable::RTLClassName;
+                    string methodName = "isNotEqual";
+                    int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName,
+                                                                              params,
+                                                                              returnDataType);
+                    merge(bytes, Int16ToBytes(methodPosition));
+                }
+                    break;
+
                 case DataType::class_:
                 case DataType::array_:
                     break;
@@ -437,7 +461,19 @@ vector<char> ExprNode::generate() {
                     merge(bytes, commandToBytes(Command::iconst_0)); // 9
                     break;
 
-                case DataType::string_:
+                case DataType::string_: {
+                    DataType returnDataType = DataType(DataType::bool_);
+                    vector<DataType> params = {DataType(DataType::string_), DataType(DataType::string_)};
+                    merge(bytes, commandToBytes(Command::invokestatic));
+                    string className = ConstTable::RTLClassName;
+                    string methodName = "isBigger";
+                    int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName,
+                                                                              params,
+                                                                              returnDataType);
+                    merge(bytes, Int16ToBytes(methodPosition));
+                }
+                    break;
+
                 case DataType::class_:
                 case DataType::array_:
                     break;
@@ -481,7 +517,19 @@ vector<char> ExprNode::generate() {
                     merge(bytes, commandToBytes(Command::iconst_0)); // 9
                     break;
 
-                case DataType::string_:
+                case DataType::string_: {
+                    DataType returnDataType = DataType(DataType::bool_);
+                    vector<DataType> params = {DataType(DataType::string_), DataType(DataType::string_)};
+                    merge(bytes, commandToBytes(Command::invokestatic));
+                    string className = ConstTable::RTLClassName;
+                    string methodName = "isLower";
+                    int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName,
+                                                                              params,
+                                                                              returnDataType);
+                    merge(bytes, Int16ToBytes(methodPosition));
+                }
+                    break;
+
                 case DataType::class_:
                 case DataType::array_:
                     break;
@@ -525,11 +573,21 @@ vector<char> ExprNode::generate() {
                     merge(bytes, commandToBytes(Command::iconst_0)); // 9
                     break;
 
-                case DataType::string_:
-                case DataType::class_:
-                case DataType::array_:
+                case DataType::string_: {
+                    DataType returnDataType = DataType(DataType::bool_);
+                    vector<DataType> params = {DataType(DataType::string_), DataType(DataType::string_)};
+                    merge(bytes, commandToBytes(Command::invokestatic));
+                    string className = ConstTable::RTLClassName;
+                    string methodName = "isBiggerOrEqual";
+                    int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName,
+                                                                              params,
+                                                                              returnDataType);
+                    merge(bytes, Int16ToBytes(methodPosition));
+                }
                     break;
 
+                case DataType::class_:
+                case DataType::array_:
                 case DataType::undefined_:
                 case DataType::void_:
                     break;
@@ -568,11 +626,20 @@ vector<char> ExprNode::generate() {
                     merge(bytes, commandToBytes(Command::iconst_0)); // 9
                     break;
 
-                case DataType::string_:
+                case DataType::string_: {
+                    DataType returnDataType = DataType(DataType::bool_);
+                    vector<DataType> params = {DataType(DataType::string_), DataType(DataType::string_)};
+                    merge(bytes, commandToBytes(Command::invokestatic));
+                    string className = ConstTable::RTLClassName;
+                    string methodName = "isLowerOrEqual";
+                    int methodPosition = ClassTable::addMethodRefToConstTable(curClassName, className, methodName,
+                                                                              params,
+                                                                              returnDataType);
+                    merge(bytes, Int16ToBytes(methodPosition));
+                }
+                    break;
                 case DataType::class_:
                 case DataType::array_:
-                    break;
-
                 case DataType::undefined_:
                 case DataType::void_:
                     break;
@@ -615,8 +682,7 @@ vector<char> ExprNode::generate() {
 
             if (ClassTable::Instance()->getMethod(curClassName, curMethodName).body == this) {
                 merge(bytes, generateReturn(this->body)); ///TODO изменил, походу ошибка. Если что Арсений откатывай)
-            }
-            else  if (this->body != NULL) {
+            } else if (this->body != NULL) {
                 merge(bytes, this->body->generate());
             }
 
@@ -626,7 +692,7 @@ vector<char> ExprNode::generate() {
         case id_:
         case self_expr:
 
-            if(this->localVarNum != -1) {
+            if (this->localVarNum != -1) {
                 switch (this->dataType.type) {
 
                     case DataType::int_:
@@ -649,8 +715,7 @@ vector<char> ExprNode::generate() {
                         break;
                 }
                 bytes.push_back(IntToBytes(this->localVarNum).back());
-            }
-            else {
+            } else {
                 int fieldPosition = ClassTable::addFieldRefToConstTable(curClassName, curClassName,
                                                                         fieldName,
                                                                         dataType);
@@ -707,7 +772,7 @@ vector<char> ExprNode::generate() {
             DataType returnDataType = ClassTable::getMethodDeep(className, methodName).returnDataType;
             if (this->expr_list != NULL) {
                 for (auto &elem: *this->expr_list->exprs) {
-                  //  params.push_back(elem->dataType);
+                    //  params.push_back(elem->dataType);
                     merge(bytes, elem->generate());
                 }
             }
@@ -728,7 +793,7 @@ vector<char> ExprNode::generate() {
 
             if (this->expr_list != NULL) {
                 for (auto &elem: *this->expr_list->exprs) {
-                  //  params.push_back(elem->dataType);
+                    //  params.push_back(elem->dataType);
                     merge(bytes, elem->generate());
                 }
             }
@@ -804,7 +869,7 @@ vector<char> ExprNode::generate() {
                 merge(bytes, elem->generate());
             }
 
-          //  merge(bytes, commandToBytes(Command::pop));
+            //  merge(bytes, commandToBytes(Command::pop));
             break;
         }
         case struct_field_expr: {
@@ -899,7 +964,7 @@ vector<char> ExprNode::generate() {
                 }
                 cur++;
             }
-          //  if(cur) merge(bytes, commandToBytes(Command::pop));
+            //  if(cur) merge(bytes, commandToBytes(Command::pop));
             break;
         }
 
@@ -983,7 +1048,7 @@ vector<char> ExprNode::generate() {
             merge(bytes, condition);
             merge(bytes, body);
         }
-        break;
+            break;
         case loop_for: {
 
             if (this->expr_left->type == range_expr) {
@@ -1073,10 +1138,10 @@ vector<char> ExprNode::generateReturn(ExprNode *exprNode) {
 void ExprNode::fillBreaks(vector<char> &body, int shift) {
 
     int i = 0;
-    while(i < body.size()){
+    while (i < body.size()) {
 
         Command command = static_cast<Command>( body[i]);
-        if(command == Command::goto_ && body[i + 1] == 0 && body[i + 2] == 3){
+        if (command == Command::goto_ && body[i + 1] == 0 && body[i + 2] == 3) {
             int exitPosition = body.size() - i + shift;
             vector<char> position = Int16ToBytes(exitPosition);
             body[i + 1] = position[0];
@@ -1091,11 +1156,11 @@ void ExprNode::fillBreaks(vector<char> &body, int shift) {
 void ExprNode::fillContinues(vector<char> &body, int shift) {
 
     int i = 0;
-    while(i < body.size()){
+    while (i < body.size()) {
 
         Command command = static_cast<Command>( body[i]);
 
-        if(command == Command::goto_ && body[i + 1] == 0 && body[i + 2] == 2){
+        if (command == Command::goto_ && body[i + 1] == 0 && body[i + 2] == 2) {
             int exitPosition = body.size() - i + shift - 3;
             vector<char> position = Int16ToBytes(exitPosition);
             body[i + 1] = position[0];
@@ -1132,9 +1197,9 @@ vector<char> ExprNode::generateFor() {
     int sz = body.size() + 3 + 3;
     merge(condition, Int16ToBytes(sz));
 
-    merge(body, commandToBytes(Command:: goto_));
-    sz =  condition.size() + body.size() - 1;
-    vector<char> position = IntToBytes(- sz);
+    merge(body, commandToBytes(Command::goto_));
+    sz = condition.size() + body.size() - 1;
+    vector<char> position = IntToBytes(-sz);
     body.insert(body.end(), u2(position));
 
     fillBreaks(body);
@@ -1242,13 +1307,13 @@ vector<char> ExprNode::generateForEach() {
     int sz = body.size() + 3 + 3;
     merge(condition, Int16ToBytes(sz));
 
-    merge(body, commandToBytes(Command:: goto_));
-    sz =  condition.size() + body.size() - 1;
-    vector<char> position = IntToBytes(- sz);
+    merge(body, commandToBytes(Command::goto_));
+    sz = condition.size() + body.size() - 1;
+    vector<char> position = IntToBytes(-sz);
     body.insert(body.end(), u2(position));
 
     fillBreaks(body);
-    fillContinues(body, - 3);
+    fillContinues(body, -3);
 
     merge(bytes, condition);
     merge(bytes, body);
