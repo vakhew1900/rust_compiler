@@ -48,6 +48,54 @@ void RTLContainer::addPrintFunctions() {
 RTLContainer::RTLContainer() {
     addReadFunctions();
     addPrintFunctions();
+    addStringFunctions();
+    addCharAt();
     rtlClass.isPub = true;
     ClassTable::Instance()->addClass(ClassTable::RTLClassName, rtlClass);
+}
+
+void RTLContainer::addStringFunctions() {
+
+    vector<string> methodName = {"push_char", "push_str"};
+    DataType returnDataType = DataType(DataType::string_);
+    vector<DataType> params = {DataType(DataType::char_), DataType(DataType::string_)};
+
+
+    for (int i = 0; i < methodName.size(); i++) {
+        MethodTableItem methodTableItem = MethodTableItem();
+        methodTableItem.isPub = true;
+        methodTableItem.isHasBody = true;
+        methodTableItem.isStatic = true;
+        methodTableItem.returnDataType = returnDataType;
+
+        VarTableItem varTableItem = VarTableItem("str", DataType(DataType::string_), false, true, false, false);
+        methodTableItem.paramTable.items.push_back(varTableItem);
+        varTableItem = VarTableItem("val",params[i] , false, params[i].type == DataType::string_ , false, false);
+        methodTableItem.paramTable.items.push_back(varTableItem);
+
+        methodTableItem.isRTL = true;
+        rtlClass.methodTable.items[methodName[i]] = methodTableItem;
+    }
+
+}
+
+void RTLContainer::addCharAt() {
+
+    string methodName = "charAt";
+    DataType returnDataType = DataType(DataType::char_);
+    DataType param = DataType(DataType::int_);
+
+    MethodTableItem methodTableItem = MethodTableItem();
+    methodTableItem.isPub = true;
+    methodTableItem.isHasBody = true;
+    methodTableItem.isStatic = true;
+    methodTableItem.returnDataType = returnDataType;
+
+    VarTableItem varTableItem = VarTableItem("str", DataType(DataType::string_), false, true, false, false);
+    methodTableItem.paramTable.items.push_back(varTableItem);
+    varTableItem = VarTableItem("val", param , false, param.isString(), false, false);
+    methodTableItem.paramTable.items.push_back(varTableItem);
+
+    methodTableItem.isRTL = true;
+    rtlClass.methodTable.items[methodName] = methodTableItem;
 }

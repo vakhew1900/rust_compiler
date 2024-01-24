@@ -14,6 +14,8 @@ public:
     ClassTableItem rtlClass;
     void addReadFunctions();
     void addPrintFunctions();
+    void addStringFunctions();
+    void addCharAt();
 };
 
 

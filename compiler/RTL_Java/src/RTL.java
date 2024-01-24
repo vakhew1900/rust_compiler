@@ -180,7 +180,7 @@ public class RTL {
      * @param c- вторая строка
      * @return объединенная с символом строка
      */
-    public static String push_сhar(String s, char c) {
+    public static String push_char(String s, char c) {
         StringBuilder stringBuilder = new StringBuilder(s);
         stringBuilder.append(c);
         return stringBuilder.toString();

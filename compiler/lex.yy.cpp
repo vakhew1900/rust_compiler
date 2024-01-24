@@ -3032,7 +3032,7 @@ int translateNumberByBase(char *input_string) {
 }
 
 
-//#define release
+#define release
 
 int main(int argc, char** argv) {
 
@@ -3045,42 +3045,7 @@ int main(int argc, char** argv) {
 
     const char *filename = argv[1];
 #else
-        //const char *filename = *argv;
-//        const char *filename = "../tests/exam_tests/loop/loop.rs";
-//        const char *filename = "../tests/exam_tests/while/simple_while.rs";
-//        const char *filename = "../tests/exam_tests/loop/simple_loop.rs";
-//        const char *filename = "../tests/exam_tests/for/simple_for.rs";
-//        const char *filename = "../tests/exam_tests/logic/logic_combine.rs";
-//        const char *filename = "../tests/exam_tests/arithmetic/as_casting.rs";
-       // const char *filename = "../tests/exam_tests/array/matrix.rs";
-//        const char *filename = "../tests/exam_tests/array/matrix_foreach_float";
-//        const char *filename = "../tests/a.rs";
-      //  const char *filename = "../tests/exam_tests/structs/simple_object_outer_main.rs";
-      //   const char *filename = "../tests/exam_tests/structs/const.rs";
-      //  const char *filename = "../tests/exam_tests/functions/gcd_algorythm.rs";
-//        const char *filename = "../tests/exam_tests/trait/simple.rs";
-//        const char *filename = "../tests/exam_tests/trait/trait_const.rs";
-     //   const char *filename = "../tests/exam_tests/trait/static_method.rs";
-//        const char *filename = "../tests/exam_tests/trait/several_trait.rs";
-//        /const char *filename = "../tests/exam_tests/polymorphism/polymorph_foreach.rs";
-//        const char *filename = "../tests/exam_tests/polymorphism/with_ios.rs";
-        //const char *filename = "../tests/exam_tests/polymorphism/ua.rs";
-   //     const char *filename = "../tests/exam_tests/polymorphism/function_param.rs";
-//        const char *filename = "../tests/exam_tests/mod/simple.rs";
-//        const char *filename = "../tests/exam_tests/mod/very_hard_mod_in_mod_and_not_pub_mod_in_mod.rs";
-//    const char *filename = "../tests/exam_tests/polymorphism/polymorph_foreach";
-   // const char *filename = "../tests/exam_tests/const/error.rs";
-//    const char *filename = "../tests/exam_tests/array/autofill.rs";
-//    const char *filename = "../tests/exam_tests/string/const.rs";
-   // const char *filename = "../tests/exam_tests/delete/for.rs";
-//    const char *filename = "../tests/exam_tests/delete/function.rs";
-//    const char *filename = "../tests/exam_tests/delete/link_for.rs";
-    const char *filename = "../tests/exam_tests/trait/chain_implementing.rs";
-
-//      const char *filename = "../tests/exam_tests/if_expr/if-else-if-else.rs";
-//    const char *filename = "../tests/bubble_sort_rust.rs";
-//    const char *filename = "../tests/check_cycle_break_continue_rust.rs";
- //   const char *filename = "../tests/check_cycle_break_continue_rust.rs";
+    const char *filename = "../tests/exam_tests/array/autofill.rs";
 #endif
     FILE *file = fopen(filename, "r");
     if (file == NULL) {

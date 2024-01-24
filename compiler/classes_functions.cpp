@@ -3228,6 +3228,18 @@ void ExprNode::transform(bool isConvertedToConst) {
             }
             this->expr_left->transform(isConvertedToConst);
 
+
+            if(this->expr_left->dataType.isString()){
+                auto  exprNode = ExprNode::CallAccessExpr(ExprNode::id_, this->Name, NULL, NULL);
+                auto firstParam = this->expr_left;
+
+                this->type = static_method;
+                this->expr_left = exprNode;
+                this->expr_list->exprs->push_front(firstParam);
+                this->transform();
+                return;
+            }
+
             if (this->expr_left->dataType.type != DataType::class_) {
                 throw Exception(Exception::TYPE_ERROR,
                                 this->expr_left->dataType.toString() + "has not methods", this->line);
@@ -4283,7 +4295,7 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
         if (this->expr_list->exprs->size() != paramTable.items.size()) {
             throw Exception(Exception::PARAM_ERROR,
                             "Param Error expected: " +
-                            to_string(this->methodTableItem.paramTable.items.size())
+                            to_string(paramTable.items.size())
                             + " param count result:" + to_string(this->expr_list->exprs->size()) + " param count",
                             this->line);
         }
