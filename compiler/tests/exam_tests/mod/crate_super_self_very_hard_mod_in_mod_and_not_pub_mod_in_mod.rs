@@ -1,6 +1,17 @@
 // main.rs
 
 mod geometry {
+    pub const PI: f64 = 3.14;
+
+    // Вложенный модуль внутри triangle
+    pub mod nested {
+        // Функция, использующая super:: для обращения к родительскому модулю
+        pub fn print_from_nested() {
+            println("{}", "Вызов ПРИВАТНОЙ функции через супер:");
+            super::private_function();
+        }
+    }
+
     // Публичная структура Circle
     pub struct Circle {
         // Публичное поле radius
@@ -11,6 +22,8 @@ mod geometry {
 
     // Публичный модуль Triangle внутри модуля geometry
     pub mod triangle {
+
+
         // Публичная структура Triangle
         pub struct Triangle {
             // Публичное поле base
@@ -46,6 +59,7 @@ mod geometry {
 
     // Непубличный модуль inner_module
     mod inner_module {
+        pub const PI: f64 = 6.28;
         // Приватная структура, доступная только внутри модуля inner_module
         pub struct InnerStruct {
             pub field: i32,
@@ -53,7 +67,8 @@ mod geometry {
 
         // Публичная функция, доступная только внутри модуля inner_module
         pub fn inner_function() {
-            println("{}", "Это внутренняя функция из модуля inner_module");
+            // self::
+            println_float("Это внутренняя функция inner_module PI is: {}", self::PI);
         }
     }
 
@@ -75,7 +90,8 @@ mod geometry {
 
         // Публичный метод area
         pub fn area(&self) -> f64 {
-            3.14 * self.radius * self.radius
+            //обращение к корневому модулю через крейт
+            crate::geometry::PI * self.radius * self.radius
         }
     }
 
@@ -119,4 +135,6 @@ fn main() {
 
     // Вызов публичной функции, использующей непубличный модуль
     geometry::use_inner_module();
+
+    geometry::nested::print_from_nested();
 }
