@@ -14,5 +14,5 @@ fn check_number(number: i32) -> String {
     } else {
         return "Positive";
     }
-    "bebebe"
+    return "bebebe";
 }

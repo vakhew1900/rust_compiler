@@ -3572,7 +3572,20 @@ void ExprNode::transform(bool isConvertedToConst) {
             if (this->body != NULL) {
                 this->dataType = this->body->dataType;
             } else {
-                this->dataType = DataType(DataType::void_);
+
+                DataType bodyDataType = DataType(DataType::void_);
+                bool isStmtsNotEmpty = this->stmt_list != NULL && this->stmt_list->stmts->size();
+                bool isExpr = isStmtsNotEmpty && this->stmt_list->stmts->back()->type == StmtNode::exprstmt;
+                bool isReturn = isExpr && this->stmt_list->stmts->back()->expr->type == ExprNode::return_expr;
+                bool isMethodBody = this == ClassTable::Instance()->getMethod(curClassName, curMethodName).body;
+                if(isReturn && isMethodBody){
+                    auto returnExpr = this->stmt_list->stmts->back()->expr;
+                    if(returnExpr->expr_left != NULL){
+                        bodyDataType = returnExpr->expr_left->dataType;
+                    }
+                }
+
+                this->dataType = bodyDataType;
             }
 
             blockExprList.pop_back();
