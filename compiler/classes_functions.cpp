@@ -1897,6 +1897,8 @@ void ItemNode::addImpl(string className, bool isTrait) {
                                             "pub` not permitted here because it's implied :" + implClassName + " " +
                                             *elem->name, this->line);
                         }
+
+                        elem->visibility = pub;
                         elem->curClassName = implClassName;
                         elem->addImpl(implClassName, this->impl_type == trait);
                     }
