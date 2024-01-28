@@ -46,7 +46,7 @@ vector<char> StmtNode::generate() {
                     case DataType::string_:
                     case DataType::class_:
                     case DataType::array_:
-                        merge(bytes, expr->generateCloneOperation(expr->dataType));
+                      //  merge(bytes, expr->generateCloneOperation(expr->dataType));
                         buffer = commandToBytes(Command::astore);
                         merge(bytes, buffer);
                         break;
@@ -260,7 +260,7 @@ vector<char> ExprNode::generate() {
                 case DataType::string_:
                 case DataType::class_:
                 case DataType::array_:
-                    merge(bytes, expr_right->generateCloneOperation(expr_right->dataType));
+               //     merge(bytes, expr_right->generateCloneOperation(expr_right->dataType));
                     merge(bytes, commandToBytes(Command::astore));
                     break;
 
@@ -299,7 +299,7 @@ vector<char> ExprNode::generate() {
                 case DataType::string_:
                 case DataType::class_:
                 case DataType::array_:
-                    merge(bytes, expr_right->generateCloneOperation(expr_right->dataType));
+              //      merge(bytes, expr_right->generateCloneOperation(expr_right->dataType));
                     merge(bytes, commandToBytes(Command::aastore));
                     break;
                 case DataType::void_:
@@ -1354,7 +1354,9 @@ vector<char> ExprNode:: generateCloneOperation(const DataType &dataType){
     vector<char> bytes = commandToBytes(Command::invokevirtual);
     vector<DataType> params;
     DataType returnDataType = DataType::StructDataType(ConstTable::objectClassName);
-    int position = ClassTable::addMethodRefToConstTable(curClassName, dataType.toConstTableFormat(), "clone", params, returnDataType);
+    DataType classType = dataType;
+    classType.id = ConstTable::formatClassName(classType.id);
+    int position = ClassTable::addMethodRefToConstTable(curClassName, classType.toConstTableFormat(), "clone", params, returnDataType);
     merge(bytes, Int16ToBytes(position));
     return bytes;
 }
