@@ -54,7 +54,7 @@ fn main() {
       }
 
       for elem in array {
-       println_float("Shape area {} = ", elem.area());
+       println_float("Shape area = {}", elem.area());
       }
 
 }
