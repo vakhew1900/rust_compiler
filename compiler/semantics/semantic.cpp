@@ -54,7 +54,7 @@ void ProgramNode::getAllItems(std::string className) {
         ClassTable::isCorrectTraitsImpl();
         ClassTable::isMainFunctionExist();
         ClassTable::makeMainForJavaFormat();
-        ClassTable:: checkClassNames();
+        ClassTable::checkClassNames();
     }
     catch (Exception e) {
         cerr << e.getMessage() << "\n";
@@ -863,7 +863,7 @@ void ItemNode::transform(bool isConvertedToConst) {
                     paramTypes.erase(paramTypes.begin());
                 }
 
-                if(*this->name == "main"){
+                if (*this->name == "main") {
                     int x = 10 + 10;
                 }
 
@@ -1228,7 +1228,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                                 this->expr_right->dataType.toString());
             }
 
-            if (this->expr_left->dataType.type != DataType::int_) {
+            if (!this->expr_left->dataType.isInt() && !this->expr_left->dataType.isFloat()) {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED,
                                 "datatype " + this->expr_left->dataType.toString() +
                                 " not supported operation mod", this->line);
@@ -1646,8 +1646,8 @@ void ExprNode::transform(bool isConvertedToConst) {
             this->expr_left->transform(isConvertedToConst);
 
 
-            if(this->expr_left->dataType.isString()){
-                auto  exprNode = ExprNode::CallAccessExpr(ExprNode::id_, this->Name, NULL, NULL);
+            if (this->expr_left->dataType.isString()) {
+                auto exprNode = ExprNode::CallAccessExpr(ExprNode::id_, this->Name, NULL, NULL);
                 auto firstParam = this->expr_left;
 
                 this->type = static_method;
@@ -1993,9 +1993,9 @@ void ExprNode::transform(bool isConvertedToConst) {
                 bool isExpr = isStmtsNotEmpty && this->stmt_list->stmts->back()->type == StmtNode::exprstmt;
                 bool isReturn = isExpr && this->stmt_list->stmts->back()->expr->type == ExprNode::return_expr;
                 bool isMethodBody = this == ClassTable::Instance()->getMethod(curClassName, curMethodName).body;
-                if(isReturn && isMethodBody){
+                if (isReturn && isMethodBody) {
                     auto returnExpr = this->stmt_list->stmts->back()->expr;
-                    if(returnExpr->expr_left != NULL){
+                    if (returnExpr->expr_left != NULL) {
                         bodyDataType = returnExpr->expr_left->dataType;
                     }
                 }
@@ -2349,6 +2349,12 @@ void ExprNode::transformConst() {
                 }
                 this->Int = this->expr_left->Int % this->expr_right->Int;
                 this->type = int_lit;
+            } else if (this->expr_left->dataType.type == DataType::float_) {
+                if (this->expr_right->Float == 0) {
+                    throw Exception(Exception::NULL_DIVIDE, "NULL DIVIDE", this->line);
+                }
+                this->Float = fmodf(this->expr_left->Float,this->expr_right->Float);
+                this->type = float_lit;
             } else {
                 throw Exception(Exception::OPERATION_NOT_SUPPORTED, "THIS LITERAL NOT SUPPORTED THIS OPERATION",
                                 this->line);
@@ -2758,13 +2764,12 @@ void ExprNode::checkMethodParam(const string &className, const string &methodNam
             }
             i++;
 
-            if(!elem->isRefExpr() && elem->isVar() && !elem->dataType.isSimple()) {
+            if (!elem->isRefExpr() && elem->isVar() && !elem->dataType.isSimple()) {
                 ExprNode *delExpr = ExprNode::DelObjectExpr(elem);
 
-                if(this->deleteExprList == NULL) {
+                if (this->deleteExprList == NULL) {
                     this->deleteExprList = new ExprListNode(delExpr);
-                }
-                else {
+                } else {
                     ExprListNode::Append(this->deleteExprList, delExpr);
                 }
             }

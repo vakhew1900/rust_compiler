@@ -162,9 +162,16 @@ vector<char> ExprNode::generate() {
             }
             break;
         case mod:
+
             merge(bytes, this->expr_left->generate());
             merge(bytes, this->expr_right->generate());
-            merge(bytes, commandToBytes(Command::irem));
+            if (this->dataType.isInt()) {
+                merge(bytes, commandToBytes(Command::irem));
+            }
+            else {
+                merge(bytes, commandToBytes(Command::frem));
+            }
+
             break;
         case uminus:
             merge(bytes, this->expr_left->generate());
