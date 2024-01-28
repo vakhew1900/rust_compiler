@@ -1667,11 +1667,19 @@ void ItemNode::getAllItems(std::string className) {
                     throw Exception(Exception::NOT_IMPLEMICATION, *this->name + " NOT_IMPLEMICATION", this->line);
                 }
 
-                if ((this->params->func_type == FuncParamListNode::self_ref
-                     || this->params->func_type == FuncParamListNode::self ||
-                     this->params->func_type == FuncParamListNode::mut_self_ref) &&
-                    ClassTable::Instance()->getClass(className).classType == ClassTableItem::mod_) {
-                    throw Exception(Exception::NOT_A_METHOD, "function " + *this->name + " NOT_A_METHOD", this->line);
+                {
+                    bool isSelf = (this->params->func_type == FuncParamListNode::self_ref
+                                   || this->params->func_type == FuncParamListNode::self ||
+                                   this->params->func_type == FuncParamListNode::mut_self_ref);
+
+                    bool isHasNotMethod = ClassTable::Instance()->getClass(className).classType == ClassTableItem::mod_
+                                          || ClassTable::Instance()->getClass(className).classType ==
+                                             ClassTableItem::enum_;
+
+                    if (isSelf && isHasNotMethod) {
+                        throw Exception(Exception::NOT_A_METHOD, "function " + *this->name + " NOT_A_METHOD",
+                                        this->line);
+                    }
                 }
 
                 if ((this->params->func_type == FuncParamListNode::self_ref
@@ -3665,7 +3673,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                                                           *this->expr_middle->Name).dataType;
             } else {
                 throw Exception(Exception::NOT_EXIST,
-                                "call field " + this->expr_left->className + " " + *this->expr_left->Name +
+                                "call field " + this->expr_left->className + " " + *this->Name +
                                 " not exist", this->line);
             }
 
