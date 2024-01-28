@@ -257,6 +257,7 @@ public:
     void  fillContinues(vector<char> &body, int shift = 0);
     vector<char> generateFor();
     vector<char> generateForEach();
+    vector<char> generateCloneOperation(const DataType &dataType);
 };
 
 class ExprListNode : public Node {
