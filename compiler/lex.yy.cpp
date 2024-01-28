@@ -751,7 +751,7 @@ char *yytext;
 #define INITIAL 0
 #line 2 "lex.l"
 // #include "_tab.h"
-#include "parser_tab.cpp"
+#include "parser/parser_tab.cpp"
 #include "code_generation/codegenerator.h"
 extern int yyparse();
 #define YY_NEVER_INTERACTIVE 1

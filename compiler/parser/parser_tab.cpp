@@ -59,7 +59,7 @@
 #line 1 "parser.y"
 
     #include <iostream>
-    #include "classesnodes.h"
+    #include "../classesnodes.h"
     void yyerror(char const* s);
     extern int yylex(void);
     using namespace std;
