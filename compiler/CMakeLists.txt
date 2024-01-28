@@ -8,7 +8,7 @@ include_directories(.)
 
 add_executable(compiler "lex.yy.cpp"
         unistd.h
-        classes_functions.cpp
+        parser/classes_functions.cpp
         classesnodes.h
         semantics/tools/datatype.cpp
         semantics/tools/datatype.h
@@ -35,4 +35,6 @@ add_executable(compiler "lex.yy.cpp"
         code_generation/generate.cpp
         code_generation/tools/utils.cpp
         code_generation/command.cpp
+        dot/print_tree.cpp
+        semantics/semantic.cpp
 )
