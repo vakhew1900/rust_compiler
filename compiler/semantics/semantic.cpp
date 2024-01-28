@@ -1261,7 +1261,7 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
                 throw Exception(Exception::NOT_EQUAL_DATA_TYPE,
-                                "NOT EQUAL DATA_TYPE" + this->expr_left->dataType.toString() + " " +
+                                "NOT EQUAL DATA_TYPE " + this->expr_left->dataType.toString() + " " +
                                 this->expr_right->dataType.toString(), this->line);
             }
 
@@ -1341,7 +1341,7 @@ void ExprNode::transform(bool isConvertedToConst) {
 
             if (!this->expr_left->dataType.isEquals(expr_right->dataType)) {
                 throw Exception(Exception::NOT_EQUAL_DATA_TYPE,
-                                "NOT EQUAL DATA_TYPE" + this->expr_left->dataType.toString() + " " +
+                                "NOT EQUAL DATA_TYPE " + this->expr_left->dataType.toString() + " " +
                                 this->expr_right->dataType.toString(), this->line);
             }
 
