@@ -59,7 +59,7 @@
 #line 1 "parser.y"
 
     #include <iostream>
-    #include "../classesnodes.h"
+    #include "classesnodes.h"
     void yyerror(char const* s);
     extern int yylex(void);
     using namespace std;
@@ -1857,11 +1857,11 @@ case 117:
     break;}
 case 118:
 #line 355 "parser.y"
-{ yyval.expr = ExprNode::ExprFromBoolLiteral(ExprNode::bool_lit, yyvsp[0].bool_literal); ;
+{ yyval.expr = ExprNode::ExprFromBoolLiteral(ExprNode::bool_lit, true); ;
     break;}
 case 119:
 #line 356 "parser.y"
-{ yyval.expr = ExprNode::ExprFromBoolLiteral(ExprNode::bool_lit, yyvsp[0].bool_literal); ;
+{ yyval.expr = ExprNode::ExprFromBoolLiteral(ExprNode::bool_lit, false); ;
     break;}
 case 120:
 #line 357 "parser.y"
