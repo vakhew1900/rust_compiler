@@ -101,7 +101,7 @@ mod geometry {
     }
 
     // Публичная функция, доступная вне модуля geometry
-    pub fn public_function() {
+    fn public_function() {
         println("{}", "Это публичная функция из модуля geometry");
         // Вызов приватной функции
         private_function();

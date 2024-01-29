@@ -1749,10 +1749,12 @@ void ExprNode::transform(bool isConvertedToConst) {
                 returnTypes.push_back(DataType(DataType::void_));
             }
 
-            addMetaInfo(expr_left);
-            checkCancelExprNode(expr_left);
-            this->expr_left->transform(isConvertedToConst);
-            returnTypes.push_back(this->expr_left->dataType);
+            if(this->expr_left != NULL) {
+                addMetaInfo(expr_left);
+                checkCancelExprNode(expr_left);
+                this->expr_left->transform(isConvertedToConst);
+                returnTypes.push_back(this->expr_left->dataType);
+            }
             this->dataType = DataType(DataType::void_);
             break;
         case if_expr_list: {

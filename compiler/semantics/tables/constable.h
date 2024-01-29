@@ -99,7 +99,7 @@ public:
     inline static const string init = "<init>";
     inline static const string clinit = "<clinit>";
     inline static const string objectClassName = "java/lang/Object";
-    inline static const string stringClassName = "java/lang/Spring";
+    inline static const string stringClassName = "java/lang/String";
 };
 
 

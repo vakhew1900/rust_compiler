@@ -3046,7 +3046,8 @@ int main(int argc, char** argv) {
     const char *filename = argv[1];
 #else
     //const char *filename = "../tests/exam_tests/array/autofill.rs";
-    const char *filename = "../tests/exam_tests/if_expr/if_return.rs";
+    //const char *filename = "../tests/exam_tests/if_expr/if_return.rs";
+    const char *filename = "../tests/a.rs";
 #endif
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
