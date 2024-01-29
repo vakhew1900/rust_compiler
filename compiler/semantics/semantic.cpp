@@ -1775,9 +1775,15 @@ void ExprNode::transform(bool isConvertedToConst) {
                 types.push_back(else_body->dataType);
             }
 
+            if(this->else_body == NULL && types.size()){
+                throw Exception(Exception::TYPE_ERROR, "if with value should have else", this->line);
+            }
+
             if (!DataType::isEquals(types)) {
                 throw Exception(Exception::TYPE_ERROR, "if has different types", this->line);
             }
+
+
 
             if (types.size())
                 this->dataType = types.front();
