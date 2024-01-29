@@ -7,7 +7,6 @@ trait Shape {
     }
 }
 
-
 trait HasAngles: Shape {
     // У любой фигуры с углами можно посчитать количество углов.
     fn angles_count(&self) -> i32;
