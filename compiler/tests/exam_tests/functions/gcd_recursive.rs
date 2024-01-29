@@ -8,8 +8,8 @@ fn gcd_recursive(a: i32, b: i32) -> i32 {
 }
 
 fn main() {
-    let num1 = 24;
-    let num2 = 36;
+    let num1 = read_int();
+    let num2 = read_int();
 
     let result = gcd_recursive(num1, num2);
 

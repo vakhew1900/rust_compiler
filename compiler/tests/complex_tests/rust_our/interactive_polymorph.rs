@@ -1,6 +1,8 @@
 trait Shape {
     // У любой фрормы можно посчитать площадь.
-    fn area(&self) -> f64;
+    fn area(&self) -> f64 {
+        println("{}",  "из Shape");
+    }
 
     fn fun(&self) {
         println("{}", "It`s is a fun function");
@@ -21,6 +23,7 @@ struct Rectangle {
 // Прямоугольник является формой.
 impl Shape for Rectangle {
     fn area(&self) -> f64 {
+        println("{}",  "из Rectangle");
         self.x * self.y
     }
 }
@@ -39,6 +42,8 @@ struct Circle {
 // Круг является формой
 impl Shape for Circle {
     fn area(&self) -> f64 {
+
+        println("{}",  "из Circle");
         self.r * self.r * 3.14   }
 }
 
