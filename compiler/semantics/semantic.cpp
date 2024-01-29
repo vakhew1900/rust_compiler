@@ -1775,7 +1775,7 @@ void ExprNode::transform(bool isConvertedToConst) {
                 types.push_back(else_body->dataType);
             }
 
-            if(this->else_body == NULL && types.size()){
+            if(this->else_body == NULL && types.size() && !types.front().isVoid()){
                 throw Exception(Exception::TYPE_ERROR, "if with value should have else", this->line);
             }
 
