@@ -205,7 +205,7 @@ vector<char> ExprNode::generate() {
             merge(bytes, right); // 7
             merge(bytes, commandToBytes(Command::iconst_1)); // 8
             merge(bytes, commandToBytes(Command::if_icmpne)); //  9
-            merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+            merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize + unaryCommandSize));
 
             merge(bytes, commandToBytes(Command::iconst_1)); // 12
             merge(bytes, commandToBytes(Command::goto_)); // 13
@@ -233,7 +233,7 @@ vector<char> ExprNode::generate() {
             merge(bytes, right); // 7
             merge(bytes, commandToBytes(Command::iconst_0)); // 8
             merge(bytes, commandToBytes(Command::if_icmpne)); //  9
-            merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize));
+            merge(bytes, Int16ToBytes(gotoCommandSize + unaryCommandSize + gotoCommandSize + unaryCommandSize));
 
             merge(bytes, commandToBytes(Command::iconst_0)); // 12
             merge(bytes, commandToBytes(Command::goto_)); // 13
