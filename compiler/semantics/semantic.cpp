@@ -561,9 +561,10 @@ void ItemNode::addDataTypeToDeclaration(const string &className) {
             this->curClassName = className + "/" + *this->name;
             break;
         case impl_:
-
-            for (auto elem: *this->items->items) {
-                elem->addDataTypeToDeclaration(this->className);
+            if (this->items != NULL) {
+                for (auto elem: *this->items->items) {
+                    elem->addDataTypeToDeclaration(this->className);
+                }
             }
             break;
         case module_:
