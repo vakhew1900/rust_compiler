@@ -1,0 +1,71 @@
+RTL  public 
+fieldTable:
+
+methodTable:
+<init> package returnType: void_
+paramTable: 
+localVarTable
+0: self class_ name this_class
+
+println - static  public returnType: void_
+paramTable: 
+0: str&const string_
+1: val& string_
+localVarTable
+
+println_bool - static  public returnType: void_
+paramTable: 
+0: str&const string_
+1: val bool_
+localVarTable
+
+println_char - static  public returnType: void_
+paramTable: 
+0: str&const string_
+1: val char_
+localVarTable
+
+println_float - static  public returnType: void_
+paramTable: 
+0: str&const string_
+1: val float_
+localVarTable
+
+println_int - static  public returnType: void_
+paramTable: 
+0: str&const string_
+1: val int_
+localVarTable
+
+read - static  public returnType: string_
+paramTable: 
+localVarTable
+
+read_bool - static  public returnType: bool_
+paramTable: 
+localVarTable
+
+read_char - static  public returnType: char_
+paramTable: 
+localVarTable
+
+read_float - static  public returnType: float_
+paramTable: 
+localVarTable
+
+read_int - static  public returnType: int_
+paramTable: 
+localVarTable
+
+
+src/ModuleClass  package mod_
+fieldTable:
+
+methodTable:
+<init> package returnType: void_
+paramTable: 
+localVarTable
+0: self class_ name this_class
+
+
+

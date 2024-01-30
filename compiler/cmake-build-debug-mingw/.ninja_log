@@ -1,0 +1,17 @@
+# ninja log v5
+68	3264	7272942069485292	CMakeFiles/compiler.dir/semantics/tools/datatype.cpp.obj	4501e6c32f108ab0
+3264	4461	7272942081575647	CMakeFiles/compiler.dir/semantics/tools/tools.cpp.obj	5b7460dfd73911e3
+8	2767	7273032429868810	CMakeFiles/compiler.dir/lex.yy.cpp.obj	54cf7e13fb9ab04e
+32	1970	7272979331861758	CMakeFiles/compiler.dir/semantics/tables/constable.cpp.obj	2cfb578f36fab193
+76	3254	7272942069505293	CMakeFiles/compiler.dir/semantics/tables/fieldtable.cpp.obj	8de3811ef6f1e394
+86	3273	7272942069525348	CMakeFiles/compiler.dir/semantics/tables/vartable.cpp.obj	2179968fc51facdc
+5	2047	7273010553073829	CMakeFiles/compiler.dir/code_generation/codegenerator.cpp.obj	fb4e6991afe33d3a
+4	2694	7272979674245985	CMakeFiles/compiler.dir/semantics/rtl/RTLContainer.cpp.obj	e0bfdeed6d66ebde
+24	2248	7272979334622911	CMakeFiles/compiler.dir/semantics/tables/methodtable.cpp.obj	eec705ff56220866
+41	3836	7272979350470406	CMakeFiles/compiler.dir/semantics/tables/classtable.cpp.obj	eef79cdaaa1f62fb
+6	5454	7272979366632302	CMakeFiles/compiler.dir/classes_functions.cpp.obj	122c8514fd70308d
+2768	4839	7273032450490447	compiler.exe	a1885aef48088f9
+7	445	7272980453067885	CMakeFiles/compiler.dir/code_generation/tools/byte_convert.cpp.obj	eeb96536e4a3df
+19	621	7272979653551387	CMakeFiles/compiler.dir/code_generation/command.cpp.obj	8b583ec2da456f7
+33	1430	7272979661672103	CMakeFiles/compiler.dir/code_generation/tools/utils.cpp.obj	5785fe33cf8f53e8
+42	2798	7272979675315943	CMakeFiles/compiler.dir/code_generation/generate.cpp.obj	b21360aa31b67890

@@ -1,0 +1,9 @@
+Const №, Const Type, Const Value
+1, CONSTANT_UTF8, Code
+2, CONSTANT_UTF8, src/ID/moduleClass
+3, CONSTANT_CLASS, 2
+4, CONSTANT_UTF8, myFunc
+5, CONSTANT_UTF8, ()V
+6, CONSTANT_NAME_AND_TYPE, 4 5
+7, CONSTANT_METHOD_REF, 3 6
+

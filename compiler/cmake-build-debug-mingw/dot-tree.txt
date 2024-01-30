@@ -1,0 +1,4 @@
+digraph rustProgram {
+id1 [label="name=program id=1 dtype=undefined_"];
+}
+
